@@ -13,9 +13,9 @@
     <!-- for AXIOS-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <script src="javascript/squadPage.js"></script>
-    <script src="javascript/index.js"></script>
-    <script src="javascript/competition.js"></script>
+    <script src="javascripts/squadPage.js"></script>
+    <script src="javascripts/index.js"></script>
+    <script src="javascripts/competitionPage.js"></script>
     <title>IUM</title>
 </head>
 <body>
@@ -83,7 +83,7 @@
                         Juventus Football Club
                     </h3>
                 </div>
-                <button class="lateral-menu-button" id="squad-info-btn">
+                <button class="lateral-menu-button" id="squad-info-btn" data-showContainer="squadInformation">
                         <img
                                     loading="eager"
                                     alt="info icon"
@@ -91,7 +91,7 @@
                             />
                         <h6>Informazioni</h6>
                 </button>
-                <button class="lateral-menu-button" id="squad-matches-btn">
+                <button class="lateral-menu-button" id="squad-matches-btn" data-showContainer="squadLastMatches">
                         <img
                             loading="eager"
                             alt="matches icon"
@@ -99,7 +99,7 @@
                         />
                         <h6>Partite</h6>
                 </button>
-                <button class="lateral-menu-button" id="squad-table-btn">
+                <button class="lateral-menu-button" id="squad-table-btn" data-showContainer="squadPositionInLeauge">
                         <img
                         loading="eager"
                         alt="leauge icon"
@@ -107,7 +107,7 @@
                         />
                         <h6>Classifica</h6>
                 </button>
-                <button class="lateral-menu-button" id="squad-players-btn">
+                <button class="lateral-menu-button" id="squad-players-btn" data-showContainer="squadPlayers">
                         <img
                                 loading="eager"
                                 alt="players icon"
@@ -264,7 +264,7 @@
                         <span id="competitionName">Serie A</span>
                     </h3>
                 </div>
-                <button class="lateral-menu-button" id="competition-info-btn">
+                <button class="lateral-menu-button" id="competition-info-btn" data-showContainer="competitionInformation">
                     <img
                             loading="eager"
                             alt="info icon"
@@ -272,7 +272,7 @@
                     />
                     <h6>Informazioni</h6>
                 </button>
-                <button class="lateral-menu-button" id="competition-statistic-btn">
+                <button class="lateral-menu-button" id="competition-statistic-btn"  data-showContainer="competitionStats">
                     <img
                             loading="eager"
                             alt="matches icon"
@@ -280,7 +280,7 @@
                     />
                     <h6>Statistiche Lega</h6>
                 </button>
-                <button class="lateral-menu-button" id="competition-matches-btn">
+                <button class="lateral-menu-button" id="competition-matches-btn" data-showContainer="competitionMatches">
                     <img
                             loading="eager"
                             alt="leauge icon"
@@ -288,7 +288,7 @@
                     />
                     <h6>Partite</h6>
                 </button>
-                <button class="lateral-menu-button" id="competition-squad-btn">
+                <button class="lateral-menu-button" id="competition-squad-btn"  data-showContainer="competitionSquads">
                     <img
                             loading="eager"
                             alt="players icon"
@@ -296,7 +296,7 @@
                     />
                     <h6>Squadre</h6>
                 </button>
-                <button class="lateral-menu-button" id="competition-table-btn">
+                <button class="lateral-menu-button" id="competition-table-btn" data-showContainer="competitionTable">
                     <img
                             loading="eager"
                             alt="players icon"
@@ -304,7 +304,7 @@
                     />
                     <h6>Classifica</h6>
                 </button>
-                <button class="lateral-menu-button" id="competition-players-btn">
+                <button class="lateral-menu-button" id="competition-players-btn" data-showContainer="competitionPlayers">
                     <img
                             loading="eager"
                             alt="players icon"
@@ -498,7 +498,7 @@
                         <span>Dusan Vlahovic</span>
                     </h3>
                 </div>
-                <button class="lateral-menu-button" id="player-info-btn">
+                <button class="lateral-menu-button" id="player-info-btn" data-showContainer="playerInformation">
                     <img
                             loading="eager"
                             alt="info icon"
@@ -506,7 +506,7 @@
                     />
                     <h6>Informazioni</h6>
                 </button>
-                <button class="lateral-menu-button" id="player-valutation-btn">
+                <button class="lateral-menu-button" id="player-valutation-btn" data-showContainer="playerValutation">
                     <img
                             loading="eager"
                             alt="matches icon"
@@ -514,7 +514,7 @@
                     />
                     <h6>Valutazione</h6>
                 </button>
-                <button class="lateral-menu-button" id="player-lastMatches-btn">
+                <button class="lateral-menu-button" id="player-lastMatches-btn" data-showContainer="playerLastMatches">
                     <img
                             loading="eager"
                             alt="leauge icon"
@@ -522,7 +522,7 @@
                     />
                     <h6>Ultime partite</h6>
                 </button>
-                <button class="lateral-menu-button" id="squad-statistic-btn">
+                <button class="lateral-menu-button" id="squad-statistic-btn" data-showContainer="playerStatistic">
                     <img
                             loading="eager"
                             alt="players icon"
@@ -531,7 +531,7 @@
                     <h6>Statistiche</h6>
                 </button>
             </div>
-            <div id="playerInformation">
+            <div class="main-container" id="playerInformation">
                 <div class="squad-info">
                     <h1>
                         Informazioni generali
@@ -614,11 +614,11 @@
                     </table>
                 </div>
             </div>
-            <div id="playerValutation">
+            <div class="main-container" id="playerValutation">
             </div>
-            <div id ="playerLastMatches">
+            <div class="main-container" id ="playerLastMatches">
             </div>
-            <div id="playerStatistic">
+            <div class="main-container" id="playerStatistic">
             </div>
         </div>
         <!-- le tre pagine sopra sono le pagine specifiche che conterranno le informazioni di una singola squadra, di una singola competizione
@@ -1714,8 +1714,6 @@
                 </div>
             </div>-->
         </div>
-
-
     </div>
 </body>
 </html>
