@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!-- for Swiper-->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!--end Swiper section-->
+    <script src="javascript/landing_page.js"></script>
+    <title> IUM</title>
+</head>
+<body onload="init()">
+<header>
+    <div class="logo">
+        <a class="navbar-burger-menu" href="#">
+            <i class='bx bx-menu'></i>
+        </a>
+        <h3>LOGO</h3>
+    </div>
+    <nav>
+        <ul class="navbar">
+            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Partite</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Competizioni</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Giocatori </a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Squadre</a>
+                </div>
+            </li>
+            <li class="navbar-single-item">
+                <a href="/">Chat</a>
+            </li>
+        </ul>
+    </nav>
+
+    <button class="login-btn" id="doLogin">
+        Accedi
+    </button>
+    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+    <div class="user-popup">
+        <div class="user-popup-header">
+            <h6>mail.example@gmail.com</h6>
+        </div>
+        <div class="user-popup-content">
+            <div class="user-popup-item">
+                <h6><i class="bi bi-gear"></i></h6>
+                <h6>Gestisci il tuo account</h6>
+            </div>
+            <div class="user-popup-item">
+                <h6><i class="bi bi-box-arrow-left"></i></h6>
+                <h6>Logout</h6>
+            </div>
+        </div>
+    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+</header>
+
+<div class="landing-page">
+    <section class="page-container">
+        <div class="titleimage">
+            <div class="title-and-text-container">
+                <span class="big-text">
+                    Esplora il cuore del
+                    <span class="blue-words">gioco</span>
+                </span>
+                <div class="football-phrase-container">
+                    <div class="slogan">
+                        Rompere i numeri, riscrivere la storia: il tuo santuario delle statistiche calcistiche!
+                    </div>
+                </div>
+            </div>
+            <img
+                    class="img-container-icon"
+                    loading="eager"
+                    alt=""
+                    src="https://static.vecteezy.com/ti/foto-gratuito/p1/29616996-calcio-calcio-giocatore-nel-azione-con-arcobaleno-acquerello-spruzzata-isolato-bianca-sfondo-neurale-rete-generato-arte-foto.jpg"
+            />
+        </div>
+        <div class="competition-match-container">
+            <div class="competition-carousel-container">
+                <div class="competition-title-container">
+                <h2>
+                    Le competizioni migliori <span class="blue-words">al mondo</span>
+                </h2>
+                </div>
+                <div class="swiper competition-swiper competition-carousel-wrapper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide competition-card">
+                        <div class="competition-name-logo">
+                            <div class="competition-logo-wrapper">
+                            <img
+                                    class="competition-logo"
+                                    alt=""
+                                    src="images/serieANONAMEpng.png"
+                            />
+                            </div>
+                            <h3>Serie A</h3>
+                        </div>
+                        <img
+                                class="competition-image"
+                                alt=""
+                                src="images/Serie_A_HD.webp"
+                        />
+                        <div class="competition-card-text-container">
+                            <p>
+                                Scopri tutto sulla Serie A TIM,
+                                a cui partecipano squadre del calibro di
+                                <b>Juventus</b>,<b>Inter</b>,<b>Milan</b>
+                                e con giocatori del calibro di
+                                <b>Lautaro Martinez</b>,
+                                <b> Dusan Vlahovic</b>e
+                                <b>Rafael Leao</b>
+                            </p>
+                        </div>
+                    </div>
+                        <div class="swiper-slide competition-card">
+                            <div class="competition-name-logo">
+                                <div class="competition-logo-wrapper">
+                                <img
+                                        class="competition-logo"
+                                        loading="eager"
+                                        alt="Premier Leauge Logo"
+                                        src="images/PremierLogo.png"
+                                />
+                                </div>
+                                <h3>Premier<br>Leauge</h3>
+                            </div>
+                            <img
+                                    class="competition-image"
+                                    alt="Premier Leauge big image"
+                                    src="images/skysports-premier-league-promo_5897092.png"
+                            />
+                            <p>
+                                La migliore lega nel ranking UEFA, a cui partecipano
+                                squadre del calibro di
+                                <b>Manchester City</b>
+                                ,
+                                <b>Liverpool</b>
+                                ,
+                                <b>Arsenal</b>
+                                e con giocatori del calibro di
+                                <b>Erling Haaland</b>
+                                ,
+                                <b> Kevin De Bruyne, Mohamed Salah.</b>
+                            </p>
+                        </div>
+                        <div class="swiper-slide competition-card">
+                            <div class="competition-name-logo">
+                                <div class="competition-logo-wrapper">
+                                    <img
+                                        class="competition-logo"
+                                        alt=""
+                                        src="images/serieANONAMEpng.png"
+                                    />
+                                </div>
+                                <h3>LaLiga</h3>
+                            </div>
+                            <img
+                                    class="competition-image"
+                                    alt=""
+                                    src="images/laliga-big-image.jpeg"
+                            />
+                            <div class="competition-card-text-container">
+                                <p>
+                                    Per molti anni la casa di Lionel Messi e Cristiano Ronaldo,
+                                    oggi ospita squadre del calibro di <b>Barcellona</b>, <b>Real Madrid</b>,<b> Atletico Madrid</b>
+                                    e con giocatori del livello di <b>Jude Bellingham</b>, <b>Antoine Griezmann</b>, <b>Vinicius Junior</b>.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide competition-card">
+                            <div class="competition-name-logo">
+                                <div class="competition-logo-wrapper">
+                                    <img
+                                            class="competition-logo"
+                                            alt=""
+                                            src="images/bundesliga.png"
+                                    />
+                                </div>
+                                <h3>Bundesliga</h3>
+                            </div>
+                            <img
+                                    class="competition-image"
+                                    alt=""
+                                    src="images/laliga-big-image.jpeg"
+                            />
+                            <div class="competition-card-text-container">
+                                <p>
+                                    Per molti anni la casa di Lionel Messi e Cristiano Ronaldo,
+                                    oggi ospita squadre del calibro di <b>Barcellona</b>, <b>Real Madrid</b>,<b> Atletico Madrid</b>
+                                    e con giocatori del livello di <b>Jude Bellingham</b>, <b>Antoine Griezmann</b>, <b>Vinicius Junior</b>.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide competition-card">
+                            <div class="competition-name-logo">
+                                    <img
+                                            class="competition-logo"
+                                            alt=""
+                                            src="images/serieANONAMEpng.png"
+                                    />
+                                <h3>Ligue1</h3>
+                            </div>
+                            <img
+                                    class="competition-image"
+                                    alt=""
+                                    src="images/laliga-big-image.jpeg"
+                            />
+                            <div class="competition-card-text-container">
+                                <p>
+                                    Per molti anni la casa di Lionel Messi e Cristiano Ronaldo,
+                                    oggi ospita squadre del calibro di <b>Barcellona</b>, <b>Real Madrid</b>,<b> Atletico Madrid</b>
+                                    e con giocatori del livello di <b>Jude Bellingham</b>, <b>Antoine Griezmann</b>, <b>Vinicius Junior</b>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-prev swiper-BTN"></div>
+                    <div class="swiper-button-next swiper-BTN"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+                <button class="homepage-button">
+                    <h6>Scopri tutti i campionati</h6>
+                </button>
+            </div>
+            <div class="match-container">
+                <div class="match-title-container">
+                  <h1>Tutti i dati e le statistiche sui <span class="blue-words">match più attesi</span></h1>
+                </div>
+                <div class="squad-name">
+                    <div class="match-container-in-homepage">
+                        <div class="matches-container-competition">
+                            <div class="day-picker-and-matches-container">
+                                <div class="day-picker-container">
+                                    <div class="container">
+                                        <p class="text">Scegli una data</p>
+                                        <!--<input type="date" class="date-days-picker" id="CalendarSelector" name="datepicker">-->
+                                        <input type="date" class="date-days-picker" id="CalendarSelector"
+                                               name="datepicker" value="2012-12-22">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--  <div class="competition-in-matches-wrap">
+                                <div class="competition-in-matches">
+                                    <div class="competition-icon-container-in-matches">
+                                        <img
+                                                class="competition-icon-in-matches"
+                                                loading="eager"
+                                                alt=""
+                                                src="images/serieANONAMEpng.png"
+                                        />
+                                    </div>
+                                    <div class="competizione-serie-a-container">
+                                        <p>
+                                            <b>Serie A</b><br>
+                                            Giornata 24</p>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="multiple-matches-container">
+                              <!--  <div class="game-information">
+                                    <div class="match-result-vertical">
+                                        <div class="squad-icon-container">
+                                            <img
+                                                    class="squad-icon"
+                                                    alt=""
+                                                    src="images/roma.webp"
+                                            />
+
+                                            <p>Roma<p>
+                                            <div class="home-result">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                        <div class="squad-icon-container">
+                                            <img
+                                                    class="squad-icon"
+                                                    alt=""
+                                                    src="images/salernitana.webp"
+                                            />
+                                            <p>Salernitana</p>
+                                            <div class="away-result">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="vertical-line"></div>
+                                    <h6>20:45</h6>
+                                </div>-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <button class="homepage-button">
+                        <h6>Tutte le partite</h6>
+                    </button>
+            </div>
+        </div>
+        <div class="stars-players">
+            <div class="star-icon-container">
+                <img
+                        class="star-icon"
+                        loading="eager"
+                        alt=""
+                        src="images/star.svg"
+                />
+                <h1><span class="blue-words">Le stelle</span> del calcio</h1>
+            </div>
+            <div class="top-players-container-for-comp">
+                <div class="competition-logo-in-starplayer">
+                    <img
+                            class="series-a-brand"
+                            alt=""
+                            src="images/serieANONAMEpng.png"
+                    />
+
+                    <b>Serie A</b>
+                </div>
+                <div class="players-container-in-homepage">
+                  <!--  <button id="Leao_BTN" class="player-card-for-homepage">
+                        <div class="player-number-container">
+                            <h3>10</h3>
+                        </div>
+                        <div class="competition-logo-container1">
+                        <h3>
+                            <span style="font-weight: normal"> Rafael</span><br>
+                            Leao
+                        </h3>
+                            <div class="squad-card">
+                                <img
+                                        class="squad-logo-in-starplayers"
+                                        loading="eager"
+                                        alt="AC Milan Logo"
+                                        src="images/acmilan.png"
+                                />
+
+                                   <h3 style="font-weight: normal">Milan</h3>
+                            </div>
+                        </div>
+                        <img
+                                class="squad-info-frame"
+                                loading="eager"
+                                alt="Rafael Leao image"
+                                src="images/Leao-Large.png"
+                        />
+                    </button>-->
+                </div>
+                <button class="homepage-button">
+                    <h6>Tutti i giocatori in Serie A</h6>
+                </button>
+            </div>
+            <div class="top-players-container-for-comp">
+                <div class="competition-logo-in-starplayer">
+                    <img
+                            class="series-a-brand"
+                            alt=""
+                            src="images/PremierLeaugeLogo.svg"
+                    />
+
+                    <b>Premier Leauge</b>
+                </div>
+                <div class="players-container-in-homepage">
+                  <!--  <div class="player-card-for-homepage">
+                        <div class="player-number-container">
+                            <h3>9</h3>
+                        </div>
+                        <div class="competition-logo-container1">
+                            <h3>
+                                <span style="font-weight: normal"> Erling</span><br>
+                                Haaland
+                            </h3>
+                            <div class="squad-card">
+                                <img
+                                        class="squad-logo-in-starplayers"
+                                        loading="eager"
+                                        alt=""
+                                        src="images/Manchester_City_FC_badge.svg.png"
+                                />
+
+                                <h3 style="font-weight: normal">Man City</h3>
+                            </div>
+                        </div>
+                        <img
+                                class="squad-info-frame"
+                                loading="eager"
+                                alt=""
+                                src="images/ErlingHaalandPNGImage.png"
+                        />
+                    </div>
+                </div>-->
+                <button class="homepage-button">
+                    <h6>Tutti i giocatori in Premier Leauge</h6>
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

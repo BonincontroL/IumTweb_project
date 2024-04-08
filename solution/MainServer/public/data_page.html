@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="javascript/squadPage.js"></script>
+    <script src="javascript/index.js"></script>
+    <script src="javascript/competition.js"></script>
+    <title>IUM</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a class="navbar-burger-menu" href="#">
+                <i class='bx bx-menu'></i>
+            </a>
+            <h3>LOGO</h3>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Partite</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Competizioni</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Giocatori </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Squadre</a>
+                    </div>
+                </li>
+                <li class="navbar-single-item">
+                    <a href="/">Chat</a>
+                </li>
+            </ul>
+        </nav>
+        <button class="login-btn" id="doLogin">
+            Accedi
+        </button>
+       <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+        <div class="user-popup">
+            <div class="user-popup-header">
+                <h6>mail.example@gmail.com</h6>
+            </div>
+            <div class="user-popup-content">
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-gear"></i></h6>
+                    <h6>Gestisci il tuo account</h6>
+                </div>
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-box-arrow-left"></i></h6>
+                    <h6>Logout</h6>
+                </div>
+            </div>
+        </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+    </header>
+        <div style="display: none" id="squad-page">
+            <div id="squadLateralNavbar" class="lateral-navbar">
+                <div class="lateral-navbar-header">
+                    <div id="squadImage" class="lateral-navbar-squad-logo">
+                    </div>
+                    <h3 id="lateral_navbar_header_text">
+                        Juventus Football Club
+                    </h3>
+                </div>
+                <button class="lateral-menu-button" id="squad-info-btn">
+                        <img
+                                    loading="eager"
+                                    alt="info icon"
+                                    src="images/lateralNavbarIcons/infoActive.svg"
+                            />
+                        <h6>Informazioni</h6>
+                </button>
+                <button class="lateral-menu-button" id="squad-matches-btn">
+                        <img
+                            loading="eager"
+                            alt="matches icon"
+                            src="images/lateralNavbarIcons/games.svg"
+                        />
+                        <h6>Partite</h6>
+                </button>
+                <button class="lateral-menu-button" id="squad-table-btn">
+                        <img
+                        loading="eager"
+                        alt="leauge icon"
+                        src="images/lateralNavbarIcons/table.svg"
+                        />
+                        <h6>Classifica</h6>
+                </button>
+                <button class="lateral-menu-button" id="squad-players-btn">
+                        <img
+                                loading="eager"
+                                alt="players icon"
+                                src="images/lateralNavbarIcons/player.svg"
+                        />
+                        <h6>Giocatori</h6>
+                </button>
+            </div>
+            <div class="main-container" id="squadInformation">
+                <!--generic squad info-->
+                <div class="squad-info">
+                    <h1>
+                        Informazioni
+                        <span class="blue-words">generali</span>
+                    </h1>
+                    <div class="generic-playerinfo-container">
+                        <div class="generic-info-card">
+                            <h3>Campionato</h3>
+                            <div class="nationality-card">
+                                <img
+                                        id="squadCompetitionImage"
+                                        class="nationality-card-image"
+                                        alt="squad logo"
+                                />
+                                <h4 id="squadCompetitionName"></h4>
+                            </div>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Stadio</h3>
+                            <div class="nationality-card">
+                                <h4 id ="squadStadiumName"></h4>
+                                <h4 id="squadStadiumCapacity"></h4>
+                            </div>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Allenatore</h3>
+                            <div class="nationality-card">
+                                <h4 id="squadManagerName"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-container" id="squadLastMatches">
+            </div>
+            <div class="main-container" id="squadPositionInLeauge">
+                <div class="squadTable-container">
+                    <div class="squadTableTitle">
+                        <h1>Posizione attuale in classifica</h1>
+                    </div>
+                    <div class="navbar-and-table-container">
+                        <div class="table-navbar">
+                        <div class="date-days-picker">
+                            <h6>Serie A</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Tutti</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Casa</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Trasferta</h6>
+                        </div>
+                    </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Squadra</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>Goals</th>
+                                    <th>PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="squadMiniTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- contenitore della classifica ridotta della squadra-->
+                <div class="squadTable-container">
+                    <div class="squadTableTitle">
+                        <h1>Forma della squadra</h1>
+                    </div>
+                    <div class ="last-5-matches-container" id="last5MatchesContainer">
+                    </div>
+                </div> <!--contenitore delle ultime 5 partite della squadra-->
+            </div>
+            <div class="main-container" id="squadPlayers">
+                <div class="players-role-and-card-container">
+                    <div class="player-role-description">
+                        <img
+                                class="player-role-image"
+                                loading="lazy"
+                                alt="Goalkeeper icon"
+                                src="images/GOALKEEPER_ICON.png"
+                        />
+                        <h1>Portieri</h1>
+                    </div>
+                    <div class="player-row-container" id="GoalkeepersContainer" >
+                    </div>
+                </div>
+                <div class="players-role-and-card-container">
+                    <div class="player-role-description">
+                        <img
+                                class="player-role-image"
+                                loading="lazy"
+                                alt="Defenders icon"
+                                src="images/Brick%20Wall.svg"
+                        />
+                        <h1>Difensori</h1>
+                    </div>
+                    <div class="player-row-container" id="DefenderContainer">
+                    </div>
+                </div>
+                <div class="players-role-and-card-container">
+                    <div class="player-role-description">
+                        <img
+                                class="player-role-image"
+                                loading="lazy"
+                                alt="Midfield icon"
+                                src="images/trivela.svg"
+                        />
+                        <h1>Centrocampisti</h1>
+                    </div>
+                    <div class="player-row-container" id="MidfieldContainer">
+
+                    </div>
+                </div>
+                <div class="players-role-and-card-container">
+                    <div class="player-role-description">
+                        <img
+                                class="player-role-image"
+                                loading="lazy"
+                                alt="Striker icon"
+                                src="images/Striker.svg"
+                        />
+                        <h1>Attaccanti</h1>
+                    </div>
+                    <div class="player-row-container" id="StrikerContainer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div  id="competition-page">
+            <div id="competitionLateralNavbar" class="lateral-navbar">
+                <div class="lateral-navbar-header">
+                    <div id="competitionImage" class="lateral-navbar-squad-logo">
+                    </div>
+                    <h3>
+                        <span id="competitionName">Serie A</span>
+                    </h3>
+                </div>
+                <button class="lateral-menu-button" id="competition-info-btn">
+                    <img
+                            loading="eager"
+                            alt="info icon"
+                            src="images/lateralNavbarIcons/infoActive.svg"
+                    />
+                    <h6>Informazioni</h6>
+                </button>
+                <button class="lateral-menu-button" id="competition-statistic-btn">
+                    <img
+                            loading="eager"
+                            alt="matches icon"
+                            src="images/lateralNavbarIcons/stats.svg"
+                    />
+                    <h6>Statistiche Lega</h6>
+                </button>
+                <button class="lateral-menu-button" id="competition-matches-btn">
+                    <img
+                            loading="eager"
+                            alt="leauge icon"
+                            src="images/lateralNavbarIcons/games.svg"
+                    />
+                    <h6>Partite</h6>
+                </button>
+                <button class="lateral-menu-button" id="competition-squad-btn">
+                    <img
+                            loading="eager"
+                            alt="players icon"
+                            src="images/lateralNavbarIcons/squads.svg"
+                    />
+                    <h6>Squadre</h6>
+                </button>
+                <button class="lateral-menu-button" id="competition-table-btn">
+                    <img
+                            loading="eager"
+                            alt="players icon"
+                            src="images/lateralNavbarIcons/table.svg"
+                    />
+                    <h6>Classifica</h6>
+                </button>
+                <button class="lateral-menu-button" id="competition-players-btn">
+                    <img
+                            loading="eager"
+                            alt="players icon"
+                            src="images/lateralNavbarIcons/player.svg"
+                    />
+                    <h6>Giocatori</h6>
+                </button>
+            </div>
+            <div class="main-container" id="competitionInformation">
+                <div class="squad-info">
+                    <h1>
+                        Informazioni
+                        <span class="blue-words">Generiche</span>
+                    </h1>
+                    <div class="generic-playerinfo-container">
+                        <div class="generic-info-card">
+                            <h3>Nazione</h3>
+                            <div class="nationality-card">
+                                <h4 id="competitionNation"></h4>
+                            </div>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Confederazione</h3>
+                            <div class="nationality-card">
+                                <h4 id="competitionConfederation"></h4>
+                            </div>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Tipologia</h3>
+                            <div class="nationality-card">
+                                <h4 id="competitionType"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="main-container" id="competitionStats">
+            </div>
+            <div class="main-container" id="competitionMatches">
+                <div id="competitionMultipleMatches">
+                    <div class="table-navbar">
+                        <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
+                        che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
+                        <div class="dropdown-menu-season-wrapper">
+                            <h6><label for="competitionSelectMatchday">Giornata</label></h6>
+                            <select id="competitionSelectMatchday" class="date-days-picker">
+                            </select>
+                        </div>
+                        <div class="left-right-arrows-wrapper">
+                            <i id="loadPrevMatchday" class='bx bx-chevrons-left'></i>
+                            <i id="loadNextMatchday" class='bx bx-chevrons-right'></i>
+                        </div>
+                    </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
+                    <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
+                    <div id="competitionMatchesContainer" class="matches-vertical-container" >
+                      <div class="single-horizontal-match">
+                                <h6>20 AGO 2023</h6>
+                                <div class="squad-names-and-result-container">
+                                    <div class="squad-name-wrapper">
+                                        <h6>ROMA</h6>
+                                    </div>
+                                    <img
+                                            class="squadLogo"
+                                            loading="lazy"
+                                            alt=""
+                                            src="./public/rectangle-20@2x.png"
+                                    />
+
+                                    <h6>2-2</h6>
+                                    <img
+                                            class="squadLogo"
+                                            loading="lazy"
+                                            alt=""
+                                            src="./public/rectangle-19@2x.png"
+                                    />
+
+                                    <div class="squad-name-wrapper">
+                                        <h6>ROMA</h6>
+                                    </div>
+                                </div>
+                                <button class='btn-load-match-details'>
+                                    <i class='bx bxs-right-arrow-circle'></i>
+                                </button>
+                      </div>
+                    </div>
+                </div>
+                <div style="display: none" id="competitionMatchDetails">
+                    <!--TODO, mettere un bottone indietro nella pagina, in modo da tornare a tutte le partite della giornata-->
+                    <div class="match-details-header">
+                        <div class="match-details-result-container">
+                            <div class="match-details-squad-and-logo-home">
+                                <h3>ROMA</h3>
+                                <img
+                                        class="squadLogo-big"
+                                        loading="lazy"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+                            </div>
+                            <div class="match-details-final-result">
+                                <h3>2-2</h3>
+                                <h4>Terminata</h4>
+                            </div>
+                            <div class="match-details-squad-and-logo-away">
+                                <img
+                                        class="squadLogo-big"
+                                        loading="lazy"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+                                <h3>SALERNITANA</h3>
+                            </div>
+                        </div>
+                        <div class="match-details-goals-row">
+                            <p>A.Belotti 82’, 17’</p>
+                            <img
+                                        class="soccer-ball-icon"
+                                        loading="lazy"
+                                        alt="goal icon"
+                                        src="images/Goal_icon.svg"
+                            />
+                            <p>A.Candreva 82’, 17’</p>
+                        </div>
+                        <div class="match-details-navbar">
+                            <button class="button-game-navbar button-game-navbar-active">
+                                <h6>Informazioni</h6>
+                            </button>
+                            <button class="button-game-navbar">
+                                <h6>Eventi</h6>
+                            </button>
+                            <button class="button-game-navbar">
+                                <h6>Formazioni</h6>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-container" id="competitionSquads">
+            </div>
+            <div class="main-container" id="competitionTable">
+                <div class="table-navbar">
+                    <div class="date-days-picker-wrapper">
+                        <button class="date-days-picker date-days-picker-active">
+                            <h6>Tutti</h6>
+                        </button>
+                        <button class="date-days-picker">
+                            <h6>Casa</h6>
+                        </button>
+                        <button class="date-days-picker">
+                            <h6>Trasferta</h6>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu-season-wrapper">
+                        <h6>Stagione</h6>
+                        <div class="date-days-picker">
+                            <h6>2022</h6>
+                        </div>
+                    </div>
+                </div>
+                <table id ="competitionTableContainer">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Squadra</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>Goals</th>
+                        <th>PTS</th>
+                    </tr>
+                    </thead>
+                    <tbody id="competitionFullTable">
+                    </tbody>
+                    <tbody id="competitionHomeTable">
+                    </tbody>
+                    <tbody id="competitionAwayTable">
+                    </tbody>
+                </table>
+            </div>
+            <div class="main-container" id="competitionPlayers">
+            </div>
+        </div>
+        <div style="display: none" id="player-page">
+            <div class="lateral-navbar">
+                <div class="lateral-navbar-header">
+                    <div class="lateral-navbar-squad-logo">
+                    </div>
+                    <h3>
+                        <span>Dusan Vlahovic</span>
+                    </h3>
+                </div>
+                <button class="lateral-menu-button" id="player-info-btn">
+                    <img
+                            loading="eager"
+                            alt="info icon"
+                            src="images/lateralNavbarIcons/infoActive.svg"
+                    />
+                    <h6>Informazioni</h6>
+                </button>
+                <button class="lateral-menu-button" id="player-valutation-btn">
+                    <img
+                            loading="eager"
+                            alt="matches icon"
+                            src="images/lateralNavbarIcons/valutation.svg"
+                    />
+                    <h6>Valutazione</h6>
+                </button>
+                <button class="lateral-menu-button" id="player-lastMatches-btn">
+                    <img
+                            loading="eager"
+                            alt="leauge icon"
+                            src="images/lateralNavbarIcons/games.svg"
+                    />
+                    <h6>Ultime partite</h6>
+                </button>
+                <button class="lateral-menu-button" id="squad-statistic-btn">
+                    <img
+                            loading="eager"
+                            alt="players icon"
+                            src="images/lateralNavbarIcons/stats.svg"
+                    />
+                    <h6>Statistiche</h6>
+                </button>
+            </div>
+            <div id="playerInformation">
+                <div class="squad-info">
+                    <h1>
+                        Informazioni generali
+                    </h1>
+                    <div class="generic-playerinfo-container">
+                        <div class="generic-info-card">
+                            <h3>Club attuale</h3>
+                            <h4>Juventus Football Club</h4>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Nazionalità</h3>
+                            <h4>Serbia</h4>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Numero Maglia</h3>
+                            <h4>9</h4>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Altezza (cm)</h3>
+                            <h4>185</h4>
+                        </div>
+                        <div class="generic-info-card">
+                            <h3>Età</h3>
+                            <h4>21 anni</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="squad-info">
+                    <h1>Carriera</h1>
+                    <table class="career-table">
+                        <thead>
+                        <tr>
+                            <td>Periodo</td>
+                            <td>Squadra</td>
+                            <td>Presenze</td>
+                            <td>Goal</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>2022-attuale</td>
+                            <td>
+                                <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                    <img class="career-squad-logo-img"
+                                         alt="Juventus image"
+                                         src="images/Juventus_FC_2017_logo.svg.png">
+                                    <p>Juventus</p>
+                                </div>
+                            </td>
+                            <td>62</td>
+                            <td>29</td>
+                        </tr>
+                        <tr>
+                            <td>2022-attuale</td>
+                            <td>
+                                <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                    <img class="career-squad-logo-img"
+                                         alt="Juventus image"
+                                         src="images/Juventus_FC_2017_logo.svg.png">
+                                    <p>Juventus</p>
+                                </div>
+                            </td>
+                            <td>62</td>
+                            <td>29</td>
+                        </tr>
+                        <tr>
+                            <td>2022-attuale</td>
+                            <td>
+                                <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                    <img class="career-squad-logo-img"
+                                         alt="Juventus image"
+                                         src="images/Juventus_FC_2017_logo.svg.png">
+                                    <p>Juventus</p>
+                                </div>
+                            </td>
+                            <td>62</td>
+                            <td>29</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="playerValutation">
+            </div>
+            <div id ="playerLastMatches">
+            </div>
+            <div id="playerStatistic">
+            </div>
+        </div>
+        <!-- le tre pagine sopra sono le pagine specifiche che conterranno le informazioni di una singola squadra, di una singola competizione
+        e di un singolo giocatore-->
+        <div style="display: none" id="chat-page">
+            <div class="lateral-navbar lateral-navbar-for-chat">
+                <div class="lateral-navbar-header">
+                    <h4><b>I miei Gruppi</b></h4>
+                </div>
+                <div class="lateral-navbar-chat-element-container">
+                    <div class="lateral-navbar-chat-element chat-element-active">
+                        <div class="lateral-navbar-chat-element-img">
+                            <img src="images/serieALOGO.svg">
+                        </div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element chat-element-active">
+                        <div class="lateral-navbar-chat-element-img">
+                            <img src="images/serieALOGO.svg">
+                        </div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element chat-element-active">
+                        <div class="lateral-navbar-chat-element-img">
+                            <img src="images/serieALOGO.svg">
+                        </div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lateral-navbar-chat-element ">
+                        <div class="lateral-navbar-chat-element-img"></div>
+                        <div class="chat-header-element-wrapper">
+                            <div class="chat-element-row">
+                                <h6><b>Serie A</b></h6>
+                                <p>4:30pm</p>
+                            </div>
+                            <div class="chat-element-row">
+                                <p>Alberto: ciao a tutti!</p>
+                                <div class="unread-msg-number-container">
+                                    <p>37</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <img
+                            class="chat-room-image"
+                            loading="lazy"
+                            alt="Chat room image"
+                            src="images/serieALOGO.svg"
+                    />
+
+                    <div class="chat-room-name-container">
+                        <h6><b>Serie A</b></h6>
+                    </div>
+                </div>
+                <div class="chat-messages-container">
+                    <div class="message-date-popup">
+                        <p>Alberto joined the room</p>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-left">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                    <div class="message-container msg-right">
+                        <div class="single-msg">
+                            <p class="msg-header"><b>Alberto</b></p>
+                            <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                                <span class="msg-hour">17:30</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-footer">
+                    <input type="text" class="msg-inputbox" placeholder="scrivi un messaggio...">
+                    <button class="btn-send-msg" >
+                        <i class='bx bx-send'></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div style="display: none" id="matches-page">
+        <div class="matches-header">
+            <!--    <div class="header-text-container">
+                    <p>
+                        <b>Selezionato: </b>
+                        9 febbraio 2024
+                    </p>
+                </div>-->
+            <!--  <div class="day-picker-container">
+                       <button class="arrow-btn" id="goLeftDays">
+                           <i class='bx bx-left-arrow-alt'></i>
+                       </button>
+                       <button class="date-days-picker">
+                           <p><b>Oggi</b></p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Domani</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Dom 14</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Lun 15</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Mar 16</p>
+                       </button>
+
+                        <button class="arrow-btn" id="goRightDays">
+                           <i class='bx bx-right-arrow-alt'></i>
+                       </button>
+              </div>-->
+            <div class="container">
+                <!--<h9 class="text">Scegli una data</h9>-->
+                <input type="date" class="date-days-picker" id="CalendarSelector" name="datepicker" value="2012-09-15">
+            </div>
+            <!--        <label for="datepicker">Seleziona una data:</label>-->
+            <div class="container">
+                <!--<p class="text">Seleziona una competizione</p>-->
+                <select id="competition-select" class="date-days-picker">
+                    <!-- Le opzioni della select verranno popolate dinamicamente -->
+                </select>
+            </div>
+            <button id="search-button" class="homepage-button">
+                <h9>Effettua ricerca combinata</h9>
+            </button>
+            <div class="vertical-line2"></div>
+            <div class="container">
+                <h9 class="text">Scegli un anno</h9>
+                <input type="number" class="date-days-picker" id="YearSelector" name="yearpicker" min="1900" max="2100" step="1" value="2022">
+            </div>
+            <button id="searchYear-btn" class="homepage-button">
+                <h9>Effettua ricerca per anno</h9>
+            </button>
+
+        </div>
+        <div class="matches-container">
+            <!--<div id="serieaMatchesContainer" class="matches-container-competition">
+                <div class="info-field">
+                    <div class="info-icon">
+                        <img
+                                class="serieanonamepng-1-icon1"
+                                loading="lazy"
+                                alt="serie A logo"
+                                src="images/serieANONAMEpng.png"
+                        />
+                    </div>
+                    <div class="leaugename_plus_matchday">
+                        <p><b>Serie A</b></p>
+                        <p>Giornata 24</p>
+                    </div>
+                </div>
+                <div class="multiple-matches-container">
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="homepage-button">
+                        <h6>Vedi la giornata completa</h6>
+                    </button>
+                </div>
+            </div>
+            <div id="premierLeaugeMatchesContainer" class="matches-container-competition">
+                <div class="info-field">
+                    <div class="info-icon">
+                        <img
+                                class="serieanonamepng-1-icon1"
+                                loading="lazy"
+                                alt="serie A logo"
+                                src="images/serieANONAMEpng.png"
+                        />
+                    </div>
+                    <div class="leaugename_plus_matchday">
+                        <p><b>Serie A</b></p>
+                        <p>Giornata 24</p>
+                    </div>
+                </div>
+                <div class="multiple-matches-container">
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="homepage-button">
+                        <h6>Vedi la giornata completa</h6>
+                    </button>
+                </div>
+            </div>-->
+        </div>
+
+
+    </div>
+</body>
+</html>
