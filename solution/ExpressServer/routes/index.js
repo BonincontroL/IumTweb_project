@@ -21,10 +21,10 @@ router.get('/', function(req, res, next) {
  */
 router.get('/games/getAllGames', async (req, res, next) => {
   try {
-    const matches = await GamesController.getAllGames();
-    res.status(200).json(matches);
+    const AllGames = await GamesController.getAllGames();
+    res.status(200).json(AllGames);
   } catch (error) {
-    console.error('Errore durante il recupero dei matches:', error);
+    console.error('Errore durante il recupero dei Games:', error);
     res.status(500).json({ error: 'Errore durante il recupero dei matches' });
   }
 });
