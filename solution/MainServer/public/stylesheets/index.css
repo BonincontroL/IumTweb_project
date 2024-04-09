@@ -389,16 +389,11 @@ header ul li ul li a{
 }
 
 .lateral-navbar-squad-logo{
-    background-image: url("../images/Juventus_FC_2017_logo.svg.png");
-    background-size:3vw;
-    background-repeat: no-repeat;
-    background-position:center;
+    position: relative;
+    object-fit: contain;
     border-radius: 100px;
-    background-color: var(--white);
-    padding: var(--padding-10px);
     width: 5vw;
     height: 5vw;
-
 }
 
 .lateral-menu-button{
@@ -1119,9 +1114,7 @@ tr{
     width: 30px;
     height: 30px;
 }
-#competitionImage{
-    background-image: url("../images/serieALOGO.svg");
-}
+
 .squad-info-row {
     background-color: var(--white);
     overflow: hidden;
@@ -1311,6 +1304,7 @@ tr{
 
 
 .competition-card{
+    cursor: pointer;
     color: var(--black);
     background-color: var(--primary-blue-100);
     border-radius: var(--br-20px);
@@ -1322,6 +1316,7 @@ tr{
     padding: var(--padding-20px);
     box-sizing: border-box;
 }
+
 .swiper-button-next,.swiper-button-prev{
     padding: 20px 25px;
     border-radius: 100px;
