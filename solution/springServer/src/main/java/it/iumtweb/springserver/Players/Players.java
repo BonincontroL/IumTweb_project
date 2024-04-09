@@ -24,7 +24,7 @@ public class Players {
     private Integer lastSeason;
 
     @Column(name = "current_club_id")
-    private Integer currentClubId;
+    private Long currentClubId;
 
     @Column(name = "player_code")
     private String playerCode;
@@ -80,7 +80,7 @@ public class Players {
     public Players() {
     }
 
-    public Players(Long playerId, String firstName, String lastName, String name, Integer lastSeason, Integer currentClubId, String playerCode, String countryOfBirth, String cityOfBirth, String countryOfCitizenship, Date dateOfBirth, String subPosition, String position, String foot, Integer heightInCm, Double marketValueInEur, Double highestMarketValueInEur, Date contractExpirationDate, String agentName, String imageUrl, String url, String currentClubDomesticCompetitionId, String currentClubName) {
+    public Players(Long playerId, String firstName, String lastName, String name, Integer lastSeason, Long currentClubId, String playerCode, String countryOfBirth, String cityOfBirth, String countryOfCitizenship, Date dateOfBirth, String subPosition, String position, String foot, Integer heightInCm, Double marketValueInEur, Double highestMarketValueInEur, Date contractExpirationDate, String agentName, String imageUrl, String url, String currentClubDomesticCompetitionId, String currentClubName) {
         this.playerId = playerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -146,11 +146,11 @@ public class Players {
         this.lastSeason = lastSeason;
     }
 
-    public Integer getCurrentClubId() {
+    public Long getCurrentClubId() {
         return currentClubId;
     }
 
-    public void setCurrentClubId(Integer currentClubId) {
+    public void setCurrentClubId(Long currentClubId) {
         this.currentClubId = currentClubId;
     }
 
