@@ -8,7 +8,6 @@ import jakarta.persistence.Column;
 @Entity
 @Table(name = "competitions")
 public class Competitions {
-
     @Id
     @Column(name = "competition_id")
     private String competitionId;
