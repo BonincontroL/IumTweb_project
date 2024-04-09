@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="javascripts/searchCompetitionPage.js"></script>
+    <script src="javascripts/index.js"></script>
+    <title>IUM</title>
+</head>
+<body>
+    <header>
+    <div class="logo">
+        <a class="navbar-burger-menu" href="#">
+            <i class='bx bx-menu'></i>
+        </a>
+        <h3>LOGO</h3>
+    </div>
+    <nav>
+        <ul class="navbar">
+            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Partite</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Competizioni</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Giocatori </a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Squadre</a>
+                </div>
+            </li>
+            <li class="navbar-single-item">
+                <a href="/">Chat</a>
+            </li>
+        </ul>
+    </nav>
+    <button class="login-btn" id="doLogin">
+        Accedi
+    </button>
+    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+    <div class="user-popup">
+        <div class="user-popup-header">
+            <h6>mail.example@gmail.com</h6>
+        </div>
+        <div class="user-popup-content">
+            <div class="user-popup-item">
+                <h6><i class="bi bi-gear"></i></h6>
+                <h6>Gestisci il tuo account</h6>
+            </div>
+            <div class="user-popup-item">
+                <h6><i class="bi bi-box-arrow-left"></i></h6>
+                <h6>Logout</h6>
+            </div>
+        </div>
+    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+</header>
+    <div id="searchCompetitionContainer">
+        <div class="search-competition-header">
+            <div class="search-button">
+                <input class="search-button-input" type="text" placeholder="Cerca competizione...">
+                <i class='bx bx-search'></i>
+            </div>
+        </div>
+        <div class="search-competition-body">
+            <!-- singolo gruppo di competizioni (raggruppo le competizioni per nazione)-->
+            <div class="competitions-group">
+                <div class="competitions-group-header">
+                    <div class="header-flag-container">
+                        <img class="nationFlag" src="images/bandieraIta.png" alt="Italy flag">
+                    </div>
+                    <h2>Italia</h2>
+                </div>
+                <div class="competitions-group-container">
+                   <!-- singola card che rappresenta la competizione(importante mettere data-competitionId="It1" per poter caricare correttamente al Click la pagina)-->
+                    <div class="competition-card-mini" data-competitionId="It1">
+                        <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
+                        <h3>Serie A</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="competitions-group">
+                <div class="competitions-group-header">
+                    <div class="header-flag-container">
+                        <img class="nationFlag" src="images/bandieraIta.png" alt="Italy flag">
+                    </div>
+                    <h2>Italia</h2>
+                </div>
+                <div class="competitions-group-container">
+                    <div class="competition-card-mini">
+                        <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
+
+                        <h3>Serie A</h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

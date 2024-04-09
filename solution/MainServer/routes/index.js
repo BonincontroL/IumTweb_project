@@ -21,4 +21,12 @@ router.get('/getCompetitionInformation', function (req,res){
         res.send(err)
       })
 })
+router.get('/competitions/getAllCompetitions', function (req,res){
+    axios.get(SPRING_SERVER+"/competitions/getAllCompetitions")
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+            res.send(err)
+    })
+})
 module.exports = router;
