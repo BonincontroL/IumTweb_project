@@ -697,9 +697,12 @@ header ul li ul li a{
     flex-direction: column;
     width: 100%;
 }
-
+#match-details-container{
+    width: 100%;
+    height: 100%;
+}
 #match-details-events{
-    display: flex;
+    display: none; /*inizialmente non deve essere mostrato*/
     margin: 0;
     flex-shrink: 0;
     flex-direction: column;
@@ -710,6 +713,41 @@ header ul li ul li a{
     align-items: center;
     padding: var(--padding-10px) var(--padding-10px);
     box-sizing: border-box;
+}
+#match-details-formation{
+    display: none; /*inizialmente non deve essere mostrato*/
+}
+#match-details-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.match-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    gap: var(--gap-xl);
+    padding: var(--padding-10px);
+    box-sizing: border-box;
+}
+.match-info-img{
+    position: relative;
+    width: 3vw;
+    height: 3vw;
+    object-fit: contain;
+}
+.match-info-text{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--gap-8xs);
 }
 .match-partial-result-container{
     background-color: var(--primary-blue-900);
@@ -936,7 +974,6 @@ header ul li ul li a{
     border-radius: var(--br-20px);
     overflow: hidden;
     background-color: var(--white);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     flex-direction: column;
     justify-content: flex-start;
     padding: 26px 40px;
@@ -1679,6 +1716,7 @@ tr{
     align-items: center;
     flex-direction: column;
     width: 100%;
+    height: 100%;
 }
 
 .match-details-squad-and-logo-home,

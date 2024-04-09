@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     //questa parte è dedicata alla gestione dei bottoni per la singola partita (Informazioni, Eventi, Formazioni)
     //in particolare per mostrare il giusto container in base a quale bottone viene cliccato
 
-    matchButtons = document.querySelectorAll('.match-details-navbar button')
+    matchButtons = document.querySelectorAll('.match-details-navbar > button')
     matchButtons.forEach(button=>{
         button.addEventListener('click',()=>{
             let containerName = button.getAttribute('data-showContainer')
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 })
 
 function hideMatchContainersExceptOne(containerToShow) {
-    let matchContainers= document.querySelectorAll('#match-details-container div')
+    let matchContainers= document.querySelectorAll('#match-details-container > div')
     matchContainers.forEach(container=>{container.style.display="none"})
     containerToShow.style.display="flex"
 }
