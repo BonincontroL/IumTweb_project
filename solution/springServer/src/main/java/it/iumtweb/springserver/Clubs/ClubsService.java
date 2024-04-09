@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClubsService {
@@ -18,5 +19,11 @@ public class ClubsService {
         return clubsRepository.findAll();
     }
 
+    public List<Clubs> findByCompetitionAndSeason(String competitionId, String season) {
+        return clubsRepository.findByDomesticCompetitionIdAndLastSeason(competitionId,season);
+    }
 
+    public Optional<Clubs> findById(Long clubId) {
+        return clubsRepository.findById(clubId);
+    }
 }
