@@ -345,7 +345,7 @@
             <div class="main-container" id="competitionStats">
             </div>
             <div class="main-container" id="competitionMatches">
-                <div id="competitionMultipleMatches">
+                <div style="display: none" id="competitionMultipleMatches">
                     <div class="table-navbar">
                         <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
                         che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
@@ -361,7 +361,7 @@
                     </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
                     <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
                     <div id="competitionMatchesContainer" class="matches-vertical-container" >
-                      <div class="single-horizontal-match">
+                      <!--<div class="single-horizontal-match">
                                 <h6>20 AGO 2023</h6>
                                 <div class="squad-names-and-result-container">
                                     <div class="squad-name-wrapper">
@@ -389,10 +389,10 @@
                                 <button class='btn-load-match-details'>
                                     <i class='bx bxs-right-arrow-circle'></i>
                                 </button>
-                      </div>
+                      </div>-->
                     </div>
                 </div>
-                <div style="display: none" id="competitionMatchDetails">
+                <div id="competitionMatchDetails">
                     <!--TODO, mettere un bottone indietro nella pagina, in modo da tornare a tutte le partite della giornata-->
                     <div class="match-details-header">
                         <div class="match-details-result-container">
@@ -430,15 +430,63 @@
                             <p>A.Candreva 82’, 17’</p>
                         </div>
                         <div class="match-details-navbar">
-                            <button class="button-game-navbar button-game-navbar-active">
+                            <button id="getMatchInformation" class="button-game-navbar button-game-navbar-active" data-showContainer="match-details-info">
                                 <h6>Informazioni</h6>
                             </button>
-                            <button class="button-game-navbar">
+                            <button id="getMatchEvents" class="button-game-navbar" data-showContainer="match-details-events">
                                 <h6>Eventi</h6>
                             </button>
-                            <button class="button-game-navbar">
+                            <button id="getMatchFormation" class="button-game-navbar" data-showContainer="match-details-formation">
                                 <h6>Formazioni</h6>
                             </button>
+                        </div>
+                    </div>
+                    <div id="match-details-container">
+                        <div id="match-details-info">
+                            <h1>TEST INFORMAZIONI CONTENUTO</h1>
+                        </div> <!-- inizialmente, il container da visualizzare è quello sulle informazioni della partita-->
+                        <div style="display: none"  id="match-details-events">
+                            <h1>TEST EVENTI</h1>
+                            <!-- banner che indica il risultato finale della partita
+                            <div class ="match-partial-result-container">
+                                <p>Partita finita</p>
+                                <p>2-2</p>
+                            </div>-->
+                            <!-- esempio di evento di gioco della squadra di casa, sostituzione
+                            <div class="home-game-event">
+                                <img class="game-event-icon" alt="substitution logo" src="images/substitution-icon.svg" />
+                                <h6>90’+2</h6>
+                                <h6><b>Entra:R.Pagano </b></h6>
+                                <h6>Esce:H.Aouar</h6>
+                            </div>-->
+                            <!-- esempio di evento di gioco della squadra in trasferta, sostituzione
+                            <div class="away-game-event">
+                                <h6>Esce:E.Bothiem</h6>
+                                <h6><b>Entra: M.Coulibaly</b></h6>
+                                <h6>88'</h6>
+                                <img class="game-event-icon" alt="substitution logo" src="images/substitution-icon.svg" />
+                            </div>-->
+                            <!-- esempio di evento di gioco: GOAL squadra in trasferta
+                            <div class="away-game-event">
+                                <h6>Assist: D. Bradaric</h6>
+                                <h6><b>Antonio Candreva</b></h6>
+                                <h6>82'</h6>
+                                <img class="game-event-icon" alt="goal logo" src="images/Goal_icon.svg" />
+                            </div>-->
+                            <!-- esempio di evento di gioco: CARTELLINO ROSSO squadra in trasferta
+                            <div class="away-game-event">
+                                <h6><b>Guillermo Ochoa</b></h6>
+                                <h6>70'</h6>
+                                <img class="game-event-icon" alt="goal logo" src="images/red-card.svg" />
+                            </div>-->
+                            <!--banner che indica il risultato nel primo tempo della partita
+                            <div class ="match-partial-result-container">
+                                <p>Primo tempo</p>
+                                <p>1-1</p>
+                            </div>-->
+                        </div>
+                        <div style="display: none"  id="match-details-formation">
+                            <h1>TEST FORMAZIONI</h1>
                         </div>
                     </div>
                 </div>

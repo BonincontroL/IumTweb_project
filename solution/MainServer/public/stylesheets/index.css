@@ -697,6 +697,59 @@ header ul li ul li a{
     flex-direction: column;
     width: 100%;
 }
+
+#match-details-events{
+    display: flex;
+    margin: 0;
+    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    align-self: unset;
+    height: auto;
+    align-items: center;
+    padding: var(--padding-10px) var(--padding-10px);
+    box-sizing: border-box;
+}
+.match-partial-result-container{
+    background-color: var(--primary-blue-900);
+    display: flex;
+    width: auto;
+    align-self: unset;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-3xs);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--br-20px);
+    padding: var(--padding-xs) var(--padding-lgi);
+    box-sizing: border-box;
+    color: var(--white);
+}
+.home-game-event,
+.away-game-event{
+    display: flex;
+    width: 100%;
+    align-self: unset;
+    flex-direction: row;
+    gap: var(--gap-3xs);
+    align-items: center;
+    padding: var(--padding-10px);
+    var(--padding-10px);
+    box-sizing: border-box;
+}
+.home-game-event{
+    justify-content: flex-start;
+}
+.away-game-event{
+    justify-content: flex-end;
+}
+.game-event-icon{
+    position: relative;
+    object-fit: contain;
+    width: 2vw;
+    height: 2vw;
+}
 .match-details-result-container{
     text-align: right;
     display: flex;
