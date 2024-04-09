@@ -2,10 +2,12 @@ let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id
+let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
     competition_id=urlParam.get('competition_id')
+
     let competitionInfoBtn= document.getElementById('competition-info-btn')
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     lateralButtons.forEach(button=>{
@@ -64,6 +66,7 @@ function getCompetitionInformation(){
  * @param competitionInfo the competition object with all infos
  */
 function renderCompetitionInformation(competitionInfo){
+    document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionName').innerText=competitionInfo.name;
     document.getElementById('competitionNation').innerText=competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation

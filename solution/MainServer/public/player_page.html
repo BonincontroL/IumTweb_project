@@ -74,135 +74,135 @@
     </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
 </header>
     <div id="player-page">
-    <div id="playerLateralNavbar" class="lateral-navbar">
-        <div class="lateral-navbar-header">
-            <div class="lateral-navbar-squad-logo">
+        <div id="playerLateralNavbar" class="lateral-navbar">
+            <div class="lateral-navbar-header">
+                <div class="lateral-navbar-squad-logo">
+                </div>
+                <h3>
+                    <span>Dusan Vlahovic</span>
+                </h3>
             </div>
-            <h3>
-                <span>Dusan Vlahovic</span>
-            </h3>
+            <button class="lateral-menu-button" id="player-info-btn" data-showContainer="playerInformation">
+                <img
+                        loading="eager"
+                        alt="info icon"
+                        src="images/lateralNavbarIcons/infoActive.svg"
+                />
+                <h6>Informazioni</h6>
+            </button>
+            <button class="lateral-menu-button" id="player-valutation-btn" data-showContainer="playerValutation">
+                <img
+                        loading="eager"
+                        alt="matches icon"
+                        src="images/lateralNavbarIcons/valutation.svg"
+                />
+                <h6>Valutazione</h6>
+            </button>
+            <button class="lateral-menu-button" id="player-lastMatches-btn" data-showContainer="playerLastMatches">
+                <img
+                        loading="eager"
+                        alt="leauge icon"
+                        src="images/lateralNavbarIcons/games.svg"
+                />
+                <h6>Ultime partite</h6>
+            </button>
+            <button class="lateral-menu-button" id="squad-statistic-btn" data-showContainer="playerStatistic">
+                <img
+                        loading="eager"
+                        alt="players icon"
+                        src="images/lateralNavbarIcons/stats.svg"
+                />
+                <h6>Statistiche</h6>
+            </button>
         </div>
-        <button class="lateral-menu-button" id="player-info-btn" data-showContainer="playerInformation">
-            <img
-                    loading="eager"
-                    alt="info icon"
-                    src="images/lateralNavbarIcons/infoActive.svg"
-            />
-            <h6>Informazioni</h6>
-        </button>
-        <button class="lateral-menu-button" id="player-valutation-btn" data-showContainer="playerValutation">
-            <img
-                    loading="eager"
-                    alt="matches icon"
-                    src="images/lateralNavbarIcons/valutation.svg"
-            />
-            <h6>Valutazione</h6>
-        </button>
-        <button class="lateral-menu-button" id="player-lastMatches-btn" data-showContainer="playerLastMatches">
-            <img
-                    loading="eager"
-                    alt="leauge icon"
-                    src="images/lateralNavbarIcons/games.svg"
-            />
-            <h6>Ultime partite</h6>
-        </button>
-        <button class="lateral-menu-button" id="squad-statistic-btn" data-showContainer="playerStatistic">
-            <img
-                    loading="eager"
-                    alt="players icon"
-                    src="images/lateralNavbarIcons/stats.svg"
-            />
-            <h6>Statistiche</h6>
-        </button>
-    </div>
-    <div class="main-container" id="playerInformation">
-        <div class="squad-info">
-            <h1>
-                Informazioni generali
-            </h1>
-            <div class="generic-playerinfo-container">
-                <div class="generic-info-card">
-                    <h3>Club attuale</h3>
-                    <h4>Juventus Football Club</h4>
-                </div>
-                <div class="generic-info-card">
-                    <h3>Nazionalità</h3>
-                    <h4>Serbia</h4>
-                </div>
-                <div class="generic-info-card">
-                    <h3>Numero Maglia</h3>
-                    <h4>9</h4>
-                </div>
-                <div class="generic-info-card">
-                    <h3>Altezza (cm)</h3>
-                    <h4>185</h4>
-                </div>
-                <div class="generic-info-card">
-                    <h3>Età</h3>
-                    <h4>21 anni</h4>
+        <div class="main-container" id="playerInformation">
+            <div class="squad-info">
+                <h1>
+                    Informazioni generali
+                </h1>
+                <div class="generic-playerinfo-container">
+                    <div class="generic-info-card">
+                        <h3>Club attuale</h3>
+                        <h4>Juventus Football Club</h4>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Nazionalità</h3>
+                        <h4>Serbia</h4>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Numero Maglia</h3>
+                        <h4>9</h4>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Altezza (cm)</h3>
+                        <h4>185</h4>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Età</h3>
+                        <h4>21 anni</h4>
+                    </div>
                 </div>
             </div>
+            <div class="squad-info">
+                <h1>Carriera</h1>
+                <table class="career-table">
+                    <thead>
+                    <tr>
+                        <td>Periodo</td>
+                        <td>Squadra</td>
+                        <td>Presenze</td>
+                        <td>Goal</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>2022-attuale</td>
+                        <td>
+                            <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                <img class="career-squad-logo-img"
+                                     alt="Juventus image"
+                                     src="images/Juventus_FC_2017_logo.svg.png">
+                                <p>Juventus</p>
+                            </div>
+                        </td>
+                        <td>62</td>
+                        <td>29</td>
+                    </tr>
+                    <tr>
+                        <td>2022-attuale</td>
+                        <td>
+                            <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                <img class="career-squad-logo-img"
+                                     alt="Juventus image"
+                                     src="images/Juventus_FC_2017_logo.svg.png">
+                                <p>Juventus</p>
+                            </div>
+                        </td>
+                        <td>62</td>
+                        <td>29</td>
+                    </tr>
+                    <tr>
+                        <td>2022-attuale</td>
+                        <td>
+                            <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
+                                <img class="career-squad-logo-img"
+                                     alt="Juventus image"
+                                     src="images/Juventus_FC_2017_logo.svg.png">
+                                <p>Juventus</p>
+                            </div>
+                        </td>
+                        <td>62</td>
+                        <td>29</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="squad-info">
-            <h1>Carriera</h1>
-            <table class="career-table">
-                <thead>
-                <tr>
-                    <td>Periodo</td>
-                    <td>Squadra</td>
-                    <td>Presenze</td>
-                    <td>Goal</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>2022-attuale</td>
-                    <td>
-                        <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
-                            <img class="career-squad-logo-img"
-                                 alt="Juventus image"
-                                 src="images/Juventus_FC_2017_logo.svg.png">
-                            <p>Juventus</p>
-                        </div>
-                    </td>
-                    <td>62</td>
-                    <td>29</td>
-                </tr>
-                <tr>
-                    <td>2022-attuale</td>
-                    <td>
-                        <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
-                            <img class="career-squad-logo-img"
-                                 alt="Juventus image"
-                                 src="images/Juventus_FC_2017_logo.svg.png">
-                            <p>Juventus</p>
-                        </div>
-                    </td>
-                    <td>62</td>
-                    <td>29</td>
-                </tr>
-                <tr>
-                    <td>2022-attuale</td>
-                    <td>
-                        <div class="career-squad"> <!--questa classe serve per mettere sulla stessa riga il logo e il nome della squadra-->
-                            <img class="career-squad-logo-img"
-                                 alt="Juventus image"
-                                 src="images/Juventus_FC_2017_logo.svg.png">
-                            <p>Juventus</p>
-                        </div>
-                    </td>
-                    <td>62</td>
-                    <td>29</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="main-container" id="playerValutation">
         </div>
-    </div>
-    <div class="main-container" id="playerValutation">
-    </div>
-    <div class="main-container" id ="playerLastMatches">
-    </div>
-    <div class="main-container" id="playerStatistic">
+        <div class="main-container" id ="playerLastMatches">
+        </div>
+        <div class="main-container" id="playerStatistic">
     </div>
 </div>
 </body>
