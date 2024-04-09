@@ -13,7 +13,6 @@ import java.util.List;
 public class PlayerValuationsController {
 
     private final PlayerValuationsService playerValuationsService;
-
     @Autowired
     public PlayerValuationsController(PlayerValuationsService playerValuationsService) {
         this.playerValuationsService = playerValuationsService;

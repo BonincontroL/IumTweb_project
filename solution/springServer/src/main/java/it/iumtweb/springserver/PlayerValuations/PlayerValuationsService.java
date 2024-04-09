@@ -8,7 +8,6 @@ import java.util.List;
 public class PlayerValuationsService {
 
     private final PlayerValuationsRepository playerValuationsRepository;
-
     public PlayerValuationsService(PlayerValuationsRepository playerValuationsRepository) {
         this.playerValuationsRepository = playerValuationsRepository;
     }

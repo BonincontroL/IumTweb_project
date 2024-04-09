@@ -18,7 +18,6 @@ public class PlayerValuations {
 
     @Column(name = "last_season")
     private Integer lastSeason;
-
     private Date datetime;
     private String date;
     private String dateweek;

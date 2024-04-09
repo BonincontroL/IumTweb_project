@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlayerValuationsRepository extends JpaRepository<PlayerValuations, Long> {
-
 }
