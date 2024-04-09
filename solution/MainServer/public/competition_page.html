@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="javascripts/competitionPage.js"></script>
+    <script src="javascripts/index.js"></script>
+    <title>IUM</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a class="navbar-burger-menu" href="#">
+                <i class='bx bx-menu'></i>
+            </a>
+            <h3>LOGO</h3>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Partite</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Competizioni</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Giocatori </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Squadre</a>
+                    </div>
+                </li>
+                <li class="navbar-single-item">
+                    <a href="/">Chat</a>
+                </li>
+            </ul>
+        </nav>
+        <button class="login-btn" id="doLogin">
+            Accedi
+        </button>
+        <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+        <div class="user-popup">
+            <div class="user-popup-header">
+                <h6>mail.example@gmail.com</h6>
+            </div>
+            <div class="user-popup-content">
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-gear"></i></h6>
+                    <h6>Gestisci il tuo account</h6>
+                </div>
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-box-arrow-left"></i></h6>
+                    <h6>Logout</h6>
+                </div>
+            </div>
+        </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+    </header>
+    <div id="competition-page">
+        <div id="competitionLateralNavbar" class="lateral-navbar">
+            <div class="lateral-navbar-header">
+                <div id="competitionImage" class="lateral-navbar-squad-logo">
+                </div>
+                <h3>
+                    <span id="competitionName">Serie A</span>
+                </h3>
+            </div>
+            <button class="lateral-menu-button" id="competition-info-btn" data-showContainer="competitionInformation">
+                <img
+                        loading="eager"
+                        alt="info icon"
+                        src="images/lateralNavbarIcons/infoActive.svg"
+                />
+                <h6>Informazioni</h6>
+            </button>
+            <button class="lateral-menu-button" id="competition-statistic-btn"  data-showContainer="competitionStats">
+                <img
+                        loading="eager"
+                        alt="matches icon"
+                        src="images/lateralNavbarIcons/stats.svg"
+                />
+                <h6>Statistiche Lega</h6>
+            </button>
+            <button class="lateral-menu-button" id="competition-matches-btn" data-showContainer="competitionMatches">
+                <img
+                        loading="eager"
+                        alt="leauge icon"
+                        src="images/lateralNavbarIcons/games.svg"
+                />
+                <h6>Partite</h6>
+            </button>
+            <button class="lateral-menu-button" id="competition-squad-btn"  data-showContainer="competitionSquads">
+                <img
+                        loading="eager"
+                        alt="players icon"
+                        src="images/lateralNavbarIcons/squads.svg"
+                />
+                <h6>Squadre</h6>
+            </button>
+            <button class="lateral-menu-button" id="competition-table-btn" data-showContainer="competitionTable">
+                <img
+                        loading="eager"
+                        alt="players icon"
+                        src="images/lateralNavbarIcons/table.svg"
+                />
+                <h6>Classifica</h6>
+            </button>
+            <button class="lateral-menu-button" id="competition-players-btn" data-showContainer="competitionPlayers">
+                <img
+                        loading="eager"
+                        alt="players icon"
+                        src="images/lateralNavbarIcons/player.svg"
+                />
+                <h6>Giocatori</h6>
+            </button>
+        </div>
+        <div class="main-container" id="competitionInformation">
+            <div class="squad-info">
+                <h1>
+                    Informazioni
+                    <span class="blue-words">Generiche</span>
+                </h1>
+                <div class="generic-playerinfo-container">
+                    <div class="generic-info-card">
+                        <h3>Nazione</h3>
+                        <div class="nationality-card">
+                            <h4 id="competitionNation"></h4>
+                        </div>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Confederazione</h3>
+                        <div class="nationality-card">
+                            <h4 id="competitionConfederation"></h4>
+                        </div>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Tipologia</h3>
+                        <div class="nationality-card">
+                            <h4 id="competitionType"></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="main-container" id="competitionStats">
+        </div>
+        <div class="main-container" id="competitionMatches">
+            <div style="display: none" id="competitionMultipleMatches">
+                <div class="table-navbar">
+                    <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
+                    che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
+                    <div class="dropdown-menu-season-wrapper">
+                        <h6><label for="competitionSelectMatchday">Giornata</label></h6>
+                        <select id="competitionSelectMatchday" class="date-days-picker">
+                        </select>
+                    </div>
+                    <div class="left-right-arrows-wrapper">
+                        <i id="loadPrevMatchday" class='bx bx-chevrons-left'></i>
+                        <i id="loadNextMatchday" class='bx bx-chevrons-right'></i>
+                    </div>
+                </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
+                <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
+                <div id="competitionMatchesContainer" class="matches-vertical-container" >
+                    <!--<div class="single-horizontal-match">
+                              <h6>20 AGO 2023</h6>
+                              <div class="squad-names-and-result-container">
+                                  <div class="squad-name-wrapper">
+                                      <h6>ROMA</h6>
+                                  </div>
+                                  <img
+                                          class="squadLogo"
+                                          loading="lazy"
+                                          alt=""
+                                          src="./public/rectangle-20@2x.png"
+                                  />
+
+                                  <h6>2-2</h6>
+                                  <img
+                                          class="squadLogo"
+                                          loading="lazy"
+                                          alt=""
+                                          src="./public/rectangle-19@2x.png"
+                                  />
+
+                                  <div class="squad-name-wrapper">
+                                      <h6>ROMA</h6>
+                                  </div>
+                              </div>
+                              <button class='btn-load-match-details'>
+                                  <i class='bx bxs-right-arrow-circle'></i>
+                              </button>
+                    </div>-->
+                </div>
+            </div>
+            <div id="competitionMatchDetails">
+                <!--TODO, mettere un bottone indietro nella pagina, in modo da tornare a tutte le partite della giornata-->
+                <div class="match-details-header">
+                    <div class="match-details-result-container">
+                        <div class="match-details-squad-and-logo-home">
+                            <h3>ROMA</h3>
+                            <img
+                                    class="squadLogo-big"
+                                    loading="lazy"
+                                    alt=""
+                                    src="images/roma.webp"
+                            />
+                        </div>
+                        <div class="match-details-final-result">
+                            <h3>2-2</h3>
+                            <h4>Terminata</h4>
+                        </div>
+                        <div class="match-details-squad-and-logo-away">
+                            <img
+                                    class="squadLogo-big"
+                                    loading="lazy"
+                                    alt=""
+                                    src="images/roma.webp"
+                            />
+                            <h3>SALERNITANA</h3>
+                        </div>
+                    </div>
+                    <div class="match-details-goals-row">
+                        <p>A.Belotti 82’, 17’</p>
+                        <img
+                                class="soccer-ball-icon"
+                                loading="lazy"
+                                alt="goal icon"
+                                src="images/Goal_icon.svg"
+                        />
+                        <p>A.Candreva 82’, 17’</p>
+                    </div>
+                    <div class="match-details-navbar">
+                        <button id="getMatchInformation" class="button-game-navbar button-game-navbar-active" data-showContainer="match-details-info">
+                            <h6>Informazioni</h6>
+                        </button>
+                        <button id="getMatchEvents" class="button-game-navbar" data-showContainer="match-details-events">
+                            <h6>Eventi</h6>
+                        </button>
+                        <button id="getMatchFormation" class="button-game-navbar" data-showContainer="match-details-formation">
+                            <h6>Formazioni</h6>
+                        </button>
+                    </div>
+                </div>
+                <div id="match-details-container">
+                    <div id="match-details-info">
+                        <div class="match-info">
+                            <img class="match-info-img" src="images/serieALOGO.svg" alt="competition logo">
+                            <div class="match-info-text">
+                                <h6><b>Competizione</b></h6>
+                                <h6 id="match-details-competition-name"></h6>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <img class="match-info-img" src="images/clock-icon.svg" alt="timer logo">
+                            <div class="match-info-text">
+                                <h6><b>Calcio di inizio</b></h6>
+                                <h6 id="match-details-date">09/10/2023</h6>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <img class="match-info-img" src="images/stadium-logo.svg" alt="competition logo">
+                            <div class="match-info-text">
+                                <h6><b>Stadio</b></h6>
+                                <h6 id="match-details-stadium">Stadio Olimpico di Roma</h6>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <img class="match-info-img" src="images/refree-icon.svg" alt="competition logo">
+                            <div class="match-info-text">
+                                <h6><b>Arbitro</b></h6>
+                                <h6 id="match-details-refree">Gianpaolo Calvarese</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="match-details-events">
+                        <h1>TEST EVENTI</h1>
+                        <!-- banner che indica il risultato finale della partita
+                        <div class ="match-partial-result-container">
+                            <p>Partita finita</p>
+                            <p>2-2</p>
+                        </div>-->
+                        <!-- esempio di evento di gioco della squadra di casa, sostituzione
+                        <div class="home-game-event">
+                            <img class="game-event-icon" alt="substitution logo" src="images/substitution-icon.svg" />
+                            <h6>90’+2</h6>
+                            <h6><b>Entra:R.Pagano </b></h6>
+                            <h6>Esce:H.Aouar</h6>
+                        </div>-->
+                        <!-- esempio di evento di gioco della squadra in trasferta, sostituzione
+                        <div class="away-game-event">
+                            <h6>Esce:E.Bothiem</h6>
+                            <h6><b>Entra: M.Coulibaly</b></h6>
+                            <h6>88'</h6>
+                            <img class="game-event-icon" alt="substitution logo" src="images/substitution-icon.svg" />
+                        </div>-->
+                        <!-- esempio di evento di gioco: GOAL squadra in trasferta
+                        <div class="away-game-event">
+                            <h6>Assist: D. Bradaric</h6>
+                            <h6><b>Antonio Candreva</b></h6>
+                            <h6>82'</h6>
+                            <img class="game-event-icon" alt="goal logo" src="images/Goal_icon.svg" />
+                        </div>-->
+                        <!-- esempio di evento di gioco: CARTELLINO ROSSO squadra in trasferta
+                        <div class="away-game-event">
+                            <h6><b>Guillermo Ochoa</b></h6>
+                            <h6>70'</h6>
+                            <img class="game-event-icon" alt="goal logo" src="images/red-card.svg" />
+                        </div>-->
+                        <!--banner che indica il risultato nel primo tempo della partita
+                        <div class ="match-partial-result-container">
+                            <p>Primo tempo</p>
+                            <p>1-1</p>
+                        </div>-->
+                    </div>
+                    <div id="match-details-formation">
+                        <h1>TEST FORMAZIONI</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container" id="competitionSquads">
+        </div>
+        <div class="main-container" id="competitionTable">
+            <div class="table-navbar">
+                <div class="date-days-picker-wrapper">
+                    <button class="date-days-picker date-days-picker-active">
+                        <h6>Tutti</h6>
+                    </button>
+                    <button class="date-days-picker">
+                        <h6>Casa</h6>
+                    </button>
+                    <button class="date-days-picker">
+                        <h6>Trasferta</h6>
+                    </button>
+                </div>
+                <div class="dropdown-menu-season-wrapper">
+                    <h6>Stagione</h6>
+                    <div class="date-days-picker">
+                        <h6>2022</h6>
+                    </div>
+                </div>
+            </div>
+            <table id ="competitionTableContainer">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Squadra</th>
+                    <th>P</th>
+                    <th>W</th>
+                    <th>D</th>
+                    <th>L</th>
+                    <th>Goals</th>
+                    <th>PTS</th>
+                </tr>
+                </thead>
+                <tbody id="competitionFullTable">
+                </tbody>
+                <tbody id="competitionHomeTable">
+                </tbody>
+                <tbody id="competitionAwayTable">
+                </tbody>
+            </table>
+        </div>
+        <div class="main-container" id="competitionPlayers">
+        </div>
+    </div>
+</body>
+</html>

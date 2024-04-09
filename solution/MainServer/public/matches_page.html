@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="javascripts/index.js"></script>
+
+    <title>IUM</title>
+</head>
+<body>
+    <header>
+    <div class="logo">
+        <a class="navbar-burger-menu" href="#">
+            <i class='bx bx-menu'></i>
+        </a>
+        <h3>LOGO</h3>
+    </div>
+    <nav>
+        <ul class="navbar">
+            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/matches_page.html">Partite</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Competizioni</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Giocatori </a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Squadre</a>
+                </div>
+            </li>
+            <li class="navbar-single-item">
+                <a href="/chat_page.html">Chat</a>
+            </li>
+        </ul>
+    </nav>
+
+    <button class="login-btn" id="doLogin">
+        Accedi
+    </button>
+    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+    <div class="user-popup">
+        <div class="user-popup-header">
+            <h6>mail.example@gmail.com</h6>
+        </div>
+        <div class="user-popup-content">
+            <div class="user-popup-item">
+                <h6><i class="bi bi-gear"></i></h6>
+                <h6>Gestisci il tuo account</h6>
+            </div>
+            <div class="user-popup-item">
+                <h6><i class="bi bi-box-arrow-left"></i></h6>
+                <h6>Logout</h6>
+            </div>
+        </div>
+    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+</header>
+    <div id="matches-page">
+        <div class="matches-header">
+            <!--    <div class="header-text-container">
+                    <p>
+                        <b>Selezionato: </b>
+                        9 febbraio 2024
+                    </p>
+                </div>-->
+            <!--  <div class="day-picker-container">
+                       <button class="arrow-btn" id="goLeftDays">
+                           <i class='bx bx-left-arrow-alt'></i>
+                       </button>
+                       <button class="date-days-picker">
+                           <p><b>Oggi</b></p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Domani</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Dom 14</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Lun 15</p>
+                       </button>
+                       <button class="date-days-picker">
+                           <p>Mar 16</p>
+                       </button>
+
+                        <button class="arrow-btn" id="goRightDays">
+                           <i class='bx bx-right-arrow-alt'></i>
+                       </button>
+              </div>-->
+            <div class="container">
+                <!--<h9 class="text">Scegli una data</h9>-->
+                <input type="date" class="date-days-picker" id="CalendarSelector" name="datepicker" value="2012-09-15">
+            </div>
+            <!--        <label for="datepicker">Seleziona una data:</label>-->
+            <div class="container">
+                <!--<p class="text">Seleziona una competizione</p>-->
+                <select id="competition-select" class="date-days-picker">
+                    <!-- Le opzioni della select verranno popolate dinamicamente -->
+                </select>
+            </div>
+            <button id="search-button" class="homepage-button">
+                <h9>Effettua ricerca combinata</h9>
+            </button>
+            <div class="vertical-line2"></div>
+            <div class="container">
+                <h9 class="text">Scegli un anno</h9>
+                <input type="number" class="date-days-picker" id="YearSelector" name="yearpicker" min="1900" max="2100" step="1" value="2022">
+            </div>
+            <button id="searchYear-btn" class="homepage-button">
+                <h9>Effettua ricerca per anno</h9>
+            </button>
+
+        </div>
+        <div class="matches-container">
+            <!--<div id="serieaMatchesContainer" class="matches-container-competition">
+                <div class="info-field">
+                    <div class="info-icon">
+                        <img
+                                class="serieanonamepng-1-icon1"
+                                loading="lazy"
+                                alt="serie A logo"
+                                src="images/serieANONAMEpng.png"
+                        />
+                    </div>
+                    <div class="leaugename_plus_matchday">
+                        <p><b>Serie A</b></p>
+                        <p>Giornata 24</p>
+                    </div>
+                </div>
+                <div class="multiple-matches-container">
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="homepage-button">
+                        <h6>Vedi la giornata completa</h6>
+                    </button>
+                </div>
+            </div>
+            <div id="premierLeaugeMatchesContainer" class="matches-container-competition">
+                <div class="info-field">
+                    <div class="info-icon">
+                        <img
+                                class="serieanonamepng-1-icon1"
+                                loading="lazy"
+                                alt="serie A logo"
+                                src="images/serieANONAMEpng.png"
+                        />
+                    </div>
+                    <div class="leaugename_plus_matchday">
+                        <p><b>Serie A</b></p>
+                        <p>Giornata 24</p>
+                    </div>
+                </div>
+                <div class="multiple-matches-container">
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                    <div class="game-information">
+                        <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/roma.webp"
+                                />
+
+                                <p>Roma
+                                <p>
+                                <div class="home-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img
+                                        class="squad-icon"
+                                        alt=""
+                                        src="images/salernitana.webp"
+                                />
+                                <p>Salernitana</p>
+                                <div class="away-result">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <h6>20:45</h6>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="homepage-button">
+                        <h6>Vedi la giornata completa</h6>
+                    </button>
+                </div>
+            </div>-->
+        </div>
+    </div>
+</body>
+</html>

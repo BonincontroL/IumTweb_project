@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="javascripts/squadPage.js"></script>
+    <script src="javascripts/index.js"></script>
+    <title>IUM</title>
+</head>
+<body>
+    <header>
+    <div class="logo">
+        <a class="navbar-burger-menu" href="#">
+            <i class='bx bx-menu'></i>
+        </a>
+        <h3>LOGO</h3>
+    </div>
+    <nav>
+        <ul class="navbar">
+            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/matches_page.html">Partite</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Competizioni</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Giocatori </a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Squadre</a>
+                </div>
+            </li>
+            <li class="navbar-single-item">
+                <a href="/chat_page.html">Chat</a>
+            </li>
+        </ul>
+    </nav>
+
+    <button class="login-btn" id="doLogin">
+        Accedi
+    </button>
+    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+    <div class="user-popup">
+        <div class="user-popup-header">
+            <h6>mail.example@gmail.com</h6>
+        </div>
+        <div class="user-popup-content">
+            <div class="user-popup-item">
+                <h6><i class="bi bi-gear"></i></h6>
+                <h6>Gestisci il tuo account</h6>
+            </div>
+            <div class="user-popup-item">
+                <h6><i class="bi bi-box-arrow-left"></i></h6>
+                <h6>Logout</h6>
+            </div>
+        </div>
+    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+</header>
+    <div id="squad-page">
+        <div id="squadLateralNavbar" class="lateral-navbar">
+            <div class="lateral-navbar-header">
+                <div id="squadImage" class="lateral-navbar-squad-logo">
+                </div>
+                <h3 id="lateral_navbar_header_text">
+                    Juventus Football Club
+                </h3>
+            </div>
+            <button class="lateral-menu-button" id="squad-info-btn" data-showContainer="squadInformation">
+                <img
+                        loading="eager"
+                        alt="info icon"
+                        src="images/lateralNavbarIcons/infoActive.svg"
+                />
+                <h6>Informazioni</h6>
+            </button>
+            <button class="lateral-menu-button" id="squad-matches-btn" data-showContainer="squadLastMatches">
+                <img
+                        loading="eager"
+                        alt="matches icon"
+                        src="images/lateralNavbarIcons/games.svg"
+                />
+                <h6>Partite</h6>
+            </button>
+            <button class="lateral-menu-button" id="squad-table-btn" data-showContainer="squadPositionInLeauge">
+                <img
+                        loading="eager"
+                        alt="leauge icon"
+                        src="images/lateralNavbarIcons/table.svg"
+                />
+                <h6>Classifica</h6>
+            </button>
+            <button class="lateral-menu-button" id="squad-players-btn" data-showContainer="squadPlayers">
+                <img
+                        loading="eager"
+                        alt="players icon"
+                        src="images/lateralNavbarIcons/player.svg"
+                />
+                <h6>Giocatori</h6>
+            </button>
+        </div>
+        <div class="main-container" id="squadInformation">
+            <!--generic squad info-->
+            <div class="squad-info">
+                <h1>
+                    Informazioni
+                    <span class="blue-words">generali</span>
+                </h1>
+                <div class="generic-playerinfo-container">
+                    <div class="generic-info-card">
+                        <h3>Campionato</h3>
+                        <div class="nationality-card">
+                            <img
+                                    id="squadCompetitionImage"
+                                    class="nationality-card-image"
+                                    alt="squad logo"
+                            />
+                            <h4 id="squadCompetitionName"></h4>
+                        </div>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Stadio</h3>
+                        <div class="nationality-card">
+                            <h4 id ="squadStadiumName"></h4>
+                            <h4 id="squadStadiumCapacity"></h4>
+                        </div>
+                    </div>
+                    <div class="generic-info-card">
+                        <h3>Allenatore</h3>
+                        <div class="nationality-card">
+                            <h4 id="squadManagerName"></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container" id="squadLastMatches">
+        </div>
+        <div class="main-container" id="squadPositionInLeauge">
+            <div class="squadTable-container">
+                <div class="squadTableTitle">
+                    <h1>Posizione attuale in classifica</h1>
+                </div>
+                <div class="navbar-and-table-container">
+                    <div class="table-navbar">
+                        <div class="date-days-picker">
+                            <h6>Serie A</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Tutti</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Casa</h6>
+                        </div>
+                        <div class="date-days-picker">
+                            <h6>Trasferta</h6>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Squadra</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>Goals</th>
+                            <th>PTS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="squadMiniTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- contenitore della classifica ridotta della squadra-->
+            <div class="squadTable-container">
+                <div class="squadTableTitle">
+                    <h1>Forma della squadra</h1>
+                </div>
+                <div class ="last-5-matches-container" id="last5MatchesContainer">
+                </div>
+            </div> <!--contenitore delle ultime 5 partite della squadra-->
+        </div>
+        <div class="main-container" id="squadPlayers">
+            <div class="players-role-and-card-container">
+                <div class="player-role-description">
+                    <img
+                            class="player-role-image"
+                            loading="lazy"
+                            alt="Goalkeeper icon"
+                            src="images/GOALKEEPER_ICON.png"
+                    />
+                    <h1>Portieri</h1>
+                </div>
+                <div class="player-row-container" id="GoalkeepersContainer" >
+                </div>
+            </div>
+            <div class="players-role-and-card-container">
+                <div class="player-role-description">
+                    <img
+                            class="player-role-image"
+                            loading="lazy"
+                            alt="Defenders icon"
+                            src="images/Brick%20Wall.svg"
+                    />
+                    <h1>Difensori</h1>
+                </div>
+                <div class="player-row-container" id="DefenderContainer">
+                </div>
+            </div>
+            <div class="players-role-and-card-container">
+                <div class="player-role-description">
+                    <img
+                            class="player-role-image"
+                            loading="lazy"
+                            alt="Midfield icon"
+                            src="images/trivela.svg"
+                    />
+                    <h1>Centrocampisti</h1>
+                </div>
+                <div class="player-row-container" id="MidfieldContainer">
+
+                </div>
+            </div>
+            <div class="players-role-and-card-container">
+                <div class="player-role-description">
+                    <img
+                            class="player-role-image"
+                            loading="lazy"
+                            alt="Striker icon"
+                            src="images/Striker.svg"
+                    />
+                    <h1>Attaccanti</h1>
+                </div>
+                <div class="player-row-container" id="StrikerContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
