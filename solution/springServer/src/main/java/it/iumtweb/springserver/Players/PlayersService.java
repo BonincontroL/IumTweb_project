@@ -17,4 +17,7 @@ public class PlayersService {
         return playersRepository.findAll();
     }
 
+    public List<Players> searchByClubIdAndSeason(Integer clubId, Integer season) {
+        return playersRepository.findPlayersByCurrentClubIdAndLastSeason(clubId,season);
+    }
 }

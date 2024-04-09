@@ -28,4 +28,20 @@ public class PlayersController {
         }
     }
 
+    /**
+     * endpoint to get all players who are playing in a certain club in a season
+     * @param clubId the club we want to get players for
+     * @param season the season we want
+     * @return a list with all club players
+     */
+    @GetMapping("/searchByClubIdAndSeason")
+    public ResponseEntity<List<Players>> searchByClubIdAndSeason(@RequestParam (name="club_id") Integer clubId, @RequestParam(name="season") Integer season){
+        List<Players> queryResult = playersService.searchByClubIdAndSeason(clubId,season);
+        if(queryResult.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.ok().body(queryResult);
+        }
+    }
+
 }
