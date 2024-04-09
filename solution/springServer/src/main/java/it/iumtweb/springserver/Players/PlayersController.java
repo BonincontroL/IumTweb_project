@@ -42,6 +42,7 @@ public class PlayersController {
         }else{
             return ResponseEntity.ok().body(queryResult);
         }
+
     }
 
 }

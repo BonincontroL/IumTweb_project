@@ -281,7 +281,6 @@ public class Players {
     public void setCurrentClubDomesticCompetitionId(String currentClubDomesticCompetitionId) {
         this.currentClubDomesticCompetitionId = currentClubDomesticCompetitionId;
     }
-
     public String getCurrentClubName() {
         return currentClubName;
     }

@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface PlayersRepository extends JpaRepository<Players, Long>{
     List<Players> findPlayersByCurrentClubIdAndLastSeason(Long currentClubId, Integer lastSeason);
+
 }
