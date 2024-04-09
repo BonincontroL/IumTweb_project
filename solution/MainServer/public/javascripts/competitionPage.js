@@ -1,20 +1,20 @@
-let lateralButtons
+let lateralCompetitionButtons
 let matchButtons
-
+const competitionPageName = 'competition-page'
 document.addEventListener('DOMContentLoaded',()=>{
     let competitionInfoBtn= document.getElementById('competition-info-btn')
-    lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
-    lateralButtons.forEach(button=>{
+    lateralCompetitionButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
+    lateralCompetitionButtons.forEach(button=>{
         button.addEventListener('click',()=>{
-            hideAllMainContainers('competition-page')
+            hideAllMainContainers(competitionPageName)
             let containerToShow = button.getAttribute('data-showContainer')
             document.getElementById(containerToShow).style.display="flex"
         })
     })
-    manageLateralButtons(lateralButtons)
+    manageLateralButtons(lateralCompetitionButtons)
     //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
     competitionInfoBtn.classList.add('active')
-    hideAllMainContainers('competition-page')
+    hideAllMainContainers(competitionPageName)
     document.getElementById('competitionInformation').style.display="flex"
 
     //questa parte è dedicata alla gestione dei bottoni per la singola partita (Informazioni, Eventi, Formazioni)
