@@ -369,7 +369,7 @@ header ul li ul li a{
     display: flex;
     justify-content: flex-start;
     box-sizing: border-box;
-    height: 88vh;
+    height: 92vh;
     width: 20vw;
     background-color: var(--primary-blue-900);
     flex-shrink: 0;
@@ -559,7 +559,7 @@ header ul li ul li a{
     padding: var(--padding-2xl);
     box-sizing: border-box;
     gap: var(--gap-11xl);
-    height: 88vh;
+    height: 92vh;
 }
 .slogan {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font particolare */
@@ -596,11 +596,11 @@ header ul li ul li a{
     align-items: flex-start;
     flex-direction: row;
     width: 100%;
-    height: 88vh;
+    height: 92vh;
 }
 .main-container{
     width: 100%;
-    height: 88vh;
+    height: 92vh;
 }
 #matches-page{
     display: flex;
@@ -2054,7 +2054,7 @@ tr{
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    height: 88vh;
+    height: 92vh;
 }
 .chat-room-name-container{
     align-self: stretch;
