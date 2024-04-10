@@ -21,4 +21,9 @@ public class PlayersService {
         return playersRepository.findPlayersByCurrentClubIdAndLastSeason(clubId,season);
 
     }
+
+    public List<Players> getPlayersByCurrentClubDomesticCompetitionId(String competitionId) {
+        return playersRepository.findByCurrentClubDomesticCompetitionId(competitionId);
+    }
+
 }

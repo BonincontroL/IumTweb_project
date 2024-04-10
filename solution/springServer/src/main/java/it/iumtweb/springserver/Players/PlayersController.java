@@ -45,4 +45,21 @@ public class PlayersController {
 
     }
 
+    /**
+     * endpoint to get all players who are playing in a certain competition
+     * @param competitionId
+     * @return a list with all players playing in the competition
+     */
+    @GetMapping("/getPlayersByCompetition/{competitionId}")
+    public ResponseEntity<List<Players>> getPlayersByCurrentClubDomesticCompetitionId(@PathVariable String competitionId) {
+        List<Players> players = playersService.getPlayersByCurrentClubDomesticCompetitionId(competitionId);
+        if (players.isEmpty()) {
+            System.out.println("No Players found for competition ID: " + competitionId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(players);
+        }
+    }
+
+
 }

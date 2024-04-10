@@ -9,4 +9,6 @@ import java.util.List;
 public interface PlayersRepository extends JpaRepository<Players, Long>{
     List<Players> findPlayersByCurrentClubIdAndLastSeason(Long currentClubId, Integer lastSeason);
 
+    List<Players> findByCurrentClubDomesticCompetitionId(String competitionId);
+
 }
