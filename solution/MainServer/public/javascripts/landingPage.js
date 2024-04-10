@@ -25,8 +25,7 @@ function init() {
     getAndRenderPlayers();
 }
 
-// ToDo sistemare funzioni + commenti + pulizia codice + mettere numero maglia giocatore
-// ToDo  il renderPlayers homepage si può unire in un'unica funzione + migliorare render controllare classi css
+// ToDo  sistemare commenti + pulizia codice + mettere numero maglia giocatore
 // ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
 
 /**
@@ -61,22 +60,37 @@ function getPlayersByCompetition(competitionId) {
 }
 
 /**
- * Funzione per renderizzare i giocatori per la Serie A
- * @param players
+ * Funzione unificata per renderizzare i giocatori in un container specifico basato sulla competizione.
+ * @param {Array} players - Array di giocatori da renderizzare.
+ * @param {String} competitionIdentifier - competizione.
  */
-function renderPlayersSeriaA(players) {
-    const playersContainer = document.querySelector('.players-container-in-homepage');
-    playersContainer.innerHTML = '';
+function renderPlayers(players, competitionIdentifier) {
+    // Mappa l'identificatore della competizione all'indice specifico del container
+    const competitionContainerMap = {
+        'Serie-A': 0,
+        'Premier-League': 1
+    };
 
+    // Ottiene l'indice del container basato sulla competizione
+    const containerIndex = competitionContainerMap[competitionIdentifier];
+
+    // Seleziona tutti i containers e sceglie quello specifico basato sull'indice
+    const playersContainers = document.querySelectorAll('.players-container-in-homepage');
+    const playersContainer = playersContainers[containerIndex];
+    playersContainer.innerHTML = ''; // Pulisce il container prima di aggiungere nuovi giocatori
+
+    // Itera su ogni giocatore e costruisce la card
     players.forEach(player => {
         const playerCard = document.createElement('button');
         playerCard.classList.add('player-card-for-homepage');
+        playerCard.style.padding = '10px'; // Aggiunge spazio intorno al contenuto della card
 
         const competitionLogoContainer = document.createElement('div');
         competitionLogoContainer.classList.add('competition-logo-container1');
 
         const playerName = document.createElement('h5');
         playerName.classList.add('player-name');
+        playerName.style.marginBottom = '10px'; // Aggiunge spazio sotto il nome del giocatore
         playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${player.firstName}</span><br><span style="font-size: smaller">${player.lastName}</span>`;
 
         const squadCard = document.createElement('div');
@@ -96,15 +110,17 @@ function renderPlayersSeriaA(players) {
         const teamName = document.createElement('h5');
         teamName.classList.add('team-name');
         teamName.style.fontWeight = 'normal';
+        teamName.style.fontStyle = 'italic';
         teamName.textContent = player.currentClubName;
         squadCard.appendChild(teamName);
+
         competitionLogoContainer.appendChild(playerName);
         competitionLogoContainer.appendChild(squadCard);
         playerCard.appendChild(competitionLogoContainer);
 
         const playerImage = document.createElement('img');
-        playerImage.classList.add('squad-info-frame');
-        playerImage.classList.add('rounded-image');
+        playerImage.classList.add('squad-info-frame', 'rounded-image');
+        playerImage.style.borderRadius = '50%'; // Rende l'immagine del giocatore arrotondata
         playerImage.setAttribute('loading', 'eager');
         playerImage.alt = player.firstName + ' ' + player.lastName + ' image';
         playerImage.src = player.imageUrl;
@@ -112,61 +128,23 @@ function renderPlayersSeriaA(players) {
 
         playersContainer.appendChild(playerCard);
     });
+
 }
 
 /**
- * Funzione per renderizzare i giocatori per la Premier League
- * @param players
+ * Ottiene i giocatori da una competizione specifica e li renderizza utilizzando la mappa identificatore-container.
  */
-function renderPlayersPremierLeauge(players) {
-    const playersContainers = document.querySelectorAll('.players-container-in-homepage');
-    const secondPlayersContainer = playersContainers[1]; // Secondo elemento con la classe 'players-container-in-homepage' è per la Premier League
+function getAndRenderPlayers() {
+    getPlayersByCompetition("IT1").then(players => {
+        renderPlayers(players, 'Serie-A');
+    }).catch(error => {
+        console.error('Errore durante il recupero dei giocatori della Serie A:', error);
+    });
 
-    secondPlayersContainer.innerHTML = '';
-
-    players.forEach(player => {
-        const playerCard = document.createElement('button');
-        playerCard.classList.add('player-card-for-homepage');
-
-        const competitionLogoContainer = document.createElement('div');
-        competitionLogoContainer.classList.add('competition-logo-container1');
-
-        const playerName = document.createElement('h5');
-        playerName.classList.add('player-name');
-        playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${player.firstName}</span><br><span style="font-size: smaller">${player.lastName}</span>`;
-
-        const squadCard = document.createElement('div');
-        squadCard.classList.add('squad-card');
-
-        const squadLogoContainer = document.createElement('div');
-        squadLogoContainer.classList.add('squad-logo-container');
-
-        const squadLogo = document.createElement('img');
-        squadLogo.classList.add('squad-logo-in-starplayers');
-        squadLogo.setAttribute('loading', 'eager');
-        squadLogo.alt = player.teamName + ' Logo';
-        squadLogo.src = `https://tmssl.akamaized.net/images/wappen/head/${player.currentClubId}.png`; // URL del logo del club
-        squadLogoContainer.appendChild(squadLogo);
-        squadCard.appendChild(squadLogoContainer);
-
-        const teamName = document.createElement('h5');
-        teamName.classList.add('team-name');
-        teamName.style.fontWeight = 'normal';
-        teamName.textContent = player.currentClubName;
-        squadCard.appendChild(teamName);
-        competitionLogoContainer.appendChild(playerName);
-        competitionLogoContainer.appendChild(squadCard);
-        playerCard.appendChild(competitionLogoContainer);
-
-        const playerImage = document.createElement('img');
-        playerImage.classList.add('squad-info-frame');
-        playerImage.classList.add('rounded-image');
-        playerImage.setAttribute('loading', 'eager');
-        playerImage.alt = player.firstName + ' ' + player.lastName + ' image';
-        playerImage.src = player.imageUrl;
-        playerCard.appendChild(playerImage);
-
-        secondPlayersContainer.appendChild(playerCard);
+    getPlayersByCompetition("GB1").then(players => {
+        renderPlayers(players, 'Premier-League');
+    }).catch(error => {
+        console.error('Errore durante il recupero dei giocatori della Premier League:', error);
     });
 }
 
@@ -181,23 +159,4 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-}
-
-/**
- * Funzione per ottenere e renderizzare i giocatori
- */
-function getAndRenderPlayers() {
-
-    getPlayersByCompetition("IT1").then(players => {
-        renderPlayersSeriaA(players);
-    }).catch(error => {
-        console.error(error);
-    });
-
-    getPlayersByCompetition("GB1").then(players => {
-        renderPlayersPremierLeauge(players);
-    }).catch(error => {
-        console.error(error);
-    });
-
 }
