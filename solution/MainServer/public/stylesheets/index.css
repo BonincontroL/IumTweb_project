@@ -1995,9 +1995,14 @@ tr{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 60px;
+    width: auto;
+    height: auto;
 }
+.lateral-navbar-chat-element-img img{
+    height: 50px;
+    width: auto;
+}
+
 .chat-element-row{
     display: flex;
     align-self: stretch;
@@ -2092,6 +2097,73 @@ tr{
     position: relative;
     overflow-y:auto;
 }
+.chat-rules {
+    padding: 10px; /* Aumenta il padding se necessario per utilizzare meglio lo spazio */
+    margin: 0 auto; /* Centra il div */
+    max-width: 90%; /* Imposta una percentuale che utilizzi meglio lo spazio del div */
+    background: #FFF; /* Opzionale: un colore di sfondo per far risaltare il testo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Opzionale: aggiungi un'ombra per farlo risaltare */
+    border-radius: 5px; /* Opzionale: bordi arrotondati per un aspetto più morbido */
+}
+
+.chat-rules ul {
+    padding-left: 40px; /* Aumenta il padding per allineare meglio i bullet */
+}
+
+.chat-rules li {
+    margin-bottom: 24px; /* Aumenta lo spazio tra le regole */
+    text-align: left; /* Se preferisci non giustificare il testo, questo può aumentare la leggibilità */
+    font-size: 1.1em; /* Aumenta la dimensione del font se necessario */
+    line-height: 1.6; /* Aumenta l'interlinea per una migliore leggibilità */
+}
+
+.chat-rules-title h1 {
+    font-size: var(--h1-size); /* Assicurati che sia un valore appropriato per la dimensione del titolo */
+    color: red; /* Usa un colore definito nelle tue variabili CSS o scegline uno che contrasti bene */
+    margin-bottom: 32px; /* Spazio tra il titolo e il paragrafo seguente */
+    font-weight: bold; /* Rendi il titolo più spesso */
+}
+
+/* Aggiungi uno stile per i paragrafi per aumentare la leggibilità */
+.chat-rules p {
+    font-size: 1em; /* Assicurati che la dimensione sia appropriata */
+    color: #333; /* Un colore scuro per migliorare la leggibilità */
+    margin-bottom: 16px; /* Spazio tra i paragrafi e l'elenco */
+}
+.chat-rules {
+    padding: 10px; /* Aumenta il padding se necessario per utilizzare meglio lo spazio */
+    margin: 0 auto; /* Centra il div */
+    max-width: 90%; /* Imposta una percentuale che utilizzi meglio lo spazio del div */
+    background: #FFF; /* Opzionale: un colore di sfondo per far risaltare il testo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Opzionale: aggiungi un'ombra per farlo risaltare */
+    border-radius: 5px; /* Opzionale: bordi arrotondati per un aspetto più morbido */
+}
+
+.chat-rules ul {
+    padding-left: 40px; /* Aumenta il padding per allineare meglio i bullet */
+}
+
+.chat-rules li {
+    margin-bottom: 24px; /* Aumenta lo spazio tra le regole */
+    text-align: left; /* Se preferisci non giustificare il testo, questo può aumentare la leggibilità */
+    font-size: 1.1em; /* Aumenta la dimensione del font se necessario */
+    line-height: 1.6; /* Aumenta l'interlinea per una migliore leggibilità */
+}
+
+.chat-rules-title h1 {
+    font-size: var(--h1-size); /* Assicurati che sia un valore appropriato per la dimensione del titolo */
+    color: red; /* Usa un colore definito nelle tue variabili CSS o scegline uno che contrasti bene */
+    margin-bottom: 32px; /* Spazio tra il titolo e il paragrafo seguente */
+    font-weight: bold; /* Rendi il titolo più spesso */
+}
+
+/* Aggiungi uno stile per i paragrafi per aumentare la leggibilità */
+.chat-rules p {
+    font-size: 1em; /* Assicurati che la dimensione sia appropriata */
+    color: #333; /* Un colore scuro per migliorare la leggibilità */
+    margin-bottom: 16px; /* Spazio tra i paragrafi e l'elenco */
+}
+
 .chat-footer {
     align-self: stretch;
     flex-direction: row;

@@ -89,21 +89,7 @@
 
                 </div>
             </div>
-            <div class="lateral-navbar-chat-element ">
-                <div class="lateral-navbar-chat-element-img"></div>
-                <div class="chat-header-element-wrapper">
-                    <div class="chat-element-row">
-                        <h6><b>Serie A</b></h6>
-                        <p>4:30pm</p>
-                    </div>
-                    <div class="chat-element-row">
-                        <p>Alberto: ciao a tutti!</p>
-                        <div class="unread-msg-number-container">
-                            <p>37</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
     </div>
@@ -113,36 +99,50 @@
                     class="chat-room-image"
                     loading="lazy"
                     alt="Chat room image"
-                    src="images/serieALOGO.svg"
+                    src="https://thumbs.dreamstime.com/b/progettazione-di-logo-chat-calcio-illustrazione-vettoriale-creativo-simboli-216760443.jpg"
             />
 
             <div class="chat-room-name-container">
-                <h6 id="chat_title"><b></b></h6>
+                <h6 id="chat_title"><b>Benvenuto nella nostra Community di Chat Calcistiche! </b></h6>
+
             </div>
         </div>
         <div id="messages-container" class="chat-messages-container">
-            <div class="message-date-popup">
-                <p>Alberto joined the room</p>
-            </div>
-            <div class="message-container msg-left">
-                <div class="single-msg">
-                    <p class="msg-header"><b>Alberto</b></p>
-                    <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
-                        <span class="msg-hour">17:30</span></p>
-                </div>
+            <div class="chat-rules">
+                <p>
+                    Qui troverai diverse stanze, ognuna dedicata a una specifica competizione sportiva calcistica.
+                </p>
+                <p>
+                    Regole della chat:
+                </p>
+
+                <ul>
+                    <li><b>Rispetta gli altri utenti:</b> Mantieni un tono cordiale e rispettoso in tutte le tue interazioni. Evita commenti offensivi o denigratori verso gli altri membri della community o gli atleti.</li>
+                    <li><b>Nessuno spam:</b> Evita di pubblicare messaggi ripetitivi o di fare autopromozione non autorizzata. La chat è uno spazio per discussioni, non per pubblicità.</li>
+                    <li><b>Rimani in tema:</b> Cerca di mantenere la discussione pertinente alla competizione della room in cui ti trovi. Se desideri parlare di un altro sport o evento, spostati nella room appropriata.</li>
+                    <li><b>Proteggi la tua privacy:</b> Ricorda di non condividere informazioni personali nella chat, come numeri di telefono, indirizzi email o qualsiasi altro dato che non vorresti fosse pubblico.</li>
+                </ul>
             </div>
 
-            <div class="message-container msg-right">
-                <div class="single-msg">
-                    <p class="msg-header"><b>Alberto</b></p>
-                    <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
-                        <span class="msg-hour">17:30</span></p>
-                </div>
-            </div>
+            <!--  <div class="message-container msg-left">
+                  <div class="single-msg">
+                      <p class="msg-header"><b>Alberto</b></p>
+                      <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                          <span class="msg-hour">17:30</span></p>
+                  </div>
+              </div>
+
+              <div class="message-container msg-right">
+                  <div class="single-msg">
+                      <p class="msg-header"><b>Alberto</b></p>
+                      <p class="msg-text">Ciao a tutti ragazzi come tutto bene spero
+                          <span class="msg-hour">17:30</span></p>
+                  </div>
+              </div>-->
         </div>
-        <div class="chat-footer">
-            <input type="text" class="msg-inputbox" placeholder="scrivi un messaggio...">
-            <button class="btn-send-msg" >
+        <div class="chat-footer" id="chat-footer" style="display:none">
+            <input id="msg-input" type="text" class="msg-inputbox" placeholder="scrivi un messaggio...">
+            <button class="btn-send-msg" id="send_message" >
                 <i class='bx bx-send'></i>
             </button>
         </div>
