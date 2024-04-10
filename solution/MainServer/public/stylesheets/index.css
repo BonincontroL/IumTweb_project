@@ -53,7 +53,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 12vh;
+    height: 8vh;
     background-color: var(--primary-blue-900);
     padding: 0 50px;
     position: sticky;
