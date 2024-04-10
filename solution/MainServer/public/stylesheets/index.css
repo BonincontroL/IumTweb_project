@@ -2081,7 +2081,7 @@ tr{
     display: flex;
     align-self: stretch;
     width: auto;
-    height: auto;
+    height: 100%;
     flex-direction: column;
     gap: var(--gap-3xs);
     align-items: center;
