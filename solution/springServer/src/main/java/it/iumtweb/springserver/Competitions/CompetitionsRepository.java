@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CompetitionsRepository extends JpaRepository<Competitions, String> {
-
+    List<Competitions> findByNameContainingIgnoreCase(String name);
 }

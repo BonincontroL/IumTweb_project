@@ -54,6 +54,4 @@ public class ClubsController {
             return ResponseEntity.ok().body(result);
     }
 
-
-
 }

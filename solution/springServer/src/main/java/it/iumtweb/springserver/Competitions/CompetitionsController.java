@@ -30,6 +30,11 @@ public class CompetitionsController {
             return ResponseEntity.ok().body(AllCompetitions);
         }
     }
+
+    /**
+     * get a map where each country is associated by his competitions
+     * @return a hash map where each country is associated to a list of competitions
+     */
     @GetMapping("/getCompetitionsGroupedByCountry")
     public ResponseEntity<Map<String,List<Competitions>>> getCompetitionsGroupedByCountry(){
         Map<String, List<Competitions>> result = competitionsService.getCompetitionsGroupedByCountry();
@@ -39,6 +44,28 @@ public class CompetitionsController {
             return ResponseEntity.ok().body(result);
         }
     }
+
+    /**
+     * return a Hash map where each country is associated by his competitions,
+     * but it's filtered by competition name
+     * @param name the part of competition's name we want to find
+     * @return a hash map where each country is associated to a list of competitions
+     */
+    @GetMapping("/getCompetitionsGroupedByCountryAndLikeName")
+    public ResponseEntity<Map<String,List<Competitions>>> getCompetitionsGroupedByCountryAndLikeName(@RequestParam(name="name") String name){
+        Map<String,List<Competitions>> result= competitionsService.getCompetitionsGroupedByCountryAndLikeName(name);
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(result);
+        }
+    }
+
+    /**
+     * get a single competition by his id
+     * @param competitionId:the competition_id we want to find in DB
+     * @return a single competition if exists in the database, otherwise return 404 not found.
+     */
     @GetMapping("/get")
     public ResponseEntity<Competitions> getById(@RequestParam(name="competition_id") String competitionId){
         Optional<Competitions> result = competitionsService.getById(competitionId);
