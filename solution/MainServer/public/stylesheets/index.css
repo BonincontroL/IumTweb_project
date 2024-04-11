@@ -2477,7 +2477,6 @@ tr{
     white-space: nowrap;
     cursor: pointer;
     transition: 0.3s ease;
-    overflow: hidden;
 }
 .competition-card-mini:hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.23);

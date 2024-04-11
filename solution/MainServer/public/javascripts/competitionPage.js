@@ -2,7 +2,6 @@ let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id
-let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)

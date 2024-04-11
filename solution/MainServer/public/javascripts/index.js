@@ -1,4 +1,7 @@
 //questo JS è per le funzioni comuni
+let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
+let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
+
 function manageLateralButtons(lateralButtons){
     lateralButtons.forEach(btn=>{
         btn.addEventListener('click',function (){
@@ -20,4 +23,13 @@ function manageLateralButtons(lateralButtons){
 function hideAllMainContainers(pageName){
     const mainContainers=document.querySelectorAll(`#${pageName} .main-container`)
     mainContainers.forEach(container=>{container.style.display="none"})
+}
+
+function setCompetitionsCardEventListener(competitionCards){
+    competitionCards.forEach(card => {
+        card.addEventListener('click', () => {
+            let competition_id = card.getAttribute('data-competitionId')
+            window.location.href = "../competition_page.html?competition_id=" + competition_id
+        })
+    })
 }

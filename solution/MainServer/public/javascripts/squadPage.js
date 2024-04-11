@@ -1,6 +1,5 @@
 let lateralSquadButtons, squadInfoBtn
 const squadPageName= 'squad-page'
-let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
 
 document.addEventListener('DOMContentLoaded',()=>{
     squadInfoBtn= document.getElementById('squad-info-btn')

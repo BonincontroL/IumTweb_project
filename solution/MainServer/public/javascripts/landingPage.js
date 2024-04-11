@@ -15,13 +15,7 @@ function init() {
     })
 
     let competition_cards = document.querySelectorAll('.competition-card')
-    competition_cards.forEach(card => {
-        card.addEventListener('click', () => {
-            let competition_id = card.getAttribute('data-competitionId')
-            window.location.href = "../competition_page.html?competition_id=" + competition_id
-        })
-    })
-
+    setCompetitionsCardEventListener(competition_cards)
     getAndRenderPlayers();
 }
 
