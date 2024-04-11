@@ -1931,7 +1931,7 @@ tr{
     box-sizing: border-box;
     gap: var(--gap-8xs);
 }
-.competition-logo-container1 {
+/*.competition-logo-container1 {
     width: 5vw;
     height: 5vw;
     display: flex;
@@ -1939,7 +1939,20 @@ tr{
     align-items: center;
 
     background-color: var(--white);
+}*/
+
+.competition-logo-container1 {
+    width: 178px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    gap: var(--gap-3xs);
+    min-width: 178px;
 }
+
+
 .squad-info-frame {
     align-self: stretch;
     width: 150px;
