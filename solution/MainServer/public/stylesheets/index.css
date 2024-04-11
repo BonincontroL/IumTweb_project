@@ -1880,17 +1880,21 @@ tr{
 .player-number-container {
     display: flex;
     align-items: center;
-    height: 63px;
-    width: 66px;
+    height: 52px;
+    width: 52px;
     margin: 0 !important;
     position: absolute;
     top: 4px;
     right: 9px;
-    border-radius: var(--br-100px);
-    background-color: var(--primary-blue-400);
+    border-radius: 50%;
+    background-color: #003366;
     flex-direction: column;
     justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
 }
+
 .player-role-description {
     height: 91px;
     display: flex;
