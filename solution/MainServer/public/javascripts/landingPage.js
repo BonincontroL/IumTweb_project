@@ -14,14 +14,17 @@ function init() {
         }
     })
 
-    let competition_cards = document.querySelectorAll('.competition-card')
-    setCompetitionsCardEventListener(competition_cards)
+    let competition_cards = document.querySelectorAll('.competition-card');
+    setCompetitionsCardEventListener(competition_cards);
+
     getAndRenderPlayers();
+
+    getAndRenderLastMatches("IT1"); // Serie A matches by default
+    addCompetitionLogosListeners();
 }
 
-// ToDo  sistemare commenti + pulizia codice
+// ToDo  sistemare commenti + pulizia e sistemazione codice + in caso di dati mancanti mettere N.D.
 // ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
-// ToDo sistemare getPlayerNumber
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -197,4 +200,138 @@ function getPlayerNumber(idPlayer) {
             console.error('Errore durante il recupero del numero di maglia del giocatore:', error);
             throw error;
         });
+}
+
+
+/**
+ * Recupera gli ultimi match di una specifica competizione utilizzando il competition_id.
+ * @param {string} competitionId - L'identificativo della competizione (ad esempio, 'IT1' per la Serie A).
+ * @returns {Promise<Array>} Un promise che, se risolto, restituisce un array dei match.
+ */
+function getLastMatchesByCompetition(competitionId) {
+    const matchesUrl = `http://localhost:3001/games/getLastMatchesByCompetition/${competitionId}`;
+
+    return axios.get(matchesUrl)
+        .then(matchesResponse => {
+            const matches = matchesResponse.data;
+            if (matches.length === 0) {
+                throw new Error(`Nessun match trovato per la competizione con ID: ${competitionId}.`);
+            }
+
+            return matches;
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero dei dati per la competizione con ID:', competitionId, error);
+            throw error;
+        });
+}
+
+/**
+ * Funzione per ottenere e renderizzare gli ultimi match (games) di una competizione specifica.
+ * @param competitionId
+ */
+function getAndRenderLastMatches(competitionId) {
+    getLastMatchesByCompetition(competitionId).then(matches => {
+        renderMatches(matches, competitionId);
+    }).catch(error => {
+        console.error(`Errore durante il recupero dei match della ${competitionId}:`, error);
+    });
+}
+
+/**
+ * Funzione per renderizzare i match (games) in container specifico.
+ * @param matches
+ */
+function renderMatches(matches) {
+    const matchesContainer = document.querySelector('.multiple-matches-container');
+    matchesContainer.innerHTML = '';
+
+    matches.forEach(matchData => {
+        const adaptedMatch = adaptMatchData(matchData);
+        const matchDiv = createMatchDiv(adaptedMatch);
+        matchesContainer.appendChild(matchDiv);
+    });
+}
+
+/**
+ * Funzione per adattare i dati del match (game) in un formato più leggibile.
+ * @param match
+ * @returns {{_id: *, game_id: *, competition_id: *, season: *, round: *, homeTeam: {name: *, logo: string, score: *}, awayTeam: {name: *, logo: string, score: *}, time: string}}
+ */
+function adaptMatchData(match) {
+    return {
+        _id: match._id,
+        game_id: match.game_id,
+        competition_id: match.competition_id,
+        season: match.season,
+        round: match.round,
+        homeTeam: {
+            name: match.home_club_name,
+            logo: `https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png`,
+            score: match.home_club_goals
+        },
+        awayTeam: {
+            name: match.away_club_name,
+            logo: `https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png`,
+            score: match.away_club_goals
+        },
+        time: new Date(match.date).toLocaleString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+    };
+}
+
+/**
+ * Funzione per creare un div per un match (game) specifico.
+ * @param match
+ * @returns {HTMLDivElement}
+ */
+function createMatchDiv(match) {
+    const matchDiv = document.createElement('div');
+    matchDiv.classList.add('game-information');
+
+    const homeTeamLogo = `<img class="team-logo" src="${match.homeTeam.logo}" alt="${match.homeTeam.name}" />`;
+    const awayTeamLogo = `<img class="team-logo" src="${match.awayTeam.logo}" alt="${match.awayTeam.name}" />`;
+
+    const homeTeamNameStyle = match.homeTeam.name && match.homeTeam.name.length > 20 ? 'font-size: 0.8rem; text-align:center;' : '';
+    const awayTeamNameStyle = match.awayTeam.name && match.awayTeam.name.length > 20 ? 'font-size: 0.8rem; text-align:center;' : '';
+
+    const matchResultVertical = `
+        <div class="match-result-vertical">
+            <div class="squad-icon-container">
+                ${homeTeamLogo}
+                <p style="${homeTeamNameStyle}">${match.homeTeam.name || 'N.D.'}</p>
+                <div class="team-result">
+                    <p>${match.homeTeam.score !== undefined ? match.homeTeam.score :'N.D.'}</p>
+                </div>
+            </div>
+            <div class="squad-icon-container">
+                ${awayTeamLogo}
+                <p style="${awayTeamNameStyle}">${match.awayTeam.name || 'N.D.'}</p>
+                <div class="team-result">
+                    <p>${match.awayTeam.score !== undefined ? match.awayTeam.score : 'N.D.'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    matchDiv.innerHTML = matchResultVertical;
+    return matchDiv;
+}
+
+/**
+ * Aggiunge un listener a tutti i loghi delle competizioni
+ */
+function addCompetitionLogosListeners() {
+    const logos = document.querySelectorAll('.competition-logos-container [data-competition-id]');
+    logos.forEach(logo => {
+        logo.addEventListener('click', function() {
+            const competitionId = logo.getAttribute('data-competition-id');
+            getAndRenderLastMatches(competitionId);
+        });
+    });
 }

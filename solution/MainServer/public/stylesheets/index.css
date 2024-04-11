@@ -2597,6 +2597,36 @@ tr{
     .squad-info-frame {
         flex: 1;
     }
-
-
 }
+
+
+/*******************************************************/
+
+.competition-logos-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.competition-logo {
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombra leggera per profondità */
+    transition: transform 0.2s ease; /* Animazione per il feedback al passaggio del mouse */
+    width: 50px;
+    height: auto; /* Mantiene le proporzioni dell'immagine */
+    object-fit: cover; /* Ridimensiona l'immagine per adattarla al contenitore */
+}
+
+.competition-logo:hover {
+    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+}
+
+
+.team-logo {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+
+
