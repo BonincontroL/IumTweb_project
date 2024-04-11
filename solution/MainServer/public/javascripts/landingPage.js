@@ -25,8 +25,9 @@ function init() {
     getAndRenderPlayers();
 }
 
-// ToDo  sistemare commenti + pulizia codice + mettere numero maglia giocatore
+// ToDo  sistemare commenti + pulizia codice
 // ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
+// ToDo sistemare getPlayerNumber
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -124,7 +125,30 @@ function renderPlayers(players, competitionIdentifier) {
         playerImage.setAttribute('loading', 'eager');
         playerImage.alt = player.firstName + ' ' + player.lastName + ' image';
         playerImage.src = player.imageUrl;
+        playerImage.style.marginRight='25px';
         playerCard.appendChild(playerImage);
+
+        /**
+         * Aggiunge il numero del giocatore alla card del giocatore.
+         */
+        getPlayerNumber(player.playerId)
+            .then(playerNumber => {
+
+                if (playerNumber !== null) {
+                    const playerNumberValue = playerNumber.playerNumber;
+                    const playerNumberContainer = document.createElement('div');
+                    playerNumberContainer.classList.add('player-number-container');
+                    const playerNumberElement = document.createElement('h5');
+                    playerNumberElement.textContent = playerNumberValue !== -1 ? String(playerNumberValue) : 'N.D.';
+
+                    playerNumberContainer.appendChild(playerNumberElement);
+                    playerCard.appendChild(playerNumberContainer);
+                }
+            })
+            .catch(error => {
+                console.error('Errore durante il recupero del numero del giocatore:', error);
+            });
+
 
         playersContainer.appendChild(playerCard);
     });
@@ -159,4 +183,24 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+}
+
+/**
+ * Funzione per ottenere il numero di maglia di un giocatore
+ * @param idPlayer
+ * @returns {Promise<unknown>}
+ */
+function getPlayerNumber(idPlayer) {
+    const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
+
+    return axios.get(playerNumberUrl)
+        .then(playerNumberResponse => {
+            const playerNumber = playerNumberResponse.data;
+
+            return playerNumber;
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero del numero di maglia del giocatore:', error);
+            throw error;
+        });
 }
