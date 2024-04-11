@@ -24,4 +24,17 @@ router.get('/getAllGames', async (req, res, next) => {
     }
 });
 
+
+router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next) => {
+    try{
+        const {competition_id} = req.params;
+        const lastMatches = await GamesController.getLast5Games(competition_id);
+        res.status(200).json(lastMatches);
+    } catch (error) {
+        console.error('Errore durante il recupero delle ultime partite:', error);
+        res.status(500).json({ error: 'Errore durante il recupero delle ultime partite' });
+    }
+});
+
+
 module.exports = router;
