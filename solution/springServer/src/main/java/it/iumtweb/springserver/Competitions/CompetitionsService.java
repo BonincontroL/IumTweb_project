@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CompetitionsService {
@@ -22,5 +24,11 @@ public class CompetitionsService {
 
     public Optional<Competitions> getById(String competitionId) {
         return competitionsRepository.findById(competitionId);
+    }
+
+    public Map<String, List<Competitions>> getCompetitionsGroupedByCountry() {
+        List<Competitions> allComps = competitionsRepository.findAll();
+        return  allComps.stream()
+                .collect(Collectors.groupingBy(competition-> competition.getCountryName()!=null ? competition.getCountryName(): "Internazionale"));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +30,15 @@ public class CompetitionsController {
             return ResponseEntity.ok().body(AllCompetitions);
         }
     }
-
+    @GetMapping("/getCompetitionsGroupedByCountry")
+    public ResponseEntity<Map<String,List<Competitions>>> getCompetitionsGroupedByCountry(){
+        Map<String, List<Competitions>> result = competitionsService.getCompetitionsGroupedByCountry();
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(result);
+        }
+    }
     @GetMapping("/get")
     public ResponseEntity<Competitions> getById(@RequestParam(name="competition_id") String competitionId){
         Optional<Competitions> result = competitionsService.getById(competitionId);
