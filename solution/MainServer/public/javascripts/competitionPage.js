@@ -67,7 +67,7 @@ function getCompetitionInformation(){
 function renderCompetitionInformation(competitionInfo){
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionName').innerText=competitionInfo.name;
-    document.getElementById('competitionNation').innerText=competitionInfo.countryName;
+    document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
 }

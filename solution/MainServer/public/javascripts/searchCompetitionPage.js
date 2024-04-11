@@ -1,3 +1,4 @@
+const COUNTRY_NAME_INTERNATIONAL="Resto del mondo"
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
 })
@@ -11,8 +12,9 @@ function getCompetitionsGroupedByCountry(){
     let url="http://localhost:3000/competitions/getCompetitionsGroupedByCountry"
     axios.get(url)
         .then(res=>{
-            renderCompetitionsGroupedByCountry(res.data)
-            setCompetitionsCardEventListener(document.querySelectorAll('.competition-card-mini'))
+            renderCompetitionsGroupedByCountry(res.data).then(()=>{
+                setCompetitionsCardEventListener(document.querySelectorAll('.competition-card-mini'))
+            })
         })
         .catch(err=>{
             alert(JSON.stringify(err))
@@ -23,37 +25,50 @@ function getCompetitionsGroupedByCountry(){
  * render all the obtained competitions in the page
  * @param competitions hash map where a list of competitions is mapped basing on his name
  */
-function renderCompetitionsGroupedByCountry(competitions){
+async function renderCompetitionsGroupedByCountry(competitions) {
     let mainContainer = document.getElementById('competitions-container');
-    mainContainer.innerHTML='';
+    mainContainer.innerHTML = '';
     //itera per ogni Nazione
-    Object.keys(competitions).forEach(countryName=>{
+    for (const countryName of Object.keys(competitions)) {
         const competitionsGroup = document.createElement('div')
-        competitionsGroup.className='competitions-group'
-        const header=`<div class="competitions-group-header">
+        let imgUrl
+        competitionsGroup.className = 'competitions-group'
+        if (countryName === COUNTRY_NAME_INTERNATIONAL)
+            imgUrl = "images/worldImage.jpg"
+        else {
+            try {
+                let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
+                let res = await axios.get(queryUrl)
+                imgUrl=res.data[0].flags.png
+            }catch (err){
+                imgUrl=null
+            }
+        }
+        const header = `<div class="competitions-group-header">
                                 <div class="header-flag-container">
+                                    <img class="nationFlag" src=${imgUrl} alt="${countryName} flag">
                                 </div>    
                                 <h2>${countryName}</h2>
                             </div>`;
-        competitionsGroup.innerHTML=header;
+        competitionsGroup.innerHTML = header;
 
         const competitionsContainer = document.createElement('div')
-        competitionsContainer.className='competitions-group-container'
+        competitionsContainer.className = 'competitions-group-container'
 
-        competitions[countryName].forEach(competition=>{
-            const competitionCard= document.createElement('div')
-            competitionCard.className='competition-card-mini'
+        competitions[countryName].forEach(competition => {
+            const competitionCard = document.createElement('div')
+            competitionCard.className = 'competition-card-mini'
             competitionCard.setAttribute('data-competitionId', competition.competitionId)
 
-            const cardContainer=`
+            const cardContainer = `
                     <img class="competition-big-logo" src="${competitionLogoImgUrl}${competition.competitionId.toLowerCase()}.png">
                     <h3>${competition.name}</h3>
             `;
-            competitionCard.innerHTML=cardContainer
+            competitionCard.innerHTML = cardContainer
             competitionsContainer.appendChild(competitionCard)
         })
         competitionsGroup.appendChild(competitionsContainer)
         mainContainer.appendChild(competitionsGroup)
-    })
+    }
 
 }
