@@ -1,6 +1,20 @@
 const COUNTRY_NAME_INTERNATIONAL="Resto del mondo"
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
+    document.getElementById('search-competitions').addEventListener('input',(e)=>
+        debouncedSearch(e.target.value)
+    );
+    const debouncedSearch = _.debounce(function (searchText){
+        axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
+            params:{name:searchText}
+        }).then(async res => {
+            if (res.data.length !== 0) {
+                await renderCompetitionsGroupedByCountry(res.data)
+            }
+        }).catch(err=>{
+            alert(JSON.stringify(err))
+        })
+    },200)
 })
 
 /**
@@ -11,10 +25,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 function getCompetitionsGroupedByCountry(){
     let url="http://localhost:3000/competitions/getCompetitionsGroupedByCountry"
     axios.get(url)
-        .then(res=>{
-            renderCompetitionsGroupedByCountry(res.data).then(()=>{
-                setCompetitionsCardEventListener(document.querySelectorAll('.competition-card-mini'))
-            })
+        .then(async res=>{
+            await renderCompetitionsGroupedByCountry(res.data)
         })
         .catch(err=>{
             alert(JSON.stringify(err))
@@ -70,5 +82,6 @@ async function renderCompetitionsGroupedByCountry(competitions) {
         competitionsGroup.appendChild(competitionsContainer)
         mainContainer.appendChild(competitionsGroup)
     }
-
+    let competitionCards = document.querySelectorAll('.competition-card-mini')
+    setCompetitionsCardEventListener(competitionCards)
 }

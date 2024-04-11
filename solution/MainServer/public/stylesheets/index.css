@@ -1049,21 +1049,6 @@ tr{
     color: var(--white);
 }
 
-.game-information{
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    flex: 1;
-    border-radius: var(--br-12px);
-    background-color: var(--white);
-    overflow: hidden;
-    flex-direction: row;
-    padding: var(--padding-10px);
-    gap: var(--gap-xl);
-    min-width: 315px;
-    max-width: 100%;
-}
 .user-popup{
     position: absolute;
     top:10vh;
@@ -1598,7 +1583,6 @@ tr{
     border-radius: var(--br-12px);
     background-color: var(--white);
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.38);
-    border: 2px solid var(--light-grey);
     box-sizing: border-box;
     flex-shrink: 0;
     display: flex;
@@ -1932,13 +1916,12 @@ tr{
     gap: var(--gap-8xs);
 }
 .competition-logo-container1 {
-    width: 5vw;
-    height: 5vw;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background-color: var(--white);
+    flex-direction: column;
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 .squad-info-frame {
     align-self: stretch;
@@ -2433,8 +2416,8 @@ tr{
     box-sizing: border-box;
 }
 .header-flag-container{
-    width: 5vw;
-    height: 5vw;
+    width: clamp(40px,4vw,5vw);
+    height: clamp(40px,4vw,5vw);
     background-color: var(--white);
     display: flex;
     justify-content: center;
@@ -2494,8 +2477,8 @@ tr{
 }
 .nationFlag{
     position: relative;
-    width: 3vw;
-    height: 3vw;
+    width: clamp(30px,3vw,5vw);
+    height: clamp(30px,3vw,5vw);
     object-fit: contain;
 }
 #searchCompetitionContainer{
@@ -2615,8 +2598,9 @@ tr{
 
 
 .team-logo {
-    max-width: 50px;
-    max-height: 50px;
+    width: clamp(20px,2vw,30px);
+    height: clamp(20px,2vw,30px);
+    object-fit: contain;
 }
 
 

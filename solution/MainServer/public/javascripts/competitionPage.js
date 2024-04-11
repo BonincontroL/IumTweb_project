@@ -60,6 +60,7 @@ function getCompetitionInformation(){
         })
 }
 
+
 /**
  * render the competition information in the correct HTML places
  * @param competitionInfo the competition object with all infos
