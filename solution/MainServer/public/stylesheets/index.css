@@ -1932,13 +1932,11 @@ tr{
     gap: var(--gap-8xs);
 }
 .competition-logo-container1 {
-    width: 5vw;
-    height: 5vw;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background-color: var(--white);
+    flex-direction: column;
+    box-sizing: border-box;
 }
 .squad-info-frame {
     align-self: stretch;
