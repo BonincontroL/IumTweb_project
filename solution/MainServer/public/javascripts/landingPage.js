@@ -89,7 +89,11 @@ function renderPlayers(players, competitionIdentifier) {
         const playerName = document.createElement('h5');
         playerName.classList.add('player-name');
         playerName.style.marginBottom = '10px'; // Aggiunge spazio sotto il nome del giocatore
-        playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${player.firstName}</span><br><span style="font-size: smaller">${player.lastName}</span>`;
+
+        const firstName = player.firstName ? player.firstName : " ";
+        const lastName = player.lastName ? player.lastName : " ";
+
+        playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${firstName}</span><br><span style="font-size: smaller">${lastName}</span>`;
 
         const squadCard = document.createElement('div');
         squadCard.classList.add('squad-card');
