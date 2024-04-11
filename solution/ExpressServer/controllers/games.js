@@ -36,9 +36,35 @@ function getLast5Games(competition_id) {
             throw new Error('Errore durante il recupero dei giochi: ' + error.message);
         });
 }
-
+function getRoundNumbers(comp_id,season){
+    return Model.aggregate([{
+        $match: {
+            competition_id: comp_id,
+            season: season //il + serve per trasformare il valore season in un numero
+        }
+    },
+        {
+            $group: {
+                _id: "$round"
+            }
+        },
+        {
+            $project: {
+                round: "$_id",
+                _id: 0
+            }
+        }
+    ]).then(data=>{
+        if(!data || data.length ===0)
+            throw new Error("Errore durante il recupero dei nomi dei round")
+        return data
+    }).catch(err=>{
+        throw new Error("Errore durante il recupero dei nomi dei round"+err.message)
+    })
+}
 
 module.exports = {
     getAllGames,
-    getLast5Games
+    getLast5Games,
+    getRoundNumbers
 };

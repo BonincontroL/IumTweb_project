@@ -24,7 +24,6 @@ router.get('/getAllGames', async (req, res, next) => {
     }
 });
 
-
 router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next) => {
     try{
         const {competition_id} = req.params;
@@ -36,5 +35,18 @@ router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next
     }
 });
 
-
+/**
+ * serve per prendere i numeri delle giornate di un campionato in una certa stagione.
+ */
+router.get('/getRoundNumbers',async (req,res)=>{
+    try{
+        const comp_id = req.query.comp_id;
+        const season = +req.query.season;
+        const lastRounds = await GamesController.getRoundNumbers(comp_id,season)
+        res.status(200).json(lastRounds)
+    }catch (error){
+        console.error('Errore durante il recupero delle giornate della competizione'+req.query.comp_id+' durante la stagione '+req.query.season)
+        res.status(500).json({error:error})
+    }
+})
 module.exports = router;

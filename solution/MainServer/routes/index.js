@@ -40,4 +40,17 @@ router.get('/competitions/getCompetitionsGroupedByCountryAndLikeName', function 
         res.send(err)
     })
 })
+
+router.get('/games/getRoundNumbers', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getRoundNumbers",{
+        params:{
+            comp_id:req.query.comp_id,
+            season:req.query.season
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.send(err)
+    })
+})
 module.exports = router;

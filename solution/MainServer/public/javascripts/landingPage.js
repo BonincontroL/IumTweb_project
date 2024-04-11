@@ -13,12 +13,14 @@ function init() {
             prevEl: ".swiper-button-prev"
         }
     })
+    document.getElementById('goToAllCompetitions').addEventListener('click',()=>{
+        window.location.href="../searchCompetition_page.html"
+    })
 
     let competition_cards = document.querySelectorAll('.competition-card');
     setCompetitionsCardEventListener(competition_cards);
 
     getAndRenderPlayers();
-
     getAndRenderLastMatches("IT1"); // Serie A matches by default
     addCompetitionLogosListeners();
 }

@@ -1946,6 +1946,9 @@ tr{
     object-fit:contain  ;
     z-index: 1;
 }
+#competitionMatchDetails{
+    display: none;
+}
 .player-card-for-homepage {
     cursor: pointer;
     display: flex;

@@ -2,6 +2,8 @@ let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id
+let currentSeason = 2023 //la stagione corrente di default è 2023
+let minMatchday, maxMatchday
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
@@ -35,8 +37,10 @@ document.addEventListener('DOMContentLoaded',()=>{
             button.classList.add('button-game-navbar-active')
         })
     })
-
     getCompetitionInformation()
+    document.getElementById('competition-matches-btn').addEventListener('click',()=>{
+        getMatches()
+    })
 })
 
 function hideMatchContainersExceptOne(containerToShow) {
@@ -59,8 +63,6 @@ function getCompetitionInformation(){
             alert(JSON.stringify(err))
         })
 }
-
-
 /**
  * render the competition information in the correct HTML places
  * @param competitionInfo the competition object with all infos
@@ -72,3 +74,44 @@ function renderCompetitionInformation(competitionInfo){
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
 }
+
+/**
+ * this function start to get all
+ */
+function getMatches(){
+    let url=`http://localhost:3000/games/getRoundNumbers`
+
+    axios.get(url,{
+        params:
+            {
+                comp_id:competition_id,
+                season: currentSeason
+            }
+    }).then(res=>{
+        let matchNumbers=res.data.sort((a,b)=>{
+            let numA=parseInt(a.round.split(".")[0],10)
+            let numB =parseInt(b.round.split("."[0]),10)
+            return numA-numB;
+        })
+        minMatchday=matchNumbers[0].round;
+        maxMatchday =matchNumbers[matchNumbers.length-1].round
+        renderMatchesDropdownMenu(matchNumbers)
+    }).catch(err=>{
+        alert(JSON.stringify(err))
+    })
+}
+
+/**
+ * render the dropdown menu loading all the matchNumbers values
+ * @param matchNumbers
+ */
+function renderMatchesDropdownMenu(matchNumbers){
+    let dropdownContainer=document.getElementById('competitionSelectMatchday')
+    matchNumbers.forEach(singleRound=>{
+        let dropdownItem = document.createElement('option')
+        dropdownItem.innerHTML=singleRound.round.split(".")[0]
+        dropdownItem.value=singleRound.round
+        dropdownContainer.appendChild(dropdownItem)
+    })
+}
+
