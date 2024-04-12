@@ -2,7 +2,8 @@
  * Inizializza la pagina di login chiamata quando la pagina viene caricata
  */
 function onLogin(){
-        showLoginForm();
+    showLoginForm();
+
 
 
 }
@@ -14,7 +15,7 @@ function addListenersLogin(){
     document.getElementById("showSingupPage").addEventListener('click', showRegisterForm);
 
     document.getElementById('login_button').addEventListener('click', function (event) {
-        event.preventDefault();
+        event.preventDefault()
         const requestBody = ExtractDataLog();
         console.log(requestBody); //da eliminare solo per vedere se stampa i dati
         if (requestBody !== null) {
@@ -34,9 +35,9 @@ function addListenersRegister(){
     document.getElementById('singUp_button').addEventListener('click', function(event) {
         event.preventDefault();
         const requestBody = ExtractDataReg();
-        console.log(requestBody); // da eliminare oslo per vedere se stampa
+        console.log(requestBody); // da eliminare solo per vedere se stampa
         if (requestBody !== null) {
-
+            SendDataReg(requestBody);
         }
         resetRegisterForm();
     });
@@ -44,10 +45,14 @@ function addListenersRegister(){
 
 }
 
+
+
 /**
  * mostra il form di login e nasconde il form di registrazione
  */
-function showLoginForm() {
+function showLoginForm(event) {
+    if (event) event.preventDefault();
+
     document.getElementById("singup_form").style.display = "none";
     document.getElementById("login_form").style.display = "flex";
     addListenersLogin();
@@ -56,7 +61,8 @@ function showLoginForm() {
 /**
  * mostra il form di registrazione e nasconde il form di login
  */
-function showRegisterForm(){
+function showRegisterForm(event){
+    if (event) event.preventDefault();
     document.getElementById("singup_form").style.display = "flex";
     document.getElementById("login_form").style.display = "none";
     addListenersRegister();
@@ -137,4 +143,25 @@ function resetLoginForm() {
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
+}
+
+
+
+/**
+ * Funzione per mandare i dati di registrazione al Expressserver
+ */
+function SendDataReg(requestBody) {
+    axios.post('http://localhost:3000/register', requestBody)
+        .then(response => {
+            if (response.status === 201) {
+                alert('Registrazione completata con successo');
+
+            } else {
+                console.error('Errore durante la registrazione:', response.data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Errore durante la registrazione:', error);
+            alert('Errore di registrazione: Username o email già in uso:');
+        });
 }

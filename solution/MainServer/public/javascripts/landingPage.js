@@ -23,6 +23,9 @@ function init() {
     getAndRenderPlayers();
     getAndRenderLastMatches("IT1"); // Serie A matches by default
     addCompetitionLogosListeners();
+    document.getElementById('doLogin').addEventListener('click',()=>{
+        window.location.href="login_singup.html"
+    }); //test poi da sistemare con l'html
 }
 
 // ToDo  sistemare commenti + pulizia e sistemazione codice + in caso di dati mancanti mettere N.D.
