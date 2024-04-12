@@ -152,6 +152,7 @@ function getTableByCompSeasonAndType(comp_id,season,type){
         throw new Error("Errore durante il recupero della classifica:"+err.message+"\n")
     })
 }
+
 module.exports = {
     getAllGames,
     getLast5Games,
