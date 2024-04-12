@@ -49,4 +49,16 @@ router.get('/getRoundNumbers',async (req,res)=>{
         res.status(500).json({error:error})
     }
 })
+
+router.get('/getTableByCompSeasonAndType', async (req,res)=>{
+    try{
+        const comp_id = req.query.comp_id
+        const season = +req.query.season
+        const type = req.query.type
+        const finalTable = await GamesController.getTableByCompSeasonAndType(comp_id,season,type)
+        res.status(200).json(finalTable)
+    }catch (error){
+        res.status(500).json({error:error})
+    }
+})
 module.exports = router;
