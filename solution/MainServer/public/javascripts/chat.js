@@ -30,7 +30,7 @@ function setupSocketListeners() {
  * Richiesta al server la lista di tutte le competizioni e richiamo di renderCompetitionOnChat per visualizzarle.
  */
 function getAllCompetitions() {
-    axios.get('http://localhost:8081/competitions/getAllCompetitions')
+    axios.get('http://localhost:3000/competitions/getAllCompetitions')
         .then(response => {
             const competitions = response.data;
             renderCompetitionOnChat(competitions);
