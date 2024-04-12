@@ -25,6 +25,20 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
     }
 });
 
+/**
+ * route che restituisce tutti i giocatori di una partita
+ */
+router.get('/getMatchPlayers', async(req,res)=>{
+    try{
+        const game_id= +req.query.game_id
+        const home_club_id = +req.query.home_club_id
+        const away_club_id = +req.query.away_club_id
+        const allPlayers = await gamelineupsController.getMatchPlayers(game_id,home_club_id,away_club_id)
+        res.status(200).json(allPlayers)
+    }catch (error){
+        res.status(500).json({error:error})
+    }
+})
 
 
 module.exports = router;
