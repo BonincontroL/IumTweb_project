@@ -22,14 +22,17 @@ function init() {
 
     getAndRenderPlayers();
     getAndRenderLastMatches("IT1"); // Serie A matches by default
+    getAndRenderLastMatches("NL1");
     addCompetitionLogosListeners();
     document.getElementById('doLogin').addEventListener('click',()=>{
         window.location.href="login_singup.html"
     }); //test poi da sistemare con l'html
 }
 
-// ToDo  sistemare commenti + pulizia e sistemazione codice + in caso di dati mancanti mettere N.D.
+//test di prova per getAndRenderLastMatches in home page --> da rivedere lo stile
+// ToDo  sistemare commenti + pulizia e sistemazione codice
 // ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
+// ToDO modificare getPlayersByCompetition per ottenere i giocatori di una competizione piu recenti (2023)
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -250,11 +253,25 @@ function getAndRenderLastMatches(competitionId) {
 /**
  * Funzione per renderizzare i match (games) in container specifico.
  * @param matches
+ * @param competitionId
  */
-function renderMatches(matches) {
-    const matchesContainer = document.querySelector('.multiple-matches-container');
+function renderMatches(matches, competitionId) {
+
+    const secondContainerCompetitionIds = ['EL', 'POSU', 'NL1', 'BE1', 'CLQ'];
+
+
+    let matchesContainer;
+    if (secondContainerCompetitionIds.includes(competitionId)) {
+
+        matchesContainer = document.querySelectorAll('.multiple-matches-container')[1];
+    } else {
+
+        matchesContainer = document.querySelector('.multiple-matches-container');
+    }
+
     matchesContainer.innerHTML = '';
 
+    // Itera su ogni match e li aggiunge al container selezionato
     matches.forEach(matchData => {
         const adaptedMatch = adaptMatchData(matchData);
         const matchDiv = createMatchDiv(adaptedMatch);
