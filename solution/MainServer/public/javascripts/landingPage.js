@@ -37,9 +37,9 @@ function init() {
  * @returns {Promise<unknown>}
  */
 function getPlayersByCompetition(competitionId) {
-    const playersUrl = `http://localhost:8081/players/getPlayersByCompetition/${competitionId}`;
-
-    return axios.get(playersUrl)
+    //const playersUrl = `http://localhost:8081/players/getPlayersByCompetition/${competitionId}`;
+    const url = `http://localhost:3000/players/getPlayersByCompetition/${competitionId}`;
+    return axios.get(url)
         .then(playersResponse => {
             const players = playersResponse.data;
 
@@ -197,9 +197,9 @@ function shuffleArray(array) {
  * @returns {Promise<unknown>}
  */
 function getPlayerNumber(idPlayer) {
-    const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
-
-    return axios.get(playerNumberUrl)
+    //const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
+    const url=`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
+    return axios.get(url)
         .then(playerNumberResponse => {
             const playerNumber = playerNumberResponse.data;
 
@@ -218,9 +218,9 @@ function getPlayerNumber(idPlayer) {
  * @returns {Promise<Array>} Un promise che, se risolto, restituisce un array dei match.
  */
 function getLastMatchesByCompetition(competitionId) {
-    const matchesUrl = `http://localhost:3001/games/getLastMatchesByCompetition/${competitionId}`;
-
-    return axios.get(matchesUrl)
+    //const matchesUrl = `http://localhost:3001/games/getLastMatchesByCompetition/${competitionId}`;
+    const url=`http://localhost:3000/games/getLastMatchesByCompetition/${competitionId}`;
+    return axios.get(url)
         .then(matchesResponse => {
             const matches = matchesResponse.data;
             if (matches.length === 0) {

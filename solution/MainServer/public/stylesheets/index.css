@@ -1989,7 +1989,7 @@ tr{
     position: relative;
     gap: var(--gap-3xs);
     height: 80%;
-    width: 70%;
+    /*width: 70%;*/
 }
 
 .lateral-navbar-chat-element{

@@ -21,40 +21,12 @@ router.get('/getCompetitionInformation', function (req,res){
         res.send(err)
       })
 })
-router.get('/competitions/getCompetitionsGroupedByCountry', function (req,res){
-    axios.get(SPRING_SERVER+"/competitions/getCompetitionsGroupedByCountry")
-        .then(data=>{
-            res.send(data.data)
-        }).catch(err=>{
-            res.send(err)
-    })
-})
 
 
-router.get('/competitions/getCompetitionsGroupedByCountryAndLikeName', function (req,res){
-    axios.get(SPRING_SERVER+"/competitions/getCompetitionsGroupedByCountryAndLikeName",
-        {params:{
-        name:req.query.name
-        }})
-        .then(data=>{
-            res.send(data.data)
-        }).catch(err=>{
-        res.send(err)
-    })
-})
 
-router.get('/games/getRoundNumbers', function (req,res){
-    axios.get(EXPRESS_SERVER+"/games/getRoundNumbers",{
-        params:{
-            comp_id:req.query.comp_id,
-            season:req.query.season
-        }
-    }).then(data=>{
-        res.send(data.data)
-    }).catch(err=>{
-        res.send(err)
-    })
-})
+
+
+
 
 
 
