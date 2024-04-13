@@ -16,6 +16,18 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
     })
 })
 
+router.get('/getMatchPlayers', function (req,res){
+    axios.get(EXPRESS_SERVER+"/gamelineups/getMatchPlayers/", {params: {
+            game_id: req.query.game_id,
+            home_club_id: req.query.home_club_id,
+            away_club_id: req.query.away_club_id
+        }})
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+        res.send(err)
+    })
+})
 
 
 

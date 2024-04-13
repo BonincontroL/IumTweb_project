@@ -2,7 +2,11 @@ package it.iumtweb.springserver.Players;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class PlayersService {
 
@@ -21,9 +25,18 @@ public class PlayersService {
         return playersRepository.findPlayersByCurrentClubIdAndLastSeason(clubId,season);
 
     }
-
     public List<Players> getPlayersByCurrentClubDomesticCompetitionId(String competitionId) {
         return playersRepository.findByCurrentClubDomesticCompetitionId(competitionId);
+    }
+    public Map<String,List<PlayersDTO>> getPlayersImgUrlById(List<Long> startingIds, List<Long> substituteIds){
+        List<PlayersDTO> startingPlayers = playersRepository.findPlayersWithImageUrlsByIds(startingIds);
+        List<PlayersDTO> substitutePlayers= playersRepository.findPlayersWithImageUrlsByIds(substituteIds);
+
+        Map<String, List<PlayersDTO>> lineup= new HashMap<>();
+        lineup.put("starting_lineup", startingPlayers);
+        lineup.put("substitutes", substitutePlayers);
+
+        return lineup;
     }
 
     public List<Players> getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId) {

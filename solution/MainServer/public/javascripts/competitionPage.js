@@ -4,6 +4,8 @@ const competitionPageName = 'competition-page'
 let competition_id
 let currentSeason = 2023 //la stagione corrente di default è 2023
 let minMatchday, maxMatchday
+let gameId =4087929, homeClubId =350, awayClubId=873 //queste variabili servono per la gestione della singola partita
+let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1"
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('competition-matches-btn').addEventListener('click',()=>{
         getMatches()
     })
+    getMatchFormation();
 })
 
 function hideMatchContainersExceptOne(containerToShow) {
@@ -76,7 +79,8 @@ function renderCompetitionInformation(competitionInfo){
 }
 
 /**
- * this function start to get all
+ * this function start to get all the matches in a single competition year
+ * in a specific round.
  */
 function getMatches(){
     let url=`http://localhost:3000/games/getRoundNumbers`
@@ -115,3 +119,99 @@ function renderMatchesDropdownMenu(matchNumbers){
     })
 }
 
+async function getMatchFormation(){
+    let params ={game_id:gameId, home_club_id:homeClubId, away_club_id:awayClubId}
+    let url = "http://localhost:3000/gamelineups/getMatchPlayers";
+        try{
+            let res = await axios.get(url,{params:params})
+            let homeLineup = res.data[0].home_lineup[0].lineup
+            let awayLineup = res.data[0].away_lineup[0].lineup
+            await renderMatchFormation(homeLineup, awayLineup)
+        }catch(error){
+            alert(JSON.stringify(error))
+        }
+}
+
+/**
+ * this function render the home lineup and away lineup of a specific game,
+ * @param homeLineup an object array of all the home team players that have played the game
+ * @param awayLineup an object array of all the away team players that have played the game
+ */
+async function renderMatchFormation(homeLineup, awayLineup){
+    let homeLineupContainer= document.getElementById('homeFormationContainer')
+    homeLineupContainer.innerHTML=''
+    let awayLineupContainer= document.getElementById('awayFormationContainer')
+    awayLineupContainer.innerHTML=''
+
+    await renderFormation(homeLineupContainer, homeLineup);
+    await renderFormation(awayLineupContainer,awayLineup)
+}
+
+/**
+ *  function that render a formation (could be home or away team, it doesn't matter)
+ *  into a container, mantaining a certain order
+ * @param container the formation container
+ * @param lineup  consisting of two array, starting_lineup and substitutes
+ */
+async function renderFormation(container, lineup){
+    let startingIds = lineup.starting_lineup.map(player=>player.player_id)
+    let substituteIds = lineup.substitutes.map(player=>player.player_id)
+    try{
+        let res = await axios.get("http://localhost:3000/players/getPlayersImgUrlById",{
+            params:{
+                starting:startingIds.join(","),
+                substitutes: substituteIds.join(",")
+            }
+        })
+        lineup.starting_lineup.forEach(player=>{
+            const match= res.data.starting_lineup.find(url=> url.playerId===player.player_id)
+            player.imageUrl=match? match.imageUrl: playerDefaultImageUrl
+        })
+        lineup.substitutes.forEach(player=>{
+            const match= res.data.substitutes.find(url=> url.playerId===player.player_id)
+            player.imageUrl=match? match.imageUrl: playerDefaultImageUrl
+        })
+
+        let startingLineupBanner= document.createElement('div')
+        startingLineupBanner.className='formation-header'
+        startingLineupBanner.innerHTML=  '<h6>Titolari</h6> '
+        container.appendChild(startingLineupBanner)
+
+        lineup.starting_lineup.forEach(player=>{
+            container.appendChild(renderPlayerCard(player))
+        })
+
+        let benchBanner= document.createElement('div')
+        benchBanner.className='formation-header'
+        benchBanner.innerHTML=  '<h6>Panchina</h6> '
+        container.appendChild(benchBanner)
+
+        lineup.substitutes.forEach(player=>{
+            container.appendChild(renderPlayerCard(player))
+        })
+    }catch (error){
+        alert(JSON.stringify(error))
+    }
+}
+
+function renderPlayerCard(player) {
+    let cardDiv = document.createElement('div')
+    cardDiv.className = 'player-card-for-competition'
+    cardDiv.innerHTML = `
+           <img 
+               class="player-card-for-competition-img"
+               loading="lazy"
+               alt=""
+               src="${player.imageUrl}"
+            />
+            <div class="subbed-player">
+                <div class="player-details">
+                    <div class="player-number-wrapper">
+                        <h4>${player.number}</h4>
+                    </div>
+                    <h4>${player.player_name}</h4>
+                </div>
+            </div>`
+
+    return cardDiv
+}

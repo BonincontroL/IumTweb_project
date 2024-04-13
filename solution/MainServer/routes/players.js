@@ -26,6 +26,18 @@ router.get('/getPlayersByCompetitionOrderByLastSeason/:competition_id', function
 })
 
 
+router.get("/getPlayersImgUrlById", function (req,res){
+    axios.get(SPRING_SERVER+"/players/getPlayersImgUrlById",{
+        params:{
+            starting:req.query.starting,
+            substitutes:req.query.substitutes
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.send(err)
+    })
+})
 
 
 
