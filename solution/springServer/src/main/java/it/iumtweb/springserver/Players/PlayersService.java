@@ -26,4 +26,8 @@ public class PlayersService {
         return playersRepository.findByCurrentClubDomesticCompetitionId(competitionId);
     }
 
+    public List<Players> getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId) {
+        return playersRepository.findByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(competitionId);
+    }
+
 }

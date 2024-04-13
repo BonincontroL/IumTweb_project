@@ -11,4 +11,6 @@ public interface PlayersRepository extends JpaRepository<Players, Long>{
 
     List<Players> findByCurrentClubDomesticCompetitionId(String competitionId);
 
+    List<Players> findByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId);
+
 }

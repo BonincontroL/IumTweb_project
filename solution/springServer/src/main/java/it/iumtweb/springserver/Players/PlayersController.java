@@ -61,6 +61,22 @@ public class PlayersController {
         }
     }
 
+    /**
+     * endpoint to get all players who are playing in a certain competition and order them by last season
+     * @param competitionId
+     * @return
+     */
+    @GetMapping("/getPlayersByCompetitionOrderByLastSeason/{competitionId}")
+    public ResponseEntity<List<Players>> getPlayersByCurrentClubIdOrderByLastSeason(@PathVariable String competitionId) {
+        List<Players> players = playersService.getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(competitionId);
+        if (players.isEmpty()) {
+            System.out.println("No Players found for competition ID: " + competitionId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(players);
+        }
+    }
+
 
 
 
