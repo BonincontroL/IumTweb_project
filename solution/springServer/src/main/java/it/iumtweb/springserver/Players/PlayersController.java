@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/players")
@@ -61,6 +62,22 @@ public class PlayersController {
         }
     }
 
+    /**
+     * endpoint to get image url of all players in a certain match
+     * @param starting a list of player id that start a certain match
+     * @param substitutes a list of player id that bench a certain match
+     * @return a map with two entries
+     *  the first is "starting_lineup" and contains a list of couples with id,url of all the players that start the match
+     *  the second is "substitutes" and contains a list of couples with id,url of all the players that bench the match.
+     */
+    @GetMapping("/getPlayersImgUrlById")
+    public ResponseEntity<Map<String,List<PlayersDTO>>> getPlayersImgUrlById(@RequestParam List<Long> starting, @RequestParam List<Long> substitutes){
+        Map<String,List<PlayersDTO>> result = playersService.getPlayersImgUrlById(starting,substitutes);
+        if(result.isEmpty())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok().body(result);
+    }
 
 
 
