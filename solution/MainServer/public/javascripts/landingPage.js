@@ -32,7 +32,6 @@ function init() {
 //test di prova per getAndRenderLastMatches in home page --> da rivedere lo stile
 // ToDo  sistemare commenti + pulizia e sistemazione codice
 // ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
-// ToDO modificare getPlayersByCompetition per ottenere i giocatori di una competizione piu recenti (2023)
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -40,8 +39,7 @@ function init() {
  * @returns {Promise<unknown>}
  */
 function getPlayersByCompetition(competitionId) {
-    //const playersUrl = `http://localhost:8081/players/getPlayersByCompetition/${competitionId}`;
-    const url = `http://localhost:3000/players/getPlayersByCompetition/${competitionId}`;
+    const url = `http://localhost:3000/players/getPlayersByCompetitionOrderByLastSeason/${competitionId}`;
     return axios.get(url)
         .then(playersResponse => {
             const players = playersResponse.data;

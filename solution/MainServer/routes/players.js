@@ -16,6 +16,15 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
     })
 })
 
+router.get('/getPlayersByCompetitionOrderByLastSeason/:competition_id', function (req,res){
+    axios.get(`http://localhost:8081/players/getPlayersByCompetition/${req.params.competition_id}`)
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+        res.send(err)
+    })
+})
+
 
 
 
