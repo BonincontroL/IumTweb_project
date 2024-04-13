@@ -26,4 +26,28 @@ router.get('/getRoundNumbers', function (req,res){
         res.send(err)
     })
 })
+router.get('/getMatchesByCompAndSeasonAndRound', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getMatchesByCompAndSeasonAndRound",{
+        params:{
+            comp_id:req.query.comp_id,
+            season:req.query.season,
+            currentRound:req.query.currentRound
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.send(err)
+    })
+})
+router.get('/getRefreeAndStadium', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getRefreeAndStadium",{
+        params:{
+            game_id:req.query.game_id
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.send(err)
+    })
+})
 module.exports = router;

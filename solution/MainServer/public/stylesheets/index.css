@@ -738,13 +738,13 @@ header ul li ul li a{
 .formation-header{
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
     box-sizing: border-box;
     padding: var(--padding-10px) var(--padding-20px);
     background-color: var(--primary-blue-900);
     border-radius: var(--br-20px);
     color: var(--white);
-    width: 70%;
+    width: 100%;
 }
 #match-details-info{
     display: flex;
@@ -833,7 +833,7 @@ header ul li ul li a{
 }
 .squadLogo-big{
     position: relative;
-    object-fit: cover;
+    object-fit: contain;
     width: 8vw;
     height: 8vw;
 }
@@ -1768,14 +1768,15 @@ tr{
     padding: var(--padding-10px) ;
     box-sizing: border-box;
     max-width: 100%;
-}
-
-.match-details-squad-and-logo-home{
-    justify-content: flex-end;
-}
-.match-details-squad-and-logo-away{
     justify-content: flex-start;
 }
+.match-details-squad-and-logo-home{
+    text-align: right;
+}
+.match-details-squad-and-logo-away{
+    text-align: left;
+}
+
 .match-details-final-result{
     text-align: center;
     display: flex;
@@ -2006,7 +2007,9 @@ tr{
     align-items: center;
     border-radius: var(--br-20px);
     padding: 0 var(--padding-10px);
+    box-shadow:0 2px 4px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+    cursor: pointer;
 }
 .subbed-player{
     flex-direction: column;
@@ -2046,7 +2049,7 @@ tr{
 .player-card-for-competition-img{
     position: relative;
     object-fit: cover;
-    width: 8vw;
+    width: 6vw;
     height: auto;
 }
 .lateral-navbar-chat-element{
@@ -2450,6 +2453,8 @@ tr{
 }
 #competitionMultipleMatches{
     width: 100%;
+    flex-direction: column;
+    overflow-x: auto;
 }
 .search-competition-header{
     background-color: var(--primary-blue-50);

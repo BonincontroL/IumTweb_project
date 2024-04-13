@@ -162,7 +162,7 @@
         <div class="main-container" id="competitionStats">
         </div>
         <div class="main-container" id="competitionMatches">
-            <div style="display: none" id="competitionMultipleMatches">
+            <div id="competitionMultipleMatches">
                 <div class="table-navbar">
                     <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
                     che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
@@ -178,7 +178,7 @@
                 </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
                 <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
                 <div id="competitionMatchesContainer" class="matches-vertical-container" >
-                    <!--<div class="single-horizontal-match">
+                    <div class="single-horizontal-match">
                               <h6>20 AGO 2023</h6>
                               <div class="squad-names-and-result-container">
                                   <div class="squad-name-wrapper">
@@ -206,7 +206,7 @@
                               <button class='btn-load-match-details'>
                                   <i class='bx bxs-right-arrow-circle'></i>
                               </button>
-                    </div>-->
+                    </div>
                 </div>
             </div>
             <div id="competitionMatchDetails">
@@ -214,8 +214,8 @@
                 <div class="match-details-header">
                     <div class="match-details-result-container">
                         <div class="match-details-squad-and-logo-home">
-                            <h3>ROMA</h3>
-                            <img
+                            <h3 id="homeClubName">ROMA</h3>
+                            <img    id="homeClubLogo"
                                     class="squadLogo-big"
                                     loading="lazy"
                                     alt=""
@@ -223,17 +223,17 @@
                             />
                         </div>
                         <div class="match-details-final-result">
-                            <h1>2:2</h1>
+                            <h1 id="aggregate">2:2</h1>
                             <h4>Terminata</h4>
                         </div>
                         <div class="match-details-squad-and-logo-away">
-                            <img
+                            <img    id="awayClubLogo"
                                     class="squadLogo-big"
                                     loading="lazy"
                                     alt=""
                                     src="images/roma.webp"
                             />
-                            <h3>SALERNITANA</h3>
+                            <h3 id="awayClubName">SALERNITANA</h3>
                         </div>
                     </div>
                     <div class="match-details-goals-row">
@@ -260,13 +260,6 @@
                 </div>
                 <div id="match-details-container">
                     <div id="match-details-info">
-                        <div class="match-info">
-                            <img class="match-info-img" src="images/serieALOGO.svg" alt="competition logo">
-                            <div class="match-info-text">
-                                <h6><b>Competizione</b></h6>
-                                <h6 id="match-details-competition-name"></h6>
-                            </div>
-                        </div>
                         <div class="match-info">
                             <img class="match-info-img" src="images/clock-icon.svg" alt="timer logo">
                             <div class="match-info-text">
