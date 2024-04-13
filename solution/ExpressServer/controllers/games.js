@@ -153,9 +153,54 @@ function getTableByCompSeasonAndType(comp_id,season,type){
     })
 }
 
+function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
+    return Model.aggregate([
+        {
+            $match:{
+                competition_id:comp_id,
+                season:season,
+                round:round
+            }
+        },
+        {
+            $sort:{
+                date:1
+            }
+        },
+        {
+            $project:{
+                _id:0, //tolgo l'id dal risultato
+                game_id:"$game_id",
+                home_club_id:"$home_club_id",
+                away_club_id:"$away_club_id",
+                home_club_name:"$home_club_name",
+                away_club_name:"$away_club_name",
+                date:"$date",
+                aggregate:"$aggregate"
+            }
+        }
+    ]).then(data=>{
+        if(!data || data.length===0)
+            throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\n")
+        else
+            return data
+    }).catch(err=>{
+        throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\nMessaggio di errore: "+err+"\n")
+    })
+}
+function getRefreeAndStadium(game_id){
+    return Model.findOne({game_id:game_id},'referee stadium')
+        .then(data=>{
+            return data;
+        }).catch(err=>{
+            throw new Error("Errore durante il recupero di una singola partita con game_id:"+game_id+"\n L'errore è il seguente: "+err+"\n")
+        })
+}
 module.exports = {
     getAllGames,
     getLast5Games,
     getRoundNumbers,
-    getTableByCompSeasonAndType
+    getTableByCompSeasonAndType,
+    getMatchesByCompAndSeasonAndRound,
+    getRefreeAndStadium
 };

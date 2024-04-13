@@ -62,4 +62,25 @@ router.get('/getTableByCompSeasonAndType', async (req,res)=>{
     }
 })
 
+router.get('/getMatchesByCompAndSeasonAndRound', async(req,res)=>{
+    try{
+        const comp_id=req.query.comp_id
+        const season=+req.query.season;
+        const round = req.query.currentRound
+        const matches = await GamesController.getMatchesByCompAndSeasonAndRound(comp_id,season,round)
+        res.status(200).json(matches)
+    }catch (error){
+        res.status(200).json({error:error})
+    }
+})
+
+router.get('/getRefreeAndStadium',async (req,res)=>{
+    try{
+        const game_id=+req.query.game_id
+        const result = await GamesController.getRefreeAndStadium(game_id)
+        res.status(200).json(result)
+    }catch (error){
+        res.status(200).json({error:error})
+    }
+})
 module.exports = router;
