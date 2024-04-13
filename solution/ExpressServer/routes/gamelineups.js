@@ -27,6 +27,10 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
 
 /**
  * route che restituisce tutti i giocatori di una partita
+ * i parametri nella query sono
+ * -game_id: identificativo della partita
+ * -home_club_id: identificativo della squadra in casa
+ * -away_club_id: identificativo della squadra in trasferta
  */
 router.get('/getMatchPlayers', async(req,res)=>{
     try{
