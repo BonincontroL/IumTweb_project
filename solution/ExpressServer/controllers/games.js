@@ -36,6 +36,17 @@ function getLast5Games(competition_id) {
             throw new Error('Errore durante il recupero dei giochi: ' + error.message);
         });
 }
+
+function getLast5GamesByClubId(club_id){
+    return Model.find({
+        $or:[
+            {home_club_id:club_id},
+            {away_club_id:club_id}
+        ]
+    },{home_club_id:1, away_club_id:1, home_club_goals:1, away_club_goals:1, date:1})
+        .sort({date:-1})
+        .limit(5)
+}
 function getRoundNumbers(comp_id,season){
     return Model.aggregate([{
         $match: {
@@ -196,11 +207,53 @@ function getRefreeStadiumAndManagers(game_id){
             throw new Error("Errore durante il recupero di una singola partita con game_id:"+game_id+"\n L'errore è il seguente: "+err+"\n")
         })
 }
+function getLastManager(club_id){
+    return Model.aggregate([
+        {
+            $match:{
+                $or:[
+                    {home_club_id:club_id},
+                    {away_club_id:club_id}
+                ]
+            }
+        },
+        {
+            $sort:{
+                date:-1
+            }
+        },
+        {
+            $limit:1 //prendi il primo risultato
+        },
+        {
+            $project:{
+                _id:0,
+                name:{
+                    $cond:{
+                        if:{$eq:["$home_club_id", club_id]},
+                        then:"$home_club_manager_name",
+                        else:"$away_club_manager_name"
+                    }
+                }
+            }
+        }
+    ]).then(data=>{
+        if(!data || data.length===0)
+            throw new Error("Errore durante il recupero dell'ultimo allenatore")
+        else
+            return data
+    }).catch(err=>{
+        throw new Error("Errore durante il recupero dell'ultimo allenatore\nCodice errore:"+err+"\n")
+    })
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
+    getLast5GamesByClubId,
     getRoundNumbers,
     getTableByCompSeasonAndType,
     getMatchesByCompAndSeasonAndRound,
-    getRefreeStadiumAndManagers
+    getRefreeStadiumAndManagers,
+    getLastManager
 };

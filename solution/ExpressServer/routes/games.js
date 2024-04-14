@@ -70,7 +70,7 @@ router.get('/getMatchesByCompAndSeasonAndRound', async(req,res)=>{
         const matches = await GamesController.getMatchesByCompAndSeasonAndRound(comp_id,season,round)
         res.status(200).json(matches)
     }catch (error){
-        res.status(200).json({error:error})
+        res.status(500).json({error:error})
     }
 })
 
@@ -80,7 +80,27 @@ router.get('/getRefreeAndStadium',async (req,res)=>{
         const result = await GamesController.getRefreeStadiumAndManagers(game_id)
         res.status(200).json(result)
     }catch (error){
-        res.status(200).json({error:error})
+        res.status(500).json({error:error})
     }
 })
+router.get('/getLastManager',async (req,res)=>{
+    try{
+        const club_id = +req.query.club_id;
+        const managerName= await GamesController.getLastManager(club_id)
+        res.status(200).json(managerName)
+    }catch (error){
+        res.status(500).json({error:error})
+    }
+})
+router.get('/getLast5GamesByClubId', async (req, res, next) => {
+    const club_id = req.query.club_id;
+    GamesController.getLast5GamesByClubId(club_id)
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero delle ultime 5 partite di un club:', error);
+            res.status(500).json({error: 'Errore durante il recupero delle ultime 5 partite di un club'});
+        })
+});
 module.exports = router;
