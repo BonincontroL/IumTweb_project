@@ -44,9 +44,44 @@ async function findUserByEmail(email) {
     }
 }
 
+/**
+ * Funzione per autentiare un utente
+ * @param email passata dal MainServer per verificarne la presenza nel DB
+ * @param password passata dal MainServer per verificarne la correttezza
+ * @returns risposta del server per il login
+ */
+function authenticateUser(email, password) {
+    return new Promise((resolve, reject) => {
+        User.findOne({ email })
+            .then(user => {
+                if (!user) {
+                    resolve({ success: false, message: 'Utente non trovato' });
+                } else {
+                    bcrypt.compare(password, user.password)
+                        .then(isValidPassword => {
+                            if (isValidPassword) {
+                                resolve({ success: true, user });
+                            } else {
+                                resolve({ success: false, message: 'Password non corretta' });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Errore durante il confronto della password:', error);
+                            reject(error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Errore durante la ricerca dell\'utente:', error);
+                reject(error);
+            });
+    });
+}
+
 module.exports = {
    createUser,
     findUserByUsername,
-    findUserByEmail
+    findUserByEmail,
+    authenticateUser
 
 };

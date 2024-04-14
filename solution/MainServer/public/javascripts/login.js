@@ -19,7 +19,7 @@ function addListenersLogin(){
         const requestBody = ExtractDataLog();
         console.log(requestBody); //da eliminare solo per vedere se stampa i dati
         if (requestBody !== null) {
-
+            sendDataLog(requestBody);
         }
         resetLoginForm();
     });
@@ -164,4 +164,34 @@ function SendDataReg(requestBody) {
             console.error('Errore durante la registrazione:', error);
             alert('Errore di registrazione: Username o email già in uso:');
         });
+}
+
+
+
+function sendDataLog(requestBody){
+    axios.post('http://localhost:3000/users/login', requestBody)
+        .then(response => {
+            if (response.status === 200) {
+                alert('Login completato con successo');
+                console.log(response.data);
+                const username = response.data.username;
+                logged(username);
+            } else {
+                console.error('Errore durante il login:', response.data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Errore durante il login:', error);
+            alert('Errore di login: Username o password errati');
+        });
+}
+
+/**
+ * Funzione per salvare l'username in session storage e reindirizzare alla landing page
+ * @param username
+ */
+function logged(username){
+    sessionStorage.setItem('username', username);
+    window.location.href = 'landing_page.html';
+
 }

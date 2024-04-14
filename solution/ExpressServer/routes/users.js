@@ -32,6 +32,31 @@ router.post('/register', async (req, res) => {
 });
 
 
+/**
+ * Risponde al MainServer per autenticare un utente.
+ */
+router.post('/login', async (req, res) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const authenticationResult = await userController.authenticateUser(email, password);
+
+        if (authenticationResult.success) {
+            const user = authenticationResult.user;
+            res.status(200).json({ success: true, username: user.username });
+        } else {
+            res.status(401).json({ success: false, message: authenticationResult.message });
+        }
+    } catch (error) {
+        console.error('Errore durante l\'autenticazione:', error);
+        res.status(500).json({ success: false, message: 'Errore durante l\'autenticazione' });
+    }
+});
+
+
+
+
+
 
 
 module.exports = router;
