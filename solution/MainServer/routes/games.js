@@ -50,4 +50,26 @@ router.get('/getRefreeAndStadium', function (req,res){
         res.send(err)
     })
 })
+router.get('/getLastManager', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getLastManager",{
+        params:{
+            club_id:req.query.club_id
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        throw new Error(err)
+    })
+})
+router.get('/getLast5GamesByClubId', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getLast5GamesByClubId",{
+        params:{
+            club_id:req.query.club_id
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        throw new Error(err)
+    })
+})
 module.exports = router;

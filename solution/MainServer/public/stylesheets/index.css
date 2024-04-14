@@ -873,6 +873,9 @@ header ul li ul li a{
     align-items: center;
     justify-content: center;
 }
+.lose{
+    color:var(--white)
+}
 .squadLogo{
     position: relative;
     display: flex;

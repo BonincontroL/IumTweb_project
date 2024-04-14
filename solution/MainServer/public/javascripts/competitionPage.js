@@ -1,7 +1,7 @@
 let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
-let competition_id
+let competition_id, competition_name
 let currentSeason = 2023 //la stagione corrente di default è 2023
 let currentRound
 let matchRounds //array in cui sono contenuti tutti i round della competition
@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
     competition_id=urlParam.get('competition_id')
+    competition_name = urlParam.get('competition_name')
+    document.getElementById('competitionName').innerText=competition_name;
 
     let competitionInfoBtn= document.getElementById('competition-info-btn')
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
@@ -82,7 +84,7 @@ function setAllClubButtonsListener(){
                 stadiumName: card.getAttribute('data-stadiumname'),
                 stadiumSeats: card.getAttribute('data-stadiumseats')
             }
-            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}`
+            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}&competitionId=${competition_id}&competitionName=${competition_name}`
         })
     })
 }
@@ -101,6 +103,7 @@ function renderClubCard(club){
     clubCard.setAttribute('data-name', club.name)
     clubCard.setAttribute('data-stadiumName', club.stadiumName)
     clubCard.setAttribute('data-stadiumSeats', club.stadiumSeats)
+    clubCard.setAttribute('data-competitionId', competition_id)
     clubCard.innerHTML=
         `<img src="${clubLogoImgURL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
           </img>
@@ -134,7 +137,6 @@ function getCompetitionInformation(){
  */
 function renderCompetitionInformation(competitionInfo){
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
-    document.getElementById('competitionName').innerText=competitionInfo.name;
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
