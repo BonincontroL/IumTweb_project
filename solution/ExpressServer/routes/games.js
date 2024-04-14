@@ -77,7 +77,7 @@ router.get('/getMatchesByCompAndSeasonAndRound', async(req,res)=>{
 router.get('/getRefreeAndStadium',async (req,res)=>{
     try{
         const game_id=+req.query.game_id
-        const result = await GamesController.getRefreeAndStadium(game_id)
+        const result = await GamesController.getRefreeStadiumAndManagers(game_id)
         res.status(200).json(result)
     }catch (error){
         res.status(200).json({error:error})

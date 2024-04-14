@@ -27,7 +27,6 @@ public class ClubsController {
             return ResponseEntity.ok().body(allClubs);
         }
     }
-
     /**
      * get a single club information by id
      * @param clubId the club id we want information for
@@ -53,5 +52,4 @@ public class ClubsController {
         else
             return ResponseEntity.ok().body(result);
     }
-
 }

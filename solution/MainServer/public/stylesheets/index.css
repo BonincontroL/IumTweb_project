@@ -591,12 +591,20 @@ header ul li ul li a{
 #squad-page ,
 #chat-page,
 #player-page,
-#competition-page{
+#competition-page,
+#competitionSquads{
     display: flex;
     align-items: flex-start;
     flex-direction: row;
     width: 100%;
     height: 92vh;
+}
+#competitionSquads{
+    align-items: center;
+    justify-content: center;
+    flex-wrap:wrap;
+    overflow-x: auto;
+    gap: var(--gap-xl);
 }
 .main-container{
     width: 100%;
@@ -742,7 +750,7 @@ header ul li ul li a{
     box-sizing: border-box;
     padding: var(--padding-10px) var(--padding-20px);
     background-color: var(--primary-blue-900);
-    border-radius: var(--br-20px);
+    border-radius: var(--br-8px);
     color: var(--white);
     width: 100%;
 }
@@ -1768,15 +1776,31 @@ tr{
     padding: var(--padding-10px) ;
     box-sizing: border-box;
     max-width: 100%;
-    justify-content: flex-start;
 }
 .match-details-squad-and-logo-home{
     text-align: right;
+    justify-content: flex-end;
+
 }
 .match-details-squad-and-logo-away{
     text-align: left;
+    justify-content: flex-start;
 }
-
+.button-go-back{
+    position: absolute;
+    top: 10vh;
+    left: 21vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    font-size: var(--h2-size);
+    color: var(--white);
+    background-color: var(--primary-blue-900);
+    cursor: pointer;
+}
 .match-details-final-result{
     text-align: center;
     display: flex;
@@ -1998,18 +2022,26 @@ tr{
     display: flex;
     justify-content: flex-start;
     align-self: unset;
-    height: auto;
     width: 100%;
     background-color: var(--white);
-    text-align: left;
     flex-direction: row;
     gap: var(--gap-xl);
     align-items: center;
-    border-radius: var(--br-20px);
-    padding: 0 var(--padding-10px);
-    box-shadow:0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: var(--br-12px);
+    padding: var(--padding-10px);
+    box-shadow:0 5px 10px rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-card-for-competition:hover{
+    transform: scale(1.05);
+    box-shadow:0 5px 10px rgba(0, 0, 0, 0.4);
+}
+.player-card-for-competition:hover .subbed-player .player-details > h6{
+    font-weight: bold;
+    color: var(--primary-blue-900)
 }
 .subbed-player{
     flex-direction: column;
@@ -2552,7 +2584,8 @@ tr{
     box-sizing: border-box;
     overflow: hidden;
 }
-.competition-card-mini{
+.competition-card-mini,
+.squad-card-mini{
     background-color: var(--white);
     display: flex;
     align-self: unset;
@@ -2563,15 +2596,26 @@ tr{
     border-radius: var(--br-12px);
     padding: var(--padding-20px) var(--padding-10px);
     box-sizing: border-box;
-    white-space: nowrap;
     cursor: pointer;
     transition: 0.3s ease;
+    width: 20vw;
 }
-.competition-card-mini:hover {
+.competition-card-mini:hover{
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.23);
     transform: translateY(-5px);
+    cursor: pointer;
 }
-
+.squad-card-mini > h3{
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.squad-card-mini{
+    box-shadow:0 10px 10px rgba(0, 0, 0, 0.2);
+}
+.squad-card-mini:hover{
+    transform: scale(1.05);
+    cursor: pointer;
+}
 .competitions-group-container{
     overflow-x: auto;
     display: flex;

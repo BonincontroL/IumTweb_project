@@ -3,7 +3,9 @@ let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id
 let currentSeason = 2023 //la stagione corrente di default è 2023
-let minMatchday, maxMatchday,currentMatchday
+let currentRound
+let matchRounds //array in cui sono contenuti tutti i round della competition
+let homeManagerName, awayManagerName
 let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
@@ -43,8 +45,69 @@ document.addEventListener('DOMContentLoaded',()=>{
         document.getElementById('competitionMatchDetails').style.display='none'
         getMatches()
     })
+    document.getElementById('competition-squad-btn').addEventListener('click', getAllClubs)
+    document.getElementById('backToAllMatches').addEventListener('click',()=>{
+        document.getElementById('competitionMultipleMatches').style.display='flex'
+        document.getElementById('competitionMatchDetails').style.display='none'
+    })
+    document.getElementById('loadPrevMatchday').addEventListener('click',getPrevMatchday)
+    document.getElementById('loadNextMatchday').addEventListener('click',getNextMatchday)
+    document.getElementById('competitionSelectMatchday').addEventListener('change',function(){
+        currentRound= matchRounds.indexOf(this.value)
+        getAllMatchesInRound()
+    })
 })
 
+function getAllClubs(){
+    let url="http://localhost:3000/clubs/searchByCompetitionAndSeason"
+    axios.get(url, {
+        params:{
+            competition_id: competition_id,
+            season:currentSeason
+        }
+    }).then(res=> {
+        renderAllClubs(res.data)
+        setAllClubButtonsListener()
+    }).catch(err=>{
+        alert(JSON.stringify(err))
+    })
+}
+function setAllClubButtonsListener(){
+    let clubCards =document.querySelectorAll('.squad-card-mini')
+    clubCards.forEach(card=>{
+        card.addEventListener('click', function (){
+            let clubInfo={
+                clubId:card.getAttribute('data-clubid'),
+                name:card.getAttribute('data-name'),
+                stadiumName: card.getAttribute('data-stadiumname'),
+                stadiumSeats: card.getAttribute('data-stadiumseats')
+            }
+            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}`
+        })
+    })
+}
+function renderAllClubs(clubs){
+    let clubContainer= document.getElementById('competitionSquads')
+    clubContainer.innerHTML=''
+    clubs.forEach(club=>{
+        let clubCard = renderClubCard(club)
+        clubContainer.appendChild(clubCard)
+    })
+}
+function renderClubCard(club){
+    let clubCard= document.createElement('div')
+    clubCard.className='squad-card-mini'
+    clubCard.setAttribute('data-clubId', club.clubId)
+    clubCard.setAttribute('data-name', club.name)
+    clubCard.setAttribute('data-stadiumName', club.stadiumName)
+    clubCard.setAttribute('data-stadiumSeats', club.stadiumSeats)
+    clubCard.innerHTML=
+        `<img src="${clubLogoImgURL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
+          </img>
+          <h5>${club.name}</h5>
+        `
+    return clubCard
+}
 function hideMatchContainersExceptOne(containerToShow) {
     let matchContainers= document.querySelectorAll('#match-details-container > div')
     matchContainers.forEach(container=>{container.style.display="none"})
@@ -90,37 +153,66 @@ function getMatches(){
                 season: currentSeason
             }
     }).then(res=>{
-        let matchNumbers=res.data.sort((a,b)=>{
+        matchRounds=res.data.sort((a,b)=>{
             let numA=parseInt(a.round.split(".")[0],10)
             let numB =parseInt(b.round.split("."[0]),10)
             return numA-numB;
-        })
-        minMatchday=matchNumbers[0].round;
-        maxMatchday =matchNumbers[matchNumbers.length-1].round
-        renderMatchesDropdownMenu(matchNumbers)
-        let currentRound= document.getElementById('competitionSelectMatchday').value
-        getAllMatchesInRound(currentRound)
+        }).map(match=>match.round)
+        currentRound =0
+        renderMatchesDropdownMenu() //di default carichiamo il primo round
+        getAllMatchesInRound()
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
 }
-function getAllMatchesInRound(roundNumber){
+
+/**
+ * function that get the next round if it's possibile
+ * if there aren't any rounds, it's not possible to load the next
+ */
+function getNextMatchday(){
+    if(currentRound!== matchRounds.length - 1){
+        currentRound++
+        getAllMatchesInRound()
+    }
+}
+/**
+ * function that get the precedent round if it's possibile
+ * if there aren't any rounds, it's not possible to load the next
+ */
+function getPrevMatchday(){
+    if(currentRound!==0){
+        currentRound--
+        getAllMatchesInRound()
+    }
+}
+
+/**
+ * function that get all the matches in a round, that is
+ * specified by matchRounds array in currentRound position
+ */
+function getAllMatchesInRound(){
     let url='http://localhost:3000/games/getMatchesByCompAndSeasonAndRound'
     axios.get(url, {
         params:{
             comp_id:competition_id,
             season: currentSeason,
-            currentRound:roundNumber
+            currentRound:matchRounds[currentRound]
         }
     }).then(res=>{
+        document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
         renderMatchesRound(res.data)
         setAllMatchesButtonListener()
-        currentMatchday=roundNumber
-        document.getElementById('competitionSelectMatchday').value=currentMatchday
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
 }
+
+/**
+ * render all the matches in a competition's round
+ * the matches are into an array sorted by date
+ * @param matches the array of all matches in a round sorted by date
+ */
 function renderMatchesRound(matches){
     let matchesContainer=document.getElementById('competitionMatchesContainer')
     matchesContainer.innerHTML=''
@@ -160,9 +252,7 @@ function renderMatchesRound(matches){
 }
 /**
  * render the dropdown menu loading all the matchNumbers values
- * @param matchNumbers
  */
-
 function setAllMatchesButtonListener(){
     matchBtns= document.querySelectorAll('.btn-load-match-details')
     matchBtns.forEach(button=>{
@@ -182,6 +272,12 @@ function setAllMatchesButtonListener(){
         })
     })
 }
+
+/**
+ * render the single match information in the top banner like
+ * home club name, away club name, logos and result.
+ * @param matchInfo object which represent the single match information
+ */
 function renderSingleMatch(matchInfo){
     //renderizza le informazioni del banner del match
     document.getElementById('homeClubName').innerText=matchInfo.homeClubName
@@ -199,6 +295,11 @@ function renderSingleMatch(matchInfo){
     getMatchInformation(matchInfo.gameId)
     getMatchFormation(matchIds)
 }
+
+/**
+ * get some match information like refree,stadium, home club manager and away club manager
+ * @param gameId the identifier of the game
+ */
 function getMatchInformation(gameId){
     let url = "http://localhost:3000/games/getRefreeAndStadium";
     axios.get(url,{params:{
@@ -206,25 +307,38 @@ function getMatchInformation(gameId){
     }}).then(res=>{
         document.getElementById('match-details-refree').innerText=res.data.referee
         document.getElementById('match-details-stadium').innerText=res.data.stadium
+        homeManagerName=res.data.home_club_manager_name
+        awayManagerName=res.data.away_club_manager_name
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
 
 }
-function renderMatchesDropdownMenu(matchNumbers){
+
+/**
+ * render the dropdown menu including all the competition's rounds, it takes the data in
+ * the matchRounds array.
+ */
+function renderMatchesDropdownMenu(){
     let dropdownContainer=document.getElementById('competitionSelectMatchday')
-    matchNumbers.forEach(singleRound=>{
+    dropdownContainer.innerHTML=''
+    matchRounds.forEach(singleRound=>{
         let dropdownItem = document.createElement('option')
-        dropdownItem.innerHTML=singleRound.round.split(".")[0]
-        dropdownItem.value=singleRound.round
+        dropdownItem.innerHTML=singleRound.split(".")[0]
+        dropdownItem.value=singleRound
         dropdownContainer.appendChild(dropdownItem)
     })
 }
 
- function getMatchFormation(params){
+/**
+ * get the home and away clubs formation, which includes the starting players
+ * and substitutes (which are player that start the game in the bench)
+ * @param matchIds query parameter, is an object formed by game_id, home_club_id and away_club_id
+ */
+function getMatchFormation(matchIds){
     let url = "http://localhost:3000/gamelineups/getMatchPlayers";
         try{
-            axios.get(url,{params:params})
+            axios.get(url,{params:matchIds})
                 .then(res=>{
                     let homeLineup = res.data[0].home_lineup[0].lineup
                     let awayLineup = res.data[0].away_lineup[0].lineup
@@ -246,8 +360,8 @@ function renderMatchFormation(homeLineup, awayLineup){
     let awayLineupContainer= document.getElementById('awayFormationContainer')
     awayLineupContainer.innerHTML=''
 
-    renderFormation(homeLineupContainer, homeLineup);
-    renderFormation(awayLineupContainer,awayLineup)
+    renderFormation(homeLineupContainer, homeLineup,homeManagerName);
+    renderFormation(awayLineupContainer,awayLineup,awayManagerName)
 }
 
 /**
@@ -255,8 +369,9 @@ function renderMatchFormation(homeLineup, awayLineup){
  *  into a container, maintaining a certain order
  * @param container the formation container
  * @param lineup  consisting of two array, starting_lineup and substitutes
+ * @param managerName the name of the manager
  */
-function renderFormation(container, lineup){
+function renderFormation(container, lineup,managerName){
     let startingIds = lineup.starting_lineup.map(player=>player.player_id)
     let substituteIds = lineup.substitutes.map(player=>player.player_id)
      axios.get("http://localhost:3000/players/getPlayersImgUrlById",{
@@ -273,10 +388,15 @@ function renderFormation(container, lineup){
                  const match= res.data.substitutes.find(url=> url.playerId===player.player_id)
                  player.imageUrl=match? match.imageUrl: playerDefaultImageUrl
              })
+             let managerBanner= document.createElement('div')
+             managerBanner.className='formation-header'
+             managerBanner.innerHTML=  '<h6><b>Allenatore</b></h6> '
+             container.appendChild(managerBanner)
+             container.appendChild(renderManagerCard(managerName))
 
              let startingLineupBanner= document.createElement('div')
              startingLineupBanner.className='formation-header'
-             startingLineupBanner.innerHTML=  '<h3>Titolari</h3> '
+             startingLineupBanner.innerHTML=  '<h6><b>Titolari</b></h6> '
              container.appendChild(startingLineupBanner)
 
              lineup.starting_lineup.forEach(player=>{
@@ -285,7 +405,7 @@ function renderFormation(container, lineup){
 
              let benchBanner= document.createElement('div')
              benchBanner.className='formation-header'
-             benchBanner.innerHTML=  '<h3>Panchina</h3> '
+             benchBanner.innerHTML=  '<h6><b>Panchina</b></h6> '
              container.appendChild(benchBanner)
 
              lineup.substitutes.forEach(player=>{
@@ -296,6 +416,30 @@ function renderFormation(container, lineup){
      })
 }
 
+/**
+ * function that render a single manager card, it's similar to player card
+ * but only have name and a default image
+ * @param managerName the squad's manager name
+ * @returns {HTMLDivElement} the manager card just created.
+ */
+function renderManagerCard(managerName){
+    let cardDiv = document.createElement('div')
+    cardDiv.className = 'player-card-for-competition'
+    cardDiv.innerHTML = `
+           <img 
+               class="player-card-for-competition-img"
+               loading="lazy"
+               alt="manager logo"
+               src="../images/managerLogo.webp"
+            />
+            <div class="subbed-player">
+                <div class="player-details">
+                    <h6>${managerName}</h6>
+                </div>
+            </div>`
+
+    return cardDiv
+}
 /**
  * function that render a single player card in the formation
  * @param player the object containing information about a single player
@@ -314,7 +458,7 @@ function renderPlayerCard(player) {
             <div class="subbed-player">
                 <div class="player-details">
                     <div class="player-number-wrapper">
-                        <h4>${player.number}</h4>
+                        <h6>${player.number}</h6>
                     </div>
                     <h6>${player.player_name}</h6>
                 </div>

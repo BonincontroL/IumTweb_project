@@ -26,7 +26,6 @@ router.get('/getCompetitionsGroupedByCountry', function (req,res){
     })
 })
 
-
 router.get('/getCompetitionsGroupedByCountryAndLikeName', function (req,res){
     axios.get(SPRING_SERVER+"/competitions/getCompetitionsGroupedByCountryAndLikeName",
         {params:{
