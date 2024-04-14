@@ -12,12 +12,17 @@ router.get('/', function(req, res, next) {
  * Riceve i dati dal client e li manda al express server per completare la registrazione
  */
 router.post('/register', function (req, res) {
-  axios.get(EXPRESS_SERVER+'/users/register')
-      .then(data => {
-        res.send(data.data)
-      }).catch(err => {
-        res.send(err)
-  });
+    axios.post(EXPRESS_SERVER + '/users/register', req.body)
+        .then(response => {
+            res.status(response.status).send(response.data);
+        })
+        .catch(err => {
+            if (err.response) {
+                res.status(err.response.status).send(err.response.data);
+            } else {
+                res.status(500).send({ message: 'Errore di connessione al server di registrazione' });
+            }
+        });
 });
 
 module.exports = router;

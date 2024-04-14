@@ -148,10 +148,10 @@ function validateEmail(email) {
 
 
 /**
- * Funzione per mandare i dati di registrazione al Expressserver
+ * Funzione per mandare i dati di registrazione al ExpressServer
  */
 function SendDataReg(requestBody) {
-    axios.post('http://localhost:3000/register', requestBody)
+    axios.post('http://localhost:3000/users/register', requestBody)
         .then(response => {
             if (response.status === 201) {
                 alert('Registrazione completata con successo');

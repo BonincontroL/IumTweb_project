@@ -6,7 +6,7 @@ router.use(cors());
 const userController = require("../controllers/users.js")
 
 /**
- * risponde al server che gli manda i dati di  registrazione per  un nuovo utente se non esiste già.
+ * risponde al MainServer che gli manda i dati di  registrazione per  un nuovo utente se non esiste già.
  */
 router.post('/register', async (req, res) => {
     try {
