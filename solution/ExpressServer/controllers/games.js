@@ -1,7 +1,7 @@
 const Model = require('../models/games');
 
 /**
- * Get all games -- no filters applied -- TEST DI PROVA
+ * Get all games
  * @returns {Promise} Promise object represents the list of games
  */
 function getAllGames() {
@@ -248,7 +248,7 @@ function getLastManager(club_id){
 }
 
 /**
- * Get games by competition ID and round
+ * Get games by competition ID and Season
  * @param competitionId
  * @param season
  * @returns {Promise<unknown>}
