@@ -1,0 +1,324 @@
+.martinez,
+.span {
+    font-weight: 900;
+}
+.lautaro-martinez {
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.lautaro-martinez:hover {
+    font-size: var(--font-size-14xl-2);
+    text-align: left;
+    color: var(--white);
+    display: flex;
+    height: 40px;
+}
+.background-icon {
+    position: relative;
+    object-fit: cover;
+}
+.background-icon,
+.background-icon:hover {
+    display: flex;
+    width: 179px;
+    height: 175px;
+}
+.count-value,
+.count-value:hover {
+    font-weight: 700;
+    display: flex;
+    align-self: stretch;
+    width: auto;
+    min-width: 31;
+}
+.count-value {
+    position: relative;
+}
+.count-value:hover {
+    font-family: var(--h4);
+    font-size: var(--h4-size);
+    text-align: right;
+    color: var(--black);
+}
+.num-goals {
+    overflow: hidden;
+}
+.num-goals,
+.num-goals:hover {
+    background-color: var(--white);
+    display: flex;
+    flex: 1;
+    height: auto;
+    flex-direction: column;
+    gap: var(--gap-3xs);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--br-11xl);
+    padding: var(--padding-4xs-5) var(--padding-3xs-5);
+    box-sizing: border-box;
+}
+.goal,
+.goal:hover {
+    font-weight: 700;
+    font-size: var(--h5-size);
+    color: var(--white);
+    display: flex;
+    width: 52px;
+    min-width: 52;
+}
+.goal {
+    position: relative;
+    align-items: center;
+}
+.goal:hover {
+    font-family: var(--h4);
+    text-align: right;
+}
+.goals-data {
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.goals-data,
+.goals-data:hover {
+    display: flex;
+    width: 107px;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-8xs);
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-xl) 0;
+    box-sizing: border-box;
+}
+.background-parent {
+    overflow: hidden;
+    text-align: right;
+    font-size: var(--h4-size);
+    color: var(--black);
+}
+.background-parent,
+.background-parent:hover {
+    display: flex;
+    align-self: stretch;
+    width: auto;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-xl);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--padding-3xs) 0;
+    box-sizing: border-box;
+}
+.player-card {
+    text-align: left;
+    font-size: var(--font-size-14xl-2);
+    color: var(--white);
+    font-family: var(--h4);
+}
+.player-card,
+.player-card:hover {
+    background-color: var(--primary-blue-500);
+    display: flex;
+    align-self: stretch;
+    width: auto;
+    height: auto;
+    flex-direction: column;
+    gap: var(--gap-xl);
+    align-items: flex-start;
+    justify-content: flex-end;
+    border-radius: var(--br-lgi);
+    padding: var(--padding-mini) var(--padding-9xl) var(--padding-mini)
+    var(--padding-11xl);
+    box-sizing: border-box;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25);
+}
+.div,
+.div:hover {
+    display: flex;
+    min-width: 30;
+}
+.div {
+    position: relative;
+}
+.div:hover {
+    font-family: var(--h4);
+    font-size: var(--h4-size);
+    text-align: left;
+    color: var(--black);
+}
+.background-icon1 {
+    position: relative;
+    object-fit: cover;
+}
+.background-icon1,
+.background-icon1:hover {
+    display: flex;
+    width: 41px;
+    height: 58px;
+}
+.d {
+    font-weight: 200;
+}
+.vlahovic {
+    font-weight: 800;
+}
+.dusan-vlahovic {
+    position: relative;
+    display: flex;
+}
+.dusan-vlahovic:hover {
+    font-size: var(--h4-size);
+    text-align: left;
+    color: var(--black);
+    display: flex;
+}
+.player-info,
+.player-info:hover {
+    display: flex;
+    width: auto;
+    align-self: unset;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-3xs);
+    align-items: center;
+    justify-content: center;
+}
+.background-group {
+    overflow: hidden;
+}
+.background-group,
+.background-group:hover {
+    display: flex;
+    width: auto;
+    align-self: unset;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-3xs);
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 var(--padding-76xl) 0 0;
+    box-sizing: border-box;
+}
+.count-value1 {
+    align-self: stretch;
+    position: relative;
+    display: flex;
+    min-width: 31;
+    font-weight: 700;
+    width: auto;
+}
+.count-value1:hover,
+.num-goals1 {
+    text-align: right;
+    color: var(--white);
+}
+.count-value1:hover {
+    font-weight: 700;
+    font-family: var(--h4);
+    font-size: var(--h4-size);
+    display: flex;
+    align-self: stretch;
+    width: auto;
+    min-width: 31;
+}
+.num-goals1 {
+    width: 50px;
+    border-radius: var(--br-11xl);
+    background-color: var(--primary-blue-500);
+    overflow: hidden;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-4xs-5) var(--padding-3xs-5);
+    gap: var(--gap-3xs);
+}
+.num-goals1,
+.num-goals1:hover,
+.player-card1 {
+    display: flex;
+    box-sizing: border-box;
+    height: auto;
+}
+.num-goals1:hover {
+    background-color: var(--primary-blue-500);
+    width: 50px;
+    flex-direction: column;
+    gap: var(--gap-3xs);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--br-11xl);
+    padding: var(--padding-4xs-5) var(--padding-3xs-5);
+}
+.player-card1 {
+    background-color: var(--white);
+    justify-content: flex-start;
+}
+.player-card1,
+.player-card1:hover {
+    width: auto;
+    align-self: unset;
+    flex-direction: row;
+    gap: var(--gap-xl);
+    align-items: center;
+    border-radius: var(--br-5xl);
+    padding: var(--padding-3xs) var(--padding-xl);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.36);
+}
+.test-translation-classific {
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    font-size: var(--h4-size);
+    color: var(--black);
+    font-family: var(--h4);
+}
+.player-card1:hover,
+.test-translation-classific,
+.test-translation-classific:hover {
+    background-color: var(--white);
+    display: flex;
+    height: auto;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+.test-translation-classific,
+.test-translation-classific:hover {
+    width: 480px;
+    flex-direction: column;
+    gap: var(--gap-3xs);
+    align-items: flex-start;
+    padding: 0 var(--padding-3xs);
+    line-height: normal;
+    letter-spacing: normal;
+}
+@media screen and (max-width: 450px) {
+    .background-icon {
+        flex: 1;
+    }
+    .count-value {
+        font-size: var(--font-size-3xl);
+    }
+    .goal {
+        font-size: var(--font-size-lg);
+    }
+    .background-parent {
+        flex-wrap: wrap;
+    }
+    .div,
+    .dusan-vlahovic {
+        font-size: var(--font-size-3xl);
+    }
+    .background-group {
+        padding-right: var(--padding-xl);
+        box-sizing: border-box;
+    }
+    .count-value1 {
+        font-size: var(--font-size-3xl);
+    }
+    .player-card1 {
+        flex-wrap: wrap;
+    }
+}

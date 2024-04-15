@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3c6147a3-c242-4e44-a527-e538e74543e7" name="Changes" comment="aggiunto frontend, informazioni della singola partita + risolto piccolo bug in competitionPage.js" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2eoLOn9wInjoMqbC4Mnyo55CZL5" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Alberto/Documents/GitHub/IumTweb_project/solution/MainServer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3c6147a3-c242-4e44-a527-e538e74543e7" name="Changes" comment="" />
+      <created>1712565954981</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712565954981</updated>
+      <workItem from="1712565956012" duration="7502000" />
+      <workItem from="1712644730809" duration="6973000" />
+      <workItem from="1712652897034" duration="15000" />
+    </task>
+    <task id="LOCAL-00001" summary="aggiunti file javascript e aggiunte funzioni in index.js per gestire il menù laterale e il mostrare/non mostrare i container corretti a seconda del bottone premuto">
+      <option name="closed" value="true" />
+      <created>1712574813262</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712574813262</updated>
+    </task>
+    <task id="LOCAL-00002" summary="aggiunto frontend su singola partita, in particolare eventi di una partita, aggiunto JS per gestire bottoni della singola partita">
+      <option name="closed" value="true" />
+      <created>1712649338370</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712649338370</updated>
+    </task>
+    <task id="LOCAL-00003" summary="aggiunto frontend, informazioni della singola partita + risolto piccolo bug in competitionPage.js">
+      <option name="closed" value="true" />
+      <created>1712651676506</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712651676506</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="aggiunti file javascript e aggiunte funzioni in index.js per gestire il menù laterale e il mostrare/non mostrare i container corretti a seconda del bottone premuto" />
+    <MESSAGE value="aggiunto frontend su singola partita, in particolare eventi di una partita, aggiunto JS per gestire bottoni della singola partita" />
+    <MESSAGE value="aggiunto frontend, informazioni della singola partita + risolto piccolo bug in competitionPage.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggiunto frontend, informazioni della singola partita + risolto piccolo bug in competitionPage.js" />
+  </component>
+</project>
