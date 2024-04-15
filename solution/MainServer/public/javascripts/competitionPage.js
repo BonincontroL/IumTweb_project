@@ -7,6 +7,7 @@ let currentRound
 let matchRounds //array in cui sono contenuti tutti i round della competition
 let homeManagerName, awayManagerName
 let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
+
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
