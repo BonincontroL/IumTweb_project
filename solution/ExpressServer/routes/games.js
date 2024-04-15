@@ -103,4 +103,18 @@ router.get('/getLast5GamesByClubId', async (req, res, next) => {
             res.status(500).json({error: 'Errore durante il recupero delle ultime 5 partite di un club'});
         })
 });
+
+router.get('/getMatchesByCompetitionAndSeason/:competition_id/:season', async (req, res, next) => {
+    const { competition_id, season } = req.params;
+
+    try {
+        const matches = await GamesController.getGamesByCompetitionIdAndSeason(competition_id,season);
+        res.status(200).json(matches);
+    } catch (error) {
+        console.error('Errore durante il recupero dei match per season e competizione:', error);
+        res.status(500).json({ error: 'Errore durante il recupero dei match per season e competizione' });
+    }
+});
+
+
 module.exports = router;

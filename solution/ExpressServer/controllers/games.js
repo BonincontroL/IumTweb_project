@@ -247,6 +247,28 @@ function getLastManager(club_id){
     })
 }
 
+
+function getGamesByCompetitionIdAndSeason(competitionId,season) {
+    return new Promise((resolve, reject) => {
+
+        Model.find({
+            competition_id: competitionId,
+            season: season
+        })
+            .sort({ date: -1 })
+            .then(results => {
+                if (!results || results.length === 0) {
+                    reject('Nessun match trovato per questa season e competizione.');
+                } else {
+                    resolve(results);
+                }
+            })
+            .catch(error => {
+                reject(error);
+            });
+    });
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -256,4 +278,5 @@ module.exports = {
     getMatchesByCompAndSeasonAndRound,
     getRefreeStadiumAndManagers,
     getLastManager,
+    getGamesByCompetitionIdAndSeason
 };
