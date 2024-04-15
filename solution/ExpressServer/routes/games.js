@@ -104,6 +104,9 @@ router.get('/getLast5GamesByClubId', async (req, res, next) => {
         })
 });
 
+/**
+ * Restituisce i match per competitionId e round
+ */
 router.get('/getMatchesByCompetitionAndSeason/:competition_id/:season', async (req, res, next) => {
     const { competition_id, season } = req.params;
 

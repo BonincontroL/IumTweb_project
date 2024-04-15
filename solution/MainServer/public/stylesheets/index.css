@@ -469,6 +469,40 @@ header ul li ul li a{
 }
 
 
+/****************************************/
+
+.competitions-picker{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--black);
+    padding: var(--padding-5px) var(--padding-lgi);
+    background-color: var(--white);
+    border-radius: var(--br-12px);
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    flex-direction: row;
+    gap: var(--gap-3xs);
+}
+
+
+.season-picker-container,
+.year-picker-container {
+    margin-bottom: 10px;
+
+}
+
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+/****************************************/
+
+
+
+
 .date-days-picker{
     display: flex;
     align-items: center;
@@ -1110,7 +1144,7 @@ tr{
     color: var(--white);
 }
 
-.game-information{
+/*.game-information{
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -1124,7 +1158,19 @@ tr{
     gap: var(--gap-xl);
     min-width: 315px;
     max-width: 100%;
+}*/
+.game-information {
+    flex: 1 1 300px;
+    max-width: 350px;
+    margin: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
+
+
 .user-popup{
     position: absolute;
     top:10vh;

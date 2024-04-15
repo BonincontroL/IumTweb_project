@@ -247,7 +247,12 @@ function getLastManager(club_id){
     })
 }
 
-
+/**
+ * Get games by competition ID and round
+ * @param competitionId
+ * @param season
+ * @returns {Promise<unknown>}
+ */
 function getGamesByCompetitionIdAndSeason(competitionId,season) {
     return new Promise((resolve, reject) => {
 
