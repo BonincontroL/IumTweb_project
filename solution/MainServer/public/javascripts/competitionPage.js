@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         currentRound= matchRounds.indexOf(this.value)
         getAllMatchesInRound()
     })
+
     document.getElementById('competition-table-btn').addEventListener('click',()=>{
         let tableType="full"  //di default, vogliamo la tabella che considera tutte le partite.
         getTable(tableType)
@@ -69,6 +70,9 @@ document.addEventListener('DOMContentLoaded',()=>{
                 alert(JSON.stringify(err))
             })
     })
+
+    initLogin();
+
 })
 function getTable(tableType){
     return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{

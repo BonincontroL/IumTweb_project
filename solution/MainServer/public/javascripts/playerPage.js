@@ -15,4 +15,5 @@ document.addEventListener('DOMContentLoaded',()=>{
     playerInfoBtn.classList.add('active')
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display="flex"
+    initLogin();
 })

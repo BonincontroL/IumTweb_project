@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 alert(JSON.stringify(err))
             })
     })
+    initLogin();
 })
 function getLast5Games(){
     return axios.get(MAIN_SERVER+'/games/getLast5GamesByClubId',{

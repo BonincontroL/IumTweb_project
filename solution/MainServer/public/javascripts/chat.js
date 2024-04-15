@@ -1,5 +1,5 @@
 const socket = io();
-let myName = "TEST";
+let myName = "";
 let currentRoom ="";
 
 
@@ -7,9 +7,11 @@ let currentRoom ="";
  * Inizializzazione di  chat_page.html
  */
 function onChat(){
+    myName = sessionStorage.getItem('username');
     getAllCompetitions();
     setupSendMessage();
     setupSocketListeners();
+
 
 }
 
@@ -22,7 +24,7 @@ function setupSocketListeners() {
     });
 
     socket.on('join conversation', (name, room) => {
-        console.log(`${name} ha joinato la stanza ${room}`);
+        console.log(`${name} ha joinato in ${room}`);
     });
 }
 
@@ -114,7 +116,9 @@ function renderCompetitionOnChat(competitions) {
  * @param competition competizione su cui si ha cliccato
  */
 function joinCompetitionRoom(competition) {
+    myName=sessionStorage.getItem("username");
     if(currentRoom) {
+
         socket.emit('leave conversation', myName, currentRoom);
     }
     document.getElementById('chat-footer').style.display = 'flex';
@@ -141,6 +145,7 @@ function joinCompetitionRoom(competition) {
  * @param message messaggio di testo da inviare
  */
 function sendMessage(message) {
+    myName=sessionStorage.getItem("username");
     const inputBox = document.getElementById('msg-input');
     if (message && currentRoom) {
 

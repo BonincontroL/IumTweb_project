@@ -16,7 +16,6 @@
 </head>
 <body onload="onLogin()">
     <header>
-<<<<<<< Updated upstream
         <div class="logo">
             <a class="navbar-burger-menu" href="#">
                 <i class='bx bx-menu'></i>
@@ -46,68 +45,32 @@
                         <a href="/">Squadre</a>
                     </div>
                 </li>
-                <li class="navbar-single-item">
+                <li class="navbar-single-item chat_button" id="chat_button">
                     <a href="/chat_page.html">Chat</a>
                 </li>
             </ul>
         </nav>
-=======
-    <div class="logo">
-        <a class="navbar-burger-menu" href="#">
-            <i class='bx bx-menu'></i>
-        </a>
-        <h3>LOGO</h3>
-    </div>
-    <nav>
-        <ul class="navbar">
-            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/matches_page.html">Partite</a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/searchCompetition_page.html">Competizioni</a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/">Giocatori </a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/">Squadre</a>
-                </div>
-            </li>
-            <li class="navbar-single-item">
-                <a href="/chat_page.html">Chat</a>
-            </li>
-        </ul>
-    </nav>
->>>>>>> Stashed changes
 
-    <button class="login-btn" id="doLogin">
-        Accedi
-    </button>
-    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
-    <div class="user-popup">
-        <div class="user-popup-header">
-            <h6>mail.example@gmail.com</h6>
-        </div>
-        <div class="user-popup-content">
-            <div class="user-popup-item">
-                <h6><i class="bi bi-gear"></i></h6>
-                <h6>Gestisci il tuo account</h6>
+        <button class="login-btn" id="doLogin">
+            Accedi
+        </button>
+        <i class='bx bx-user'  id="user_icon" ></i>
+        <div id="user_popup" class="user-popup">
+            <div class="user-popup-header">
+                <h6>mail.example@gmail.com</h6>
             </div>
-            <div class="user-popup-item">
-                <h6><i class="bi bi-box-arrow-left"></i></h6>
-                <h6>Logout</h6>
+            <div class="user-popup-content">
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-gear"></i></h6>
+                    <h6>Gestisci il tuo account</h6>
+                </div>
+                <div class="user-popup-item">
+                    <h6><i class="bi bi-box-arrow-left"></i></h6>
+                    <h6>Logout</h6>
+                </div>
             </div>
-        </div>
-    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
-</header>
+        </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+    </header>
     <section class="login-form-container">
                 <img class="login-image"
                         loading="eager"

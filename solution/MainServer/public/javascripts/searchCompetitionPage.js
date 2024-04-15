@@ -1,33 +1,37 @@
 const COUNTRY_NAME_INTERNATIONAL="Resto del mondo"
-document.addEventListener('DOMContentLoaded',()=> {
+document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
-    document.getElementById('search-competitions').addEventListener('input', (e) =>
+    document.getElementById('search-competitions').addEventListener('input',(e)=>
         debouncedSearch(e.target.value)
     );
-    const debouncedSearch = _.debounce(function (searchText) {
-        axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName", {
-            params: {name: searchText}
+    const debouncedSearch = _.debounce(function (searchText){
+        axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
+            params:{name:searchText}
         }).then(async res => {
             if (res.data.length !== 0) {
                 await renderCompetitionsGroupedByCountry(res.data)
             }
-        }).catch(err => {
+        }).catch(err=>{
             alert(JSON.stringify(err))
         })
-    }, 200)
+    },200)
+    initLogin();
 })
+
 /**
  * send an axios query to get all the competitions in PG database
  * grouped by country name
  */
+
 function getCompetitionsGroupedByCountry(){
     let url="http://localhost:3000/competitions/getCompetitionsGroupedByCountry"
     axios.get(url)
-        .then(async res=> {
-                await renderCompetitionsGroupedByCountry(res.data)
-        }).catch(err=>{
+        .then(async res=>{
+            await renderCompetitionsGroupedByCountry(res.data)
+        })
+        .catch(err=>{
             alert(JSON.stringify(err))
-    })
+        })
 }
 
 /**
@@ -48,9 +52,9 @@ async function renderCompetitionsGroupedByCountry(competitions) {
             try {
                 let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
                 let res = await axios.get(queryUrl)
-                imgUrl = res.data[0].flags.png
-            } catch (err) {
-                imgUrl = null
+                imgUrl=res.data[0].flags.png
+            }catch (err){
+                imgUrl=null
             }
         }
         const header = `<div class="competitions-group-header">
@@ -80,20 +84,6 @@ async function renderCompetitionsGroupedByCountry(competitions) {
         competitionsGroup.appendChild(competitionsContainer)
         mainContainer.appendChild(competitionsGroup)
     }
-    setEventListeners()
-}
-
-/**
- * set all competition-cards event listeners in order to go to the correct page
- */
-function setEventListeners() {
     let competitionCards = document.querySelectorAll('.competition-card-mini')
-    competitionCards.forEach(card => {
-        card.addEventListener('click', () => {
-            let competitionId = card.getAttribute('data-competitionId')
-            let competitionName=card.getAttribute('data-competitionName')
-            window.location.href = `../competition_page.html?competition_id=${competitionId}&competition_name=${competitionName}`
-        })
-    })
+    setCompetitionsCardEventListener(competitionCards)
 }
-

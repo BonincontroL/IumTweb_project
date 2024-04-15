@@ -13,50 +13,50 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="javascripts/competitionPage.js"></script>
     <script src="javascripts/index.js"></script>
+    <script src="javascripts/login.js"></script>
     <title>IUM</title>
 </head>
 <body>
     <header>
-    <div class="logo">
-        <a class="navbar-burger-menu" href="#">
-            <i class='bx bx-menu'></i>
-        </a>
-        <h3>LOGO</h3>
-    </div>
-    <nav>
-        <ul class="navbar">
-            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/matches_page.html">Partite</a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/searchCompetition_page.html">Competizioni</a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/">Giocatori </a>
-                </div>
-            </li>
-            <li>
-                <div class="navbar-single-item">
-                    <a href="/">Squadre</a>
-                </div>
-            </li>
-            <li class="navbar-single-item">
-                <a href="/chat_page.html">Chat</a>
-            </li>
-        </ul>
-    </nav>
-
-    <button class="login-btn" id="doLogin">
-        Accedi
-    </button>
-    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
-        <div class="user-popup">
+        <div class="logo">
+            <a class="navbar-burger-menu" href="#">
+                <i class='bx bx-menu'></i>
+            </a>
+            <h3>LOGO</h3>
+        </div>
+        <nav>
+            <ul class="navbar">
+                <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/matches_page.html">Partite</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/searchCompetition_page.html">Competizioni</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Giocatori </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="navbar-single-item">
+                        <a href="/">Squadre</a>
+                    </div>
+                </li>
+                <li class="navbar-single-item chat_button" id="chat_button">
+                    <a href="/">Chat</a>
+                </li>
+            </ul>
+        </nav>
+        <button class="login-btn" id="doLogin">
+            Accedi
+        </button>
+            <i class='bx bx-user'  id="user_icon" ></i>
+        <div id="user_popup" class="user-popup">
             <div class="user-popup-header">
                 <h6>mail.example@gmail.com</h6>
             </div>
@@ -70,8 +70,7 @@
                     <h6>Logout</h6>
                 </div>
             </div>
-        <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
-        </div>
+        </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
     </header>
     <div id="competition-page">
         <div id="competitionLateralNavbar" class="lateral-navbar">
@@ -162,122 +161,6 @@
 
         </div>
         <div class="main-container" id="competitionStats">
-            <div class="squad-info">
-                <h1>
-                    Classifica<br>
-                    <span class="blue-words">Capocannonieri</span>
-                </h1>
-                <div class="players-table-container">
-                    <div class="player-stats-container-first">
-                        <h3> 1° Lautaro Martinez</h3>
-                        <div class="player-stats-first-img-container">
-                            <img src="images/lautaro.webp" alt="Lautaro Martinez image" class="player-stats-first-img">
-                            <div class="player-stats-goals-container">
-                                <div class="player-stats-goals-circle">
-                                    <h5>12</h5>
-                                </div>
-                                <h6>Goals</h6>
-                            </div>
-                        </div>
-                    </div> <!--container per il PRIMO giocatore nelle classifiche-->
-                    <div class="player-stats-container">
-                        <h3>2°</h3>
-                        <img src="images/VLHDSN.webp" alt="Dusan vlahovic image" class="player-stats-img">
-                        <h6>Dusan Vlahovic</h6>
-                        <div class="player-stats-goals-circle-blue">
-                            <h6>9</h6>
-                        </div>
-                    </div> <!-- container per gli altri giocatori della classifica-->
-
-                </div>
-            </div>
-            <div class="squad-info">
-                <h1>
-                    Classifica<br>
-                    <span class="blue-words">Capocannonieri</span>
-                </h1>
-                <div class="players-table-container">
-                    <div class="player-stats-container-first">
-                        <h3> 1° Lautaro Martinez</h3>
-                        <div class="player-stats-first-img-container">
-                            <img src="images/lautaro.webp" alt="Lautaro Martinez image" class="player-stats-first-img">
-                            <div class="player-stats-goals-container">
-                                <div class="player-stats-goals-circle">
-                                    <h5>12</h5>
-                                </div>
-                                <h6>Goals</h6>
-                            </div>
-                        </div>
-                    </div> <!--container per il PRIMO giocatore nelle classifiche-->
-                    <div class="player-stats-container">
-                        <h3>2°</h3>
-                        <img src="images/VLHDSN.webp" alt="Dusan vlahovic image" class="player-stats-img">
-                        <h6>Dusan Vlahovic</h6>
-                        <div class="player-stats-goals-circle-blue">
-                            <h6>9</h6>
-                        </div>
-                    </div> <!-- container per gli altri giocatori della classifica-->
-
-                </div>
-            </div>
-            <div class="squad-info">
-                <h1>
-                    Classifica<br>
-                    <span class="blue-words">Capocannonieri</span>
-                </h1>
-                <div class="players-table-container">
-                    <div class="player-stats-container-first">
-                        <h3> 1° Lautaro Martinez</h3>
-                        <div class="player-stats-first-img-container">
-                            <img src="images/lautaro.webp" alt="Lautaro Martinez image" class="player-stats-first-img">
-                            <div class="player-stats-goals-container">
-                                <div class="player-stats-goals-circle">
-                                    <h5>12</h5>
-                                </div>
-                                <h6>Goals</h6>
-                            </div>
-                        </div>
-                    </div> <!--container per il PRIMO giocatore nelle classifiche-->
-                    <div class="player-stats-container">
-                        <h3>2°</h3>
-                        <img src="images/VLHDSN.webp" alt="Dusan vlahovic image" class="player-stats-img">
-                        <h6>Dusan Vlahovic</h6>
-                        <div class="player-stats-goals-circle-blue">
-                            <h6>9</h6>
-                        </div>
-                    </div> <!-- container per gli altri giocatori della classifica-->
-
-                </div>
-            </div>
-            <div class="squad-info">
-                <h1>
-                    Classifica<br>
-                    <span class="blue-words">Capocannonieri</span>
-                </h1>
-                <div class="players-table-container">
-                    <div class="player-stats-container-first">
-                        <h3> 1° Lautaro Martinez</h3>
-                        <div class="player-stats-first-img-container">
-                            <img src="images/lautaro.webp" alt="Lautaro Martinez image" class="player-stats-first-img">
-                            <div class="player-stats-goals-container">
-                                <div class="player-stats-goals-circle">
-                                    <h5>12</h5>
-                                </div>
-                                <h6>Goals</h6>
-                            </div>
-                        </div>
-                    </div> <!--container per il PRIMO giocatore nelle classifiche-->
-                    <div class="player-stats-container">
-                        <h3>2°</h3>
-                        <img src="images/VLHDSN.webp" alt="Dusan vlahovic image" class="player-stats-img">
-                        <h6>Dusan Vlahovic</h6>
-                        <div class="player-stats-goals-circle-blue">
-                            <h6>9</h6>
-                        </div>
-                    </div> <!-- container per gli altri giocatori della classifica-->
-
-                </div>
-            </div>
         </div>
         <div class="main-container" id="competitionMatches">
             <div id="competitionMultipleMatches">
