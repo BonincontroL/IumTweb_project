@@ -14,8 +14,22 @@ router.get('/getTopScorer', async (req, res, next) => {
         })
         .catch(err=>{
             console.error('Errore durante il recupero dei caponannonieri:', err);
-            res.status(500).json({ error: 'Errore durante il recupero del numero del giocatore' });
+            res.status(500).json({ error: 'Errore durante il recupero dei capocannonieri' });
         });
 });
 
+router.get('/getMatchEvents', async (req, res) => {
+    const gameId=+req.query.game_id;
+    const homeClubId=+req.query.home_club_id;
+    const awayClubId=+req.query.away_club_id;
+
+    gameeventsController.getMatchEvents(gameId,homeClubId,awayClubId)
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err=>{
+            console.error('Errore durante il recupero di tutti gli eventi:', err);
+            res.status(500).json({ error: 'Errore durante il recupero di tutti gli eventi' });
+        });
+});
 module.exports=router
