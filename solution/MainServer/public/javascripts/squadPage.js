@@ -2,6 +2,7 @@ let lateralSquadButtons, squadInfoBtn
 const squadPageName= 'squad-page'
 let clubId
 const MAIN_SERVER="http://localhost:3000"
+
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)

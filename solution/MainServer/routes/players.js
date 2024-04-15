@@ -39,11 +39,4 @@ router.get("/getPlayersImgUrlById", function (req,res){
     })
 })
 
-
-
-
-
-
-
-
 module.exports = router;

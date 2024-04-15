@@ -22,23 +22,6 @@ router.get('/getCompetitionInformation', function (req,res){
       })
 })
 
-router.get('/competitions/getAllCompetitions', function (req,res){
-    axios.get(SPRING_SERVER+"/competitions/getAllCompetitions")
-        .then(data=>{
-            res.send(data.data)
-        }).catch(err=>{
-            res.send(err)
-    })
-})
-
-router.get('/competitions/getCompetitionsGroupedByCountry', function (req,res){
-    axios.get(SPRING_SERVER+'/competitions/getCompetitionsGroupedByCountry')
-        .then(data=>{
-            res.send(data.data)
-        }).catch(err=>{
-            res.send(err)
-    })
-})
 module.exports = router;
 
 

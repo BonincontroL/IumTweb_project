@@ -19,7 +19,6 @@ function init() {
 
     let competition_cards = document.querySelectorAll('.competition-card');
     setCompetitionsCardEventListener(competition_cards);
-
     getAndRenderPlayers();
     getAndRenderLastMatches("IT1"); // Serie A matches by default
     getAndRenderLastMatches("NL1");
