@@ -434,7 +434,7 @@ header ul li ul li a{
     align-items: center;
     justify-content: center;
 }
-.matches-header{
+/*.matches-header{
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -449,7 +449,25 @@ header ul li ul li a{
     text-align: center;
     color: var(--black);
     width: 100%;
+}*/
+
+.matches-header{
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    background-color: var(--primary-blue-50);
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-10px) var(--padding-10px);
+    top: 0;
+    gap: var(--gap-xl);
+    text-align: center;
+    color: var(--black);
+    width: 100%;
 }
+
 
 .date-days-picker{
     display: flex;
@@ -1638,13 +1656,23 @@ tr{
     padding: var(--padding-11xs) var(--padding-15px) var(--padding-12xs);
     gap: var(--gap-3xs);
 }
-.vertical-line {
+
+/*.vertical-line {
     height: 100px;
     width: 1px;
     position: relative;
     border-right: 1px solid var(--primary-blue-600);
     box-sizing: border-box;
+}*/
+
+.vertical-line {
+    height: 50px;
+    width: 1px;
+    position: relative;
+    border-right: 1px solid var(--primary-blue-600);
+    box-sizing: border-box;
 }
+
 
 .game-information {
     border-radius: var(--br-12px);

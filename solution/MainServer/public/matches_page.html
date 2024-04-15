@@ -76,58 +76,26 @@
 </header>
     <div id="matches-page">
         <div class="matches-header">
-            <!--    <div class="header-text-container">
-                    <p>
-                        <b>Selezionato: </b>
-                        9 febbraio 2024
-                    </p>
-                </div>-->
-            <!--  <div class="day-picker-container">
-                       <button class="arrow-btn" id="goLeftDays">
-                           <i class='bx bx-left-arrow-alt'></i>
-                       </button>
-                       <button class="date-days-picker">
-                           <p><b>Oggi</b></p>
-                       </button>
-                       <button class="date-days-picker">
-                           <p>Domani</p>
-                       </button>
-                       <button class="date-days-picker">
-                           <p>Dom 14</p>
-                       </button>
-                       <button class="date-days-picker">
-                           <p>Lun 15</p>
-                       </button>
-                       <button class="date-days-picker">
-                           <p>Mar 16</p>
-                       </button>
 
-                        <button class="arrow-btn" id="goRightDays">
-                           <i class='bx bx-right-arrow-alt'></i>
-                       </button>
-              </div>-->
-            <div class="container">
-                <!--<h9 class="text">Scegli una data</h9>-->
-                <input type="date" class="date-days-picker" id="CalendarSelector" name="datepicker" value="2012-09-15">
-            </div>
-            <!--        <label for="datepicker">Seleziona una data:</label>-->
             <div class="container">
                 <!--<p class="text">Seleziona una competizione</p>-->
-                <select id="competition-select" class="date-days-picker">
-                    <!-- Le opzioni della select verranno popolate dinamicamente -->
+                <select id="competition-select" class="competitions-picker">
+
                 </select>
             </div>
-            <button id="search-button" class="homepage-button">
-                <h9>Effettua ricerca combinata</h9>
-            </button>
-            <div class="vertical-line2"></div>
+            <div class="vertical-line"></div>
             <div class="container">
-                <h9 class="text">Scegli un anno</h9>
-                <input type="number" class="date-days-picker" id="YearSelector" name="yearpicker" min="1900" max="2100" step="1" value="2022">
+                <div class="year-picker-container">
+                    <label for="year-select">Seleziona anno</label>
+                    <select id="year-select">
+                    </select>
+                </div>
+                <div class="season-picker-container">
+                    <label for="season-select">Seleziona season</label>
+                    <select id="season-select"></select>
+                </div>
             </div>
-            <button id="searchYear-btn" class="homepage-button">
-                <h9>Effettua ricerca per anno</h9>
-            </button>
+            <div class="vertical-line"></div>
 
         </div>
         <div class="matches-container">
