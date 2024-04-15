@@ -52,12 +52,10 @@ function getTopScorer(comp_id, season){
 }
 
 /**
- * return all the game events in a single match, divided by home and away team.
+ * return all the game events in a single match,sorted by minutes.
  * @param gameId
- * @param homeClubId
- * @param awayClubId
  */
-function getMatchEvents(gameId,homeClubId,awayClubId){
+function getMatchEvents(gameId){
     return Model.aggregate([
         {
             $match:{
@@ -67,37 +65,33 @@ function getMatchEvents(gameId,homeClubId,awayClubId){
         {
             $lookup:{
                 from:GameLineups.collection.name,
-                localField:"player_id",
-                foreignField:"player_id",
-                as:"playerDetails"
+                let:{player_id:'$player_id', club_id:'$club_id'},
+                pipeline:[
+                    { $match: { $expr: { $and: [{ $eq: ['$player_id', '$$player_id'] }, { $eq: ['$game_id', gameId] }] } }},
+                    { $project: { player_name: 1} }
+                ],
+                as:'playerDetails'
             }
         },
         {
             $unwind:{path:'$playerDetails',preserveNullAndEmptyArrays:true}
         },
         {
-            $group:{
-                _id:null,
-                homeEvents:{
-                    $push:{
-                        $cond:[{$eq:["$club_id",homeClubId]},'$$ROOT','$$REMOVE']
-                    }
-                },
-                awayEvents:{
-                    $push:{
-                        $cond:[{$eq:["$club_id",awayClubId]},'$$ROOT','$$REMOVE']
-                    }
-                },
+            $project:{
+                _id:0,
+                club_id:1,
+                type:1,
+                minute:1,
+                description:1,
+                player_name:'$playerDetails.player_name',
+                player_id:'$playerDetails.player_id',
+                player_assist_id:1,
+                player_in_id:1
             }
         },
         {
-            $project:{
-                _id:0,
-                homeEvents:1,
-                awayEvents:1
-            }
-        }
-    ])
+            $sort:{minute:-1}
+        }])
 }
 module.exports={
     getTopScorer,

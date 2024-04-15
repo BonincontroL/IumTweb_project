@@ -371,6 +371,19 @@ function renderSingleMatch(matchInfo){
     }
     getMatchInformation(matchInfo.gameId)
     getMatchFormation(matchIds)
+    getMatchEvents(matchIds)
+}
+function getMatchEvents(matchIds){
+    axios.get("http://localhost:3000/getMatchEvents",{params:{
+        matchIds
+        }}).then(res=>{
+            renderMatchEvents(res.data)
+    }).catch(err=>{
+        alert(JSON.stringify(err))
+    })
+}
+function renderMatchEvents(events){
+
 }
 
 /**
