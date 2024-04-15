@@ -1,9 +1,7 @@
 /**
  * @ToDo Migliorare grafica e query -- Aggiungere funzionalità
- * @ToDo Possibilità di scelta squadra
- * @ToDo Possibilità di scelta data precisa (calendario) xx/yy/kk
  * @ToDo Pulire codice + commenti puliti
- * @ToDo Aggiungere funzionalità di ricerca
+ * @ToDo Aggiungere funzionalità di ricerca --> come Possibilità di scelta squadra e/o Possibilità di scelta data precisa (calendario) xx/yy/kk
  * @ToDo migliorare selezione anno e season
  *
  * @ToDo >>>>>> FARE TEST codice
@@ -20,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             createDayButtons();
             yearSelect();
             yearSeason();
-            triggerDefaultCompetitionLoad('IT1', 'Sunday');
+            triggerDefaultCompetitionLoad('IT1', 'Domenica');
         })
         .catch(error => {
             console.error('Error fetching competitions:', error);
@@ -129,7 +127,8 @@ function groupCompetitionsByCountry(competitions) {
  * Crea i pulsanti per i giorni della settimana
  */
 function createDayButtons() {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const daysOfWeek = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+
     const container = document.querySelector('.matches-header');
 
     daysOfWeek.forEach(day => {
@@ -187,7 +186,8 @@ function fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek) {
  * @returns {{}|*}
  */
 function filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId) {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const daysOfWeek = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+
     const filteredMatches = matches.filter(match => {
         const date = new Date(match.date);
         const matchDayOfWeek = daysOfWeek[date.getDay()];
