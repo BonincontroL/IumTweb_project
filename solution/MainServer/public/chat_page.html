@@ -14,6 +14,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="javascripts/index.js"></script>
     <script src="javascripts/chat.js"></script>
+    <script src="javascripts/login.js"></script>
     <title>IUM</title>
 </head>
 <body onload="onChat()">
@@ -52,11 +53,10 @@
             </li>
         </ul>
     </nav>
-    <button class="login-btn" id="doLogin">
-        Accedi
-    </button>
-    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
-    <div class="user-popup">
+
+
+        <i class='bx bx-user'  id="user_icon" ></i>
+    <div id="user_popup" class="user-popup">
         <div class="user-popup-header">
             <h6>mail.example@gmail.com</h6>
         </div>

@@ -1110,7 +1110,7 @@ tr{
     right: 10px;
     z-index: 99;
     overflow: hidden;
-    background-color: var(--primary-blue-800);
+    background-color: var(--primary-blue-900);
     display: none;
     align-self: unset;
     flex-direction: column;
@@ -1119,6 +1119,15 @@ tr{
     justify-content: flex-start;
     border-radius: 20px;
 }
+
+.bx.bx-user{
+    font-size:  clamp(22px, 4vw, var(--h2-size));
+    display:none;
+}
+.chat_button{
+    display:none;
+}
+
 .user-popup-header{
     display: flex;
     width: 100%;

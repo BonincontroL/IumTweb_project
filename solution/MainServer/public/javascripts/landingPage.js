@@ -13,8 +13,8 @@ function init() {
             prevEl: ".swiper-button-prev"
         }
     })
-    document.getElementById('goToAllCompetitions').addEventListener('click',()=>{
-        window.location.href="../searchCompetition_page.html"
+    document.getElementById('goToAllCompetitions').addEventListener('click', () => {
+        window.location.href = "../searchCompetition_page.html"
     })
 
     let competition_cards = document.querySelectorAll('.competition-card');
@@ -24,9 +24,8 @@ function init() {
     getAndRenderLastMatches("IT1"); // Serie A matches by default
     getAndRenderLastMatches("NL1");
     addCompetitionLogosListeners();
-    document.getElementById('doLogin').addEventListener('click',()=>{
-        window.location.href="login_singup.html"
-    }); //test poi da sistemare con l'html
+    initLogin();
+
 }
 
 //test di prova per getAndRenderLastMatches in home page --> da rivedere lo stile
@@ -359,3 +358,6 @@ function addCompetitionLogosListeners() {
         });
     });
 }
+
+
+

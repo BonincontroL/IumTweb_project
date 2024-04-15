@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             alert(JSON.stringify(err))
         })
     },200)
+    initLogin();
 })
 
 /**
