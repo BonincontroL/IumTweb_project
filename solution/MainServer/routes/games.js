@@ -72,4 +72,17 @@ router.get('/getLast5GamesByClubId', function (req,res){
         throw new Error(err)
     })
 })
+router.get('/getTableByCompSeasonAndType', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getTableByCompSeasonAndType",{
+        params:{
+            comp_id:req.query.comp_id,
+            season:req.query.season,
+            type:req.query.type
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        throw new Error(err)
+    })
+})
 module.exports = router;

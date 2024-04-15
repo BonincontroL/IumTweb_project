@@ -58,8 +58,78 @@ document.addEventListener('DOMContentLoaded',()=>{
         currentRound= matchRounds.indexOf(this.value)
         getAllMatchesInRound()
     })
+    document.getElementById('competition-table-btn').addEventListener('click',()=>{
+        let tableType="full"  //di default, vogliamo la tabella che considera tutte le partite.
+        getTable(tableType)
+            .then(res=>{
+                renderTable(res.data,tableType)
+            })
+            .catch(err=>{
+                alert(JSON.stringify(err))
+            })
+    })
 })
+function getTable(tableType){
+    return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
+        params:{
+            comp_id:competition_id,
+            season:currentSeason,
+            type:tableType
+        }
+    })
+}
+function renderTable(completeLeaugeTable,type){
+    let index =0
+    let tableBody
+    switch (type){
+        case 'full':
+            tableBody=document.getElementById('competitionFullTable')
+            break
+        case 'home':
+            tableBody=document.getElementById('competitionHomeTable')
+            break
+        case 'away':
+            tableBody=document.getElementById('competitionAwayTable')
+            break
+        default:
+            throw new Error("comando per creare la classifica sconosciuto:"+type+"\n")
+    }
+    tableBody.innerHTML=''
+    completeLeaugeTable.forEach(tableRowData=>{
+        let tableRow= renderTableRow(tableRowData,index++)
+        tableBody.appendChild(tableRow)
+    })
+}
+function renderTableRow(tableRowData,index){
+    let tableRow=document.createElement('tr')
+    tableRow.appendChild(renderTableTD(++index))
+    tableRow.appendChild(renderTableTDWithLogo(tableRowData._id, tableRowData.club_name))
+    let totalGames=tableRowData.vittorie+tableRowData.pareggi+tableRowData.sconfitte
+    tableRow.appendChild(renderTableTD(totalGames))
+    tableRow.appendChild(renderTableTD(tableRowData.vittorie))
+    tableRow.appendChild(renderTableTD(tableRowData.pareggi))
+    tableRow.appendChild(renderTableTD(tableRowData.sconfitte))
+    tableRow.appendChild(renderTableTD(`${tableRowData.gol_fatti}:${tableRowData.gol_subiti}`))
+    tableRow.appendChild(renderTableTD(tableRowData.punti));
 
+    return tableRow
+}
+function renderTableTD(tdInnerData){
+    let singleTd=document.createElement('td')
+    singleTd.innerText=tdInnerData
+    return singleTd
+}
+function renderTableTDWithLogo(squadId,squadName){
+    let singleTd=document.createElement('td')
+    let container=document.createElement('div')
+    container.className='career-squad'
+    container.innerHTML=
+        `<img src="${clubLogoImgURL}${squadId}.png" alt="${squadName} logo" class="squadLogo">
+         <p>${squadName}</p>          
+        `
+    singleTd.appendChild(container)
+    return singleTd
+}
 function getAllClubs(){
     let url="http://localhost:3000/clubs/searchByCompetitionAndSeason"
     axios.get(url, {

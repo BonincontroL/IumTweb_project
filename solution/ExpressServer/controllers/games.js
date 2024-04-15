@@ -255,5 +255,5 @@ module.exports = {
     getTableByCompSeasonAndType,
     getMatchesByCompAndSeasonAndRound,
     getRefreeStadiumAndManagers,
-    getLastManager
+    getLastManager,
 };
