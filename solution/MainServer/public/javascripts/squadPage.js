@@ -6,7 +6,7 @@ const MAIN_SERVER="http://localhost:3000"
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
-    clubId= urlParam.get('club_id')
+    clubId= parseInt(urlParam.get('club_id'),10)
 
     const clubInfo={
         clubId:clubId,
@@ -64,19 +64,36 @@ function renderMiniGameCard(game){
     let miniGameCard= document.createElement('div')
     let gameOutcome, circleClass
     miniGameCard.className='last-match-container'
-    if(game.home_club_goals>game.away_club_goals) {
-        gameOutcome = "Vittoria"
-        circleClass="win"
-        miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-win')
-    }else if(game.home_club_goals < game.away_club_goals) {
-        gameOutcome = "Sconfitta"
-        circleClass="lose"
-        miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-lose')
-    }else {
-        gameOutcome = "Pareggio"
-        circleClass="draw"
-        miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-draw')
-    }miniGameCard.innerHTML=
+    if(game.home_club_id===clubId){ //se sei la squadra di casa
+        if(game.home_club_goals>game.away_club_goals)
+            gameOutcome = "Vittoria"
+        else if(game.home_club_goals < game.away_club_goals)
+            gameOutcome = "Sconfitta"
+        else
+            gameOutcome="Pareggio"
+    }else{  //se sei la squadra in trasferta...
+        if(game.away_club_goals>game.home_club_goals)
+            gameOutcome = "Vittoria"
+        else if(game.away_club_goals < game.home_club_goals)
+            gameOutcome = "Sconfitta"
+        else
+            gameOutcome="Pareggio"
+    }
+    switch (gameOutcome){
+        case 'Vittoria':
+            circleClass="win"
+            miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-win')
+            break
+        case 'Sconfitta':
+            circleClass="lose"
+            miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-lose')
+            break
+        case 'Pareggio':
+            circleClass="draw"
+            miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-draw')
+            break
+    }
+    miniGameCard.innerHTML=
         `<div class="match-result-vertical">
             <h6>${game.date.split('T')[0]}</h6>
          </div>

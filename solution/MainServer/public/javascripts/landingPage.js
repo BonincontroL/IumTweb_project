@@ -316,25 +316,22 @@ function createMatchDiv(match) {
     const matchDiv = document.createElement('div');
     matchDiv.classList.add('game-information');
 
-    const homeTeamLogo = `<img class="team-logo" src="${match.homeTeam.logo}" alt="${match.homeTeam.name}" />`;
-    const awayTeamLogo = `<img class="team-logo" src="${match.awayTeam.logo}" alt="${match.awayTeam.name}" />`;
-
-    const homeTeamNameStyle = match.homeTeam.name && match.homeTeam.name.length > 20 ? 'font-size: 0.8rem; text-align:center;' : '';
-    const awayTeamNameStyle = match.awayTeam.name && match.awayTeam.name.length > 20 ? 'font-size: 0.8rem; text-align:center;' : '';
+    const homeTeamLogo = `<img class="squad-icon" src="${match.homeTeam.logo}" alt="${match.homeTeam.name} logo" />`;
+    const awayTeamLogo = `<img class="squad-icon" src="${match.awayTeam.logo}" alt="${match.awayTeam.name} logo" />`;
 
     const matchResultVertical = `
         <div class="match-result-vertical">
             <div class="squad-icon-container">
                 ${homeTeamLogo}
-                <p style="${homeTeamNameStyle}">${match.homeTeam.name || 'N.D.'}</p>
-                <div class="team-result">
+                <p>${match.homeTeam.name || 'N.D.'}</p>
+                <div class="home-result">
                     <p>${match.homeTeam.score !== undefined ? match.homeTeam.score :'N.D.'}</p>
                 </div>
             </div>
             <div class="squad-icon-container">
                 ${awayTeamLogo}
-                <p style="${awayTeamNameStyle}">${match.awayTeam.name || 'N.D.'}</p>
-                <div class="team-result">
+                <p>${match.awayTeam.name || 'N.D.'}</p>
+                <div class="away-result">
                     <p>${match.awayTeam.score !== undefined ? match.awayTeam.score : 'N.D.'}</p>
                 </div>
             </div>

@@ -413,6 +413,7 @@ header ul li ul li a{
     cursor: pointer;
     color: var(--white);
     font-weight: normal;
+    text-align: left;
 }
 
 .lateral-menu-button img{
@@ -575,9 +576,8 @@ header ul li ul li a{
 
 .info-field{
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
-    width: 330px;
     overflow: hidden;
     flex-direction: row;
     padding: 0 var(--padding-10px);
@@ -645,6 +645,7 @@ header ul li ul li a{
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    box-sizing: border-box;
     gap:var(--gap-60px);
     padding: var(--padding-20px) 0;
 }
@@ -731,7 +732,7 @@ header ul li ul li a{
     position: relative;
     border-radius: 0 var(--br-20px) var(--br-20px) var(--br-20px);
     background-color: var(--white);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -893,8 +894,8 @@ header ul li ul li a{
 .game-event-icon{
     position: relative;
     object-fit: contain;
-    width: 2vw;
-    height: 2vw;
+    width: clamp(20px,2vw,30px);
+    height: clamp(20px,2vw,30px);
 }
 .match-details-result-container{
     text-align: right;
@@ -913,8 +914,8 @@ header ul li ul li a{
 .squadLogo-big{
     position: relative;
     object-fit: contain;
-    width: 8vw;
-    height: 8vw;
+    width: clamp(70px,8vw,125px);
+    height: clamp(70px,8vw,125px);
 }
 .match-details-goals-row{
     background-color: var(--primary-blue-100);
@@ -951,7 +952,7 @@ header ul li ul li a{
     position: relative;
     display: flex;
     object-fit:contain;
-    width: 26px;
+    min-width: 26px;
     height: 26px;
 }
 .win{
@@ -1073,6 +1074,7 @@ header ul li ul li a{
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    box-sizing: border-box;
     padding-top: var(--padding-20px);
     gap: var(--gap-xl);
     width: 100%;
@@ -1092,6 +1094,7 @@ header ul li ul li a{
     max-width: 100%;
     text-align: center;
     color: var(--black);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .squadTableTitle{
@@ -1158,17 +1161,6 @@ tr{
     background-color: var(--primary-blue-900);
     color: var(--white);
 }
-
-.game-information {
-    flex: 1 1 300px;
-    max-width: 350px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
 
 .user-popup{
     position: absolute;
@@ -1463,13 +1455,10 @@ tr{
 }
 
 .competition-image {
-    align-self: stretch;
-    max-height: 100%;
     position: relative;
     border-radius: var(--br-12px);
     max-width: 100%;
-    overflow: hidden;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .homepage-button {
@@ -1677,7 +1666,7 @@ tr{
 }
 .squad-icon {
     height: clamp(20px,3vw,35px);
-    width: clamp(20px,3vw,35px);
+    min-width: clamp(20px,3vw,35px);
     position: relative;
     object-fit: contain;
 }
@@ -1730,8 +1719,7 @@ tr{
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    padding: var(--padding-10px) var(--padding-15px) var(--padding-10px)
-    var(--padding-10px);
+    padding: var(--padding-10px);
     gap: var(--gap-lgi);
 }
 
@@ -1743,10 +1731,6 @@ tr{
     padding: var(--padding-10px) var(--padding-11xs);
     gap: var(--gap-4xs);
     text-align: right;
-}
-
-.swiper-wrapper{
-    height: 10vh;
 }
 
 .matches-container {
@@ -1882,10 +1866,10 @@ tr{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 3vw;
-    height: 3vw;
+    width: clamp(25px, 3vw, 50px);
+    height: clamp(25px, 3vw, 50px);
     border-radius: 50%;
-    font-size: var(--h2-size);
+    font-size: clamp(18px, 2vw, var(--h3-size));
     color: var(--white);
     background-color: var(--primary-blue-900);
     cursor: pointer;
@@ -2081,19 +2065,20 @@ tr{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    gap:var(--gap-8xs);
     width: 100%;
 }
 .star-icon-container {
-    background-color: var(--white);
-    overflow: hidden;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
     padding: var(--padding-10px);
     box-sizing: border-box;
     gap: var(--gap-3xs);
-    font-size: var(--h1-size);
+}
+.star-icon-container>i{
+    color:var(--primary-blue-900);
+    font-size:var(--h1-size)
 }
 .series-a-brand {
     height: 59px;
@@ -2176,10 +2161,8 @@ tr{
 }
 .squad-info-frame {
     align-self: stretch;
-    width: 150px;
     position: relative;
-    border-radius: var(--br-20px);
-    object-fit:contain  ;
+    object-fit:contain ;
     z-index: 1;
 }
 
@@ -2192,14 +2175,12 @@ tr{
     border-radius: var(--br-12px);
     border: 0;
     background-color: var(--white);
-    box-shadow: 0 9px 20px rgba(0, 0, 0, 0.25);
     box-sizing: border-box;
     flex-direction: row;
     justify-content: flex-start;
     padding: var(--padding-lgi) 0;
     position: relative;
     gap: var(--gap-3xs);
-    height: 80%;
 }
 .player-card-for-competition{
     box-sizing: border-box;
@@ -2254,8 +2235,8 @@ tr{
 .player-number-wrapper{
     background-color: var(--primary-blue-900);
     display: flex;
-    width: clamp(25px, 4vw, 50px);
-    height: clamp(25px, 4vw, 50px);
+    min-width: clamp(25px, 3vw, 40px);
+    height: clamp(25px, 3vw, 40px);
     align-items: center;
     justify-content: center;
     border-radius: 50%;
@@ -2595,9 +2576,9 @@ tr{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-items: center;
     align-content: flex-start;
     padding: var(--padding-10px) 0;
-    font-size: var(--h3-size);
     gap:var(--gap-4xs)
 }
 
@@ -2609,13 +2590,12 @@ tr{
 
 .top-players-container-for-comp {
     width: 85%;
-    background-color: var(--white);
-    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.45);
-    border: 1px solid var(--light-grey);
+    background-color: var(--primary-blue-50);
     box-sizing: border-box;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    gap: var(--gap-8xs);
     padding: var(--padding-20px) var(--padding-2xl) var(--padding-20px)
     var(--padding-lgi);
 }
@@ -2635,14 +2615,13 @@ tr{
     flex-direction: column;
 }
 .stars-players {
-    width: 1323px;
-    height: 1148px;
     border-radius: var(--br-20px);
     flex-shrink: 0;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: var(--padding-10px);
     max-width: 100%;
+    gap: var(--gap-lgi);
     font-size: var(--h2-size);
 }
 .landing-page,
@@ -2747,8 +2726,8 @@ tr{
     box-sizing: border-box;
 }
 .header-flag-container{
-    width: 5vw;
-    height: 5vw;
+    width: clamp(40px,5vw,100px);
+    height: clamp(40px,5vw,100px);
     background-color: var(--white);
     display: flex;
     justify-content: center;
@@ -2782,7 +2761,6 @@ tr{
     box-sizing: border-box;
     cursor: pointer;
     transition: 0.3s ease;
-    width: 20vw;
 }
 .competition-card-mini:hover{
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.23);
@@ -2820,8 +2798,8 @@ tr{
 }
 .nationFlag{
     position: relative;
-    width: 3vw;
-    height: 3vw;
+    width: clamp(30px,3vw,50px);
+    height: clamp(30px,3vw,50px);
     object-fit: contain;
 }
 #searchCompetitionContainer{
@@ -2854,7 +2832,7 @@ tr{
         display: block;
     }
     .navbar-burger-menu i{
-        font-size: 50px;
+        font-size: clamp(30px,3.5vw,50px);
     }
     .navbar {
         padding-left: var(--padding-6xl);
@@ -2898,6 +2876,9 @@ tr{
     .star-icon-container {
         width: calc(100% - 40px);
     }
+    .formation-players-container{
+        width: 50%;
+    }
 }
 @media screen and (max-width: 450px) {
 
@@ -2939,10 +2920,10 @@ tr{
     transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
 }
 
-
-.team-logo {
-    max-width: 50px;
-    max-height: 50px;
+.team-logo{
+    min-width: clamp(30px,3vw,50px);
+    height: clamp(30px,3vw,50px);
+    object-fit: contain;
 }
 
 
