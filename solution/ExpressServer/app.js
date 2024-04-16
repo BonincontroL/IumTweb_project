@@ -11,6 +11,7 @@ var gameRouter = require('./routes/games');
 var gamelineupsRouter = require('./routes/gamelineups');
 var clubgamesRouter = require('./routes/clubgames');
 var gameeventsRouter = require('./routes/gameevents');
+var appearencesRouter = require('./routes/appearances');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/games', gameRouter);
 app.use('/gamelineups', gamelineupsRouter);
 app.use('/clubgames', clubgamesRouter);
 app.use('/gameevents', gameeventsRouter);
+app.use('/appearences', appearencesRouter);
 
 
 // catch 404 and forward to error handler

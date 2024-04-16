@@ -419,9 +419,9 @@ function renderEvent(event,homeClubId,awayClubId){
             }
             break;
         case 'Cards':
-            if(event.description.search('Red') !==-1)
+            if((event.description.search('Red') !==-1)|| (event.description.search('Second')  !==-1)) //modo per capire se un cartellino è rosso, potrebbe essere migliorato.
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/red-icon.svg')
-            else if(event.description.search('Yellow')!==-1)
+            else if(event.description.search('Yellow')!==-1) //potrebbe essere migliorato,
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/yellow-icon.svg')
             let playercardContainer= document.createElement('h6')
             playercardContainer.innerHTML=`<b>${event.player_name}</b>`
