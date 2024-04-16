@@ -2,7 +2,7 @@
 let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
 let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
 
-function manageLateralButtons(lateralButtons){
+function manageLateralButtons(lateralButtons,pageName){
     lateralButtons.forEach(btn=>{
         btn.addEventListener('click',function (){
             lateralButtons.forEach(button=>{
@@ -11,11 +11,16 @@ function manageLateralButtons(lateralButtons){
                 let btnLogoNewSrc =btnLogo.src.replace("Active","")
                 btnLogo.setAttribute('src',btnLogoNewSrc)
             })
+            //parte dedicata alla gestione delle icone dei bottoni laterali
             this.classList.add('active')
             let btnLogo = this.querySelector('img')
             let btnLogoSrc= btnLogo.getAttribute('src').split('.')[0]
             btnLogoSrc+='Active.svg'
             btnLogo.setAttribute('src',btnLogoSrc)
+            //parte dedicata alla gestione dei container
+            hideAllMainContainers(pageName)
+            let containerToShow = btn.getAttribute('data-showContainer')
+            document.getElementById(containerToShow).style.display="flex"
         })
     })
 }

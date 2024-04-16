@@ -3,46 +3,53 @@ let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id, competition_name
 let currentSeason = 2023 //la stagione corrente di default è 2023
-let currentRound
-let matchRounds //array in cui sono contenuti tutti i round della competition
+let currentRound=0
+let matchRounds=[] //array in cui sono contenuti tutti i round della competition
 let homeManagerName, awayManagerName
 let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
-
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
-    competition_id=urlParam.get('competition_id')
-    competition_name = urlParam.get('competition_name')
-    document.getElementById('competitionName').innerText=competition_name;
-
-    let competitionInfoBtn= document.getElementById('competition-info-btn')
+    const isFromMatchesPage= urlParam.get('isFromMatchesPage')
+    if(isFromMatchesPage==='true'){ //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
+        const gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
+        competition_id=gameInfo.competitionId
+        fetchAllRoundNumbers().then(res=>{
+            matchRounds = res.data.sort((a, b) => {
+                let numA = parseInt(a.round.split(".")[0], 10)
+                let numB = parseInt(b.round.split(".")[0], 10)
+                return numA - numB;
+            }).map(match => match.round);
+            if((currentRound=matchRounds.indexOf(gameInfo.round))===-1) //se non trovi il round del match nei currentRound, allora metti il round a 0
+                currentRound=0
+            renderMatchesDropdownMenu() //di default carichiamo il primo round
+            getAllMatchesInRound()
+        }).catch(err=>{
+            alert(err)
+        })
+        hideAllMainContainers(competitionPageName)
+        document.getElementById('competitionMatches').style.display='flex'
+        document.getElementById('competitionMultipleMatches').style.display='none'
+        document.getElementById('competitionMatchDetails').style.display='flex'
+        document.getElementById('competition-matches-btn').classList.add('active') //in questo modo il bottone predefinito diventa quello delle partite
+        renderSingleMatch(gameInfo)
+    }else {
+        competition_id = urlParam.get('competition_id')
+        competition_name = urlParam.get('competition_name')
+        //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
+        let competitionInfoBtn= document.getElementById('competition-info-btn')
+        competitionInfoBtn.classList.add('active')
+        hideAllMainContainers(competitionPageName)
+        document.getElementById('competitionInformation').style.display="flex"
+    }
+    getCompetitionInformation()
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     lateralButtons.forEach(button=>{
         button.addEventListener('click',()=>{
-            hideAllMainContainers(competitionPageName)
-            let containerToShow = button.getAttribute('data-showContainer')
-            document.getElementById(containerToShow).style.display="flex"
         })
     })
-    manageLateralButtons(lateralButtons)
-    //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
-    competitionInfoBtn.classList.add('active')
-    hideAllMainContainers(competitionPageName)
-    document.getElementById('competitionInformation').style.display="flex"
-    //questa parte è dedicata alla gestione dei bottoni per la singola partita (Informazioni, Eventi, Formazioni)
-    //in particolare per mostrare il giusto container in base a quale bottone viene cliccato
-    matchButtons = document.querySelectorAll('.match-details-navbar > button')
-    matchButtons.forEach(button=>{
-        button.addEventListener('click',()=>{
-            let containerName = button.getAttribute('data-showContainer')
-            let containerToShow = document.getElementById(containerName)
-            hideMatchContainersExceptOne(containerToShow)
-            //ora rendiamo il bottone l'unico "attivo"
-            matchButtons.forEach(btn=>{btn.classList.remove('button-game-navbar-active')})
-            button.classList.add('button-game-navbar-active')
-        })
-    })
-    getCompetitionInformation()
+    manageLateralButtons(lateralButtons,competitionPageName)
+    manageMatchButtons()
     document.getElementById('competition-matches-btn').addEventListener('click',()=>{
         document.getElementById('competitionMultipleMatches').style.display='flex'
         document.getElementById('competitionMatchDetails').style.display='none'
@@ -70,10 +77,26 @@ document.addEventListener('DOMContentLoaded',()=>{
                 alert(JSON.stringify(err))
             })
     })
-
     initLogin();
-
 })
+
+/**
+ * this function is used to switch to the correct container into the single match page
+ * it's also used to manage the correct active class of the button
+ */
+function manageMatchButtons(){
+    matchButtons = document.querySelectorAll('.match-details-navbar > button')
+    matchButtons.forEach(button=>{
+        button.addEventListener('click',()=>{
+            let containerName = button.getAttribute('data-showContainer')
+            let containerToShow = document.getElementById(containerName)
+            hideMatchContainersExceptOne(containerToShow)
+            //ora rendiamo il bottone l'unico "attivo"
+            matchButtons.forEach(btn=>{btn.classList.remove('button-game-navbar-active')})
+            button.classList.add('button-game-navbar-active')
+        })
+    })
+}
 function getTable(tableType){
     return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
         params:{
@@ -191,7 +214,6 @@ function hideMatchContainersExceptOne(containerToShow) {
     matchContainers.forEach(container=>{container.style.display="none"})
     containerToShow.style.display="flex"
 }
-
 /**
  * do the axios query to get all competition infos
  */
@@ -211,31 +233,34 @@ function getCompetitionInformation(){
  * @param competitionInfo the competition object with all infos
  */
 function renderCompetitionInformation(competitionInfo){
+    competition_name=competitionInfo.name
+    document.getElementById('competitionName').innerText=competitionInfo.name;
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
 }
-
+function fetchAllRoundNumbers(){
+    let roundNumbersUrl=`http://localhost:3000/games/getRoundNumbers`
+    return axios.get(roundNumbersUrl,{
+        params:
+            {
+                comp_id:competition_id,
+                season: currentSeason
+            }}
+    )
+}
 /**
  * this function start to get all the matches in a single competition year
  * in a specific round.
  */
 function getMatches(){
-    let url=`http://localhost:3000/games/getRoundNumbers`
-    axios.get(url,{
-        params:
-            {
-                comp_id:competition_id,
-                season: currentSeason
-            }
-    }).then(res=>{
-        matchRounds=res.data.sort((a,b)=>{
-            let numA=parseInt(a.round.split(".")[0],10)
-            let numB =parseInt(b.round.split("."[0]),10)
-            return numA-numB;
-        }).map(match=>match.round)
-        currentRound =0
+    fetchAllRoundNumbers().then(res=>{
+        matchRounds = res.data.sort((a, b) => {
+            let numA = parseInt(a.round.split(".")[0], 10)
+            let numB = parseInt(b.round.split(".")[0], 10)
+            return numA - numB;
+        }).map(match => match.round);
         renderMatchesDropdownMenu() //di default carichiamo il primo round
         getAllMatchesInRound()
     }).catch(err=>{
@@ -390,7 +415,6 @@ function renderMatchEvents(events, homeClubId, awayClubId){
         eventsContainer.appendChild(eventDiv)
     })
 }
-
 function renderEvent(event,homeClubId,awayClubId){
     let eventDiv=document.createElement('div')
     let eventLogo = document.createElement('img')

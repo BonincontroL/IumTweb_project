@@ -163,9 +163,7 @@ function fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek) {
                 const errorMessage = `Nessun match trovato per questa stagione e/o competizione.`;
                 alert(errorMessage);
             }
-            console.log(matches);
             const matchesByRoundAndDate = filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId);
-            console.log(matchesByRoundAndDate);
             createCompetitionDiv(competitionId, matchesByRoundAndDate);
         })
         .catch(error => {
@@ -247,24 +245,24 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
                 </div>
                 <div class="leaugename_plus_matchday">
                     <p class="match-date">${formatDate(roundMatches[0].date)}</p>
-                    <p><strong>Round ${round}</strong></p>
+                    <p><b>Round ${round}</b></p>
                     <p>Season: ${season}</p>
                 </div>
             </div>
             <div class="multiple-matches-container">
                 ${roundMatches.map(match => `
-                    <div class="game-information">
+                    <div class="game-information" data-competitionId="${match.competition_id}" data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${match.date}" data-homeclubname="${match.home_club_name}" data-awayclubname="${match.away_club_name}" data-round="${match.round}">
                         <div class="match-result-vertical">
                             <div class="squad-icon-container">
                                 <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png" alt="${match.home_club_name}" />
-                                <p style="font-size: 0.8rem; text-align:center;">${match.home_club_name}</p>
+                                <p>${match.home_club_name}</p>
                                 <div class="home-result">
                                     <p>${match.home_club_goals !== undefined ? match.home_club_goals : 'N.D.'}</p>
                                 </div>
                             </div>
                             <div class="squad-icon-container">
                                 <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png" alt="${match.away_club_name}" />
-                                <p style="font-size: 0.8rem; text-align:center;"> ${match.away_club_name}</p>
+                                <p> ${match.away_club_name}</p>
                                 <div class="away-result">
                                     <p>${match.away_club_goals !== undefined ? match.away_club_goals : 'N.D.'}</p>
                                 </div>
@@ -276,23 +274,40 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
         `;
         container.appendChild(roundDiv);
     });
+    manageGameContainers()
 }
-
+function manageGameContainers(){
+    let gameContainers= document.querySelectorAll('.game-information')
+    gameContainers.forEach(game=>{
+        game.addEventListener('click',()=>{
+            let gameInfo={
+                competitionId:game.getAttribute('data-competitionid'),
+                gameId: game.getAttribute('data-gameid'),
+                homeClubId: game.getAttribute('data-homeclubid'),
+                awayClubId:game.getAttribute('data-awayclubid'),
+                homeClubName: game.getAttribute('data-homeclubname'),
+                awayClubName:game.getAttribute('data-awayclubname'),
+                aggregate:game.getAttribute('data-aggregate'),
+                date:game.getAttribute('data-date'),
+                round:game.getAttribute('data-round')
+            }
+            sessionStorage.setItem('gameInfo',JSON.stringify(gameInfo))
+            window.location.href='../competition_page.html?isFromMatchesPage=true'
+        })
+    })
+}
 /**
  * Imposta la competizione predefinita e il giorno predefinito
  * @param defaultCompetitionId
  * @param defaultDay
  */
-
 function triggerDefaultCompetitionLoad(defaultCompetitionId, defaultDay) {
     const selectElement = document.getElementById('competition-select');
     selectElement.value = defaultCompetitionId;
 
     const defaultDayButton = Array.from(document.querySelectorAll('.date-days-picker')).find(btn => btn.textContent === defaultDay);
     defaultDayButton?.click();
-
 }
-
 
 /**
  * Formatta la data in modo leggibile
@@ -307,5 +322,9 @@ function formatDate(dateString) {
         month: 'long', // "November"
         day: 'numeric' // "2"
     });
+}
+
+module.exports={
+    manageGameContainers
 }
 

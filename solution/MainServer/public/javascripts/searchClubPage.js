@@ -29,7 +29,6 @@ async function renderClubsGroupedByInitial(clubsGrouped) {
     let mainContainer = document.getElementById('competitions-container');
     mainContainer.innerHTML = '';
 
-
     for (const initial of Object.keys(clubsGrouped)) {
         const clubsGroup = document.createElement('div');
         clubsGroup.className = 'competitions-group';
@@ -48,13 +47,10 @@ async function renderClubsGroupedByInitial(clubsGrouped) {
             clubCard.className = 'squad-card-mini';
             clubCard.setAttribute('data-clubId', club.clubId);
 
-            const cardContent = document.createElement('div');
-            cardContent.innerHTML = `
+            clubCard.innerHTML = `
                 <img class="competition-big-logo" src="https://tmssl.akamaized.net/images/wappen/head/${club.clubId}.png" alt="${club.name} logo">
                 <h3>${club.name}</h3>
             `;
-
-            clubCard.appendChild(cardContent);
             clubsContainer.appendChild(clubCard);
         });
 
