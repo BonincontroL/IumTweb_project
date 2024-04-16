@@ -20,9 +20,6 @@ router.get('/getTopScorer', async (req, res, next) => {
 
 router.get('/getMatchEvents', async (req, res) => {
     const gameId=+req.query.game_id;
-    const homeClubId=+req.query.home_club_id;
-    const awayClubId=+req.query.away_club_id;
-
     gameeventsController.getMatchEvents(gameId)
         .then(data=>{
             res.status(200).json(data);

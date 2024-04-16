@@ -374,18 +374,71 @@ function renderSingleMatch(matchInfo){
     getMatchEvents(matchIds)
 }
 function getMatchEvents(matchIds){
-    axios.get("http://localhost:3000/getMatchEvents",{params:{
-        matchIds
+    axios.get("http://localhost:3000/gameevents/getMatchEvents",{params:{
+        game_id:matchIds.game_id
         }}).then(res=>{
-            renderMatchEvents(res.data)
+            renderMatchEvents(res.data,+matchIds.home_club_id, +matchIds.away_club_id) //il + serve per convertire le stringhe in numeri
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
 }
-function renderMatchEvents(events){
-
+function renderMatchEvents(events, homeClubId, awayClubId){
+    let eventsContainer = document.getElementById('match-details-events')
+    eventsContainer.innerHTML=''
+    events.forEach(event=>{
+        let eventDiv= renderEvent(event,homeClubId,awayClubId)
+        eventsContainer.appendChild(eventDiv)
+    })
 }
 
+function renderEvent(event,homeClubId,awayClubId){
+    let eventDiv=document.createElement('div')
+    let eventLogo = document.createElement('img')
+    eventLogo.className='game-event-icon'
+    let minutesContainer= document.createElement('p')
+    minutesContainer.innerText=event.minute
+    let containers=[eventLogo,minutesContainer]
+    switch (event.type){
+        case 'Substitutions': {
+            eventLogo.setAttribute('src', 'images/gameeventsLogos/substitution-icon.svg');
+            let playerInContainer= document.createElement('h6')
+            playerInContainer.innerHTML=`Entra: <b>${event.player_in_id}</b>`//bisogna trovare il modo per ottenere il nome del giocatore
+            let playerOutContainer = document.createElement('h6')
+            playerOutContainer.innerHTML= `Esce: <b>${event.player_name}</b>`
+            containers.push(playerInContainer,playerOutContainer)
+            break
+        }case 'Goals':
+            eventLogo.setAttribute('src','images/gameeventsLogos/goal-icon.svg');
+            let scorerContainer= document.createElement('h6')
+            scorerContainer.innerHTML=`<b>${event.player_name}</b>`
+            containers.push(scorerContainer)
+            if(event.player_assist_id){
+                let assistmanContainer= document.createElement('h6')
+                assistmanContainer.innerHTML=`Assist:<b>${event.player_assist_id}</b>`
+                containers.push(assistmanContainer)
+            }
+            break;
+        case 'Cards':
+            if(event.description.search('Red') !==-1)
+                eventLogo.setAttribute('src', 'images/gameeventsLogos/red-icon.svg')
+            else if(event.description.search('Yellow')!==-1)
+                eventLogo.setAttribute('src', 'images/gameeventsLogos/yellow-icon.svg')
+            let playercardContainer= document.createElement('h6')
+            playercardContainer.innerHTML=`<b>${event.player_name}</b>`
+            containers.push(playercardContainer)
+            break;
+    }
+    if(event.club_id ===homeClubId)
+        eventDiv.className='home-game-event';
+    else if(event.club_id===awayClubId) {
+        eventDiv.className = 'away-game-event'
+        containers.reverse()
+    }
+    containers.forEach(container=>{
+        eventDiv.appendChild(container)
+    })
+    return eventDiv;
+}
 /**
  * get some match information like refree,stadium, home club manager and away club manager
  * @param gameId the identifier of the game
