@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class ClubsService {
@@ -20,10 +22,16 @@ public class ClubsService {
     }
 
     public List<Clubs> findByCompetitionAndSeason(String competitionId, String season) {
-        return clubsRepository.findByDomesticCompetitionIdAndLastSeason(competitionId,season);
+        return clubsRepository.findByDomesticCompetitionIdAndLastSeason(competitionId, season);
     }
 
     public Optional<Clubs> findById(Long clubId) {
         return clubsRepository.findById(clubId);
     }
+
+    public Map<Character, List<Clubs>> getClubsGroupedByInitial() {
+        List<Clubs> clubs = clubsRepository.findAll();
+        return clubs.stream().collect(Collectors.groupingBy(club -> Character.toUpperCase(club.getName().charAt(0))));
+    }
+
 }
