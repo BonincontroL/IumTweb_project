@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded',()=>{
-getAllClubsByInitial();
+    initLogin();
+    getAllClubsByInitial();
+
 
 
 

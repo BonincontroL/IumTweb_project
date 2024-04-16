@@ -195,6 +195,7 @@ function logged(username){
     sessionStorage.setItem('username', username);
     window.location.href = 'landing_page.html';
 
+
 }
 
 /**
@@ -203,6 +204,7 @@ function logged(username){
 function initLogin(){
 
     if (sessionStorage.getItem('username') !== null) {
+
         const user_icon= document.getElementById('user_icon');
         const user_popup=document.getElementById('user_popup');
         document.getElementById('doLogin').style.display = 'none';
@@ -213,7 +215,11 @@ function initLogin(){
         document.addEventListener('click', function(event) {
             if(user_icon.contains(event.target)){
                 user_popup.style.display = 'flex';
-
+                document.getElementById('email_popup').innerText = sessionStorage.getItem('username');
+                document.getElementById('logout').addEventListener('click', function(){
+                    sessionStorage.removeItem('username');
+                    window.location.href = 'landing_page.html';
+                });
 
             }else if(user_popup.contains(event.target)){
 
