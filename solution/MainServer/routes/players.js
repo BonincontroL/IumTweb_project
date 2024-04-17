@@ -16,6 +16,9 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
     })
 })
 
+/**
+ * Get player by competitionID and last season
+ */
 router.get('/getPlayersByCompetitionAndLastSeason/:competition_id/:last_season', function (req,res){
     axios.get(`http://localhost:8081/players/getPlayersByCompetitionAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
@@ -25,7 +28,9 @@ router.get('/getPlayersByCompetitionAndLastSeason/:competition_id/:last_season',
     })
 })
 
-
+/**
+ * Get player Img Url by player id
+ */
 router.get("/getPlayersImgUrlById", function (req,res){
     axios.get(SPRING_SERVER+"/players/getPlayersImgUrlById",{
         params:{
@@ -38,6 +43,10 @@ router.get("/getPlayersImgUrlById", function (req,res){
         res.send(err)
     })
 })
+
+/**
+ * search player by club id and season
+ */
 router.get("/searchByClubIdAndSeason", function (req,res){
     axios.get(SPRING_SERVER+"/players/searchByClubIdAndSeason",{
         params:{

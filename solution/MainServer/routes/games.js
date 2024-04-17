@@ -4,7 +4,9 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001";
 const SPRING_SERVER="http://localhost:8081";
 
-
+/**
+ * Get last matches (games) by competition id
+ */
 router.get('/getLastMatchesByCompetition/:competitionId', function (req,res){
     axios.get(EXPRESS_SERVER+"/games/getLastMatchesByCompetition/"+req.params.competitionId)
         .then(data=>{
@@ -13,6 +15,10 @@ router.get('/getLastMatchesByCompetition/:competitionId', function (req,res){
         res.send(err)
     })
 })
+
+/**
+ * get round numbers by competition id and season
+ */
 
 router.get('/getRoundNumbers', function (req,res){
     axios.get(EXPRESS_SERVER+"/games/getRoundNumbers",{
@@ -26,6 +32,11 @@ router.get('/getRoundNumbers', function (req,res){
         res.send(err)
     })
 })
+
+/**
+ * get matches(games) by competition id, season and round
+
+ */
 router.get('/getMatchesByCompAndSeasonAndRound', function (req,res){
     axios.get(EXPRESS_SERVER+"/games/getMatchesByCompAndSeasonAndRound",{
         params:{
@@ -50,6 +61,10 @@ router.get('/getRefreeAndStadium', function (req,res){
         res.send(err)
     })
 })
+
+/**
+ * Get last manager by club id
+ */
 router.get('/getLastManager', function (req,res){
     axios.get(EXPRESS_SERVER+"/games/getLastManager",{
         params:{
@@ -61,6 +76,9 @@ router.get('/getLastManager', function (req,res){
         throw new Error(err)
     })
 })
+/**
+ * Get last 5 games by club id
+ */
 router.get('/getLast5GamesByClubId', function (req,res){
     axios.get(EXPRESS_SERVER+"/games/getLast5GamesByClubId",{
         params:{
