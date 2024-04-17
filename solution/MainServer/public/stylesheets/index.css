@@ -723,9 +723,9 @@ header ul li ul li a{
 }
 #squadPlayers{
     width: 100%;
+    overflow-x:auto;
 }
 .players-role-and-card-container{
-    overflow: hidden;
     display: flex;
     text-align: left;
     max-width: 70vw;

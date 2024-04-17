@@ -38,5 +38,16 @@ router.get("/getPlayersImgUrlById", function (req,res){
         res.send(err)
     })
 })
-
+router.get("/searchByClubIdAndSeason", function (req,res){
+    axios.get(SPRING_SERVER+"/players/searchByClubIdAndSeason",{
+        params:{
+            club_id:req.query.club_id,
+            season:req.query.season
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.send(err)
+    })
+})
 module.exports = router;
