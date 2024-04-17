@@ -42,5 +42,7 @@ public class PlayersService {
     public List<Players> getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId) {
         return playersRepository.findByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(competitionId);
     }
-
+    public List<Players> getPlayersByCompIdAndSeasonOrderByValue(String competitionId, Integer lastSeason) {
+        return playersRepository.findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
+    }
 }

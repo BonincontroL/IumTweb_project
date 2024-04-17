@@ -79,13 +79,15 @@ public class PlayersController {
             return ResponseEntity.ok().body(result);
     }
     /**
-     * endpoint to get all players who are playing in a certain competition and order them by last season
-     * @param competitionId
-     * @return
+     * endpoint to get all players who are playing in a certain competition and in a certain season
+     * ordered by market value
+     * @param competitionId: the competition which we want to filter
+     * @param lastSeason: the season we want to filter
+     * @return a list of most valuable players in a certain competitition and season.
      */
-    @GetMapping("/getPlayersByCompetitionOrderByLastSeason/{competitionId}")
-    public ResponseEntity<List<Players>> getPlayersByCurrentClubIdOrderByLastSeason(@PathVariable String competitionId) {
-        List<Players> players = playersService.getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(competitionId);
+    @GetMapping("/getPlayersByCompetitionAndLastSeason/{competitionId}/{lastSeason}")
+    public ResponseEntity<List<Players>> getPlayersByCompIdAndSeasonOrderByValue(@PathVariable String competitionId, @PathVariable Integer lastSeason) {
+        List<Players> players = playersService.getPlayersByCompIdAndSeasonOrderByValue(competitionId,lastSeason);
         if (players.isEmpty()) {
             System.out.println("No Players found for competition ID: " + competitionId);
             return ResponseEntity.noContent().build();
@@ -93,8 +95,4 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
-
-
-
-
 }

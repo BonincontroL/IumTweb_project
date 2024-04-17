@@ -1,3 +1,4 @@
+const LAST_SEASON=2023
 function init() {
     let swiper = new Swiper(".competition-swiper", {
         slidesPerView: 1,
@@ -37,22 +38,18 @@ function init() {
  * @returns {Promise<unknown>}
  */
 function getPlayersByCompetition(competitionId) {
-    const url = `http://localhost:3000/players/getPlayersByCompetitionOrderByLastSeason/${competitionId}`;
+    const url = `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${LAST_SEASON}`;
     return axios.get(url)
         .then(playersResponse => {
             const players = playersResponse.data;
-
             // Controlla se sono stati trovati giocatori
             if (players.length === 0) {
                 throw new Error(`Nessun giocatore trovato per la competizione con ID: ${competitionId}`);
             }
-
             // Mescola i giocatori della competizione
             const shuffledPlayers = shuffleArray(players);
-
             // Limita i risultati ai primi 5 giocatori
             const limitedPlayers = shuffledPlayers.slice(0, 5);
-
             return limitedPlayers;
         })
         .catch(error => {
