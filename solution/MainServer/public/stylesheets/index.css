@@ -826,6 +826,15 @@ header ul li ul li a{
     color: var(--white);
     width: 100%;
 }
+.formation-role-banner{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    border-bottom: var(--primary-blue-900);
+    color:var(--primary-blue-900);
+    width:100%;
+}
 #match-details-info{
     display: flex;
     flex-direction: column;
@@ -929,6 +938,21 @@ header ul li ul li a{
     height: auto;
     align-items: flex-start;
     box-sizing: border-box;
+}
+.match-details-squadGoals-column-left,
+.match-details-squadGoals-column-right{
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    gap: var(--gap-8xs);
+    width: 100%;
+}
+.match-details-squadGoals-column-right{
+    align-items: flex-start;
+}
+.match-details-squadGoals-column-left{
+    align-items: flex-end;
 }
 .soccer-ball-icon{
     width: 20px;
@@ -2599,7 +2623,6 @@ tr{
     padding: var(--padding-20px) var(--padding-2xl) var(--padding-20px)
     var(--padding-lgi);
 }
-
 
 .landing-page,
 .page-container,

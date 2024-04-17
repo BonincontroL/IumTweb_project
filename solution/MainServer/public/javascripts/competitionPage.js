@@ -7,6 +7,13 @@ let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutti i round della competition
 let homeManagerName, awayManagerName
 let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
+const TIME_MINUTES=45 //in un tempo di calcio ci sono 45 minuti.
+let currentHomeGoals=0, currentAwayGoals=0
+let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei goal nel banner superiore
+const isDefender=['Centre-Back','Right-Back','Left-Back']
+const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
+const isStriker=['Centre-Forward','Left Winger','Right Winger','Second Striker']
+const isGoalkeeper ='Goalkeeper'
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
@@ -396,25 +403,100 @@ function renderSingleMatch(matchInfo){
     }
     getMatchInformation(matchInfo.gameId)
     getMatchFormation(matchIds)
-    getMatchEvents(matchIds)
+    getMatchEvents(matchIds,matchInfo.aggregate)
 }
-function getMatchEvents(matchIds){
+function getMatchEvents(matchIds,finalResult){
     axios.get("http://localhost:3000/gameevents/getMatchEvents",{params:{
         game_id:matchIds.game_id
         }}).then(res=>{
-            renderMatchEvents(res.data,+matchIds.home_club_id, +matchIds.away_club_id) //il + serve per convertire le stringhe in numeri
+            renderMatchEvents(res.data,+matchIds.home_club_id, +matchIds.away_club_id,finalResult) //il + serve per convertire le stringhe in numeri
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
 }
-function renderMatchEvents(events, homeClubId, awayClubId){
+function renderMatchEvents(events, homeClubId, awayClubId,finalResult){
     let eventsContainer = document.getElementById('match-details-events')
+    let isFirstHalfBannerRendered=false
+    homeGoalEvents=[]
+    awayGoalEvents=[]
+    currentHomeGoals=finalResult.split(':')[0]
+    currentAwayGoals=finalResult.split(':')[1]
     eventsContainer.innerHTML=''
-    events.forEach(event=>{
-        let eventDiv= renderEvent(event,homeClubId,awayClubId)
+    //aggiungiamo il banner per il risultato finale.
+    eventsContainer.appendChild(renderResultBanner(finalResult,"Partita finita"))
+    //aggiungiamo tutti gli altri eventi
+    events.forEach((event,index,arr)=>{
+        let eventDiv= renderEvent(event,homeClubId,awayClubId,currentHomeGoals,currentAwayGoals)
         eventsContainer.appendChild(eventDiv)
+        //controlliamo il banner del primo tempo
+        if(index+1<arr.length && !isFirstHalfBannerRendered){
+            let nextEvent= arr[index+1]
+            if(nextEvent.minute < TIME_MINUTES){
+                eventsContainer.appendChild(renderResultBanner(`${currentHomeGoals}:${currentAwayGoals}`,"Fine primo tempo"))
+                isFirstHalfBannerRendered=true
+            } //se il prossimo evento si trova nel secondo tempo
+        }
+    })
+    renderGoalsRow()
+}
+
+/**
+ * function that render the goals row in the match banner
+ * there are two columns, home and away goals, and for each row
+ * there is who scored and the goal/goals minute when he scored
+ */
+function renderGoalsRow(){
+    const homeGoalsColumnContainer= document.querySelector(".match-details-squadGoals-column-left")
+    const awayGoalsColumnContainer= document.querySelector(".match-details-squadGoals-column-right")
+    homeGoalsColumnContainer.innerHTML=''
+    awayGoalsColumnContainer.innerHTML=''
+    renderGoalsColumn(homeGoalsColumnContainer,homeGoalEvents)
+    renderGoalsColumn(awayGoalsColumnContainer,awayGoalEvents)
+}
+
+/**
+ * function that render a single goal column in the match banner
+ * @param columnContainer the goal column container
+ * @param goalEvents a "hash map" where each player is associated to the goals scored
+ */
+function renderGoalsColumn(columnContainer,goalEvents){
+    goalEvents = goalEvents.reduce((acc,goal)=>{
+        if(!acc[goal.player_name]){
+            acc[goal.player_name]=[]
+        }
+        acc[goal.player_name].push(goal)
+        return acc
+    },{})
+    Object.keys(goalEvents).forEach(player=>{
+        let playerGoalContainer= document.createElement('p')
+        let minutes = goalEvents[player].map(goal=>goal.minute+'°').join(', ')
+        playerGoalContainer.innerText=`${player} ${minutes}`
+        columnContainer.appendChild(playerGoalContainer)
     })
 }
+/**
+ * function that render the partial or final result in the match events page
+ * @param result the final or partial result of the match
+ * @param phrase the phrase to put in the banner
+ * @returns {HTMLDivElement}
+ */
+function renderResultBanner(result,phrase){
+    let resultBanner= document.createElement('div')
+    resultBanner.className='match-partial-result-container';
+    resultBanner.innerHTML=
+        `<h6>${phrase}</h6>
+         <h6>${result}</h6>`
+    return resultBanner
+}
+
+/**
+ * function that render a single game event in the correct position,
+ * there are three types of game events: Goals, Cards and Substitution
+ * @param event the object which represent an event
+ * @param homeClubId
+ * @param awayClubId
+ * @returns {HTMLDivElement}
+ */
 function renderEvent(event,homeClubId,awayClubId){
     let eventDiv=document.createElement('div')
     let eventLogo = document.createElement('img')
@@ -432,8 +514,21 @@ function renderEvent(event,homeClubId,awayClubId){
             containers.push(playerInContainer,playerOutContainer)
             break
         }case 'Goals':
-            eventLogo.setAttribute('src','images/gameeventsLogos/goal-icon.svg');
-            let scorerContainer= document.createElement('h6')
+            if(event.description.search('Penalty')!==-1)
+                eventLogo.setAttribute('src','images/gameeventsLogos/penaltyScored-icon.svg');
+            else
+                eventLogo.setAttribute('src','images/gameeventsLogos/goal-icon.svg');
+
+            let partialResultContainer = document.createElement('h6')
+            partialResultContainer.innerHTML=`${currentHomeGoals}-${currentAwayGoals}`
+            containers.push(partialResultContainer)
+            if(event.club_id===homeClubId) {
+                currentHomeGoals--
+                homeGoalEvents.push(event)
+            }else {
+                currentAwayGoals--
+                awayGoalEvents.push(event)
+            }let scorerContainer= document.createElement('h6')
             scorerContainer.innerHTML=`<b>${event.player_name}</b>`
             containers.push(scorerContainer)
             if(event.player_assist_id){
@@ -541,6 +636,7 @@ function renderMatchFormation(homeLineup, awayLineup){
 function renderFormation(container, lineup,managerName){
     let startingIds = lineup.starting_lineup.map(player=>player.player_id)
     let substituteIds = lineup.substitutes.map(player=>player.player_id)
+    let goalkeeper=[],defenders=[],midfields=[],strikers=[]
      axios.get("http://localhost:3000/players/getPlayersImgUrlById",{
             params:{
                 starting:startingIds.join(","),
@@ -567,14 +663,27 @@ function renderFormation(container, lineup,managerName){
              container.appendChild(startingLineupBanner)
 
              lineup.starting_lineup.forEach(player=>{
-                 container.appendChild(renderPlayerCard(player))
+                 let playerCard = renderPlayerCard(player)
+                 if(player.position===isGoalkeeper)
+                     goalkeeper=playerCard
+                 else if(isDefender.includes(player.position))
+                     defenders.push(playerCard)
+                 else if(isMidfield.includes(player.position))
+                     midfields.push(playerCard)
+                 else
+                     strikers.push(playerCard)
              })
-
+             if(goalkeeper!=='undefined')
+                container.appendChild(renderFormationRoleBanner('Portiere'))
+                container.appendChild(goalkeeper)
+             appendBannerAndEachPlayer(container,defenders,'Difensori')
+             appendBannerAndEachPlayer(container,midfields,'Centrocampisti')
+             appendBannerAndEachPlayer(container,strikers,'Attaccanti')
+         //da qui in poi ricreiamo la panchina, ho scelto di non raggruppare per ruolo
              let benchBanner= document.createElement('div')
              benchBanner.className='formation-header'
              benchBanner.innerHTML=  '<h6><b>Panchina</b></h6> '
              container.appendChild(benchBanner)
-
              lineup.substitutes.forEach(player=>{
                  container.appendChild(renderPlayerCard(player))
              })
@@ -582,7 +691,18 @@ function renderFormation(container, lineup,managerName){
          alert(JSON.stringify(err))
      })
 }
-
+function appendBannerAndEachPlayer(container,playerList,bannerName){
+    container.appendChild(renderFormationRoleBanner(bannerName))
+    playerList.forEach(player=>{
+        container.appendChild(player)
+    })
+}
+function renderFormationRoleBanner(role){
+    let formationBanner= document.createElement('div')
+    formationBanner.className='formation-role-banner'
+    formationBanner.innerHTML=  `<h6><b>${role}</b></h6>`
+    return formationBanner
+}
 /**
  * function that render a single manager card, it's similar to player card
  * but only have name and a default image
