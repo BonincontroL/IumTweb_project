@@ -2,7 +2,7 @@ let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
 let competition_id, competition_name
-let currentSeason = 2023 //la stagione corrente di default è 2023
+const LAST_SEASON = 2023 //la stagione corrente di default è 2023
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutti i round della competition
 let homeManagerName, awayManagerName
@@ -12,7 +12,6 @@ let currentHomeGoals=0, currentAwayGoals=0
 let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei goal nel banner superiore
 const isDefender=['Centre-Back','Right-Back','Left-Back']
 const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
-const isStriker=['Centre-Forward','Left Winger','Right Winger','Second Striker']
 const isGoalkeeper ='Goalkeeper'
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString = window.location.search;
@@ -72,21 +71,60 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('competitionSelectMatchday').addEventListener('change',function(){
         currentRound= matchRounds.indexOf(this.value)
         getAllMatchesInRound()
+        setAllMatchesButtonListener()
     })
 
     document.getElementById('competition-table-btn').addEventListener('click',()=>{
-        let tableType="full"  //di default, vogliamo la tabella che considera tutte le partite.
-        getTable(tableType)
+        getTable(competition_id,LAST_SEASON,"full")
             .then(res=>{
-                renderTable(res.data,tableType)
-            })
-            .catch(err=>{
-                alert(JSON.stringify(err))
-            })
+            renderTable(res.data,"full")
+        }).catch(err=>{
+            alert(err)
+        }) //di default vogliamo la classifica completa
+    })
+    //parte dedicata alla gestione dei bottoni della classifica
+    let competitionTableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
+    manageTableBtns(competitionTableBtns)
+    competitionTableBtns[0].addEventListener('click',()=>{
+        getTable(competition_id,LAST_SEASON,"full")
+            .then(res=>{
+                renderTable(res.data,"full")
+            }).catch(err=>{
+            alert(err)
+        })
+    })
+    competitionTableBtns[1].addEventListener('click',()=>{
+        getTable(competition_id,LAST_SEASON,"home")
+            .then(res=>{
+                renderTable(res.data,"home")
+            }).catch(err=>{
+            alert(err)
+        })
+    })
+    competitionTableBtns[2].addEventListener('click',()=>{
+        getTable(competition_id,LAST_SEASON,"away")
+            .then(res=>{
+                renderTable(res.data,"away")
+            }).catch(err=>{
+            alert(err)
+        })
     })
     initLogin();
 })
 
+function manageTableBtns(buttons){
+    buttons.forEach(button=>{
+        button.addEventListener('click',()=>{
+            buttons.forEach(btn=>{btn.classList.remove('date-days-picker-active')})
+            button.classList.add('date-days-picker-active')
+            let tbodyToShowId = button.getAttribute('data-tbodyid')
+            let tbodyToShow= document.getElementById(tbodyToShowId)
+            let tbodies=document.querySelectorAll('#competitionTableContainer > tbody')
+            tbodies.forEach(tb=>{tb.style.display='none'})
+            tbodyToShow.style.display='table-row-group'
+        })
+    })
+}
 /**
  * this function is used to switch to the correct container into the single match page
  * it's also used to manage the correct active class of the button
@@ -104,11 +142,11 @@ function manageMatchButtons(){
         })
     })
 }
-function getTable(tableType){
+export function getTable(compId,season,tableType){
     return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
         params:{
-            comp_id:competition_id,
-            season:currentSeason,
+            comp_id:compId,
+            season:season,
             type:tableType
         }
     })
@@ -135,7 +173,7 @@ function renderTable(completeLeaugeTable,type){
         tableBody.appendChild(tableRow)
     })
 }
-function renderTableRow(tableRowData,index){
+export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
     tableRow.appendChild(renderTableTD(++index))
     tableRow.appendChild(renderTableTDWithLogo(tableRowData._id, tableRowData.club_name))
@@ -170,7 +208,7 @@ function getAllClubs(){
     axios.get(url, {
         params:{
             competition_id: competition_id,
-            season:currentSeason
+            season:LAST_SEASON
         }
     }).then(res=> {
         renderAllClubs(res.data)
@@ -253,7 +291,7 @@ function fetchAllRoundNumbers(){
         params:
             {
                 comp_id:competition_id,
-                season: currentSeason
+                season: LAST_SEASON
             }}
     )
 }
@@ -305,13 +343,13 @@ function getAllMatchesInRound(){
     axios.get(url, {
         params:{
             comp_id:competition_id,
-            season: currentSeason,
+            season: LAST_SEASON,
             currentRound:matchRounds[currentRound]
         }
     }).then(res=>{
         document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
         renderMatchesRound(res.data)
-        setAllMatchesButtonListener()
+        manageMatchButtons()
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
@@ -363,7 +401,7 @@ function renderMatchesRound(matches){
  * render the dropdown menu loading all the matchNumbers values
  */
 function setAllMatchesButtonListener(){
-    matchBtns= document.querySelectorAll('.btn-load-match-details')
+    let matchBtns= document.querySelectorAll('.btn-load-match-details')
     matchBtns.forEach(button=>{
         button.addEventListener('click',()=>{
             let matchBasicInfo= {

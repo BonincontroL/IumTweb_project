@@ -109,7 +109,6 @@ router.get('/getLast5GamesByClubId', async (req, res, next) => {
  */
 router.get('/getMatchesByCompetitionAndSeason/:competition_id/:season', async (req, res, next) => {
     const { competition_id, season } = req.params;
-
     try {
         const matches = await GamesController.getGamesByCompetitionIdAndSeason(competition_id,season);
         res.status(200).json(matches);
@@ -118,6 +117,20 @@ router.get('/getMatchesByCompetitionAndSeason/:competition_id/:season', async (r
         res.status(500).json({ error: 'Errore durante il recupero dei match per season e competizione' });
     }
 });
-
+/**
+ * this endpoint return all the competitions played by a certain club in a certain season
+ */
+router.get('/getCompetitionsByClubAndSeason', async (req, res) => {
+    const club_id = +req.query.club_id
+    const season = +req.query.season
+    GamesController.getCompetitionsByClubAndSeason(club_id, season)
+        .then(data => {
+            data=data.map(result=>result._id)
+            res.status(200).json(data);
+        }).catch(err => {
+        console.error('Errore durante il recupero delle competizioni giocate da un club in una season ', err);
+        res.status(500).json({error: 'Errore durante il recupero delle competizioni giocate da un club in una season '})
+    })
+})
 
 module.exports = router;

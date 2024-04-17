@@ -1098,10 +1098,10 @@ header ul li ul li a{
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    box-sizing: border-box;
     padding-top: var(--padding-20px);
     gap: var(--gap-xl);
     width: 100%;
+    overflow: auto;
 }
 
 .squadTable-container {
@@ -1109,7 +1109,6 @@ header ul li ul li a{
     align-items: flex-start;
     box-sizing: border-box;
     border-radius: var(--br-20px);
-    overflow: hidden;
     background-color: var(--white);
     flex-direction: column;
     justify-content: flex-start;

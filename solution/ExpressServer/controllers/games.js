@@ -274,6 +274,22 @@ function getGamesByCompetitionIdAndSeason(competitionId,season) {
     });
 }
 
+function getCompetitionsByClubAndSeason(club_id,season){
+    return Model.aggregate([
+        {
+            $match:{
+                $or:[{home_club_id:club_id},{away_club_id:club_id}],
+                season:season
+            }
+        },
+        {
+            $group:{
+                _id:"$competition_id"
+            }
+        }
+    ]);
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -283,5 +299,6 @@ module.exports = {
     getMatchesByCompAndSeasonAndRound,
     getRefreeStadiumAndManagers,
     getLastManager,
-    getGamesByCompetitionIdAndSeason
+    getGamesByCompetitionIdAndSeason,
+    getCompetitionsByClubAndSeason
 };

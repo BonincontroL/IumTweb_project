@@ -3,7 +3,7 @@ const squadPageName= 'squad-page'
 let clubId
 const CURRENT_SEASON=2023
 const MAIN_SERVER="http://localhost:3000"
-
+import {getTable,renderTableRow} from './competitionPage.js'
 document.addEventListener('DOMContentLoaded',()=>{
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
@@ -36,13 +36,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     hideAllMainContainers(squadPageName)
     document.getElementById('squadInformation').style.display="flex"
     document.getElementById('squad-table-btn').addEventListener('click',()=>{
-        getLast5Games()
-            .then(res=>{
-                renderLast5Games(res.data)
-            })
-            .catch(err=>{
-                alert(JSON.stringify(err))
-            })
+        Promise.all([
+            getTable(clubInfo.competition.competitionId, CURRENT_SEASON, "full"),
+            getLast5Games()
+        ]).then(res=>{
+            renderMiniTable(res[0].data)
+            renderLast5Games(res[1].data)
+        }).catch(err=>{
+            alert(err)
+        })
     })
     document.getElementById('squad-players-btn').addEventListener('click',()=>{
         getClubPlayers()
@@ -56,7 +58,20 @@ document.addEventListener('DOMContentLoaded',()=>{
     })
     initLogin();
 })
+function renderMiniTable(completeCompetitionTable){
+    let miniTable=document.getElementById('squadMiniTableBody')
+    const index = completeCompetitionTable.findIndex(squad=>squad._id===clubId)
+    let startingIndex= Math.max(0,index-1)
+    const lastIndex=Math.min(completeCompetitionTable.length, index+2)
+    let miniCompetitionTable=completeCompetitionTable.slice(startingIndex,lastIndex)
 
+    miniCompetitionTable.forEach(tableRowData=>{
+        let tableRow =renderTableRow(tableRowData,startingIndex)
+        if(index===startingIndex++)
+            tableRow.classList.add('table-row-active')
+        miniTable.appendChild(tableRow)
+    })
+}
 /**
  * function that do an axios request to get all the club players
  * in a certain season
