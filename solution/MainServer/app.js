@@ -33,6 +33,10 @@ app.use('/games', gamesRouter);
 app.use('/clubs', clubsRouter);
 app.use('/gameevents', gameeventsRouter);
 
+const swaggerUi = require('swagger-ui-express');
+const openApiDocumentation = require('./swagger/swaggerDocumentation.json');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

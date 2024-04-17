@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "IumTweb_project",
+    "description": "This API is part of the IUM-TWEB project for the 2023-2024 academic year at the Dipartimento di Informatica, Università di Torino. Designed to enable both fans and pundits to access and analyze a wide range of football data, this API supports functionalities across multiple servers (two Express servers and one Java Spring server). It provides interfaces for querying football competitions, clubs, and player statistics, and integrates with MongoDB and Postgres databases to manage dynamic and static datasets respectively. [ IUM-TWEB Group Accornero, Aiello, Bonincontro ]",
+    "version": "1.0.0",
+    "contact": {
+      "name": "IUM-TWEB Group Accornero, Aiello, Bonincontro"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "MainServer - Can handle all API requests."
+    },
+    {
+      "url": "http://localhost:3001",
+      "description": "ExpressServer"
+    },
+    {
+      "url": "http://localhost:8081",
+      "description": "SpringServer"
+    }
+  ],
+  "paths": {
+    "/competitions/getAllCompetitions": {
+      "get": {
+        "summary": "Retrieve all competitions available in the database",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "A list of all competitions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {}
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error retrieving competitions"
+          }
+        }
+      }
+    }
+  }
+}
