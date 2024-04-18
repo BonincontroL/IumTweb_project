@@ -59,4 +59,25 @@ router.get("/searchByClubIdAndSeason", function (req,res){
         res.send(err)
     })
 })
+
+/**
+ * get di  tutti i giocatori
+ */
+router.get("/getAllPlayers", function (req,res){
+    axios.get(SPRING_SERVER+"/players/getAllPlayers")
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+        res.send(err)
+    })
+})
+
+
+
+
+
+
+
+
 module.exports = router;
+

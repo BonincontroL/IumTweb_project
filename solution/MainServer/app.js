@@ -11,6 +11,7 @@ var playersRouter = require('./routes/players');
 var gamesRouter = require('./routes/games');
 var clubsRouter = require('./routes/clubs');
 var gameeventsRouter = require('./routes/gameevents');
+var appearancesRouter= require('./routes/appearances');
 
 var app = express();
 
@@ -24,8 +25,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/appearances', appearancesRouter);
 app.use('/competitions', competitionsRouter);
 app.use('/gamelineups', gamelineupsRouter);
 app.use('/players', playersRouter);
