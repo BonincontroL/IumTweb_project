@@ -36,21 +36,89 @@
             "description": "SpringServer"
           }
         ],
-
         "responses": {
           "200": {
             "description": "A list of all competitions.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {}
+                  "$ref": "#/components/schemas/Competitions"
                 }
               }
             }
           },
           "500": {
             "description": "Error retrieving competitions"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Competition": {
+        "type": "object",
+        "properties": {
+          "competitionId": {
+            "type": "string",
+            "description": "Unique identifier for the competition"
+          },
+          "competitionCode": {
+            "type": "string",
+            "description": "Code assigned to the competition"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the competition"
+          },
+          "subType": {
+            "type": "string",
+            "description": "Subtype of the competition"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the competition"
+          },
+          "countryId": {
+            "type": "integer",
+            "description": "Identifier for the country associated with the competition"
+          },
+          "countryName": {
+            "type": "string",
+            "description": "Name of the country associated with the competition"
+          },
+          "domesticLeagueCode": {
+            "type": "string",
+            "description": "Code of the domestic league related to the competition"
+          },
+          "confederation": {
+            "type": "string",
+            "description": "Confederation to which the competition belongs"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL with more information about the competition"
+          }
+        },
+        "description": "Object representing a competition"
+      },
+      "Competitions": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Competition"
+        },
+        "description":"Array of Competition objects, used to represent a list of competitions"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error encountered"
+          },
+          "internal_code": {
+            "type": "string",
+            "description": "Internal code corresponding to the error"
           }
         }
       }
