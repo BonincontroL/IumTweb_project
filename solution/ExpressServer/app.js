@@ -31,7 +31,7 @@ app.use('/games', gameRouter);
 app.use('/gamelineups', gamelineupsRouter);
 app.use('/clubgames', clubgamesRouter);
 app.use('/gameevents', gameeventsRouter);
-app.use('/appearences', appearencesRouter);
+app.use('/appearances', appearencesRouter);
 
 
 // catch 404 and forward to error handler

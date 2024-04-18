@@ -26,10 +26,7 @@ function getPlayerStatisticsFor2023(playerId) {
         {
             $match: {
                 player_id: playerId, // Filtro per player_id
-                date: {
-                    $gte: new Date('2023-01-01T00:00:00Z'),
-                    $lte: new Date('2023-12-31T23:59:59Z')
-                }
+
             }
         },
         {
