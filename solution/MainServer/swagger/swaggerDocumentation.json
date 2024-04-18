@@ -47,14 +47,104 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
           "500": {
             "description": "Error retrieving competitions"
+          }
+        }
+      }
+    },
+    "/competitions/getCompetitionsGroupedByCountry": {
+      "get": {
+        "summary": "Retrieve all competitions grouped by country",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all competitions grouped by country.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error retrieving competitions grouped by country"
+          }
+        }
+      }
+    },
+    "/competitions/getCompetitionsGroupedByCountryAndLikeName": {
+      "get": {
+        "summary": "Retrieve all competitions grouped by country and filtered by name",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the competition to filter by",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all competitions grouped by country and filtered by name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error retrieving competitions grouped by country and filtered by name"
           }
         }
       }
     }
   },
   "components": {
+
     "schemas": {
       "Competition": {
         "type": "object",
@@ -107,7 +197,7 @@
         "items": {
           "$ref": "#/components/schemas/Competition"
         },
-        "description":"Array of Competition objects, used to represent a list of competitions"
+        "description": "Array of Competition objects, used to represent a list of competitions"
       },
       "Error": {
         "type": "object",
