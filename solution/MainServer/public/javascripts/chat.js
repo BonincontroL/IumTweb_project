@@ -4,15 +4,13 @@ let currentRoom ="";
 
 
 /**
- * Inizializzazione di  chat_page.html
+ * Inizializzazione di chat_page.html
  */
 function onChat(){
     myName = sessionStorage.getItem('username');
     getAllCompetitions();
     setupSendMessage();
     setupSocketListeners();
-
-
 }
 
 /**
@@ -36,10 +34,8 @@ function getAllCompetitions() {
         .then(response => {
             const competitions = response.data;
             renderCompetitionOnChat(competitions);
-
-            console.log(competitions);
-
-
+            let lateralChatButtons=document.querySelectorAll('.lateral-navbar-chat-element-container .lateral-navbar-chat-element')
+            manageLateralChatButtons(lateralChatButtons)
         })
         .catch(error => {
             console.error('Si è verificato un errore durante la richiesta:', error);
@@ -47,7 +43,7 @@ function getAllCompetitions() {
 }
 
 /**
- * Manipolazione  html per la corretta visualizzazione della  lista delle competizioni sia per i messaggi ricevuti che inviati
+ * Manipolazione html per la corretta visualizzazione della lista delle competizioni sia per i messaggi ricevuti che inviati
  * @param competitions lista di tutte le competizioni
  */
 function renderCompetitionOnChat(competitions) {
@@ -59,8 +55,6 @@ function renderCompetitionOnChat(competitions) {
         console.error('Container per le competizioni non trovato.');
         return;
     }
-
-
     container.innerHTML = '';
 
     // Itera su ogni competizione per creare e appendere i div
@@ -118,7 +112,6 @@ function renderCompetitionOnChat(competitions) {
 function joinCompetitionRoom(competition) {
     myName=sessionStorage.getItem("username");
     if(currentRoom) {
-
         socket.emit('leave conversation', myName, currentRoom);
     }
     document.getElementById('chat-footer').style.display = 'flex';
@@ -133,11 +126,6 @@ function joinCompetitionRoom(competition) {
 
     // Invia il nuovo room al server via Socket.IO
     socket.emit('join conversation', myName, competition.competitionId); // Usa l'ID come identificatore della room
-
-    // Pulisci i messaggi precedenti dalla chat
-    document.getElementById('messages-container').innerHTML = '';
-
-
 }
 
 /**
@@ -159,10 +147,7 @@ function sendMessage(message) {
         // Invia il messaggio al server
         socket.emit('chat message',currentRoom, msg);
 
-
         insertMessage(msg, true);
-
-
         inputBox.value = '';
     }
 }
@@ -173,7 +158,7 @@ function sendMessage(message) {
  * @param isOwnMessage booleano per verificare se il messaggio è inviato o ricevuto
  */
 function insertMessage(msgData, isOwnMessage) {
-    const messagesContainer = document.getElementById('messages-container');
+    const messagesContainer = document.getElementById('messages-container-'+currentRoom.toLowerCase());
 
     const messageDiv = document.createElement('div');
     messageDiv.className = isOwnMessage ? 'message-container msg-right' : 'message-container msg-left';
@@ -206,7 +191,7 @@ function insertMessage(msgData, isOwnMessage) {
 
 
 /**
- * Aggiunge  listeners al pulsante di invio del messaggio
+ * Aggiunge listeners al pulsante di invio del messaggio
  */
 function setupSendMessage() {
     const sendButton = document.getElementById('send_message');
@@ -230,8 +215,30 @@ function setupSendMessage() {
             }
         }
     });
-
-
 }
 
+function manageLateralChatButtons(lateralbuttons){
+    lateralbuttons.forEach(button=>{
+        button.addEventListener('click',()=>{
+            lateralbuttons.forEach(btn=>{btn.classList.remove('chat-element-active')})
+            button.classList.add('chat-element-active')
+            hideAllMessagesContainers()
+            let containerToShowId = 'messages-container-'+button.getAttribute('data-competition-id')
+            let containerToShow=document.getElementById(containerToShowId)
+            if(!containerToShow) {
+                let mainContainer=document.getElementById('main-container')
+                containerToShow=document.createElement('div')
+                containerToShow.className='chat-messages-container'
+                containerToShow.id=containerToShowId
+                mainContainer.appendChild(containerToShow)
+            }else {
+                containerToShow.style.display = 'flex'
+            }
+        })
+    })
+}
+function hideAllMessagesContainers(){
+    let chatContainers= document.querySelectorAll('.chat-messages-container')
+    chatContainers.forEach(container=>{container.style.display='none'})
+}
 
