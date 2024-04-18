@@ -21,12 +21,12 @@ function getTopScorer(competitionId){
     ])
 }
 
-function getPlayerStatisticsFor2023(playerId) {
+function getPlayerStatistics(playerId) {
+    const numericPlayerId = parseInt(playerId);
     return Model.aggregate([
         {
             $match: {
-                player_id: playerId, // Filtro per player_id
-
+                player_id: numericPlayerId
             }
         },
         {
@@ -59,5 +59,5 @@ function getPlayerStatisticsFor2023(playerId) {
 
 module.exports={
     getTopScorer,
-    getPlayerStatisticsFor2023
+    getPlayerStatistics
 }
