@@ -19,8 +19,12 @@ function manageLateralButtons(lateralButtons,pageName){
             btnLogo.setAttribute('src',btnLogoSrc)
             //parte dedicata alla gestione dei container
             hideAllMainContainers(pageName)
-            let containerToShow = btn.getAttribute('data-showContainer')
+            let containerToShow = btn.getAttribute('data-showContainer');
+            if(btn === document.getElementById('squad-statistic-btn'))
+                getPlayerStatistics(playerId);
+
             document.getElementById(containerToShow).style.display="flex"
+
         })
     })
 }

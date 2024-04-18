@@ -16,9 +16,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     playerInfoBtn.classList.add('active')
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display="flex"
-    if( document.getElementById('playerStatistic').style.display==="flex"){
-        console.log(getPlayerStatistics(playerId))
-    }
+
 
     initLogin();
 })
@@ -45,12 +43,30 @@ function getAllPlayers(){
  * @param playerId id del giocatore
  */
 function getPlayerStatistics(playerId) {
-    return axios.get('http://localhost:3000/appearances/getPlayerStatistics/${playerId}')
-        .then(response => response.data)
-        .catch(error => console.error(`Error not found statistics for player ${playerId}:`, error));
+    axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
+        .then(response => {
+            console.log(response.data);
+            renderPlayerStatistics(response.data)
+
+
+        })
+            .catch(error => console.error(`Error not found statistics for player ${playerId}:`, error));
+
+
+    /**
+     * funzione che scrive le statistiche del giocatore nella pagina.
+     * @param playerStatistics
+     */
+    function renderPlayerStatistics(playerStatistics) {
+    document.getElementById('playerNumYellowCards').innerText = playerStatistics[0].total_yellow_cards
+    document.getElementById('playerNumRedCards').innerText = playerStatistics[0].total_red_cards
+    document.getElementById('playerNumGoals').innerText = playerStatistics[0].total_goals
+    document.getElementById('playerNumAssists').innerText = playerStatistics[0].total_assists
+    document.getElementById('playerNumMinutes').innerText = playerStatistics[0].total_minutes_played
+
 }
 
-
+}
 
 
 

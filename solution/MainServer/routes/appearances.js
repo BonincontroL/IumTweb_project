@@ -12,7 +12,7 @@ const SPRING_SERVER="http://localhost:8081"
 router.get("/getPlayerStatistics/:playerId", function (req, res) {
     axios.get(EXPRESS_SERVER+'/appearances/getPlayerStatistics/'+req.params.playerId)
         .then(response => {
-            console.log(`Data received: ${JSON.stringify(response.data)}`);
+            console.log(response.data);
             res.status(200).send(response.data);
         })
         .catch(err => {

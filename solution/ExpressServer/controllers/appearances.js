@@ -40,6 +40,7 @@ function getPlayerStatistics(playerId) {
                 total_assists: { $sum: '$assists' },
                 total_yellow_cards: { $sum: '$yellow_cards' },
                 total_red_cards: { $sum: '$red_cards' },
+                total_minutes_played: { $sum: '$minutes_played' },
                 appearances: { $sum: 1 },
                 player_name: { $first: '$player_name' } // Assicurati che 'player_name' esista sempre nei documenti
             }
@@ -53,7 +54,8 @@ function getPlayerStatistics(playerId) {
                 total_assists: 1,
                 total_yellow_cards: 1,
                 total_red_cards: 1,
-                appearances: 1
+                appearances: 1,
+                total_minutes_played: 1
             }
         }
     ])
