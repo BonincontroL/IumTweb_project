@@ -617,7 +617,8 @@ header ul li ul li a{
     gap: var(--gap-11xl);
     height: 100%;
 }
-#playerInformation{
+#playerInformation,
+#playerStatistic{
     overflow-y:auto;
     display: flex;
     flex-direction: column;
@@ -629,6 +630,7 @@ header ul li ul li a{
     gap: var(--gap-11xl);
     height: 92vh;
 }
+
 .slogan {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font particolare */
     font-size: 28px;
@@ -1178,6 +1180,10 @@ tr{
     text-align: left;
     height: 6vh;
 }
+tbody > tr:hover{
+    background-color: var(--color-gainsboro-100);
+    cursor: pointer;
+}
 
 .table-row-active{
     font-weight: bold;
@@ -1405,7 +1411,7 @@ tr{
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    min-height: 850px;
+    min-height: 92vh;
     max-width: 100%;
     text-align: left;
 }
@@ -2219,7 +2225,8 @@ tr{
     position: relative;
     gap: var(--gap-3xs);
 }
-.player-card-for-competition{
+.player-card-for-competition,
+.manager-card-for-competition{
     box-sizing: border-box;
     display: flex;
     justify-content: flex-start;

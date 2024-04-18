@@ -51,10 +51,6 @@ function init(){
     }
     getCompetitionInformation()
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
-    lateralButtons.forEach(button=>{
-        button.addEventListener('click',()=>{
-        })
-    })
     manageLateralButtons(lateralButtons,competitionPageName)
     manageMatchButtons()
     document.getElementById('competition-matches-btn').addEventListener('click',()=>{
@@ -336,7 +332,7 @@ function getAllMatchesInRound(){
     }).then(res=>{
         document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
         renderMatchesRound(res.data)
-        manageMatchButtons()
+        setAllMatchesButtonListener()
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
@@ -649,6 +645,7 @@ function renderMatchFormation(homeLineup, awayLineup){
 
     renderFormation(homeLineupContainer, homeLineup,homeManagerName);
     renderFormation(awayLineupContainer,awayLineup,awayManagerName)
+
 }
 
 /**
@@ -658,7 +655,7 @@ function renderMatchFormation(homeLineup, awayLineup){
  * @param lineup  consisting of two array, starting_lineup and substitutes
  * @param managerName the name of the manager
  */
-function renderFormation(container, lineup,managerName){
+ function renderFormation(container, lineup,managerName){
     let startingIds = lineup.starting_lineup.map(player=>player.player_id)
     let substituteIds = lineup.substitutes.map(player=>player.player_id)
     let goalkeeper=[],defenders=[],midfields=[],strikers=[]
@@ -712,6 +709,8 @@ function renderFormation(container, lineup,managerName){
              lineup.substitutes.forEach(player=>{
                  container.appendChild(renderPlayerCard(player))
              })
+         let playerCards = document.querySelectorAll('#'+container.id+' > .player-card-for-competition')
+         setPlayersEventListener(playerCards)
      }).catch(err=>{
          alert(JSON.stringify(err))
      })
@@ -736,7 +735,7 @@ function renderFormationRoleBanner(role){
  */
 function renderManagerCard(managerName){
     let cardDiv = document.createElement('div')
-    cardDiv.className = 'player-card-for-competition'
+    cardDiv.className = 'manager-card-for-competition'
     cardDiv.innerHTML = `
            <img 
                class="player-card-for-competition-img"
@@ -759,7 +758,13 @@ function renderManagerCard(managerName){
  */
 function renderPlayerCard(player) {
     let cardDiv = document.createElement('div')
+    let teamCaptain = player.team_captain === 1? '(C)':''
     cardDiv.className = 'player-card-for-competition'
+    cardDiv.setAttribute('data-playerid', player.player_id)
+    cardDiv.setAttribute('data-name', player.player_name)
+    cardDiv.setAttribute('data-imageurl', player.imageUrl)
+    cardDiv.setAttribute('data-countryofbirth', player.countryOfBirth)
+
     cardDiv.innerHTML = `
            <img 
                class="player-card-for-competition-img"
@@ -772,7 +777,7 @@ function renderPlayerCard(player) {
                     <div class="player-number-wrapper">
                         <h6>${player.number}</h6>
                     </div>
-                    <h6>${player.player_name}</h6>
+                    <h6>${player.player_name} ${teamCaptain}</h6>
                 </div>
             </div>`
 

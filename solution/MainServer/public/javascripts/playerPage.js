@@ -1,12 +1,11 @@
 let lateralPlayerButtons, playerInfoBtn
 const playerPageName= 'player-page'
 let playerId;
+let isStatsLoaded=false //booleano che serve a capire quando le statistiche sono state caricate correttamente.
 document.addEventListener('DOMContentLoaded',()=>{
     let playerInfo=JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId=playerInfo.playerId
     renderPlayerInfo(playerInfo)
-
-
 
     playerInfoBtn=document.getElementById('player-info-btn')
     lateralPlayerButtons=document.querySelectorAll('#playerLateralNavbar .lateral-menu-button')
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     playerInfoBtn.classList.add('active')
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display="flex"
-
+    document.getElementById('player-statistic-btn').addEventListener('click',getPlayerStatistics)
 
     initLogin();
 })
@@ -39,20 +38,17 @@ function getAllPlayers(){
 }
 
 /**
- * get di tutte  le statistiche di un singolo giocatore( cartellini gialli, rossi, goal e assist totali)
- * @param playerId id del giocatore
+ * get di tutte le statistiche di un singolo giocatore(cartellini gialli, rossi, goal e assist totali)
  */
-function getPlayerStatistics(playerId) {
-    axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
-        .then(response => {
-            console.log(response.data);
-            renderPlayerStatistics(response.data)
-
-
-        })
+function getPlayerStatistics() {
+    if(!isStatsLoaded) {
+        axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
+            .then(response => {
+                renderPlayerStatistics(response.data)
+                isStatsLoaded = true
+            })
             .catch(error => console.error(`Error not found statistics for player ${playerId}:`, error));
-
-
+    }
     /**
      * funzione che scrive le statistiche del giocatore nella pagina.
      * @param playerStatistics

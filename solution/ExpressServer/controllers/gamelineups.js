@@ -50,7 +50,7 @@ function getMatchPlayers(game_id,home_club_id, away_club_id){
                         player_id:"$player_id",
                         player_name:"$player_name",
                         position:"$position",
-                        team_capitain:"$team_capitain",
+                        team_captain:"$team_captain",
                         number:"$number"
                     }
                 }

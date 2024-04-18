@@ -72,7 +72,6 @@ function getCompetitionName(){
             competition_id:clubInfo.competition.competitionId
         }
     })
-
 }
 function getLastSeason(){
     let url="http://localhost:3000/clubs/getLastSeason"
@@ -165,20 +164,6 @@ function renderPlayerCard(player){
            <h4>${player.name}</h4>
         </div>`
     return playerCard
-}
-function setPlayersEventListener(playerCards){
-    playerCards.forEach(card=>{
-        card.addEventListener('click',()=>{
-            let playerInfo ={
-                playerId:card.getAttribute('data-playerid'),
-                name:card.getAttribute('data-name'),
-                imageUrl:card.getAttribute('data-imageUrl'),
-                countryOfBirth:card.getAttribute('data-countryofbirth'),
-            }
-            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
-            window.location.href='../player_page.html'
-        })
-    })
 }
 function getLast5Games(){
     return axios.get(MAIN_SERVER+'/games/getLast5GamesByClubId',{

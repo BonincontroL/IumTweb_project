@@ -81,6 +81,10 @@ function renderPlayers(players, competitionIdentifier) {
     // Itera su ogni giocatore e costruisce la card
     players.forEach(player => {
         const playerCard = document.createElement('button');
+        playerCard.setAttribute('data-playerid', player.playerId)
+        playerCard.setAttribute('data-imageurl', player.imageUrl)
+        playerCard.setAttribute('data-name', player.name)
+
         playerCard.classList.add('player-card-for-homepage');
         playerCard.style.padding = '10px'; // Aggiunge spazio intorno al contenuto della card
 
@@ -161,14 +165,14 @@ function renderPlayers(players, competitionIdentifier) {
  * Ottiene i giocatori da una competizione specifica e li renderizza utilizzando la mappa identificatore-container.
  */
 function getAndRenderPlayers() {
-    getPlayersByCompetition("IT1").then(players => {
-        renderPlayers(players, 'Serie-A');
-    }).catch(error => {
-        console.error('Errore durante il recupero dei giocatori della Serie A:', error);
-    });
-
-    getPlayersByCompetition("GB1").then(players => {
-        renderPlayers(players, 'Premier-League');
+    Promise.all([
+        getPlayersByCompetition('IT1'),
+        getPlayersByCompetition('GB1')
+    ]).then(res=>{
+        renderPlayers(res[0],'Serie-A')
+        renderPlayers(res[1],'Premier-League')
+        let playerCards = document.querySelectorAll('.players-container-in-homepage > .player-card-for-homepage')
+        setPlayersEventListener(playerCards) //imposto i listener per far si che quando l'utente clicca si vada sulla pagina del giocatore
     }).catch(error => {
         console.error('Errore durante il recupero dei giocatori della Premier League:', error);
     });

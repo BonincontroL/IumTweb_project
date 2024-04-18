@@ -20,9 +20,6 @@ function manageLateralButtons(lateralButtons,pageName){
             //parte dedicata alla gestione dei container
             hideAllMainContainers(pageName)
             let containerToShow = btn.getAttribute('data-showContainer');
-            if(btn === document.getElementById('squad-statistic-btn'))
-                getPlayerStatistics(playerId);
-
             document.getElementById(containerToShow).style.display="flex"
 
         })
@@ -56,6 +53,26 @@ function setAllClubButtonsListener(clubCards,competition_id, competition_name){
                 competition_id=card.getAttribute('data-competitionid')
             }
             window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}&competitionId=${competition_id}&competitionName=${competition_name}`
+        })
+    })
+}
+
+/**
+ * function used to set the player card event listener, with this you can click on player
+ * and go to his page
+ * @param playerCards all the player cards in the current page
+ */
+function setPlayersEventListener(playerCards){
+    playerCards.forEach(card=>{
+        card.addEventListener('click',()=>{
+            let playerInfo ={
+                playerId:card.getAttribute('data-playerid'),
+                name:card.getAttribute('data-name'),
+                imageUrl:card.getAttribute('data-imageurl'),
+                countryOfBirth:card.getAttribute('data-countryofbirth'),
+            }
+            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
+            window.location.href='../player_page.html'
         })
     })
 }
