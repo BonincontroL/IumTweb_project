@@ -39,3 +39,19 @@ function setCompetitionsCardEventListener(competitionCards){
         })
     })
 }
+function setAllClubButtonsListener(clubCards,competition_id, competition_name){
+    clubCards.forEach(card=>{
+        card.addEventListener('click', function (){
+            let clubInfo={
+                clubId:card.getAttribute('data-clubid'),
+                name:card.getAttribute('data-name'),
+                stadiumName: card.getAttribute('data-stadiumname'),
+                stadiumSeats: card.getAttribute('data-stadiumseats'),
+            }
+            if(competition_id===null){
+                competition_id=card.getAttribute('data-competitionid')
+            }
+            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}&competitionId=${competition_id}&competitionName=${competition_name}`
+        })
+    })
+}

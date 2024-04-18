@@ -1,11 +1,7 @@
+
 document.addEventListener('DOMContentLoaded',()=>{
     initLogin();
     getAllClubsByInitial();
-
-
-
-
-
 });
 
 /**
@@ -13,11 +9,13 @@ document.addEventListener('DOMContentLoaded',()=>{
  */
 function getAllClubsByInitial() {
     axios.get("http://localhost:3000/clubs/getAllClubsByInitial")
-        .then(async response => {
-            await renderClubsGroupedByInitial(response.data);
+        .then(response => {
+            renderClubsGroupedByInitial(response.data);
+            let clubCards = document.querySelectorAll('#clubs-container .squad-card-mini')
+            setAllClubButtonsListener(clubCards,null,null)//non conosciamo il competition name, dovremo fare una query per ottenerlo quando arriviamo in squadPage
         })
         .catch(error => {
-            alert(JSON.stringify(error));
+            alert(error);
         });
 }
 
@@ -25,8 +23,8 @@ function getAllClubsByInitial() {
  * visualizzazione di tutte le squadre nella pagina suddivise per la lettera iniziale
  * @param clubsGrouped  hash map che ha lista di club che iniziano con la chiave, come valore e un carattere come chiave.
  */
-async function renderClubsGroupedByInitial(clubsGrouped) {
-    let mainContainer = document.getElementById('competitions-container');
+function renderClubsGroupedByInitial(clubsGrouped) {
+    let mainContainer = document.getElementById('clubs-container');
     mainContainer.innerHTML = '';
 
     for (const initial of Object.keys(clubsGrouped)) {
@@ -46,14 +44,16 @@ async function renderClubsGroupedByInitial(clubsGrouped) {
             const clubCard = document.createElement('div');
             clubCard.className = 'squad-card-mini';
             clubCard.setAttribute('data-clubId', club.clubId);
-
+            clubCard.setAttribute('data-name', club.name);
+            clubCard.setAttribute('data-stadiumname', club.stadiumName);
+            clubCard.setAttribute('data-stadiumseats', club.stadiumSeats);
+            clubCard.setAttribute('data-competitionid', club.domesticCompetitionId);
             clubCard.innerHTML = `
                 <img class="competition-big-logo" src="https://tmssl.akamaized.net/images/wappen/head/${club.clubId}.png" alt="${club.name} logo">
                 <h3>${club.name}</h3>
             `;
             clubsContainer.appendChild(clubCard);
         });
-
         clubsGroup.appendChild(clubsContainer);
         mainContainer.appendChild(clubsGroup);
     }

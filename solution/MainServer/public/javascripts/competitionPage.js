@@ -13,7 +13,8 @@ let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei g
 const isDefender=['Centre-Back','Right-Back','Left-Back']
 const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
 const isGoalkeeper ='Goalkeeper'
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',init)
+function init(){
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
     const isFromMatchesPage= urlParam.get('isFromMatchesPage')
@@ -77,8 +78,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('competition-table-btn').addEventListener('click',()=>{
         getTable(competition_id,LAST_SEASON,"full")
             .then(res=>{
-            renderTable(res.data,"full")
-        }).catch(err=>{
+                renderTable(res.data,"full")
+            }).catch(err=>{
             alert(err)
         }) //di default vogliamo la classifica completa
     })
@@ -110,8 +111,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         })
     })
     initLogin();
-})
-
+}
 function manageTableBtns(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
@@ -212,23 +212,10 @@ function getAllClubs(){
         }
     }).then(res=> {
         renderAllClubs(res.data)
-        setAllClubButtonsListener()
+        let clubCards =document.querySelectorAll('#competitionSquads > .squad-card-mini')
+        setAllClubButtonsListener(clubCards,competition_id,competition_name)
     }).catch(err=>{
         alert(JSON.stringify(err))
-    })
-}
-function setAllClubButtonsListener(){
-    let clubCards =document.querySelectorAll('.squad-card-mini')
-    clubCards.forEach(card=>{
-        card.addEventListener('click', function (){
-            let clubInfo={
-                clubId:card.getAttribute('data-clubid'),
-                name:card.getAttribute('data-name'),
-                stadiumName: card.getAttribute('data-stadiumname'),
-                stadiumSeats: card.getAttribute('data-stadiumseats')
-            }
-            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}&stadiumName=${clubInfo.stadiumName}&stadiumSeats=${clubInfo.stadiumSeats}&competitionId=${competition_id}&competitionName=${competition_name}`
-        })
     })
 }
 function renderAllClubs(clubs){

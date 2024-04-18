@@ -13,7 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- for LODASH-->
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-  <script src="javascripts/searchClubPage.js"></script>
+  <script src="javascripts/searchClubPage.js" type="module"></script>
   <script src="javascripts/index.js"></script>
   <script src="javascripts/login.js"></script>
   <title>IUM</title>
@@ -81,15 +81,15 @@
         <i class='bx bx-search'></i>
       </div>
     </div>
-    <div id="competitions-container" class="search-competition-body">
+    <div id="clubs-container" class="search-competition-body">
       <!-- singolo gruppo di competizioni (raggruppo le competizioni per nazione)-->
       <h3>Squadre ordinate alfabeticamente</h3>
-       <div class="competitions-group">
+      <div class="competitions-group">
            <!--<div class="competitions-group-header">
                <h2>A</h2>
            </div>-->
            <div class="competitions-group-container">
-              <!--singola card che rappresenta la squadra(importante mettere data-clubId  per poter caricare correttamente al Click la pagina della squadra)-->
+              <!--singola card che rappresenta la squadra(importante mettere data-clubId per poter caricare correttamente al Click la pagina della squadra)-->
              <!--  <div class="squad-card-mini" data-clubId="4102">
                    <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
                    <h3>AC Carpi</h3>-->

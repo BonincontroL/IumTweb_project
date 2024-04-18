@@ -1287,9 +1287,23 @@ tr{
     justify-content: flex-start;
     padding: var(--padding-10px) var(--padding-10px);
     gap: 15px;
+    width: 25vw;
     min-height: 17vh;
 }
-
+.stats-container-and-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    box-sizing: border-box;
+    gap: var(--gap-8xs)
+}
+.player-stats-icon{
+    position: relative;
+    height: clamp(25px,3vw,50px);
+    min-width: clamp(25px,3vw,50px);
+    object-fit: cover;
+}
 .nationality-card{
     overflow: hidden;
     display: flex;

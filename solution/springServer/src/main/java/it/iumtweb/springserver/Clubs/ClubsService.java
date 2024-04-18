@@ -34,4 +34,7 @@ public class ClubsService {
         return clubs.stream().collect(Collectors.groupingBy(club -> Character.toUpperCase(club.getName().charAt(0))));
     }
 
+    public String getLastSeason(Long clubId) {
+        return clubsRepository.getLastSeason(clubId);
+    }
 }

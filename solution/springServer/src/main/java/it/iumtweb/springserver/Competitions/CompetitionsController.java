@@ -72,4 +72,14 @@ public class CompetitionsController {
         return result.map(competitions -> ResponseEntity.ok().body(result.get())).orElseGet(()->ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/getName")
+    public ResponseEntity<String> getName(@RequestParam(name="competition_id") String competitionId){
+        String name = competitionsService.getName(competitionId);
+        if(name!=null){
+            return ResponseEntity.ok().body(name);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

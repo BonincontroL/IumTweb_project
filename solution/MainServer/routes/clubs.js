@@ -12,13 +12,22 @@ router.get('/searchByCompetitionAndSeason', function (req,res){
         .then(data=>{
             res.send(data.data)
         }).catch(err=>{
-        res.send(err)
+        res.status(500).send(err)
+    });
+})
+router.get('/getLastSeason', function (req,res){
+    axios.get(SPRING_SERVER + "/clubs/getLastSeason",{params:{
+            club_id: +req.query.club_id,
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        res.status(500).send(err)
     });
 })
 
-
 /**
- * get al SpringServer per  tutte le squadre suddivise  per il carattere iniziale
+ * get al SpringServer per tutte le squadre suddivise per il carattere iniziale
  */
 router.get('/getAllClubsByInitial', function (req, res) {
     axios.get(SPRING_SERVER+"/clubs/getAllClubsByInitial")

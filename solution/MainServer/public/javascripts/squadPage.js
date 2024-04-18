@@ -1,16 +1,14 @@
 let lateralSquadButtons, squadInfoBtn
 const squadPageName= 'squad-page'
-let clubId
-const CURRENT_SEASON=2023
+let clubInfo
 const MAIN_SERVER="http://localhost:3000"
 import {getTable,renderTableRow} from './competitionPage.js'
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',init)
+function init(){
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
-    clubId= parseInt(urlParam.get('club_id'),10)
-
-    const clubInfo={
-        clubId:clubId,
+    clubInfo={
+        clubId:parseInt(urlParam.get('club_id'),10),
         name :urlParam.get('name'),
         stadium:{
             stadiumName:urlParam.get('stadiumName'),
@@ -19,15 +17,23 @@ document.addEventListener('DOMContentLoaded',()=>{
         competition:{
             competitionId: urlParam.get('competitionId'),
             competitionName: urlParam.get('competitionName')
-        }
+        },
+        lastSeason:undefined
     }
-    getManagerName() //ottieni il nome del manager, ritorna un array con un solo elemento.
-        .then(res=>{
-            clubInfo.managerName=res.data[0].name
-            renderBasicInfo(clubInfo)
-        }).catch(err=>{
-            alert(JSON.stringify(err))
+
+    Promise.all([
+        getManagerName(),
+        getLastSeason(),
+        getCompetitionName()
+    ]).then(res=>{
+        clubInfo.managerName=res[0].data[0].name;
+        clubInfo.lastSeason=res[1].data.lastSeason
+        clubInfo.competition.competitionName=res[2].data
+        renderBasicInfo()
+    }).catch(err=>{
+        alert(err)
     })
+
     squadInfoBtn= document.getElementById('squad-info-btn')
     lateralSquadButtons=document.querySelectorAll('#squadLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralSquadButtons,squadPageName)
@@ -35,9 +41,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     squadInfoBtn.classList.add('active')
     hideAllMainContainers(squadPageName)
     document.getElementById('squadInformation').style.display="flex"
+
     document.getElementById('squad-table-btn').addEventListener('click',()=>{
         Promise.all([
-            getTable(clubInfo.competition.competitionId, CURRENT_SEASON, "full"),
+            getTable( clubInfo.competition.competitionId, clubInfo.lastSeason,"full"),
             getLast5Games()
         ]).then(res=>{
             renderMiniTable(res[0].data)
@@ -57,10 +64,26 @@ document.addEventListener('DOMContentLoaded',()=>{
             })
     })
     initLogin();
-})
+}
+function getCompetitionName(){
+    let url="http://localhost:3000/competitions/getName"
+    return axios.get(url,{
+        params:{
+            competition_id:clubInfo.competition.competitionId
+        }
+    })
+
+}
+function getLastSeason(){
+    let url="http://localhost:3000/clubs/getLastSeason"
+    return axios.get(url,{params:{
+        club_id:clubInfo.clubId
+    }
+    })
+}
 function renderMiniTable(completeCompetitionTable){
     let miniTable=document.getElementById('squadMiniTableBody')
-    const index = completeCompetitionTable.findIndex(squad=>squad._id===clubId)
+    const index = completeCompetitionTable.findIndex(squad=>squad._id===clubInfo.clubId)
     let startingIndex= Math.max(0,index-1)
     const lastIndex=Math.min(completeCompetitionTable.length, index+2)
     let miniCompetitionTable=completeCompetitionTable.slice(startingIndex,lastIndex)
@@ -81,8 +104,8 @@ function getClubPlayers(){
     let url ="http://localhost:3000/players/searchByClubIdAndSeason"
     return axios.get(url,{
         params:{
-            club_id:clubId,
-            season:CURRENT_SEASON
+            club_id:clubInfo.clubId,
+            season:clubInfo.lastSeason
         }
     })
 }
@@ -160,7 +183,7 @@ function setPlayersEventListener(playerCards){
 function getLast5Games(){
     return axios.get(MAIN_SERVER+'/games/getLast5GamesByClubId',{
         params:{
-            club_id:clubId
+            club_id:clubInfo.clubId
         }})
 }
 function renderLast5Games(games){
@@ -176,7 +199,7 @@ function renderMiniGameCard(game){
     let miniGameCard= document.createElement('div')
     let gameOutcome, circleClass
     miniGameCard.className='last-match-container'
-    if(game.home_club_id===clubId){ //se sei la squadra di casa
+    if(game.home_club_id===clubInfo.clubId){ //se sei la squadra di casa
         if(game.home_club_goals>game.away_club_goals)
             gameOutcome = "Vittoria"
         else if(game.home_club_goals < game.away_club_goals)
@@ -226,11 +249,11 @@ function renderMiniGameCard(game){
 function getManagerName(){
     return axios.get(MAIN_SERVER+'/games/getLastManager',{
         params:{
-            club_id:clubId
+            club_id:clubInfo.clubId
         }
     })
 }
-function renderBasicInfo(clubInfo) {
+function renderBasicInfo() {
     //nome e logo del club nella barra laterale
     document.getElementById('clubName').innerText = clubInfo.name
     document.getElementById('clubImage').setAttribute('src', `${clubLogoImgURL}${clubInfo.clubId}.png`)
