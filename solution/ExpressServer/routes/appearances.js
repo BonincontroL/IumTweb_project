@@ -17,8 +17,11 @@ router.get('/getTopScorer', async (req,res)=>{
         });
 })
 
-router.get('/getPlayerStatisticsFor2023/:playerId', async (req, res)=>{
-       appearancesController.getPlayerStatisticsFor2023(req.params.playerId)
+
+
+router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
+       const idPlayer = req.params.playerId;
+       appearancesController.getPlayerStatistics(idPlayer)
         .then(data=>{
             res.status(200).json(data);
         })

@@ -21,12 +21,16 @@ function getTopScorer(competitionId){
     ])
 }
 
-function getPlayerStatisticsFor2023(playerId) {
+
+function getPlayerStatistics(playerId) {
+
+    const numericPlayerId = parseInt(playerId, 10);
+
+
     return Model.aggregate([
         {
             $match: {
-                player_id: playerId, // Filtro per player_id
-
+                player_id: numericPlayerId  // Assicurati che 'player_id' nel database sia dello stesso tipo (es. Number)
             }
         },
         {
@@ -36,8 +40,9 @@ function getPlayerStatisticsFor2023(playerId) {
                 total_assists: { $sum: '$assists' },
                 total_yellow_cards: { $sum: '$yellow_cards' },
                 total_red_cards: { $sum: '$red_cards' },
+                total_minutes_played: { $sum: '$minutes_played' },
                 appearances: { $sum: 1 },
-                player_name: { $first: '$player_name' }
+                player_name: { $first: '$player_name' } // Assicurati che 'player_name' esista sempre nei documenti
             }
         },
         {
@@ -49,15 +54,23 @@ function getPlayerStatisticsFor2023(playerId) {
                 total_assists: 1,
                 total_yellow_cards: 1,
                 total_red_cards: 1,
-                appearances: 1
+                appearances: 1,
+                total_minutes_played: 1
             }
         }
-    ]);
+    ])
+        .then(data => {
+            return data;
+        })
+        .catch(err => {
+            console.error(`Error retrieving statistics for player ID ${playerId}`, err);
+            throw err;
+        });
 }
 
 
 
 module.exports={
     getTopScorer,
-    getPlayerStatisticsFor2023
+    getPlayerStatistics,
 }
