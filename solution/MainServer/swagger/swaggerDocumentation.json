@@ -38,11 +38,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of all competitions.",
+            "description": "Successful - A list of all competitions.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competitions"
+                  "$ref": "#/components/schemas/Competition"
                 }
               }
             }
@@ -54,7 +54,7 @@
             "description": "Not Found"
           },
           "500": {
-            "description": "Error retrieving competitions"
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
           }
         }
       }
@@ -74,11 +74,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of all competitions grouped by country.",
+            "description": "Successful - A list of all competitions grouped by country.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competitions"
+                  "$ref": "#/components/schemas/Competition"
                 }
               }
             }
@@ -90,7 +90,7 @@
             "description": "Not Found"
           },
           "500": {
-            "description": "Error retrieving competitions grouped by country"
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
           }
         }
       }
@@ -121,11 +121,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of all competitions grouped by country and filtered by name.",
+            "description": "Successful - A list of all competitions grouped by country and filtered by name.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competitions"
+                  "$ref": "#/components/schemas/Competition"
                 }
               }
             }
@@ -137,14 +137,208 @@
             "description": "Not Found"
           },
           "500": {
-            "description": "Error retrieving competitions grouped by country and filtered by name"
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/competitions/getName": {
+      "get": {
+        "summary": "Retrieve competition name by competition ID",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier for the competition to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Detailed information about the competition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competition"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+
+    "/clubs/searchByCompetitionAndSeason": {
+      "get": {
+        "summary": "Search clubs by competition ID and season",
+        "description": "Retrieves a list of clubs participating in a given competition for a specified season.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier for the competition",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season for which to retrieve club data",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - retrieval of club list for the specified competition and season.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Club"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/clubs/getLastSeason": {
+      "get": {
+        "summary": "Retrieve last season's for a specified club",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the club",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - retrieval of last season for the club.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Club"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/clubs/getAllClubsByInitial": {
+      "get": {
+        "summary": "Retrieve all clubs grouped by their initial character",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of clubs grouped by initial character.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Club"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
           }
         }
       }
     }
+
+
+
+
   },
   "components": {
-
     "schemas": {
       "Competition": {
         "type": "object",
@@ -192,13 +386,535 @@
         },
         "description": "Object representing a competition"
       },
-      "Competitions": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Competition"
+      "Club": {
+        "type": "object",
+        "properties": {
+          "clubId": {
+            "type": "integer",
+            "description": "The unique identifier for the club."
+          },
+          "clubCode": {
+            "type": "string",
+            "description": "Unique code of the club."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the club."
+          },
+          "domesticCompetitionId": {
+            "type": "string",
+            "description": "Identifier of the domestic competition the club participates in."
+          },
+          "totalMarketValue": {
+            "type": "number",
+            "description": "Total market value of the club."
+          },
+          "squadSize": {
+            "type": "integer",
+            "description": "Number of players in the club."
+          },
+          "averageAge": {
+            "type": "number",
+            "description": "Average age of the club players."
+          },
+          "foreignersNumber": {
+            "type": "integer",
+            "description": "Number of foreign players in the club."
+          },
+          "foreignersPercentage": {
+            "type": "number",
+            "description": "Percentage of foreign players in the club."
+          },
+          "nationalTeamPlayers": {
+            "type": "integer",
+            "description": "Number of players in the club who are also national team players."
+          },
+          "stadiumName": {
+            "type": "string",
+            "description": "Name of the club's stadium."
+          },
+          "stadiumSeats": {
+            "type": "integer",
+            "description": "Seating capacity of the stadium."
+          },
+          "netTransferRecord": {
+            "type": "string",
+            "description": "Net transfer record of the club."
+          },
+          "coachName": {
+            "type": "string",
+            "description": "Name of the club's coach."
+          },
+          "lastSeason": {
+            "type": "string",
+            "description": "Performance of the club in the last season."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL to more information about the club."
+          }
         },
-        "description": "Array of Competition objects, used to represent a list of competitions"
+        "description": "Object representing a club"
       },
+      "GameEvent": {
+        "type": "object",
+        "properties": {
+          "game_event_id": {
+            "type": "string",
+            "description": "Unique identifier for the game event."
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the game event occurred."
+          },
+          "game_id": {
+            "type": "integer",
+            "description": "Identifier of the game associated with the event."
+          },
+          "minute": {
+            "type": "integer",
+            "description": "Minute of the game when the event occurred."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of event (e.g., goal, card, substitution)."
+          },
+          "club_id": {
+            "type": "integer",
+            "description": "Identifier of the club involved in the event."
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier of the player involved in the event."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the event."
+          },
+          "player_assist_id": {
+            "type": "integer",
+            "description": "Identifier of the player who assisted in the event, if applicable."
+          },
+          "player_in_id": {
+            "type": "integer",
+            "description": "Identifier of the player who came in during a substitution, if applicable."
+          }
+        }
+      },
+      "GameLineup": {
+        "type": "object",
+        "properties": {
+          "game_lineups_id": {
+            "type": "string",
+            "description": "Unique identifier for the game lineup entry."
+          },
+          "game_id": {
+            "type": "integer",
+            "description": "Identifier of the game to which the lineup is associated."
+          },
+          "club_id": {
+            "type": "integer",
+            "description": "Identifier of the club for which the lineup is set."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the lineup (starting_lineup, substitute, reserve).",
+            "enum": ["starting_lineup", "substitute", "reserve"]
+          },
+          "number": {
+            "type": "integer",
+            "description": "Shirt number of the player in this lineup."
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier of the player in the lineup."
+          },
+          "player_name": {
+            "type": "string",
+            "description": "Name of the player in the lineup."
+          },
+          "team_captain": {
+            "type": "boolean",
+            "description": "Indicates whether the player is the team captain. Defaults to false if not specified.",
+            "default": false
+          },
+          "position": {
+            "type": "string",
+            "description": "Playing position of the player in the lineup."
+          }
+        }
+      },
+      "Game": {
+        "type": "object",
+        "properties": {
+          "game_id": {
+            "type": "integer",
+            "description": "Unique identifier for the game."
+          },
+          "competition_id": {
+            "type": "string",
+            "description": "Identifier for the competition in which the game is played."
+          },
+          "season": {
+            "type": "integer",
+            "description": "Season year in which the game is played."
+          },
+          "round": {
+            "type": "string",
+            "description": "Round of the competition, e.g., 'Final', 'Semi-final'."
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the game is scheduled or was played."
+          },
+          "home_club_id": {
+            "type": "integer",
+            "description": "Identifier of the home club."
+          },
+          "away_club_id": {
+            "type": "integer",
+            "description": "Identifier of the away club."
+          },
+          "home_club_goals": {
+            "type": "integer",
+            "description": "Number of goals scored by the home club."
+          },
+          "away_club_goals": {
+            "type": "integer",
+            "description": "Number of goals scored by the away club."
+          },
+          "home_club_position": {
+            "type": "integer",
+            "description": "League position of the home club at the time of the game."
+          },
+          "away_club_position": {
+            "type": "integer",
+            "description": "League position of the away club at the time of the game."
+          },
+          "home_club_manager_name": {
+            "type": "string",
+            "description": "Name of the home club's manager."
+          },
+          "away_club_manager_name": {
+            "type": "string",
+            "description": "Name of the away club's manager."
+          },
+          "stadium": {
+            "type": "string",
+            "description": "Stadium where the game is played."
+          },
+          "attendance": {
+            "type": "integer",
+            "description": "Number of spectators attending the game."
+          },
+          "referee": {
+            "type": "string",
+            "description": "Name of the referee officiating the game."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL to more detailed information about the game."
+          },
+          "home_club_name": {
+            "type": "string",
+            "description": "Name of the home club."
+          },
+          "away_club_name": {
+            "type": "string",
+            "description": "Name of the away club."
+          },
+          "aggregate": {
+            "type": "string",
+            "description": "Aggregate score, if applicable."
+          },
+          "competition_type": {
+            "type": "string",
+            "description": "Type of the competition, e.g., 'domestic league', 'international cup'."
+          }
+        }
+      },
+      "Appearance": {
+        "type": "object",
+        "properties": {
+          "appearance_id": {
+            "type": "string",
+            "description": "Unique identifier for the player's appearance in a game."
+          },
+          "game_id": {
+            "type": "integer",
+            "description": "Identifier of the game in which the player appeared."
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier of the player who appeared in the game."
+          },
+          "player_club_id": {
+            "type": "integer",
+            "description": "Identifier of the club the player was representing in the game."
+          },
+          "player_current_club_id": {
+            "type": "integer",
+            "description": "Identifier of the player's current club at the time of the game."
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the game in which the appearance occurred."
+          },
+          "player_name": {
+            "type": "string",
+            "description": "Name of the player."
+          },
+          "competition_id": {
+            "type": "string",
+            "description": "Identifier of the competition in which the appearance occurred."
+          },
+          "yellow_cards": {
+            "type": "integer",
+            "description": "Number of yellow cards received by the player during the game. Defaults to 0 if none."
+          },
+          "red_cards": {
+            "type": "integer",
+            "description": "Number of red cards received by the player during the game. Defaults to 0 if none."
+          },
+          "goals": {
+            "type": "integer",
+            "description": "Number of goals scored by the player during the game. Defaults to 0 if none."
+          },
+          "assists": {
+            "type": "integer",
+            "description": "Number of assists made by the player during the game. Defaults to 0 if none."
+          },
+          "minutes_played": {
+            "type": "integer",
+            "description": "Total minutes played by the player in the game."
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Unique username for the user. This serves as a user identifier."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Unique email address of the user. Used for login and communication purposes."
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for the user account, stored securely. Not displayed in API responses."
+          }
+        }
+      },
+      "ClubGame": {
+        "type": "object",
+        "properties": {
+          "game_id": {
+            "type": "integer",
+            "description": "Identifier of the game associated with these club game details."
+          },
+          "club_id": {
+            "type": "integer",
+            "description": "Identifier of the club that this game data belongs to."
+          },
+          "own_goals": {
+            "type": "integer",
+            "description": "Number of goals scored by the club in the game."
+          },
+          "own_manager_name": {
+            "type": "string",
+            "description": "Name of the manager of the club in this game."
+          },
+          "own_position": {
+            "type": "integer",
+            "description": "League position of the club at the time of the game."
+          },
+          "opponent_id": {
+            "type": "integer",
+            "description": "Identifier of the opponent club in the game."
+          },
+          "opponent_goals": {
+            "type": "integer",
+            "description": "Number of goals scored by the opponent club in the game."
+          },
+          "opponent_position": {
+            "type": "integer",
+            "description": "League position of the opponent club at the time of the game."
+          },
+          "opponent_manager_name": {
+            "type": "string",
+            "description": "Name of the opponent club's manager."
+          },
+          "hosting": {
+            "type": "string",
+            "description": "Indicates whether the club was playing at home or away.",
+            "enum": ["Home", "Away"]
+          },
+          "is_win": {
+            "type": "integer",
+            "description": "Indicates the game result from the club's perspective. 1 for win, 0 for draw or loss.",
+            "enum": [0, 1]
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Unique identifier of the player."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the player."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name of the player."
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of the player."
+          },
+          "lastSeason": {
+            "type": "integer",
+            "description": "Last season played by the player."
+          },
+          "currentClubId": {
+            "type": "integer",
+            "description": "Identifier of the player's current club."
+          },
+          "playerCode": {
+            "type": "string",
+            "description": "Unique player code."
+          },
+          "countryOfBirth": {
+            "type": "string",
+            "description": "Country of birth of the player."
+          },
+          "cityOfBirth": {
+            "type": "string",
+            "description": "City of birth of the player."
+          },
+          "countryOfCitizenship": {
+            "type": "string",
+            "description": "Country of citizenship of the player."
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of birth of the player."
+          },
+          "subPosition": {
+            "type": "string",
+            "description": "Sub-position of the player on the field."
+          },
+          "position": {
+            "type": "string",
+            "description": "Primary playing position of the player."
+          },
+          "foot": {
+            "type": "string",
+            "description": "Dominant foot of the player."
+          },
+          "heightInCm": {
+            "type": "integer",
+            "description": "Height of the player in centimeters."
+          },
+          "marketValueInEur": {
+            "type": "number",
+            "description": "Current market value of the player in euros."
+          },
+          "highestMarketValueInEur": {
+            "type": "number",
+            "description": "Highest market value reached by the player in euros."
+          },
+          "contractExpirationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Expiration date of the player's current contract."
+          },
+          "agentName": {
+            "type": "string",
+            "description": "Name of the player's agent."
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "URL to the player's image."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL to more detailed information about the player."
+          },
+          "currentClubDomesticCompetitionId": {
+            "type": "string",
+            "description": "Identifier of the domestic competition in which the player's current club participates."
+          },
+          "currentClubName": {
+            "type": "string",
+            "description": "Name of the player's current club."
+          }
+        }
+      },
+      "PlayerValuation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the player valuation."
+          },
+          "playerId": {
+            "type": "integer",
+            "description": "Identifier of the player to whom the valuation pertains."
+          },
+          "lastSeason": {
+            "type": "integer",
+            "description": "Last season for which the valuation is relevant."
+          },
+          "datetime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The exact date and time when the valuation was recorded."
+          },
+          "date": {
+            "type": "string",
+            "description": "The date when the valuation was recorded."
+          },
+          "dateweek": {
+            "type": "string",
+            "description": "The week of the date when the valuation was recorded."
+          },
+          "marketValueInEur": {
+            "type": "integer",
+            "description": "The market value of the player in euros at the time of valuation."
+          },
+          "n": {
+            "type": "integer",
+            "description": "An integer value associated with the player valuation, specific to the business logic."
+          },
+          "currentClubId": {
+            "type": "integer",
+            "description": "Identifier of the club to which the player belongs at the time of valuation."
+          },
+          "playerClubDomesticCompetitionId": {
+            "type": "string",
+            "description": "Identifier of the domestic competition in which the player's club participates."
+          }
+        }
+      },
+
+
+
+
+
+
+
+
       "Error": {
         "type": "object",
         "properties": {
