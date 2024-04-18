@@ -144,6 +144,7 @@
     }
   },
   "components": {
+
     "schemas": {
       "Competition": {
         "type": "object",
