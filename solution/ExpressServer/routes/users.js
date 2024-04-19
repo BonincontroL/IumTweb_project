@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Email già in uso' });
         }
         await userController.createUser(username, email, password);
-        res.status(201).json({ message: 'Registrazione completata con successo' });
+        res.status(200).json({ message: 'Registrazione completata con successo' });
     } catch (error) {
         console.log(req.body); // da eliminare solo per test
         console.error('Errore durante la registrazione:', error);
