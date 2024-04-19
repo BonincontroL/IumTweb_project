@@ -25,7 +25,9 @@
   "paths": {
     "/competitions/getAllCompetitions": {
       "get": {
-        "tags": ["Competitions"],
+        "tags": [
+          "Competitions"
+        ],
         "summary": "Retrieve all competitions available in the database",
         "servers": [
           {
@@ -62,7 +64,9 @@
     },
     "/competitions/getCompetitionsGroupedByCountry": {
       "get": {
-        "tags": ["Competitions"],
+        "tags": [
+          "Competitions"
+        ],
         "summary": "Retrieve all competitions grouped by country",
         "servers": [
           {
@@ -99,7 +103,9 @@
     },
     "/competitions/getCompetitionsGroupedByCountryAndLikeName": {
       "get": {
-        "tags": ["Competitions"],
+        "tags": [
+          "Competitions"
+        ],
         "summary": "Retrieve all competitions grouped by country and filtered by name",
         "servers": [
           {
@@ -147,7 +153,9 @@
     },
     "/competitions/getName": {
       "get": {
-        "tags": ["Competitions"],
+        "tags": [
+          "Competitions"
+        ],
         "summary": "Retrieve competition name by competition ID",
         "servers": [
           {
@@ -193,10 +201,11 @@
         }
       }
     },
-
     "/clubs/searchByCompetitionAndSeason": {
       "get": {
-        "tags": ["Clubs"],
+        "tags": [
+          "Clubs"
+        ],
         "summary": "Search clubs by competition ID and season",
         "description": "Retrieves a list of clubs participating in a given competition for a specified season.",
         "servers": [
@@ -257,7 +266,9 @@
     },
     "/clubs/getLastSeason": {
       "get": {
-        "tags": ["Clubs"],
+        "tags": [
+          "Clubs"
+        ],
         "summary": "Retrieve last season's for a specified club",
         "servers": [
           {
@@ -305,7 +316,9 @@
     },
     "/clubs/getAllClubsByInitial": {
       "get": {
-        "tags": ["Clubs"],
+        "tags": [
+          "Clubs"
+        ],
         "summary": "Retrieve all clubs grouped by their initial character",
         "servers": [
           {
@@ -340,10 +353,11 @@
         }
       }
     },
-
     "/gameevents/getMatchEvents": {
       "get": {
-        "tags": ["Game Events"],
+        "tags": [
+          "Game Events"
+        ],
         "summary": "Retrieve match events by game ID",
         "description": "Retrieves a list of events for a specified game, providing details about each event that occurred during the match.",
         "servers": [
@@ -392,10 +406,11 @@
         }
       }
     },
-
     "/users/login": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User Login",
         "description": "Returns a response if the user exists",
         "servers": [
@@ -443,7 +458,9 @@
     },
     "/users/register": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User Registration",
         "description": "Registers a new user",
         "servers": [
@@ -485,16 +502,107 @@
           }
         }
       }
+    },
+    "/players/getAllPlayers": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Retrieve all players",
+        "description": "Retrieves a list of all players in the database.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of all players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/players/searchByClubIdAndSeason": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Search players by club ID and season",
+        "description": "Retrieves a list of players who played for a given club in a specified season.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier for the club",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season for which to retrieve player data",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of all players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
     }
-
-
-
-
-
-
-
-
-
   },
   "components": {
     "schemas": {
