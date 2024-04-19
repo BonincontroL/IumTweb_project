@@ -47,21 +47,20 @@ function getAllCompetitions() {
  * @param competitions lista di tutte le competizioni
  */
 function renderCompetitionOnChat(competitions) {
-    // Trova il container dove appendere i div delle competizioni
+
     const container = document.getElementById('lateral-navbar-chat-element-container');
 
-    //Controllo per verificare che il container sia stato trovato
     if (!container) {
         console.error('Container per le competizioni non trovato.');
         return;
     }
     container.innerHTML = '';
 
-    // Itera su ogni competizione per creare e appendere i div
+
     competitions.forEach(competition => {
         const id= competition.competitionId.toLowerCase();
 
-        // Crea il div dell'elemento della chat
+
         const chatElement = document.createElement('div');
         chatElement.className = 'lateral-navbar-chat-element ';
 
@@ -73,34 +72,33 @@ function renderCompetitionOnChat(competitions) {
 
         });
 
-        // Crea il div per l'immagine
+
         const imgContainer = document.createElement('div');
         imgContainer.className = 'lateral-navbar-chat-element-img';
 
-        // Crea l'immmagine e per ogni competizione viene messo il suo id nell 'url
+
         const image = document.createElement('img');
         image.src = `https://tmssl.akamaized.net/images/logo/header/${id}.png`;  // Usa l'URL del logo dalla competizione
         imgContainer.appendChild(image);
 
-        // Crea il wrapper per l'header dell'elemento della chat
+
         const headerWrapper = document.createElement('div');
         headerWrapper.className = 'chat-header-element-wrapper';
 
-        // Crea il div della riga dell'elemento della chat
+
         const row = document.createElement('div');
         row.className = 'chat-element-row';
 
-        // Crea e imposta il titolo della competizione
         const title = document.createElement('h6');
         title.innerHTML = `<b>${competition.name}</b>`; // Usa il nome della competizione
         row.appendChild(title);
 
-        // Assembla i div
+
         headerWrapper.appendChild(row);
         chatElement.appendChild(imgContainer);
         chatElement.appendChild(headerWrapper);
 
-        // Appende il div della competizione al container
+
         container.appendChild(chatElement);
     });
 }
@@ -115,16 +113,15 @@ function joinCompetitionRoom(competition) {
         socket.emit('leave conversation', myName, currentRoom);
     }
     document.getElementById('chat-footer').style.display = 'flex';
-    // Aggiorna la stanza corrente
+
     currentRoom = competition.competitionId;
 
-    // Aggiorna il titolo della chat e l'immagine della stanza con il nome della competizione
     document.getElementById('chat_title').textContent = competition.name;
-    // Costruisce l'URL dell'immagine basato sull'id della competizione e lo aggiorna
+
     const imageUrl = `https://tmssl.akamaized.net/images/logo/header/${competition.competitionId.toLowerCase()}.png`;
     document.querySelector('.chat-room-image').src = imageUrl;
 
-    // Invia il nuovo room al server via Socket.IO
+
     socket.emit('join conversation', myName, competition.competitionId); // Usa l'ID come identificatore della room
 }
 
@@ -144,7 +141,7 @@ function sendMessage(message) {
 
         };
 
-        // Invia il messaggio al server
+
         socket.emit('chat message',currentRoom, msg);
 
         insertMessage(msg, true);
@@ -185,7 +182,7 @@ function insertMessage(msgData, isOwnMessage) {
     messageDiv.appendChild(singleMsgDiv);
     messagesContainer.appendChild(messageDiv);
 
-    // Scorri verso il basso per visualizzare il nuovo messaggio
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
@@ -207,7 +204,7 @@ function setupSendMessage() {
 
     inputBox.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Previene l'azione di default del tasto Enter
+            event.preventDefault();
             const message = inputBox.value.trim();
             if (message) {
                 sendMessage(message);
