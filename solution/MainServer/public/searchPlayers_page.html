@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
+
+    <link rel="stylesheet" href="stylesheets/global.css"/>
+    <link rel="stylesheet" href="stylesheets/index.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;800;900&display=swap"/>
+    <!--box icon link-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- for AXIOS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="javascripts/searchPlayersPage.js"></script>
+    <script src="javascripts/index.js"></script>
+    <title>IUM</title>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <a class="navbar-burger-menu" href="#">
+            <i class='bx bx-menu'></i>
+        </a>
+        <h3>LOGO</h3>
+    </div>
+    <nav>
+        <ul class="navbar">
+            <li class="navbar-single-item"><a href="/landing_page.html">Homepage</a></li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/matches_page.html">Partite</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/searchCompetition_page.html">Competizioni</a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Giocatori </a>
+                </div>
+            </li>
+            <li>
+                <div class="navbar-single-item">
+                    <a href="/">Squadre</a>
+                </div>
+            </li>
+            <li class="navbar-single-item">
+                <a href="/chat_page.html">Chat</a>
+            </li>
+        </ul>
+    </nav>
+
+    <button class="login-btn" id="doLogin">
+        Accedi
+    </button>
+    <h2><i class='bx bx-user'  id="user_icon" ></i></h2>
+    <div class="user-popup">
+        <div class="user-popup-header">
+            <h6>mail.example@gmail.com</h6>
+        </div>
+        <div class="user-popup-content">
+            <div class="user-popup-item">
+                <h6><i class="bi bi-gear"></i></h6>
+                <h6>Gestisci il tuo account</h6>
+            </div>
+            <div class="user-popup-item">
+                <h6><i class="bi bi-box-arrow-left"></i></h6>
+                <h6>Logout</h6>
+            </div>
+        </div>
+    </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
+</header>
+
+<div class="matches-header">
+    <div class="search-button" style="margin: auto">
+        <input id="search-players" class="search-button-input" type="text" placeholder="Cerca players...">
+        <i class='bx bx-search'></i>
+    </div>
+</div>
+
+<div class="main-container" id="GeneralPlayers">
+    <div class="star-icon-container">
+        <i class='bx bx-star'></i>
+        <h1> <span class="blue-words">Le stelle</span> del calcio</h1>
+    </div>
+     <div class="players-role-and-card-container2">
+         <div class="player-role-description">
+             <img
+                     class="player-role-image"
+                     loading="lazy"
+                     alt="Goalkeeper icon"
+                     src="images/GOALKEEPER_ICON.png"
+             />
+             <h1>Portieri</h1>
+         </div>
+         <div class="player-row-container" id="GoalkeepersContainer">
+         </div>
+     </div>
+     <div class="players-role-and-card-container2">
+         <div class="player-role-description">
+             <img
+                     class="player-role-image"
+                     loading="lazy"
+                     alt="Defenders icon"
+                     src="images/Brick%20Wall.svg"
+             />
+             <h1>Difensori</h1>
+         </div>
+         <div class="player-row-container" id="DefenderContainer">
+         </div>
+     </div>
+     <div class="players-role-and-card-container2">
+         <div class="player-role-description">
+             <img
+                     class="player-role-image"
+                     loading="lazy"
+                     alt="Midfield icon"
+                     src="images/trivela.svg"
+             />
+             <h1>Centrocampisti</h1>
+         </div>
+         <div class="player-row-container" id="MidfieldContainer">
+
+         </div>
+     </div>
+     <div class="players-role-and-card-container2">
+         <div class="player-role-description">
+             <img
+                     class="player-role-image"
+                     loading="lazy"
+                     alt="Striker icon"
+                     src="images/Striker.svg"
+             />
+             <h1>Attaccanti</h1>
+         </div>
+         <div class="player-row-container" id="StrikerContainer">
+         </div>
+     </div>
+</div>
+</div>
+
+</body>
+</html>
