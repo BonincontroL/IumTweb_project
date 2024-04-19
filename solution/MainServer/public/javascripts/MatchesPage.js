@@ -8,7 +8,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-
+    initLogin();
     const competitionsEndpoint = 'http://localhost:3000/competitions/getAllCompetitions';
     axios.get(competitionsEndpoint)
         .then(response => {
