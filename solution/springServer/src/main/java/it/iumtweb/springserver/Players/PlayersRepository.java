@@ -23,11 +23,8 @@ public interface PlayersRepository extends JpaRepository<Players, Long>{
             "where p.playerId IN (:playerIds)")
     List<PlayersDTO> findPlayersWithImageUrlsByIds(@Param("playerIds") List<Long> playerIds);
 
-    List<Players> findByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId);
-
+    @Query(value="SELECT * FROM Players p where p.current_club_domestic_competition_id = :competitionId AND p.last_season=:lastSeason ORDER BY CASE WHEN p.market_value_in_eur IS NULL THEN 1 ELSE 0 END, p.market_value_in_eur DESC LIMIT 50", nativeQuery = true)
     List<Players> findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(String competitionId, Integer lastSeason);
-
-    List<Players> findTop50ByOrderByMarketValueInEurDesc();
 
     List<Players> findByNameContainingIgnoreCase(String letter);
 }
