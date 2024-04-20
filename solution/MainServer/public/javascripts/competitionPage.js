@@ -79,6 +79,9 @@ function init(){
             alert(err)
         }) //di default vogliamo la classifica completa
     })
+    document.getElementById('competition-statistic-btn').addEventListener('click',()=>{
+        getTopPlayers()
+    })
     //parte dedicata alla gestione dei bottoni della classifica
     let competitionTableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
     manageTableBtns(competitionTableBtns)
@@ -107,6 +110,55 @@ function init(){
         })
     })
     initLogin();
+}
+function getTopPlayers(){
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competition_id}/${LAST_SEASON}`
+    axios.get(url)
+        .then(res=>{
+            renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
+        })
+        .catch(err=>{
+            alert(err)
+        })
+}
+
+function renderTopPlayers(players){
+    let playersContainer= document.getElementById('playersTopMarketValueContainer')
+    playersContainer.innerHTML=''
+    players.forEach((player,index)=>{
+        let playerCard
+        if(index===0)
+            playerCard=renderFirstPlayerCard(player,index)
+        else
+            playerCard=renderNormalPlayerCard(player,index)
+        playersContainer.appendChild(playerCard)
+    })
+}
+
+function renderFirstPlayerCard(player,index){
+    let playerCard= document.createElement('div');
+    playerCard.className='player-stats-container-first';
+    playerCard.innerHTML=
+        `<h3>${index+1}° ${player.name}</h3>
+        <div class="player-stats-first-img-container">
+            <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-first-img">
+            <div class="player-stats-goals-container">
+                <h6>${player.marketValueInEur}</h6>
+                <h6>MLN</h6>
+            </div> 
+        </div>`
+    return playerCard
+}
+function renderNormalPlayerCard(player,index){
+    let playerCard= document.createElement('div');
+    playerCard.className='player-stats-container';
+    playerCard.innerHTML=
+        `<h3>${index+1}°</h3>
+         <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-img">
+         <h6 class="player-name-in-card">${player.name}</h6>
+         <h6>${player.marketValueInEur}</h6>
+        `
+    return playerCard
 }
 function manageTableBtns(buttons){
     buttons.forEach(button=>{

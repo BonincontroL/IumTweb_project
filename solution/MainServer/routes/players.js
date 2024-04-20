@@ -61,7 +61,7 @@ router.get("/searchByClubIdAndSeason", function (req,res){
 })
 
 /**
- * get di  tutti i giocatori
+ * get di tutti i giocatori
  */
 router.get("/getAllPlayers", function (req,res){
     axios.get(SPRING_SERVER+"/players/getAllPlayers")
@@ -71,7 +71,14 @@ router.get("/getAllPlayers", function (req,res){
         res.send(err)
     })
 })
-
+router.get("/getTop50PlayersByMarketValue", function (req,res){
+    axios.get(SPRING_SERVER+"/players/getTop50PlayersByMarketValue")
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+        res.send(err)
+    })
+})
 
 
 

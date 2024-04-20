@@ -3,9 +3,11 @@ package it.iumtweb.springserver.Players;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayersService {
@@ -31,7 +33,6 @@ public class PlayersService {
     public Map<String,List<PlayersDTO>> getPlayersImgUrlById(List<Long> startingIds, List<Long> substituteIds){
         List<PlayersDTO> startingPlayers = playersRepository.findPlayersWithImageUrlsByIds(startingIds);
         List<PlayersDTO> substitutePlayers= playersRepository.findPlayersWithImageUrlsByIds(substituteIds);
-
         Map<String, List<PlayersDTO>> lineup= new HashMap<>();
         lineup.put("starting_lineup", startingPlayers);
         lineup.put("substitutes", substitutePlayers);
@@ -39,14 +40,15 @@ public class PlayersService {
         return lineup;
     }
 
-    public List<Players> getPlayersByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(String competitionId) {
-        return playersRepository.findByCurrentClubDomesticCompetitionIdOrderByLastSeasonDesc(competitionId);
-    }
     public List<Players> getPlayersByCompIdAndSeasonOrderByValue(String competitionId, Integer lastSeason) {
         return playersRepository.findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
     }
 
     public List<Players> getTop50PlayersByMarketValue() {
-        return playersRepository.findTop50ByOrderByMarketValueInEurDesc();
+        return playersRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Players::getMarketValueInEur, Comparator.nullsLast(Comparator.reverseOrder())))
+                .limit(50)
+                .collect(Collectors.toList());
     }
 }

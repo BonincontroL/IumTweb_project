@@ -29,7 +29,7 @@ function fetchPlayersAndCategorize() {
  * @returns {Promise<Array>} Una promise che si risolve in un array di oggetti giocatore.
  */
 function fetchPlayers() {
-    return axios.get('http://localhost:8081/players/getTop50PlayersByMarketValue')
+    return axios.get('http://localhost:3000/players/getTop50PlayersByMarketValue')
         .then(response => response.data)
         .catch(error => {
             throw error;

@@ -2036,7 +2036,7 @@ tbody > tr:hover{
 }
 .player-stats-first-img{
     display: flex;
-    width: clamp(100px, 10vw, 150px);
+    width: clamp(80px, 7vw, 125px);
     height: auto;
     position: relative;
     object-fit: contain;
@@ -2066,7 +2066,7 @@ tbody > tr:hover{
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    flex-direction: row;
+    flex-direction: column;
     gap: var(--gap-8xs);
 }
 .player-stats-container{
@@ -2075,7 +2075,7 @@ tbody > tr:hover{
     height: auto;
     background-color: var(--white);
     justify-content: flex-start;
-    width: auto;
+    width: 100%;
     align-self: unset;
     flex-direction: row;
     gap: var(--gap-xl);
@@ -2090,6 +2090,9 @@ tbody > tr:hover{
     height: clamp(40px,4vw,80px);
     position: relative;
     object-fit: cover;
+}
+.player-name-in-card{
+    width: 100%;
 }
 .single-horizontal-match{
     overflow: hidden;
@@ -2991,6 +2994,7 @@ tbody > tr:hover{
     object-fit: contain;
 }
 #main-container{
+    overflow-y:auto;
     height: 100%;
     width: 100%;
 }
