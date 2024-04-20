@@ -49,4 +49,8 @@ public class PlayersService {
     public List<Players> getTop50PlayersByMarketValue() {
         return playersRepository.findTop50ByOrderByMarketValueInEurDesc();
     }
+
+    public List<Players> findPlayersByLetterInName(String letter) {
+        return playersRepository.findByNameContainingIgnoreCase(letter);
+    }
 }

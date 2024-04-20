@@ -28,4 +28,6 @@ public interface PlayersRepository extends JpaRepository<Players, Long>{
     List<Players> findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(String competitionId, Integer lastSeason);
 
     List<Players> findTop50ByOrderByMarketValueInEurDesc();
+
+    List<Players> findByNameContainingIgnoreCase(String letter);
 }

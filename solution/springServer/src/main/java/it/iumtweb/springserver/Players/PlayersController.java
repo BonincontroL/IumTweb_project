@@ -106,4 +106,15 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
+
+    @GetMapping("/findPlayersByLetterInName")
+    public ResponseEntity<List<Players>> findPlayersByLetterInName(@RequestParam String letter) {
+        List<Players> players = playersService.findPlayersByLetterInName(letter);
+        if (players.isEmpty()) {
+            System.out.println("No Players found");
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(players);
+        }
+    }
 }
