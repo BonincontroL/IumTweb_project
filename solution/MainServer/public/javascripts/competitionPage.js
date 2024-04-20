@@ -1,7 +1,7 @@
 let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
-let competition_id, competition_name
+let competitionId, competition_name
 const LAST_SEASON = 2023 //la stagione corrente di default è 2023
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutti i round della competition
@@ -13,6 +13,7 @@ let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei g
 const isDefender=['Centre-Back','Right-Back','Left-Back']
 const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
 const isGoalkeeper ='Goalkeeper'
+let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 document.addEventListener('DOMContentLoaded',init)
 function init(){
     const queryString = window.location.search;
@@ -20,7 +21,7 @@ function init(){
     const isFromMatchesPage= urlParam.get('isFromMatchesPage')
     if(isFromMatchesPage==='true'){ //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
         const gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
-        competition_id=gameInfo.competitionId
+        competitionId=gameInfo.competitionId
         fetchAllRoundNumbers().then(res=>{
             matchRounds = res.data.sort((a, b) => {
                 let numA = parseInt(a.round.split(".")[0], 10)
@@ -41,7 +42,7 @@ function init(){
         document.getElementById('competition-matches-btn').classList.add('active') //in questo modo il bottone predefinito diventa quello delle partite
         renderSingleMatch(gameInfo)
     }else {
-        competition_id = urlParam.get('competition_id')
+        competitionId = urlParam.get('competition_id')
         competition_name = urlParam.get('competition_name')
         //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
         let competitionInfoBtn= document.getElementById('competition-info-btn')
@@ -49,6 +50,7 @@ function init(){
         hideAllMainContainers(competitionPageName)
         document.getElementById('competitionInformation').style.display="flex"
     }
+    getCompetitionsWithGroup()
     getCompetitionInformation()
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralButtons,competitionPageName)
@@ -58,7 +60,7 @@ function init(){
         document.getElementById('competitionMatchDetails').style.display='none'
         getMatches()
     })
-    document.getElementById('competition-squad-btn').addEventListener('click', getAllClubs)
+    document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
     document.getElementById('backToAllMatches').addEventListener('click',()=>{
         document.getElementById('competitionMultipleMatches').style.display='flex'
         document.getElementById('competitionMatchDetails').style.display='none'
@@ -72,7 +74,7 @@ function init(){
     })
 
     document.getElementById('competition-table-btn').addEventListener('click',()=>{
-        getTable(competition_id,LAST_SEASON,"full")
+        getTable(competitionId,LAST_SEASON,"full")
             .then(res=>{
                 renderTable(res.data,"full")
             }).catch(err=>{
@@ -86,7 +88,7 @@ function init(){
     let competitionTableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
     manageTableBtns(competitionTableBtns)
     competitionTableBtns[0].addEventListener('click',()=>{
-        getTable(competition_id,LAST_SEASON,"full")
+        getTable(competitionId,LAST_SEASON,"full")
             .then(res=>{
                 renderTable(res.data,"full")
             }).catch(err=>{
@@ -94,7 +96,7 @@ function init(){
         })
     })
     competitionTableBtns[1].addEventListener('click',()=>{
-        getTable(competition_id,LAST_SEASON,"home")
+        getTable(competitionId,LAST_SEASON,"home")
             .then(res=>{
                 renderTable(res.data,"home")
             }).catch(err=>{
@@ -102,7 +104,7 @@ function init(){
         })
     })
     competitionTableBtns[2].addEventListener('click',()=>{
-        getTable(competition_id,LAST_SEASON,"away")
+        getTable(competitionId,LAST_SEASON,"away")
             .then(res=>{
                 renderTable(res.data,"away")
             }).catch(err=>{
@@ -111,8 +113,29 @@ function init(){
     })
     initLogin();
 }
+
+/**
+ * get a list of all the competitions that have group and then
+ * if my current competition is in this list we set a boolean value to true
+ */
+function getCompetitionsWithGroup(){
+    let url ="http://localhost:3000/games/getCompetitionIdsWithGroup"
+    axios.get(url)
+        .then(res=>{
+            if(res.data.length!==0) {
+                let competitionsWithGroup = res.data
+                if(competitionsWithGroup.find(comp=>comp.competition_id===competitionId)) {
+                    isWithGroup = true
+                    document.getElementById('competition-squad-btn').querySelector('h6').innerText='Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
+                }
+            }
+        })
+        .catch(err=>{
+            alert(err)
+        })
+}
 function getTopPlayers(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competition_id}/${LAST_SEASON}`
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${LAST_SEASON}`
     axios.get(url)
         .then(res=>{
             renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
@@ -251,17 +274,67 @@ function renderTableTDWithLogo(squadId,squadName){
     singleTd.appendChild(container)
     return singleTd
 }
-function getAllClubs(){
+function getClubsWrapper(){
+    if(isWithGroup)
+        getClubsDividedByGroup()
+    else
+        getClubs()
+}
+function getClubsDividedByGroup(){
+    let url="http://localhost:3000/games/getClubsDividedByGroups"
+    axios.get(url,{
+        params:{
+            competition_id:competitionId,
+            season:LAST_SEASON
+        }
+    }).then(res=>{
+        if(res.data!==0) {
+            renderClubsDividedByGroup(res.data)
+            let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
+            setAllClubButtonsListener(clubCards, competitionId, competition_name)
+        }
+    })
+}
+function renderClubsDividedByGroup(groups){
+    let mainContainer= document.getElementById('competitionSquads')
+    mainContainer.innerHTML=''
+    groups.forEach(group=>{
+        let groupContainer = renderGroup(group)
+        mainContainer.appendChild(groupContainer)
+    })
+}
+function renderGroup(group){
+    let groupContainer =document.createElement('div')
+    groupContainer.className='competitions-group'
+    //creazione del banner che contiene il nome del gruppo (Group A, Group B...)
+    let groupNameBanner = document.createElement('div')
+    groupNameBanner.className='competitions-group-header'
+    groupNameBanner.innerHTML=`<h3>${group.group}</h3>`
+    groupContainer.appendChild(groupNameBanner)
+    //creazione del div che conterrà le squadre
+    let squadsContainer=document.createElement('div')
+    squadsContainer.className='competitions-group-container'
+    groupContainer.appendChild(squadsContainer)
+    //creazione delle varie card per le squadre.
+    group.clubs.forEach(club=>{
+        let clubCard = renderClubCard(club)
+        squadsContainer.appendChild(clubCard)
+    })
+    return groupContainer
+}
+function getClubs(){
     let url="http://localhost:3000/clubs/searchByCompetitionAndSeason"
     axios.get(url, {
         params:{
-            competition_id: competition_id,
+            competition_id: competitionId,
             season:LAST_SEASON
         }
     }).then(res=> {
-        renderAllClubs(res.data)
-        let clubCards =document.querySelectorAll('#competitionSquads > .squad-card-mini')
-        setAllClubButtonsListener(clubCards,competition_id,competition_name)
+        if(res.data.length!==0) {
+            renderAllClubs(res.data)
+            let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
+            setAllClubButtonsListener(clubCards, competitionId, competition_name)
+        }
     }).catch(err=>{
         alert(JSON.stringify(err))
     })
@@ -281,7 +354,7 @@ function renderClubCard(club){
     clubCard.setAttribute('data-name', club.name)
     clubCard.setAttribute('data-stadiumName', club.stadiumName)
     clubCard.setAttribute('data-stadiumSeats', club.stadiumSeats)
-    clubCard.setAttribute('data-competitionId', competition_id)
+    clubCard.setAttribute('data-competitionId', competitionId)
     clubCard.innerHTML=
         `<img src="${clubLogoImgURL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
           </img>
@@ -300,7 +373,7 @@ function hideMatchContainersExceptOne(containerToShow) {
 function getCompetitionInformation(){
     let url="http://localhost:3000/getCompetitionInformation"
     axios.get(url,{params:
-            {"competition_id":competition_id}
+            {"competition_id":competitionId}
     })
         .then(res=>{
             renderCompetitionInformation(res.data)
@@ -325,7 +398,7 @@ function fetchAllRoundNumbers(){
     return axios.get(roundNumbersUrl,{
         params:
             {
-                comp_id:competition_id,
+                comp_id:competitionId,
                 season: LAST_SEASON
             }}
     )
@@ -377,7 +450,7 @@ function getAllMatchesInRound(){
     let url='http://localhost:3000/games/getMatchesByCompAndSeasonAndRound'
     axios.get(url, {
         params:{
-            comp_id:competition_id,
+            comp_id:competitionId,
             season: LAST_SEASON,
             currentRound:matchRounds[currentRound]
         }

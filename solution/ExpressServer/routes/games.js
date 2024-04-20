@@ -132,5 +132,27 @@ router.get('/getCompetitionsByClubAndSeason', async (req, res) => {
         res.status(500).json({error: 'Errore durante il recupero delle competizioni giocate da un club in una season '})
     })
 })
+router.get('/getClubsDividedByGroups',async(req,res)=>{
+    const competition_id = req.query.competition_id
+    const season= +req.query.season
+    GamesController.getClubsDividedByGroups(competition_id,season)
+        .then(data=>{
+            res.status(200).json(data)
+        })
+        .catch(err=>{
+            console.error('Errore durante il recupero dei club nei gironi', err);
+            res.status(500).json({error: 'Errore durante il recupero dei club nei gironi \n'+err})
+        })
+})
 
+router.get('/getCompetitionIdsWithGroup',async (req,res)=>{
+    GamesController.getCompetitionIdsWithGroup()
+        .then(data=>{
+            res.status(200).json(data)
+        })
+        .catch(err=>{
+            console.error('Errore durante il recupero degli id delle competizioni con gruppi', err);
+            res.status(500).json({error: 'Errore durante il recupero degli id delle competizioni con gruppi\n'+err})
+        })
+})
 module.exports = router;
