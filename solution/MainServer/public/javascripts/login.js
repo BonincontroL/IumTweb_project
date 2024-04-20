@@ -3,9 +3,6 @@
  */
 function onLogin(){
     showLoginForm();
-
-
-
 }
 
 /**
@@ -42,18 +39,13 @@ function addListenersRegister(){
         }
         resetRegisterForm();
     });
-
-
 }
-
-
 
 /**
  * mostra il form di login e nasconde il form di registrazione
  */
 function showLoginForm(event) {
     if (event) event.preventDefault();
-
     document.getElementById("singup_form").style.display = "none";
     document.getElementById("login_form").style.display = "flex";
     addListenersLogin();

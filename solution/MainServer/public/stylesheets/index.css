@@ -323,9 +323,10 @@ header ul li ul li a{
 }
 .form-button{
     cursor: pointer;
-    border: 0px;
+    border: 0;
     padding: var(--padding-xs) var(--padding-11xl);
-    background-color: var(--white);
+    background-color: var(--black);
+    color: var(--white);
     align-self: stretch;
     border-radius: var(--br-20px);
     display: flex;
@@ -659,6 +660,7 @@ header ul li ul li a{
     flex-direction: column;
     overflow:auto;
 }
+
 
 #squad-page ,
 #chat-page,
@@ -3015,10 +3017,9 @@ tbody > tr:hover{
     border: 1px solid #ccc;
     border-radius: 10px;
     overflow: hidden;
-    margin: 20px;
-    min-width: 250px;
+    min-width: 20vw;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    background-color: #ffffff;
+    background-color: var(--white);
     transition: transform 0.3s ease;
 }
 .player-card2:hover {
@@ -3026,7 +3027,7 @@ tbody > tr:hover{
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 .player-image {
-    width: auto;
+    width: clamp(100px,10vw,150px);
     height: auto;
     object-fit: cover;
     border-top-left-radius: 10px;
@@ -3054,6 +3055,6 @@ tbody > tr:hover{
     height: 40px;
     border-radius: 50%;
     box-shadow: 0 2px 3px rgba(0,0,0,0.3);
-    background-color: #fff;
+    object-fit: contain;
     position: relative;
 }

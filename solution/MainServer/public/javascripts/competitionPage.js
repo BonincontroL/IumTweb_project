@@ -13,6 +13,7 @@ let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei g
 const isDefender=['Centre-Back','Right-Back','Left-Back']
 const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
 const isGoalkeeper ='Goalkeeper'
+let gameInfo
 let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 document.addEventListener('DOMContentLoaded',init)
 function init(){
@@ -20,9 +21,9 @@ function init(){
     const urlParam= new URLSearchParams(queryString)
     const isFromMatchesPage= urlParam.get('isFromMatchesPage')
     if(isFromMatchesPage==='true'){ //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
-        const gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
+        gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
         competitionId=gameInfo.competitionId
-        fetchAllRoundNumbers().then(res=>{
+       fetchAllRoundNumbers().then(res=>{
             matchRounds = res.data.sort((a, b) => {
                 let numA = parseInt(a.round.split(".")[0], 10)
                 let numB = parseInt(b.round.split(".")[0], 10)
@@ -35,6 +36,7 @@ function init(){
         }).catch(err=>{
             alert(err)
         })
+
         hideAllMainContainers(competitionPageName)
         document.getElementById('competitionMatches').style.display='flex'
         document.getElementById('competitionMultipleMatches').style.display='none'
@@ -50,18 +52,20 @@ function init(){
         hideAllMainContainers(competitionPageName)
         document.getElementById('competitionInformation').style.display="flex"
     }
-    getCompetitionsWithGroup() //ottieni una lista delle competizioni che hanno i gruppi
-
     Promise.all([
         getCompetitionSeasons(), //ottieni gli anni in cui la competizione corrente è stata giocata
         getCompetitionInformation()  //ottieni informazioni di base sulla competizione
     ]).then(res=>{
         seasons=res[0].data
-        lastSeason=seasons[seasons.length-1]
+        if(isFromMatchesPage)
+            lastSeason= gameInfo.season
+        else
+            lastSeason=seasons[seasons.length-1]
         renderCompetitionInformation(res[1].data)
     }).catch(err=> {
         alert(JSON.stringify(err))
     })
+    getCompetitionsWithGroup() //ottieni una lista delle competizioni che hanno i gruppi
 
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralButtons,competitionPageName)

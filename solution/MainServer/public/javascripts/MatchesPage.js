@@ -251,7 +251,7 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
             </div>
             <div class="multiple-matches-container">
                 ${roundMatches.map(match => `
-                    <div class="game-information" data-competitionId="${match.competition_id}" data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${match.date}" data-homeclubname="${match.home_club_name}" data-awayclubname="${match.away_club_name}" data-round="${match.round}">
+                    <div class="game-information" data-competitionId="${match.competition_id}" data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${match.date}" data-homeclubname="${match.home_club_name}" data-awayclubname="${match.away_club_name}" data-round="${match.round}" data-season="${match.season}">
                         <div class="match-result-vertical">
                             <div class="squad-icon-container">
                                 <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png" alt="${match.home_club_name}" />
@@ -289,7 +289,8 @@ function manageGameContainers(){
                 awayClubName:game.getAttribute('data-awayclubname'),
                 aggregate:game.getAttribute('data-aggregate'),
                 date:game.getAttribute('data-date'),
-                round:game.getAttribute('data-round')
+                round:game.getAttribute('data-round'),
+                season:game.getAttribute('data-season')
             }
             sessionStorage.setItem('gameInfo',JSON.stringify(gameInfo))
             window.location.href='../competition_page.html?isFromMatchesPage=true'
