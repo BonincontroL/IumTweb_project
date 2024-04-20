@@ -2998,3 +2998,54 @@ tbody > tr:hover{
     height: 100%;
     width: 100%;
 }
+
+/*********************************************************************/
+.player-card2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px;
+    min-width: 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+    transition: transform 0.3s ease;
+}
+.player-card2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+.player-image {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-top: 10px;
+}
+.player-info {
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+.player-info h3 {
+    margin: 10px 0 5px;
+    color: #333;
+    font-size: 18px;
+}
+.player-info h4 {
+    margin: 5px 0 10px;
+    color: #555;
+    font-style: italic;
+    font-size: 16px;
+}
+.club-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    background-color: #fff;
+    position: relative;
+}
