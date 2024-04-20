@@ -88,13 +88,18 @@ function init(){
         setAllMatchesButtonListener()
     })
 
-    document.getElementById('competition-table-btn').addEventListener('click',()=>{
-        getTable(competitionId,lastSeason,"full")
-            .then(res=>{
-                renderTable(res.data,"full")
-            }).catch(err=>{
-            alert(err)
-        }) //di default vogliamo la classifica completa
+    document.getElementById('competition-table-btn').addEventListener('click',async () => {
+        if (isWithGroup)
+            await getGroupTables()
+        else {
+            getTable(competitionId, lastSeason, "full")//di default vogliamo la classifica completa
+                .then(res => {
+                    renderTable(res.data, "full")
+                })
+                .catch(err => {
+                    alert(err)
+                })
+        }
     })
     document.getElementById('competition-statistic-btn').addEventListener('click',()=>{
         getTopPlayers()
@@ -129,6 +134,90 @@ function init(){
     initLogin();
 }
 
+/**
+ * get all the group tables of a competition (obviously , only for a competition with groups)
+ * @returns {Promise<void>}
+ */
+async function getGroupTables(){
+    let groupTables={}
+    if(matchRounds.length===0){//lo abbiamo già
+        matchRounds= await fetchAllRoundNumbers()
+        matchRounds=matchRounds.data.map(round=>round.round)
+    }
+    let groupNames = matchRounds.filter(round=>round.includes('Group')).sort()
+    for (const group of groupNames) {
+        
+        let table =await getTable(competitionId,lastSeason, 'full', group)
+        groupTables[group] = table.data
+    }
+    renderGroupTables(groupTables)
+}
+
+/**
+ * render group tables in different containers
+ * (one for each table) that will be attached to the same container
+ * @param groupTables
+ */
+function renderGroupTables(groupTables){
+    let groupTablesContainer= document.getElementById('competitionTable')
+    groupTablesContainer.innerHTML=''
+    for (const groupName of Object.keys(groupTables)){
+        groupTablesContainer.appendChild(renderGroupTable(groupName, groupTables[groupName]))
+    }
+}
+function renderGroupTable(groupName,groupTable){
+    let finalContainer= document.createElement('div')
+    finalContainer.className='competitions-group'
+    finalContainer.innerHTML=
+        `<div class="competitions-group-header">
+              <h3>Classifica ${groupName}</h3>
+         </div>`
+    let tableContiner = document.createElement('div')
+    tableContiner.className='table-container'
+    tableContiner.innerHTML=
+        `<div class="table-navbar">
+            <div class="date-days-picker-wrapper">
+                            <button data-tbodyid="${groupName}FullTable" class="date-days-picker date-days-picker-active">
+                                <h6>Tutti</h6>
+                            </button>
+                            <button data-tbodyid="${groupName}HomeTable" class="date-days-picker">
+                                <h6>Casa</h6>
+                            </button>
+                            <button data-tbodyid="${groupName}AwayTable" class="date-days-picker">
+                                <h6>Trasferta</h6>
+                            </button>
+                        </div>
+                    </div>`
+    let table = document.createElement('table')
+    table.innerHTML=
+        `<thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Squadra</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>Goals</th>
+                            <th>PTS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="${groupName}HomeTable">
+                        </tbody>
+                        <tbody id="${groupName}AwayTable">
+                        </tbody>`
+    tableContiner.appendChild(table)
+    finalContainer.appendChild(tableContiner)
+    let fullTable= document.createElement(`tbody`)
+    table.appendChild(fullTable)
+    fullTable.id =`${groupName}FullTable`
+    groupTable.forEach((singleTd,index)=>{
+        let tr= renderTableRow(singleTd,index)
+        fullTable.appendChild(tr)
+    })
+
+    return finalContainer
+}
 /**
  * fetch all the current competition seasons, save it into a global variabile
  * called seasons and update lastSeason
@@ -240,12 +329,13 @@ function manageMatchButtons(){
         })
     })
 }
-export function getTable(compId,season,tableType){
+export function getTable(compId,season,tableType, groupName){
     return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
         params:{
             comp_id:compId,
             season:season,
-            type:tableType
+            type:tableType,
+            round:groupName
         }
     })
 }
@@ -282,7 +372,6 @@ export function renderTableRow(tableRowData,index){
     tableRow.appendChild(renderTableTD(tableRowData.sconfitte))
     tableRow.appendChild(renderTableTD(`${tableRowData.gol_fatti}:${tableRowData.gol_subiti}`))
     tableRow.appendChild(renderTableTD(tableRowData.punti));
-
     return tableRow
 }
 function renderTableTD(tdInnerData){

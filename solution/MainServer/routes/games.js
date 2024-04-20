@@ -95,7 +95,8 @@ router.get('/getTableByCompSeasonAndType', function (req,res){
         params:{
             comp_id:req.query.comp_id,
             season:req.query.season,
-            type:req.query.type
+            type:req.query.type,
+            round:req.query.round
         }
     }).then(data=>{
         res.send(data.data)

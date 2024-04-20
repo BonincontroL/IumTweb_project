@@ -253,9 +253,7 @@ function getAndRenderLastMatches(competitionId) {
  * @param competitionId
  */
 function renderMatches(matches, competitionId) {
-
     const secondContainerCompetitionIds = ['EL', 'POSU', 'NL1', 'BE1', 'CLQ'];
-
 
     let matchesContainer;
     if (secondContainerCompetitionIds.includes(competitionId)) {

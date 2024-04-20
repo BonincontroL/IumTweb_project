@@ -44,13 +44,6 @@ public class PlayersService {
         return playersRepository.findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
     }
 
-    public List<Players> getTop50PlayersByMarketValue() {
-        return playersRepository.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Players::getMarketValueInEur, Comparator.nullsLast(Comparator.reverseOrder())))
-                .limit(50)
-                .collect(Collectors.toList());
-    }
 
     public List<Players> getTop150PlayersByMarketValue() {
         return playersRepository.findAll()
