@@ -55,7 +55,8 @@ router.get('/getTableByCompSeasonAndType', async (req,res)=>{
         const comp_id = req.query.comp_id
         const season = +req.query.season
         const type = req.query.type
-        const finalTable = await GamesController.getTableByCompSeasonAndType(comp_id,season,type)
+        const round = req.query.round
+        const finalTable = await GamesController.getTableByCompSeasonAndType(comp_id,season,type,round)
         res.status(200).json(finalTable)
     }catch (error){
         res.status(500).json({error:error})

@@ -414,94 +414,54 @@
             </div>
         </div>
         <div class="main-container" id="competitionSquads">
-            <div class="competitions-group">
-                <div class="competitions-group-header">
-                    <h2>Gruppo A</h2>
-                </div>
-                <div class="competitions-group-container">
-                    <!--singola card che rappresenta la squadra(importante mettere data-clubId per poter caricare correttamente al Click la pagina della squadra)-->
-                    <!--  <div class="squad-card-mini" data-clubId="4102">
-                          <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
-                          <h3>AC Carpi</h3>-->
-                </div>
-            </div>
-
-            <div class="competitions-group">
-                <div class="competitions-group-header">
-                    <h2>Gruppo B</h2>
-                </div>
-                <div class="competitions-group-container">
-                    <!--singola card che rappresenta la squadra(importante mettere data-clubId per poter caricare correttamente al Click la pagina della squadra)-->
-                    <!--  <div class="squad-card-mini" data-clubId="4102">
-                          <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
-                          <h3>AC Carpi</h3>-->
-                </div>
-            </div>
-
-            <div class="competitions-group">
-                <div class="competitions-group-header">
-                    <h2>Gruppo C</h2>
-                </div>
-                <div class="competitions-group-container">
-                    <!--singola card che rappresenta la squadra(importante mettere data-clubId per poter caricare correttamente al Click la pagina della squadra)-->
-                    <!--  <div class="squad-card-mini" data-clubId="4102">
-                          <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
-                          <h3>AC Carpi</h3>-->
-                </div>
-            </div>
-
-            <div class="competitions-group">
-                <div class="competitions-group-header">
-                    <h2>Gruppo D</h2>
-                </div>
-                <div class="competitions-group-container">
-                    <!--singola card che rappresenta la squadra(importante mettere data-clubId per poter caricare correttamente al Click la pagina della squadra)-->
-                    <!--  <div class="squad-card-mini" data-clubId="4102">
-                          <img class="competition-big-logo" src="images/serieALOGO.svg" alt="serie A logo">
-                          <h3>AC Carpi</h3>-->
-                </div>
-            </div>
         </div>
         <div class="main-container" id="competitionTable">
-            <div class="table-navbar">
-                <div class="date-days-picker-wrapper">
-                    <button data-tbodyid="competitionFullTable" class="date-days-picker date-days-picker-active">
-                        <h6>Tutti</h6>
-                    </button>
-                    <button data-tbodyid="competitionHomeTable" class="date-days-picker">
-                        <h6>Casa</h6>
-                    </button>
-                    <button data-tbodyid="competitionAwayTable" class="date-days-picker">
-                        <h6>Trasferta</h6>
-                    </button>
+            <div class="competitions-group">
+                <div class="competitions-group-header">
+                    <h3>Classifica Gruppo A</h3>
                 </div>
-                <div class="dropdown-menu-season-wrapper">
-                    <h6>Stagione</h6>
-                    <div class="date-days-picker">
-                        <h6>2022</h6>
+                <div class="table-container">
+                    <div class="table-navbar">
+                        <div class="date-days-picker-wrapper">
+                            <button data-tbodyid="competitionFullTable" class="date-days-picker date-days-picker-active">
+                                <h6>Tutti</h6>
+                            </button>
+                            <button data-tbodyid="competitionHomeTable" class="date-days-picker">
+                                <h6>Casa</h6>
+                            </button>
+                            <button data-tbodyid="competitionAwayTable" class="date-days-picker">
+                                <h6>Trasferta</h6>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu-season-wrapper">
+                            <h6>Stagione</h6>
+                            <div class="date-days-picker">
+                                <h6>2022</h6>
+                            </div>
+                        </div>
                     </div>
+                    <table id ="competitionTableContainer">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Squadra</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>Goals</th>
+                            <th>PTS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="competitionFullTable">
+                        </tbody>
+                        <tbody id="competitionHomeTable">
+                        </tbody>
+                        <tbody id="competitionAwayTable">
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <table id ="competitionTableContainer">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Squadra</th>
-                    <th>P</th>
-                    <th>W</th>
-                    <th>D</th>
-                    <th>L</th>
-                    <th>Goals</th>
-                    <th>PTS</th>
-                </tr>
-                </thead>
-                <tbody id="competitionFullTable">
-                </tbody>
-                <tbody id="competitionHomeTable">
-                </tbody>
-                <tbody id="competitionAwayTable">
-                </tbody>
-            </table>
         </div>
         <div class="main-container" id="competitionPlayers">
         </div>

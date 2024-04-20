@@ -2041,6 +2041,14 @@ tbody > tr:hover{
     position: relative;
     object-fit: contain;
 }
+.table-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+}
 .player-stats-goals-circle,
 .player-stats-goals-circle-blue {
     display: flex;

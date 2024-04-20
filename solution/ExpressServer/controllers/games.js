@@ -75,8 +75,15 @@ function getRoundNumbers(comp_id,season){
     })
 }
 
-function getTableByCompSeasonAndType(comp_id,season,type){
+function getTableByCompSeasonAndType(comp_id,season,type,round){
     let initialMatchCondition ={}
+    let matchConditions={
+        competition_id: comp_id,
+        season: season
+    }
+    if(round)
+        matchConditions.round = round
+
     if(type==='home')
         initialMatchCondition={
             $expr:{$eq:["$home_club_id","$events.club_id"]}
@@ -87,10 +94,7 @@ function getTableByCompSeasonAndType(comp_id,season,type){
         };
     return Model.aggregate([
         {
-            $match:{
-                competition_id: comp_id,
-                season: season,
-            }
+            $match: matchConditions
         },
         {
             $lookup:{
