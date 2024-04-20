@@ -54,9 +54,8 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     if (err.status === 404) {
-        res.status(404);
-        res.sendFile(path.join(__dirname, 'public', 'Error404.html'));
-    } else if (err.status === 500) {
+        res.status(404).sendFile(path.join(__dirname, 'public', 'Error404.html'));
+    } else {
         res.status(err.status || 500);
         res.render('error');
     }
