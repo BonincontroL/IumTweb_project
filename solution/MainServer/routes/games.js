@@ -103,4 +103,30 @@ router.get('/getTableByCompSeasonAndType', function (req,res){
         throw new Error(err)
     })
 })
+
+/**
+ * return a list of competition ids which are all
+ * the competitions that have a division in Group (Group A, Group B...)
+ */
+router.get('/getCompetitionIdsWithGroup', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getCompetitionIdsWithGroup",)
+        .then(data=>{
+            res.send(data.data)
+        }).catch(err=>{
+            throw new Error(err)
+        })
+})
+
+router.get('/getClubsDividedByGroups', function (req,res){
+    axios.get(EXPRESS_SERVER+"/games/getClubsDividedByGroups",{
+        params:{
+            competition_id:req.query.competition_id,
+            season:req.query.season
+        }
+    }).then(data=>{
+        res.send(data.data)
+    }).catch(err=>{
+        throw new Error(err)
+    })
+})
 module.exports = router;

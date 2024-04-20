@@ -290,6 +290,81 @@ function getCompetitionsByClubAndSeason(club_id,season){
     ]);
 }
 
+/**
+ * search all the clubs that played in a certain competition and season
+ * and divide it into groups (Group A,Group B, Group C...)
+ * query ONLY used for competition that have groups!
+ * @param competition_id should be a competition with groups
+ * @param season the season we want
+ */
+function getClubsDividedByGroups(competition_id,season){
+    return Model.aggregate([
+        {
+            $match: {
+                competition_id: competition_id,
+                season: season,
+                round: /Group/  //espressione regolare per cercare solo i round con la parola Group
+
+            }
+        },
+        {
+            $group:{
+                _id:"$round",
+                clubs:{
+                    $addToSet:{
+                        $setUnion: [  // Combine and deduplicate arrays of club details
+                            [{ name: "$home_club_name", clubId: "$home_club_id" }],
+                            [{ name: "$away_club_name", clubId: "$away_club_id" }]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            $sort:{
+              _id:1
+            }
+        },
+        {
+            $project:{
+                _id:0,
+                group:"$_id",
+                clubs:{
+                    $reduce: {  // Flatten the set of club arrays into a single array
+                        input: "$clubs",
+                        initialValue: [],
+                        in: { $setUnion: ["$$value", "$$this"] }
+                    }                }
+            }
+        }
+    ]);
+}
+
+/**
+ * return a list of competition_id that are all the competitions
+ * with groups
+ */
+function getCompetitionIdsWithGroup(){
+   return Model.aggregate([
+       {
+           $match:{
+               round:/Group/
+           }
+       },
+       {
+           $group:{
+               _id:"$competition_id"
+           }
+       },
+       {
+           $project:{
+               _id:0,
+               competition_id:"$_id"
+           }
+       }
+   ])
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -300,5 +375,7 @@ module.exports = {
     getRefreeStadiumAndManagers,
     getLastManager,
     getGamesByCompetitionIdAndSeason,
-    getCompetitionsByClubAndSeason
+    getCompetitionsByClubAndSeason,
+    getClubsDividedByGroups,
+    getCompetitionIdsWithGroup
 };
