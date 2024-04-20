@@ -51,4 +51,8 @@ public class PlayersService {
                 .limit(50)
                 .collect(Collectors.toList());
     }
+
+    public List<Players> findPlayersByLetterInName(String letter) {
+        return playersRepository.findByNameContainingIgnoreCase(letter);
+    }
 }
