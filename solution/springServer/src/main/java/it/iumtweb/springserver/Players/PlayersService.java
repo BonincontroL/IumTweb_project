@@ -52,6 +52,14 @@ public class PlayersService {
                 .collect(Collectors.toList());
     }
 
+    public List<Players> getTop150PlayersByMarketValue() {
+        return playersRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Players::getMarketValueInEur, Comparator.nullsLast(Comparator.reverseOrder())))
+                .limit(150)
+                .collect(Collectors.toList());
+    }
+
     public List<Players> findPlayersByLetterInName(String letter) {
         return playersRepository.findByNameContainingIgnoreCase(letter);
     }
