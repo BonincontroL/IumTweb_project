@@ -1,8 +1,8 @@
 let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
-let competitionId, competition_name
-const LAST_SEASON = 2023 //la stagione corrente di default è 2023
+let competitionId, competitionName,lastSeason = 2023 //la stagione corrente di default è 2023
+let seasons=[] //array globale che rappresenta tutte le annate giocate.
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutti i round della competition
 let homeManagerName, awayManagerName
@@ -43,15 +43,26 @@ function init(){
         renderSingleMatch(gameInfo)
     }else {
         competitionId = urlParam.get('competition_id')
-        competition_name = urlParam.get('competition_name')
+        competitionName = urlParam.get('competition_name')
         //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
         let competitionInfoBtn= document.getElementById('competition-info-btn')
         competitionInfoBtn.classList.add('active')
         hideAllMainContainers(competitionPageName)
         document.getElementById('competitionInformation').style.display="flex"
     }
-    getCompetitionsWithGroup()
-    getCompetitionInformation()
+    getCompetitionsWithGroup() //ottieni una lista delle competizioni che hanno i gruppi
+
+    Promise.all([
+        getCompetitionSeasons(), //ottieni gli anni in cui la competizione corrente è stata giocata
+        getCompetitionInformation()  //ottieni informazioni di base sulla competizione
+    ]).then(res=>{
+        seasons=res[0].data
+        lastSeason=seasons[seasons.length-1]
+        renderCompetitionInformation(res[1].data)
+    }).catch(err=> {
+        alert(JSON.stringify(err))
+    })
+
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralButtons,competitionPageName)
     manageMatchButtons()
@@ -74,7 +85,7 @@ function init(){
     })
 
     document.getElementById('competition-table-btn').addEventListener('click',()=>{
-        getTable(competitionId,LAST_SEASON,"full")
+        getTable(competitionId,lastSeason,"full")
             .then(res=>{
                 renderTable(res.data,"full")
             }).catch(err=>{
@@ -88,7 +99,7 @@ function init(){
     let competitionTableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
     manageTableBtns(competitionTableBtns)
     competitionTableBtns[0].addEventListener('click',()=>{
-        getTable(competitionId,LAST_SEASON,"full")
+        getTable(competitionId,lastSeason,"full")
             .then(res=>{
                 renderTable(res.data,"full")
             }).catch(err=>{
@@ -96,7 +107,7 @@ function init(){
         })
     })
     competitionTableBtns[1].addEventListener('click',()=>{
-        getTable(competitionId,LAST_SEASON,"home")
+        getTable(competitionId,lastSeason,"home")
             .then(res=>{
                 renderTable(res.data,"home")
             }).catch(err=>{
@@ -104,7 +115,7 @@ function init(){
         })
     })
     competitionTableBtns[2].addEventListener('click',()=>{
-        getTable(competitionId,LAST_SEASON,"away")
+        getTable(competitionId,lastSeason,"away")
             .then(res=>{
                 renderTable(res.data,"away")
             }).catch(err=>{
@@ -114,6 +125,18 @@ function init(){
     initLogin();
 }
 
+/**
+ * fetch all the current competition seasons, save it into a global variabile
+ * called seasons and update lastSeason
+ */
+function getCompetitionSeasons(){
+    let url="http://localhost:3000/games/getCompetitionSeasonsSorted"
+    return axios.get(url,{
+        params:{
+            competition_id:competitionId
+        }
+    })
+}
 /**
  * get a list of all the competitions that have group and then
  * if my current competition is in this list we set a boolean value to true
@@ -135,7 +158,7 @@ function getCompetitionsWithGroup(){
         })
 }
 function getTopPlayers(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${LAST_SEASON}`
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${lastSeason}`
     axios.get(url)
         .then(res=>{
             renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
@@ -285,13 +308,13 @@ function getClubsDividedByGroup(){
     axios.get(url,{
         params:{
             competition_id:competitionId,
-            season:LAST_SEASON
+            season:lastSeason
         }
     }).then(res=>{
         if(res.data!==0) {
             renderClubsDividedByGroup(res.data)
             let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
-            setAllClubButtonsListener(clubCards, competitionId, competition_name)
+            setAllClubButtonsListener(clubCards, competitionId, competitionName)
         }
     })
 }
@@ -327,13 +350,13 @@ function getClubs(){
     axios.get(url, {
         params:{
             competition_id: competitionId,
-            season:LAST_SEASON
+            season:lastSeason
         }
     }).then(res=> {
         if(res.data.length!==0) {
             renderAllClubs(res.data)
             let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
-            setAllClubButtonsListener(clubCards, competitionId, competition_name)
+            setAllClubButtonsListener(clubCards, competitionId, competitionName)
         }
     }).catch(err=>{
         alert(JSON.stringify(err))
@@ -372,13 +395,8 @@ function hideMatchContainersExceptOne(containerToShow) {
  */
 function getCompetitionInformation(){
     let url="http://localhost:3000/getCompetitionInformation"
-    axios.get(url,{params:
+    return axios.get(url,{params:
             {"competition_id":competitionId}
-    })
-        .then(res=>{
-            renderCompetitionInformation(res.data)
-        }).catch(err=> {
-            alert(JSON.stringify(err))
         })
 }
 /**
@@ -386,8 +404,8 @@ function getCompetitionInformation(){
  * @param competitionInfo the competition object with all infos
  */
 function renderCompetitionInformation(competitionInfo){
-    competition_name=competitionInfo.name
-    document.getElementById('competitionName').innerText=competitionInfo.name;
+    competitionName=competitionInfo.name
+    document.getElementById('competitionName').innerText=competitionInfo.name+`\n${lastSeason}`;
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
@@ -399,7 +417,7 @@ function fetchAllRoundNumbers(){
         params:
             {
                 comp_id:competitionId,
-                season: LAST_SEASON
+                season: lastSeason
             }}
     )
 }
@@ -451,7 +469,7 @@ function getAllMatchesInRound(){
     axios.get(url, {
         params:{
             comp_id:competitionId,
-            season: LAST_SEASON,
+            season: lastSeason,
             currentRound:matchRounds[currentRound]
         }
     }).then(res=>{

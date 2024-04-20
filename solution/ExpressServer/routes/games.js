@@ -155,4 +155,14 @@ router.get('/getCompetitionIdsWithGroup',async (req,res)=>{
             res.status(500).json({error: 'Errore durante il recupero degli id delle competizioni con gruppi\n'+err})
         })
 })
+router.get('/getCompetitionSeasonsSorted', async(req,res)=>{
+    GamesController.getCompetitionSeasonsSorted(req.query.competition_id)
+        .then(data=>{
+            res.status(200).json(data.map(item=>item.season))
+        })
+        .catch(err=>{
+            console.error('Errore durante il recupero delle stagioni di una competizione', err);
+            res.status(500).json({error: 'Errore durante il recupero delle stagioni di una competizione\n'+err})
+        })
+})
 module.exports = router;

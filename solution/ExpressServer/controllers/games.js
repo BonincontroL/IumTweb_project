@@ -365,6 +365,34 @@ function getCompetitionIdsWithGroup(){
    ])
 }
 
+/**
+ * return all the seasons when the competition played
+ */
+function getCompetitionSeasonsSorted(competition_id){
+    return Model.aggregate([
+        {
+            $match:{
+                competition_id:competition_id
+            }
+        },
+        {
+            $group:{
+                _id:"$season"
+            }
+        },
+        {
+            $sort:{
+                _id:1
+            }
+        },
+        {
+            $project:{
+                _id:0,
+                season:"$_id"
+            }
+        }
+    ])
+}
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -377,5 +405,6 @@ module.exports = {
     getGamesByCompetitionIdAndSeason,
     getCompetitionsByClubAndSeason,
     getClubsDividedByGroups,
-    getCompetitionIdsWithGroup
+    getCompetitionIdsWithGroup,
+    getCompetitionSeasonsSorted
 };
