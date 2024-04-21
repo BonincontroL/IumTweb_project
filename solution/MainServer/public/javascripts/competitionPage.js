@@ -36,7 +36,6 @@ function init(){
         }).catch(err=>{
             alert(err)
         })
-
         hideAllMainContainers(competitionPageName)
         document.getElementById('competitionMatches').style.display='flex'
         document.getElementById('competitionMultipleMatches').style.display='none'
@@ -94,48 +93,25 @@ function init(){
         else {
             getTable(competitionId, lastSeason, "full")//di default vogliamo la classifica completa
                 .then(res => {
-                    renderTable(res.data, "full")
+                    let tableContainer=document.getElementById('competitionTable')
+                    tableContainer.innerHTML=''
+                    tableContainer.appendChild(renderGroupTable(competitionName,res.data))
+                    //parte dedicata alla gestione dei bottoni della classifica
+                    let tableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
+                    manageTableBtns(tableBtns)
+                    manageTableVariants(tableBtns)
                 })
                 .catch(err => {
                     alert(err)
                 })
         }
     })
-    document.getElementById('competition-statistic-btn').addEventListener('click',()=>{
-        getTopPlayers()
-    })
-    //parte dedicata alla gestione dei bottoni della classifica
-    let competitionTableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
-    manageTableBtns(competitionTableBtns)
-    competitionTableBtns[0].addEventListener('click',()=>{
-        getTable(competitionId,lastSeason,"full")
-            .then(res=>{
-                renderTable(res.data,"full")
-            }).catch(err=>{
-            alert(err)
-        })
-    })
-    competitionTableBtns[1].addEventListener('click',()=>{
-        getTable(competitionId,lastSeason,"home")
-            .then(res=>{
-                renderTable(res.data,"home")
-            }).catch(err=>{
-            alert(err)
-        })
-    })
-    competitionTableBtns[2].addEventListener('click',()=>{
-        getTable(competitionId,lastSeason,"away")
-            .then(res=>{
-                renderTable(res.data,"away")
-            }).catch(err=>{
-            alert(err)
-        })
-    })
+    document.getElementById('competition-statistic-btn').addEventListener('click',getTopPlayers)
     initLogin();
 }
 
 /**
- * get all the group tables of a competition (obviously , only for a competition with groups)
+ * get all the group tables of a competition (obviously ,used only for a competition with groups)
  * @returns {Promise<void>}
  */
 async function getGroupTables(){
@@ -146,7 +122,6 @@ async function getGroupTables(){
     }
     let groupNames = matchRounds.filter(round=>round.includes('Group')).sort()
     for (const group of groupNames) {
-        
         let table =await getTable(competitionId,lastSeason, 'full', group)
         groupTables[group] = table.data
     }
@@ -162,11 +137,62 @@ function renderGroupTables(groupTables){
     let groupTablesContainer= document.getElementById('competitionTable')
     groupTablesContainer.innerHTML=''
     for (const groupName of Object.keys(groupTables)){
-        groupTablesContainer.appendChild(renderGroupTable(groupName, groupTables[groupName]))
+        let groupTableContainer = renderGroupTable(groupName, groupTables[groupName])
+        groupTablesContainer.appendChild(groupTableContainer)
+        manageTableBtns(groupTableContainer.querySelectorAll('.date-days-picker-wrapper > button')) //prendiamo SOLO i bottoni nel container
     }
+    let tableGroupButtons= document.querySelectorAll('.date-days-picker-wrapper > button')
+    manageTableVariants(tableGroupButtons)
+}
+
+/**
+ * function that get the correct table based on what button is clicked
+ * and then render it into the correct table body.
+ * @param buttons
+ */
+function manageTableVariants(buttons){
+    buttons.forEach(button=>{
+        button.addEventListener('click',()=>{
+            let group= isWithGroup ? button.getAttribute('data-group'):null
+            getTable(competitionId,lastSeason,button.getAttribute('data-type'), group)
+                .then(res=>{
+                    let groupTable = res.data
+                    let groupName = button.getAttribute('data-group')
+                    let tbodyId = button.getAttribute('data-tbodyid')
+                    let table=document.getElementById(groupName)
+                    renderTableBody(table,groupName,groupTable,tbodyId) //questo perchè assumiamo che la struttura della tabella sia già stata creata.
+                    let tbodyToShow= document.getElementById(tbodyId)
+                    hideTbodiesExceptOne(tbodyToShow,table.querySelectorAll('tbody'))
+                }).catch(err=>{
+                    alert(err)
+            })
+        })
+    })
+}
+function hideTbodiesExceptOne(tBodyToShow,tBodies){
+    tBodies.forEach(tb=>{tb.style.display='none'})
+    tBodyToShow.style.display='table-row-group'
 }
 function renderGroupTable(groupName,groupTable){
     let finalContainer= document.createElement('div')
+    let table = renderTableStructure(groupName,finalContainer)
+    renderTableBody(table,groupName,groupTable,`${groupName}FullTable`) //di default, poi si potrà rendere dinamico questo valore
+    return finalContainer
+}
+function renderTableBody(table,groupName,groupTable,tbodyId){
+    let groupTableTbody= document.getElementById(tbodyId)
+    if(groupTableTbody===null) {
+        groupTableTbody = document.createElement('tbody')
+        groupTableTbody.id=tbodyId
+        table.appendChild(groupTableTbody)
+    }
+    groupTableTbody.innerHTML='' //svuotiamo il container
+    groupTable.forEach((singleTd,index)=>{
+        let tr= renderTableRow(singleTd,index)
+        groupTableTbody.appendChild(tr)
+    })
+}
+function renderTableStructure(groupName,finalContainer){
     finalContainer.className='competitions-group'
     finalContainer.innerHTML=
         `<div class="competitions-group-header">
@@ -177,18 +203,19 @@ function renderGroupTable(groupName,groupTable){
     tableContiner.innerHTML=
         `<div class="table-navbar">
             <div class="date-days-picker-wrapper">
-                            <button data-tbodyid="${groupName}FullTable" class="date-days-picker date-days-picker-active">
+                            <button data-type="full" data-group="${groupName}" data-tbodyid="${groupName}FullTable" class="date-days-picker date-days-picker-active">
                                 <h6>Tutti</h6>
                             </button>
-                            <button data-tbodyid="${groupName}HomeTable" class="date-days-picker">
+                            <button data-type="home" data-group="${groupName}" data-tbodyid="${groupName}HomeTable" class="date-days-picker">
                                 <h6>Casa</h6>
                             </button>
-                            <button data-tbodyid="${groupName}AwayTable" class="date-days-picker">
+                            <button data-type="away" data-group="${groupName}" data-tbodyid="${groupName}AwayTable" class="date-days-picker">
                                 <h6>Trasferta</h6>
                             </button>
                         </div>
                     </div>`
     let table = document.createElement('table')
+    table.id=groupName
     table.innerHTML=
         `<thead>
                         <tr>
@@ -201,22 +228,10 @@ function renderGroupTable(groupName,groupTable){
                             <th>Goals</th>
                             <th>PTS</th>
                         </tr>
-                        </thead>
-                        <tbody id="${groupName}HomeTable">
-                        </tbody>
-                        <tbody id="${groupName}AwayTable">
-                        </tbody>`
+                        </thead>`
     tableContiner.appendChild(table)
     finalContainer.appendChild(tableContiner)
-    let fullTable= document.createElement(`tbody`)
-    table.appendChild(fullTable)
-    fullTable.id =`${groupName}FullTable`
-    groupTable.forEach((singleTd,index)=>{
-        let tr= renderTableRow(singleTd,index)
-        fullTable.appendChild(tr)
-    })
-
-    return finalContainer
+    return table
 }
 /**
  * fetch all the current competition seasons, save it into a global variabile
@@ -299,16 +314,17 @@ function renderNormalPlayerCard(player,index){
         `
     return playerCard
 }
+
+/**
+ * automatically switch between table bodies that contains 'full' 'home' and 'away' tables
+ * and automatically assign active class to the clicked button.
+ * @param buttons the table buttons to manage.
+ */
 function manageTableBtns(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
             buttons.forEach(btn=>{btn.classList.remove('date-days-picker-active')})
             button.classList.add('date-days-picker-active')
-            let tbodyToShowId = button.getAttribute('data-tbodyid')
-            let tbodyToShow= document.getElementById(tbodyToShowId)
-            let tbodies=document.querySelectorAll('#competitionTableContainer > tbody')
-            tbodies.forEach(tb=>{tb.style.display='none'})
-            tbodyToShow.style.display='table-row-group'
         })
     })
 }
@@ -339,28 +355,7 @@ export function getTable(compId,season,tableType, groupName){
         }
     })
 }
-function renderTable(completeLeaugeTable,type){
-    let index =0
-    let tableBody
-    switch (type){
-        case 'full':
-            tableBody=document.getElementById('competitionFullTable')
-            break
-        case 'home':
-            tableBody=document.getElementById('competitionHomeTable')
-            break
-        case 'away':
-            tableBody=document.getElementById('competitionAwayTable')
-            break
-        default:
-            throw new Error("comando per creare la classifica sconosciuto:"+type+"\n")
-    }
-    tableBody.innerHTML=''
-    completeLeaugeTable.forEach(tableRowData=>{
-        let tableRow= renderTableRow(tableRowData,index++)
-        tableBody.appendChild(tableRow)
-    })
-}
+
 export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
     tableRow.appendChild(renderTableTD(++index))
