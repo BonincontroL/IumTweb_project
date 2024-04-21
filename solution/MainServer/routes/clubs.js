@@ -10,7 +10,11 @@ router.get('/searchByCompetitionAndSeason', function (req,res){
         }
     })
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
         res.status(500).send(err)
     });
@@ -20,9 +24,13 @@ router.get('/getLastSeason', function (req,res){
             club_id: +req.query.club_id,
         }
     }).then(data=>{
-        res.send(data.data)
+        if (data.status === 200) {
+            res.send(data.data);
+        }else{
+            res.status(data.status).send(data.data);
+        }
     }).catch(err=>{
-        res.status(500).send(err)
+        res.status(err.status).send(err)
     });
 })
 
@@ -32,9 +40,13 @@ router.get('/getLastSeason', function (req,res){
 router.get('/getAllClubsByInitial', function (req, res) {
     axios.get(SPRING_SERVER+"/clubs/getAllClubsByInitial")
         .then(response => {
-            res.send(response.data);
+            if (response.status === 200) {
+                res.send(response.data);
+            }else{
+                res.status(response.status).send(response.data);
+            }
         }).catch(error => {
-        res.status(500).send(error);
+        res.status(error.status).send(error)
     });
 });
 

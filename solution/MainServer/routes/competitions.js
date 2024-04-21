@@ -10,9 +10,13 @@ const SPRING_SERVER="http://localhost:8081"
 router.get('/getAllCompetitions', function (req,res){
     axios.get(SPRING_SERVER+"/competitions/getAllCompetitions")
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     });
 })
 
@@ -20,9 +24,13 @@ router.get('/getAllCompetitions', function (req,res){
 router.get('/getCompetitionsGroupedByCountry', function (req,res){
     axios.get(SPRING_SERVER+"/competitions/getCompetitionsGroupedByCountry")
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
@@ -32,9 +40,13 @@ router.get('/getCompetitionsGroupedByCountryAndLikeName', function (req,res){
                 name:req.query.name
             }})
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 router.get('/getName', function (req,res){
@@ -43,9 +55,13 @@ router.get('/getName', function (req,res){
                 competition_id:req.query.competition_id
             }})
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 module.exports = router;

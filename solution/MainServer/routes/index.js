@@ -15,10 +15,14 @@ router.get('/getCompetitionInformation', function (req,res){
         }
     })
       .then(data=>{
-        res.send(data.data)
+          if (data.status === 200) {
+              res.send(data.data);
+          }else{
+              res.status(data.status).send(data.data);
+          }
       })
       .catch(err=>{
-        res.send(err)
+          res.status(err.status).send(err)
       })
 })
 

@@ -12,12 +12,16 @@ const SPRING_SERVER="http://localhost:8081"
 router.get("/getPlayerStatistics/:playerId", function (req, res) {
     axios.get(EXPRESS_SERVER+'/appearances/getPlayerStatistics/'+req.params.playerId)
         .then(response => {
-            console.log(response.data);
-            res.status(200).send(response.data);
+            if (response.status === 200) {
+                res.send(response.data);
+            }else{
+                res.status(response.status).send(response.data);
+            }
         })
         .catch(err => {
             console.error('Errore durante il recupero delle statistiche del giocatore', err);
-            res.status(500).send('Errore durante il recupero delle statistiche del giocatore');
+            res.status(err.status).send(err)
+
         });
 });
 

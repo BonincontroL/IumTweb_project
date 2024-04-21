@@ -10,9 +10,13 @@ const SPRING_SERVER="http://localhost:8081";
 router.get('/getPlayersByCompetition/:competition_id', function (req,res){
     axios.get(`http://localhost:8081/players/getPlayersByCompetition/${req.params.competition_id}`)
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
@@ -22,9 +26,13 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
 router.get('/getPlayersByCompetitionAndLastSeason/:competition_id/:last_season', function (req,res){
     axios.get(`http://localhost:8081/players/getPlayersByCompetitionAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
@@ -38,7 +46,11 @@ router.get("/getPlayersImgUrlById", function (req,res){
             substitutes:req.query.substitutes
         }
     }).then(data=>{
-        res.send(data.data)
+        if (data.status === 200) {
+            res.send(data.data);
+        }else{
+            res.status(data.status).send(data.data);
+        }
     }).catch(err=>{
         res.send(err)
     })
@@ -54,9 +66,13 @@ router.get("/searchByClubIdAndSeason", function (req,res){
             season:req.query.season
         }
     }).then(data=>{
-        res.send(data.data)
+        if (data.status === 200) {
+            res.send(data.data);
+        }else{
+            res.status(data.status).send(data.data);
+        }
     }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
@@ -66,26 +82,38 @@ router.get("/searchByClubIdAndSeason", function (req,res){
 router.get("/getAllPlayers", function (req,res){
     axios.get(SPRING_SERVER+"/players/getAllPlayers")
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 router.get("/getTop50PlayersByMarketValue", function (req,res){
     axios.get(SPRING_SERVER+"/players/getTop50PlayersByMarketValue")
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
 router.get("/getTop150PlayersByMarketValue", function (req,res){
     axios.get(SPRING_SERVER+"/players/getTop150PlayersByMarketValue")
         .then(data=>{
-            res.send(data.data)
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
         }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
@@ -96,9 +124,13 @@ router.get("/findPlayersByLetterInName", function (req,res){
             letter:req.query.letter
         }
     }).then(data=>{
-        res.send(data.data)
+        if (data.status === 200) {
+            res.send(data.data);
+        }else{
+            res.status(data.status).send(data.data);
+        }
     }).catch(err=>{
-        res.send(err)
+        res.status(err.status).send(err)
     })
 })
 
