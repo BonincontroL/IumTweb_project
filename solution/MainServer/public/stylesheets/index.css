@@ -662,7 +662,22 @@ header ul li ul li a{
     gap: var(--gap-xl);
     padding-top: var(--padding-20px);
 }
+.matches-generic-container,
+.matches-knockout-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    gap: var(--gap-xl);
+}
 
+.matches-knockout-container{
+    flex-direction: row;
+}
+.matches-knockout-container{
+    flex-direction: column;
+}
 
 #squad-page ,
 #chat-page,
