@@ -660,19 +660,19 @@ header ul li ul li a{
     flex-direction: column;
     overflow:auto;
     gap: var(--gap-xl);
-    padding-top: var(--padding-20px);
 }
 .matches-generic-container,
-#knockoutContainer{
+#competitionKnockout{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     box-sizing: border-box;
     width: 100%;
     gap: var(--gap-xl);
+    overflow-y:auto;
 }
 
-#knockoutContainer{
+#competitionKnockout{
     flex-direction: row;
 }
 .matches-generic-container{

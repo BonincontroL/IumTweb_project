@@ -17,19 +17,19 @@ const isGoalkeeper ='Goalkeeper'
 let gameInfo
 let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 document.addEventListener('DOMContentLoaded',init)
-function init(){
+async function init() {
     const queryString = window.location.search;
-    const urlParam= new URLSearchParams(queryString)
-    const isFromMatchesPage= urlParam.get('isFromMatchesPage')
+    const urlParam = new URLSearchParams(queryString)
+    const isFromMatchesPage = urlParam.get('isFromMatchesPage')
     if (isFromMatchesPage === 'true') { //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
         gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
         competitionId = gameInfo.competitionId
         fetchAllRoundNumbers().then(res => {
-            if(competitionType==='domestic_league')
+            if (competitionType === 'domestic_league')
                 matchRounds = res.data
-            else{
-                matchRounds=res.data.filter(round=>round.startsWith('Group'))
-                knockoutRounds=res.data.filter(round=>!round.startsWith('Group'))
+            else {
+                matchRounds = res.data.filter(round => round.startsWith('Group'))
+                knockoutRounds = res.data.filter(round => !round.startsWith('Group'))
             }
             if ((currentRound = matchRounds.indexOf(gameInfo.round)) === -1) //se non trovi il round del match nei currentRound, allora metti il round a 0
                 currentRound = 0
@@ -44,63 +44,104 @@ function init(){
         document.getElementById('competitionMatchDetails').style.display = 'flex'
         document.getElementById('competition-matches-btn').classList.add('active') //in questo modo il bottone predefinito diventa quello delle partite
         renderSingleMatch(gameInfo)
-    }else {
+    } else {
         competitionId = urlParam.get('competition_id')
         competitionName = urlParam.get('competition_name')
-        competitionType=urlParam.get('competition_type')
+        competitionType = urlParam.get('competition_type')
         //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
-        let competitionInfoBtn= document.getElementById('competition-info-btn')
+        let competitionInfoBtn = document.getElementById('competition-info-btn')
         competitionInfoBtn.classList.add('active')
         hideAllMainContainers(competitionPageName)
-        document.getElementById('competitionInformation').style.display="flex"
+        document.getElementById('competitionInformation').style.display = "flex"
     }
+
     Promise.all([
         getCompetitionSeasons(), //ottieni gli anni in cui la competizione corrente è stata giocata
         getCompetitionInformation()  //ottieni informazioni di base sulla competizione
-    ]).then(res=>{
-        seasons=res[0].data
-        if(isFromMatchesPage)
-            lastSeason= gameInfo.season
+    ]).then(res => {
+        seasons = res[0].data
+        if (isFromMatchesPage)
+            lastSeason = gameInfo.season
         else
-            lastSeason=seasons[seasons.length-1]
+            lastSeason = seasons[seasons.length - 1]
         renderCompetitionInformation(res[1].data)
-    }).catch(err=> {
+    }).catch(err => {
         alert(err)
     })
-    getCompetitionsWithGroup() //ottieni una lista delle competizioni che hanno i gruppi
-
+    try {
+        let competitionsWithGroup =await getCompetitionsWithGroup()
+        if(competitionsWithGroup.data.find(comp=>comp.competition_id===competitionId)) {
+            isWithGroup = true
+            document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
+        }
+        if (competitionType === 'domestic_league') { //questo perchè in una domestic_leauge non ho la fase finale
+            document.getElementById('competition-knockout-btn').remove()
+            document.getElementById('competitionKnockout').remove()
+        } else if (!isWithGroup) {
+            document.getElementById('competition-matches-btn').remove()
+            document.getElementById('competitionMatches').remove()
+        }
+    }catch (e){
+        alert(e)
+    }
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
-    manageLateralButtons(lateralButtons,competitionPageName)
+    manageLateralButtons(lateralButtons, competitionPageName)
     manageMatchButtons()
-    document.getElementById('competition-matches-btn').addEventListener('click',async function (){
-        document.getElementById('competitionMultipleMatches').style.display='flex'
-        document.getElementById('competitionMatchDetails').style.display='none'
-        await getMatches()
-    })
-    document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
-    document.getElementById('backToAllMatches').addEventListener('click',()=>{
-        document.getElementById('competitionMultipleMatches').style.display='flex'
-        document.getElementById('competitionMatchDetails').style.display='none'
-    })
-    document.getElementById('loadPrevMatchday').addEventListener('click',getPrevMatchday)
-    document.getElementById('loadNextMatchday').addEventListener('click',getNextMatchday)
-    document.getElementById('competitionSelectMatchday').addEventListener('change',function(){
-        currentRound= matchRounds.indexOf(this.value)
-        getAllMatchesInRound(matchRounds)
-        setAllMatchesButtonListener()
-    })
 
-    document.getElementById('competition-table-btn').addEventListener('click',async () => {
+    let competitionMatchesBtn = document.getElementById('competition-matches-btn')
+    if (competitionMatchesBtn)    //questo perchè non in tutte le leghe esiste questo bottone!
+        competitionMatchesBtn.addEventListener('click', async function () {
+            document.getElementById('competitionMultipleMatches').style.display = 'flex'
+            document.getElementById('competitionMatchDetails').style.display = 'none'
+            await getGroupMatches()
+        })
+    let competitionKnockoutBtn = document.getElementById('competition-knockout-btn')
+    if (competitionKnockoutBtn)     //questo perchè non in tutte le leghe esiste questo bottone!
+        competitionKnockoutBtn.addEventListener('click', async function () {
+            await getKnockoutMatches()
+        })
+
+    document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
+    let backToAllMatchesBtn = document.getElementById('backToAllMatches')
+    if (backToAllMatchesBtn)
+        backToAllMatchesBtn.addEventListener('click', () => {
+            document.getElementById('competitionMultipleMatches').style.display = 'flex'
+            document.getElementById('competitionMatchDetails').style.display = 'none'
+        })
+
+    let loadPrevMatchday = document.getElementById('loadPrevMatchday')
+    if (loadPrevMatchday)
+        loadPrevMatchday.addEventListener('click', getPrevMatchday)
+
+    let loadNextMatchday = document.getElementById('loadNextMatchday')
+    if (loadNextMatchday)
+        loadNextMatchday.addEventListener('click', getNextMatchday)
+
+    let matchdaySelector = document.getElementById('competitionSelectMatchday')
+    if (matchdaySelector)
+        matchdaySelector.addEventListener('change', function () {
+            currentRound = matchRounds.indexOf(this.value)
+            getAllMatchesInRound(matchRounds[currentRound])
+                .then(res => {
+                    renderMatchesRound(res.data)
+                    setAllMatchesButtonListener()
+                })
+                .catch(err => {
+                    alert(err)
+                })
+        })
+
+    document.getElementById('competition-table-btn').addEventListener('click', async () => {
         if (isWithGroup)
             await getGroupTables()
         else {
             getTable(competitionId, lastSeason, "full")//di default vogliamo la classifica completa
                 .then(res => {
-                    let tableContainer=document.getElementById('competitionTable')
-                    tableContainer.innerHTML=''
-                    tableContainer.appendChild(renderGroupTable(competitionName,res.data))
+                    let tableContainer = document.getElementById('competitionTable')
+                    tableContainer.innerHTML = ''
+                    tableContainer.appendChild(renderGroupTable(competitionName, res.data))
                     //parte dedicata alla gestione dei bottoni della classifica
-                    let tableBtns= document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
+                    let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-picker')
                     manageTableBtns(tableBtns)
                     manageTableVariants(tableBtns)
                 })
@@ -109,7 +150,7 @@ function init(){
                 })
         }
     })
-    document.getElementById('competition-statistic-btn').addEventListener('click',getTopPlayers)
+    document.getElementById('competition-statistic-btn').addEventListener('click', getTopPlayers)
     initLogin();
 }
 
@@ -254,19 +295,7 @@ function getCompetitionSeasons(){
  */
 function getCompetitionsWithGroup(){
     let url ="http://localhost:3000/games/getCompetitionIdsWithGroup"
-    axios.get(url)
-        .then(res=>{
-            if(res.data.length!==0) {
-                let competitionsWithGroup = res.data
-                if(competitionsWithGroup.find(comp=>comp.competition_id===competitionId)) {
-                    isWithGroup = true
-                    document.getElementById('competition-squad-btn').querySelector('h6').innerText='Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
-                }
-            }
-        })
-        .catch(err=>{
-            alert(err)
-        })
+    return axios.get(url)
 }
 function getTopPlayers(){
     let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${lastSeason}`
@@ -517,36 +546,35 @@ function fetchAllRoundNumbers(){
  * this function start to get all the matches in a single competition year
  * in a specific round.
  */
-async function getMatches() {
-    if (competitionType === 'domestic_league') {
+async function getGroupMatches() {
         if(matchRounds.length ===0) {
             matchRounds = await fetchAllRoundNumbers()
             matchRounds = matchRounds.data
         }
             await getAndRenderGroupMatches()
-    }else {
-        if (matchRounds.length === 0 && knockoutRounds.length === 0) {
-            let rounds = await fetchAllRoundNumbers()
-            matchRounds = rounds.data.filter(round => round.startsWith('Group'))
-            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
-        }
-            await getAndRenderGroupMatches()
-            await getAllMatchesInKnockoutRounds()
-    }
+
 }
-async function getAndRenderGroupMatches(){
-    if(isWithGroup || competitionType === 'domestic_league') {
-        renderMatchesDropdownMenu()
-        try {
-            let matches = await getAllMatchesInRound(matchRounds[currentRound])
-            renderMatchesRound(matches.data)
-        } catch (e) {
-            alert(e)
-        }
+async function getKnockoutMatches(){
+    if(matchRounds.length===0 && knockoutRounds.length===0) {
+        let rounds = await fetchAllRoundNumbers()
+        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+        knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+    }
+    await getAllMatchesInKnockoutRounds()
+}
+
+async function getAndRenderGroupMatches() {
+    renderMatchesDropdownMenu()
+    try {
+        let matches = await getAllMatchesInRound(matchRounds[currentRound])
+        renderMatchesRound(matches.data)
+        setAllMatchesButtonListener()
+    } catch (e) {
+        alert(e)
     }
 }
 async function getAllMatchesInKnockoutRounds(){
-    let container = document.getElementById('knockoutContainer')
+    let container = document.getElementById('competitionKnockout')
     container.innerHTML=''
     for(let round of knockoutRounds) {
         try {
@@ -616,7 +644,15 @@ function renderSingleKnockoutMatch(match){
 function getNextMatchday(){
     if(currentRound!== matchRounds.length - 1){
         currentRound++
-        getAllMatchesInRound()
+        getAllMatchesInRound(matchRounds[currentRound])
+            .then(res=>{
+                renderMatchesRound(res.data)
+                document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
+                setAllMatchesButtonListener()
+            })
+            .catch(err=>{
+                alert(err)
+            })
     }
 }
 /**
@@ -626,7 +662,15 @@ function getNextMatchday(){
 function getPrevMatchday(){
     if(currentRound!==0){
         currentRound--
-        getAllMatchesInRound()
+        getAllMatchesInRound(matchRounds[currentRound])
+            .then(res=>{
+                renderMatchesRound(res.data)
+                document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
+                setAllMatchesButtonListener()
+            })
+            .catch(err=>{
+                alert(err)
+            })
     }
 }
 
