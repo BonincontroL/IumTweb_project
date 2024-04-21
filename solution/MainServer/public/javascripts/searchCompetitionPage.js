@@ -73,6 +73,7 @@ async function renderCompetitionsGroupedByCountry(competitions) {
             competitionCard.className = 'competition-card-mini'
             competitionCard.setAttribute('data-competitionId', competition.competitionId)
             competitionCard.setAttribute('data-competitionName', competition.name)
+            competitionCard.setAttribute('data-competitionType', competition.type)
 
             const cardContainer = `
                     <img class="competition-big-logo" src="${competitionLogoImgUrl}${competition.competitionId.toLowerCase()}.png">

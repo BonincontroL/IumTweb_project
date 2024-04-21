@@ -48,16 +48,21 @@ function getLast5GamesByClubId(club_id){
         .limit(5)
 }
 function getRoundNumbers(comp_id,season){
-    return Model.aggregate([{
-        $match: {
-            competition_id: comp_id,
-            season: season //il + serve per trasformare il valore season in un numero
-        }
-    },
+    return Model.aggregate([
+        {
+            $match: {
+                competition_id: comp_id,
+                season: season //il + serve per trasformare il valore season in un numero
+            }
+        },
         {
             $group: {
-                _id: "$round"
+                _id: "$round",
+                firstDate:{$min:"$date"}
             }
+        },
+        {
+            $sort:{firstDate:1}
         },
         {
             $project: {
@@ -185,13 +190,6 @@ function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
         {
             $project:{
                 _id:0, //tolgo l'id dal risultato
-                game_id:"$game_id",
-                home_club_id:"$home_club_id",
-                away_club_id:"$away_club_id",
-                home_club_name:"$home_club_name",
-                away_club_name:"$away_club_name",
-                date:"$date",
-                aggregate:"$aggregate"
             }
         }
     ]).then(data=>{
@@ -397,6 +395,7 @@ function getCompetitionSeasonsSorted(competition_id){
         }
     ])
 }
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -410,5 +409,5 @@ module.exports = {
     getCompetitionsByClubAndSeason,
     getClubsDividedByGroups,
     getCompetitionIdsWithGroup,
-    getCompetitionSeasonsSorted
+    getCompetitionSeasonsSorted,
 };

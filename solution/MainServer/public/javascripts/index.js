@@ -36,7 +36,8 @@ function setCompetitionsCardEventListener(competitionCards){
         card.addEventListener('click', () => {
             let competition_id = card.getAttribute('data-competitionId')
             let competition_name = card.getAttribute('data-competitionName')
-            window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}`
+            let competition_type = card.getAttribute('data-competitionType')
+            window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}&competition_type=${competition_type}`
         })
     })
 }

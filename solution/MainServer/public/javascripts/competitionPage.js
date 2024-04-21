@@ -1,10 +1,11 @@
 let lateralButtons
 let matchButtons
 const competitionPageName = 'competition-page'
-let competitionId, competitionName,lastSeason = 2023 //la stagione corrente di default è 2023
+let competitionId, competitionName, competitionType,lastSeason = 2023 //la stagione corrente di default è 2023
 let seasons=[] //array globale che rappresenta tutte le annate giocate.
 let currentRound=0
-let matchRounds=[] //array in cui sono contenuti tutti i round della competition
+let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
+let knockoutRounds =[]
 let homeManagerName, awayManagerName
 let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
 const TIME_MINUTES=45 //in un tempo di calcio ci sono 45 minuti.
@@ -20,31 +21,33 @@ function init(){
     const queryString = window.location.search;
     const urlParam= new URLSearchParams(queryString)
     const isFromMatchesPage= urlParam.get('isFromMatchesPage')
-    if(isFromMatchesPage==='true'){ //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
+    if (isFromMatchesPage === 'true') { //in questo caso i dati arrivano dalla pagina matches page quindi devo chiedere competitionName al server
         gameInfo = JSON.parse(sessionStorage.getItem('gameInfo'));
-        competitionId=gameInfo.competitionId
-       fetchAllRoundNumbers().then(res=>{
-            matchRounds = res.data.sort((a, b) => {
-                let numA = parseInt(a.round.split(".")[0], 10)
-                let numB = parseInt(b.round.split(".")[0], 10)
-                return numA - numB;
-            }).map(match => match.round);
-            if((currentRound=matchRounds.indexOf(gameInfo.round))===-1) //se non trovi il round del match nei currentRound, allora metti il round a 0
-                currentRound=0
+        competitionId = gameInfo.competitionId
+        fetchAllRoundNumbers().then(res => {
+            if(competitionType==='domestic_league')
+                matchRounds = res.data
+            else{
+                matchRounds=res.data.filter(round=>round.startsWith('Group'))
+                knockoutRounds=res.data.filter(round=>!round.startsWith('Group'))
+            }
+            if ((currentRound = matchRounds.indexOf(gameInfo.round)) === -1) //se non trovi il round del match nei currentRound, allora metti il round a 0
+                currentRound = 0
             renderMatchesDropdownMenu() //di default carichiamo il primo round
             getAllMatchesInRound()
-        }).catch(err=>{
+        }).catch(err => {
             alert(err)
         })
         hideAllMainContainers(competitionPageName)
-        document.getElementById('competitionMatches').style.display='flex'
-        document.getElementById('competitionMultipleMatches').style.display='none'
-        document.getElementById('competitionMatchDetails').style.display='flex'
+        document.getElementById('competitionMatches').style.display = 'flex'
+        document.getElementById('competitionMultipleMatches').style.display = 'none'
+        document.getElementById('competitionMatchDetails').style.display = 'flex'
         document.getElementById('competition-matches-btn').classList.add('active') //in questo modo il bottone predefinito diventa quello delle partite
         renderSingleMatch(gameInfo)
     }else {
         competitionId = urlParam.get('competition_id')
         competitionName = urlParam.get('competition_name')
+        competitionType=urlParam.get('competition_type')
         //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
         let competitionInfoBtn= document.getElementById('competition-info-btn')
         competitionInfoBtn.classList.add('active')
@@ -62,17 +65,17 @@ function init(){
             lastSeason=seasons[seasons.length-1]
         renderCompetitionInformation(res[1].data)
     }).catch(err=> {
-        alert(JSON.stringify(err))
+        alert(err)
     })
     getCompetitionsWithGroup() //ottieni una lista delle competizioni che hanno i gruppi
 
     lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralButtons,competitionPageName)
     manageMatchButtons()
-    document.getElementById('competition-matches-btn').addEventListener('click',()=>{
+    document.getElementById('competition-matches-btn').addEventListener('click',async function (){
         document.getElementById('competitionMultipleMatches').style.display='flex'
         document.getElementById('competitionMatchDetails').style.display='none'
-        getMatches()
+        await getMatches()
     })
     document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
     document.getElementById('backToAllMatches').addEventListener('click',()=>{
@@ -83,7 +86,7 @@ function init(){
     document.getElementById('loadNextMatchday').addEventListener('click',getNextMatchday)
     document.getElementById('competitionSelectMatchday').addEventListener('change',function(){
         currentRound= matchRounds.indexOf(this.value)
-        getAllMatchesInRound()
+        getAllMatchesInRound(matchRounds)
         setAllMatchesButtonListener()
     })
 
@@ -116,12 +119,12 @@ function init(){
  */
 async function getGroupTables(){
     let groupTables={}
-    if(matchRounds.length===0){//lo abbiamo già
-        matchRounds= await fetchAllRoundNumbers()
-        matchRounds=matchRounds.data.map(round=>round.round)
+    if(matchRounds.length===0){//se non abbiamo ancora caricato matchRounds...
+        let rounds = await fetchAllRoundNumbers()
+        matchRounds=rounds.data.filter(round=>round.startsWith('Group'))
+        knockoutRounds=rounds.data.filter(round=>!round.startsWith('Group'))
     }
-    let groupNames = matchRounds.filter(round=>round.includes('Group')).sort()
-    for (const group of groupNames) {
+    for (const group of matchRounds) {
         let table =await getTable(competitionId,lastSeason, 'full', group)
         groupTables[group] = table.data
     }
@@ -447,7 +450,7 @@ function getClubs(){
             setAllClubButtonsListener(clubCards, competitionId, competitionName)
         }
     }).catch(err=>{
-        alert(JSON.stringify(err))
+        alert(err)
     })
 }
 function renderAllClubs(clubs){
@@ -493,6 +496,7 @@ function getCompetitionInformation(){
  */
 function renderCompetitionInformation(competitionInfo){
     competitionName=competitionInfo.name
+    competitionType=competitionInfo.type
     document.getElementById('competitionName').innerText=competitionInfo.name+`\n${lastSeason}`;
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
@@ -513,20 +517,98 @@ function fetchAllRoundNumbers(){
  * this function start to get all the matches in a single competition year
  * in a specific round.
  */
-function getMatches(){
-    fetchAllRoundNumbers().then(res=>{
-        matchRounds = res.data.sort((a, b) => {
-            let numA = parseInt(a.round.split(".")[0], 10)
-            let numB = parseInt(b.round.split(".")[0], 10)
-            return numA - numB;
-        }).map(match => match.round);
-        renderMatchesDropdownMenu() //di default carichiamo il primo round
-        getAllMatchesInRound()
-    }).catch(err=>{
-        alert(JSON.stringify(err))
+async function getMatches() {
+    if (competitionType === 'domestic_league') {
+        if(matchRounds.length ===0) {
+            matchRounds = await fetchAllRoundNumbers()
+            matchRounds = matchRounds.data
+        }
+            await getAndRenderGroupMatches()
+    }else {
+        if (matchRounds.length === 0 && knockoutRounds.length === 0) {
+            let rounds = await fetchAllRoundNumbers()
+            matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+        }
+            await getAndRenderGroupMatches()
+            await getAllMatchesInKnockoutRounds()
+    }
+}
+async function getAndRenderGroupMatches(){
+    if(isWithGroup || competitionType === 'domestic_league') {
+        renderMatchesDropdownMenu()
+        try {
+            let matches = await getAllMatchesInRound(matchRounds[currentRound])
+            renderMatchesRound(matches.data)
+        } catch (e) {
+            alert(e)
+        }
+    }
+}
+async function getAllMatchesInKnockoutRounds(){
+    let container = document.getElementById('knockoutContainer')
+    container.innerHTML=''
+    for(let round of knockoutRounds) {
+        try {
+            let matches = await getAllMatchesInRound(round)
+            container.appendChild(renderKnockoutMatches(matches.data,round))
+        }catch (err){
+            alert(err)
+        }
+    }
+}
+function renderKnockoutMatches(matches,round){
+    let roundContainer = document.createElement('div')
+    roundContainer.className='matches-knockout-group'
+    roundContainer.innerHTML=
+        `<div class="matches-knockout-group-header">
+            <h3>${round}</h3>
+        </div>`
+    let matchesContainer = document.createElement('div')
+    matchesContainer.className='matches-knockout-group-container'
+    roundContainer.appendChild(matchesContainer)
+
+    matches.forEach(match=>{
+        let matchCard= renderSingleKnockoutMatch(match)
+        matchesContainer.appendChild(matchCard)
     })
+
+    return roundContainer
 }
 
+function renderSingleKnockoutMatch(match){
+    let matchCard = document.createElement('div')
+    matchCard.className='game-information'
+    matchCard.setAttribute('data-competitionid',match.competition_id)
+    matchCard.setAttribute('data-gameId',match.game_id)
+    matchCard.setAttribute('data-homeClubId',match.home_club_id)
+    matchCard.setAttribute('data-awayClubId',match.away_club_id)
+    matchCard.setAttribute('data-homeClubName',match.home_club_name)
+    matchCard.setAttribute('data-awayClubName',match.away_club_name)
+    matchCard.setAttribute('data-aggregate',match.aggregate)
+    matchCard.setAttribute('data-date',match.date)
+    matchCard.setAttribute('data-round',match.round)
+    matchCard.setAttribute('data-season',match.season)
+
+    matchCard.innerHTML=
+        ` <div class="match-result-vertical">
+                            <div class="squad-icon-container">
+                                <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png" alt="${match.home_club_name}" />
+                                <p>${match.home_club_name}</p>
+                                <div class="home-result">
+                                    <p>${match.home_club_goals !== undefined ? match.home_club_goals : 'N.D.'}</p>
+                                </div>
+                            </div>
+                            <div class="squad-icon-container">
+                                <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png" alt="${match.away_club_name}" />
+                                <p> ${match.away_club_name}</p>
+                                <div class="away-result">
+                                    <p>${match.away_club_goals !== undefined ? match.away_club_goals : 'N.D.'}</p>
+                                </div>
+                            </div>
+                        </div>`
+    return matchCard
+}
 /**
  * function that get the next round if it's possibile
  * if there aren't any rounds, it's not possible to load the next
@@ -552,20 +634,14 @@ function getPrevMatchday(){
  * function that get all the matches in a round, that is
  * specified by matchRounds array in currentRound position
  */
-function getAllMatchesInRound(){
+function getAllMatchesInRound(round){
     let url='http://localhost:3000/games/getMatchesByCompAndSeasonAndRound'
-    axios.get(url, {
+    return axios.get(url, {
         params:{
             comp_id:competitionId,
             season: lastSeason,
-            currentRound:matchRounds[currentRound]
+            currentRound:round
         }
-    }).then(res=>{
-        document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
-        renderMatchesRound(res.data)
-        setAllMatchesButtonListener()
-    }).catch(err=>{
-        alert(JSON.stringify(err))
     })
 }
 
@@ -663,7 +739,7 @@ function getMatchEvents(matchIds,finalResult){
         }}).then(res=>{
             renderMatchEvents(res.data,+matchIds.home_club_id, +matchIds.away_club_id,finalResult) //il + serve per convertire le stringhe in numeri
     }).catch(err=>{
-        alert(JSON.stringify(err))
+        alert(err)
     })
 }
 function renderMatchEvents(events, homeClubId, awayClubId,finalResult){
@@ -824,18 +900,20 @@ function getMatchInformation(gameId){
         homeManagerName=res.data.home_club_manager_name
         awayManagerName=res.data.away_club_manager_name
     }).catch(err=>{
-        alert(JSON.stringify(err))
+        alert(err)
     })
 
 }
 
 /**
- * render the dropdown menu including all the competition's rounds, it takes the data in
- * the matchRounds array.
+ * render the dropdown menu including all the competition's rounds,
+ * both used to render the group dropdown menu in a cup competition and render
+ * the match dropdown menu in a domestic_league competition
  */
 function renderMatchesDropdownMenu(){
     let dropdownContainer=document.getElementById('competitionSelectMatchday')
     dropdownContainer.innerHTML=''
+
     matchRounds.forEach(singleRound=>{
         let dropdownItem = document.createElement('option')
         dropdownItem.innerHTML=singleRound.split(".")[0]
@@ -859,7 +937,7 @@ function getMatchFormation(matchIds){
                     renderMatchFormation(homeLineup, awayLineup)
                 })
         }catch(error){
-            alert(JSON.stringify(error))
+            alert(error)
         }
 }
 
@@ -943,7 +1021,7 @@ function renderMatchFormation(homeLineup, awayLineup){
          let playerCards = document.querySelectorAll('#'+container.id+' > .player-card-for-competition')
          setPlayersEventListener(playerCards)
      }).catch(err=>{
-         alert(JSON.stringify(err))
+         alert(err)
      })
 }
 function appendBannerAndEachPlayer(container,playerList,bannerName){
