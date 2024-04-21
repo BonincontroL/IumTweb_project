@@ -9,7 +9,11 @@ router.get('/getTopScorer', async (req,res)=>{
     const competitionId=req.query.comp_id;
     appearancesController.getTopScorer(competitionId)
         .then(data=>{
-            res.status(200).json(data);
+            if(data && data.length>0){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({error: 'Nessun top scorer trovato'});
+            }
         })
         .catch(err=>{
             console.error('Errore durante il recupero dei top scorer', err);
@@ -23,7 +27,11 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
        const idPlayer = req.params.playerId;
        appearancesController.getPlayerStatistics(idPlayer)
         .then(data=>{
-            res.status(200).json(data);
+           if(data && data.length>0){
+               res.status(200).json(data);
+           }else{
+               res.status(404).json({error: 'Nessuna statistica trovata'});
+           }
         })
         .catch(err=>{
             console.error('Errore durante il recupero delle statistiche del giocatore', err);
