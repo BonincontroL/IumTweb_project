@@ -638,6 +638,347 @@
           }
         }
       }
+    },
+    "/players/getPlayersByCompetition/{competition_id}": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get player by competition ID",
+        "description": "Retrieves players based on a competition ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier for the competition",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/players/getPlayersByCompetitionAndLastSeason/{competition_id}/{last_season}": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get player by competition ID and last season",
+        "description": "Retrieves players based on a competition ID and the last season.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "path",
+            "required": true,
+            "description": "The competition's unique identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last_season",
+            "in": "path",
+            "required": true,
+            "description": "The last season of interest",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/players/getTop150PlayersByMarketValue": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get top 150 players by market value",
+        "description": "Retrieves a list of the top 150 players sorted by their market value.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of top 150 players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/players/findPlayersByLetterInName": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Find players by letter in name",
+        "description": "Retrieves a list of players whose names contain a specified letter.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "letter",
+            "in": "query",
+            "required": true,
+            "description": "The letter to search for in player names",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - A list of players.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/gamelineups/getPlayerNumberByIdPlayer/{idPlayer}": {
+      "get": {
+        "tags": ["Game Lineups"],
+        "summary": "Get player number by player ID",
+        "description": "Retrieves the player number assigned to a player for a specific game based on the player's ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idPlayer",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the player.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the player number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "playerId": {
+                      "type": "integer",
+                      "description": "Player's ID."
+                    },
+                    "playerNumber": {
+                      "type": "integer",
+                      "description": "Number assigned to the player for the game."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/gamelineups/getMatchPlayers": {
+      "get": {
+        "tags": ["Game Lineups"],
+        "summary": "Retrieve players participating in a match",
+        "description": "Fetches a list of all players participating in a specific match, categorized by home and away teams.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "game_id",
+            "in": "query",
+            "required": true,
+            "description": "The game ID for which player information is needed.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "home_club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier for the home club.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "away_club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier for the away club.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns a list of players for both teams.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Player"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - Parameters may be missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - No match found for the specified parameters."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1234,16 +1575,17 @@
         }
       },
 
+
       "Error": {
         "type": "object",
         "properties": {
           "message": {
             "type": "string",
-            "description": "Description of the error encountered"
+            "description": " :( - Error Message"
           },
           "internal_code": {
             "type": "string",
-            "description": "Internal code corresponding to the error"
+            "description": " :( - Code Error"
           }
         }
       }
