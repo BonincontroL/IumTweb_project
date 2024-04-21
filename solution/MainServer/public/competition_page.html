@@ -193,50 +193,55 @@
         </div>
         <div class="main-container" id="competitionMatches">
             <div id="competitionMultipleMatches">
-                <div class="table-navbar">
-                    <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
-                    che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
-                    <div class="dropdown-menu-season-wrapper">
-                        <h6><label for="competitionSelectMatchday">Giornata</label></h6>
-                        <select id="competitionSelectMatchday" class="date-days-picker">
-                        </select>
-                    </div>
-                    <div class="left-right-arrows-wrapper">
-                        <i id="loadPrevMatchday" class='bx bx-chevrons-left'></i>
-                        <i id="loadNextMatchday" class='bx bx-chevrons-right'></i>
-                    </div>
-                </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
-                <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
-                <div id="competitionMatchesContainer" class="matches-vertical-container" >
-                    <div class="single-horizontal-match">
-                              <h6>20 AGO 2023</h6>
-                              <div class="squad-names-and-result-container">
-                                  <div class="squad-name-wrapper">
-                                      <h6>ROMA</h6>
-                                  </div>
-                                  <img
-                                          class="squadLogo"
-                                          loading="lazy"
-                                          alt=""
-                                          src="./public/rectangle-20@2x.png"
-                                  />
+                <div class="matches-generic-container">
+                    <div class="table-navbar">
+                        <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
+                        che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
+                        <div class="dropdown-menu-season-wrapper">
+                            <h6><label for="competitionSelectMatchday">Giornata</label></h6>
+                            <select id="competitionSelectMatchday" class="date-days-picker">
+                            </select>
+                        </div>
+                        <div class="left-right-arrows-wrapper">
+                            <i id="loadPrevMatchday" class='bx bx-chevrons-left'></i>
+                            <i id="loadNextMatchday" class='bx bx-chevrons-right'></i>
+                        </div>
+                    </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
+                    <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte tutte le singole partite della giornata-->
+                    <div id="competitionMatchesContainer" class="matches-vertical-container" >
+                        <div class="single-horizontal-match">
+                            <h6>20 AGO 2023</h6>
+                            <div class="squad-names-and-result-container">
+                                <div class="squad-name-wrapper">
+                                    <h6>ROMA</h6>
+                                </div>
+                                <img
+                                        class="squadLogo"
+                                        loading="lazy"
+                                        alt=""
+                                        src="./public/rectangle-20@2x.png"
+                                />
 
-                                  <h6>2-2</h6>
-                                  <img
-                                          class="squadLogo"
-                                          loading="lazy"
-                                          alt=""
-                                          src="./public/rectangle-19@2x.png"
-                                  />
+                                <h6>2-2</h6>
+                                <img
+                                        class="squadLogo"
+                                        loading="lazy"
+                                        alt=""
+                                        src="./public/rectangle-19@2x.png"
+                                />
 
-                                  <div class="squad-name-wrapper">
-                                      <h6>ROMA</h6>
-                                  </div>
-                              </div>
-                              <button class='btn-load-match-details'>
-                                  <i class='bx bxs-right-arrow-circle'></i>
-                              </button>
+                                <div class="squad-name-wrapper">
+                                    <h6>ROMA</h6>
+                                </div>
+                            </div>
+                            <button class='btn-load-match-details'>
+                                <i class='bx bxs-right-arrow-circle'></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
+                <div class="matches-knockout-container" id="knockoutContainer">
+
                 </div>
             </div>
             <div id="competitionMatchDetails">
