@@ -32,7 +32,7 @@ router.get('/getRoundNumbers', function (req, res) {
         }
     }).then(data => {
         if (data.status === 200) {
-            res.send(data.data);
+            res.send(data.data.map(item=>item.round));
         } else {
             res.status(data.status).send(data.data);
         }

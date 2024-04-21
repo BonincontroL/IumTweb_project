@@ -660,25 +660,51 @@ header ul li ul li a{
     flex-direction: column;
     overflow:auto;
     gap: var(--gap-xl);
-    padding-top: var(--padding-20px);
 }
 .matches-generic-container,
-.matches-knockout-container{
+#competitionKnockout{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     box-sizing: border-box;
     width: 100%;
     gap: var(--gap-xl);
+    overflow-y:auto;
 }
 
-.matches-knockout-container{
+#competitionKnockout{
     flex-direction: row;
 }
-.matches-knockout-container{
+.matches-generic-container{
     flex-direction: column;
 }
-
+.matches-knockout-group{
+    background-color: var(--primary-blue-50);
+    display: flex;
+    flex-direction: column;
+    padding: var(--padding-10px);
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    gap: var(--gap-8xs);
+    border-radius: var(--br-12px);
+}
+.matches-knockout-group-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: var(--padding-10px);
+}
+.matches-knockout-group-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    gap: var(--gap-4xs);
+}
 #squad-page ,
 #chat-page,
 #player-page,

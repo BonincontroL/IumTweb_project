@@ -166,4 +166,5 @@ router.get('/getCompetitionSeasonsSorted', async(req,res)=>{
             res.status(500).json({error: 'Errore durante il recupero delle stagioni di una competizione\n'+err})
         })
 })
+
 module.exports = router;
