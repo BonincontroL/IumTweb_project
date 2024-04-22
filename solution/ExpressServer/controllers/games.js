@@ -305,8 +305,6 @@ function getClubsDividedByGroups(competition_id,season){
             $match: {
                 competition_id: competition_id,
                 season: season,
-                round: /Group/  //espressione regolare per cercare solo i round con la parola Group
-
             }
         },
         {

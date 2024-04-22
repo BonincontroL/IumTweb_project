@@ -418,9 +418,9 @@ function renderTableTDWithLogo(squadId,squadName){
     return singleTd
 }
 function getClubsWrapper(){
-    if(isWithGroup)
+    if(isWithGroup || competitionType!=='domestic_league')
         getClubsDividedByGroup()
-    else
+    else if(competitionType==='domestic_league')
         getClubs()
 }
 function getClubsDividedByGroup(){
@@ -432,11 +432,35 @@ function getClubsDividedByGroup(){
         }
     }).then(res=>{
         if(res.data!==0) {
-            renderClubsDividedByGroup(res.data)
-            let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
+            let clubs=res.data
+            let clubCards
+            if(competitionType!=='domestic_league' && !isWithGroup) {
+                clubs = unifyClubs(clubs)
+                renderAllClubs(clubs)
+                clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
+            }else { //in questo caso devi mantenere solo i gruppi
+                clubs = clubs.filter(group=>group.group.startsWith('Group'))
+                renderClubsDividedByGroup(clubs)
+                clubCards= document.querySelectorAll('.competitions-group-container > .squad-card-mini')
+            }
             setAllClubButtonsListener(clubCards, competitionId, competitionName)
         }
     })
+}
+
+function unifyClubs(groups){
+    const uniqueClubs=new Map();
+    groups.forEach(group=>{
+        group.clubs.forEach(club=>{
+            if(!uniqueClubs.has(club.clubId)){
+                uniqueClubs.set(club.clubId,{
+                    name:club.name,
+                    clubId:club.clubId
+                })
+            }
+        })
+    })
+    return Array.from(uniqueClubs.values())
 }
 function renderClubsDividedByGroup(groups){
     let mainContainer= document.getElementById('competitionSquads')
