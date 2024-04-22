@@ -15,4 +15,11 @@ public class PlayerValuationsService {
         return playerValuationsRepository.findAll();
     }
 
+    public List<Object[]> getAverageMarketValuePerSeason(Long playerId) {
+        return playerValuationsRepository.findAverageMarketValuePerYear(playerId);
+    }
+
+    public List<Object[]> findAverageMarketValuePerYear(Long playerId) {
+        return playerValuationsRepository.findAverageMarketValuePerYear(playerId);
+    }
 }
