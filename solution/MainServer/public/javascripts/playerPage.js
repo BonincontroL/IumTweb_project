@@ -1,6 +1,7 @@
 let lateralPlayerButtons, playerInfoBtn
 const playerPageName= 'player-page'
 let playerId;
+let isStatsLoaded = false;
 
 document.addEventListener('DOMContentLoaded',()=> {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
@@ -10,7 +11,6 @@ document.addEventListener('DOMContentLoaded',()=> {
         getPlayerInfo(),
         getPlayerNumber()
     ]).then(res=>{
-        console.log(res[1].data.playerNumber);
         renderPlayerInfo(res[0].data,res[1].data.playerNumber)
     })
 
@@ -26,7 +26,10 @@ document.addEventListener('DOMContentLoaded',()=> {
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display = "flex"
     document.getElementById('player-statistic-btn').addEventListener('click', () => {
-        getPlayerStatistics()
+        if(!isStatsLoaded){
+            getPlayerStatistics()
+            isStatsLoaded = true
+        }
     })
 
 
@@ -55,7 +58,8 @@ function getAllPlayers(){
  * get di tutte le statistiche di un singolo giocatore(cartellini gialli, rossi, goal e assist totali)
  */
 function getPlayerStatistics() {
-
+    const loadingSpinner= document.getElementById('loading-spinner');
+    loadingSpinner.style.display = "block";
         axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
             .then(response => {
                 if(response.status===200){
@@ -67,7 +71,10 @@ function getPlayerStatistics() {
             .catch(error =>{
                 console.error(`Error not found statistics for player ${playerId}:`, error);
 
-            })
+            }).finally(()=> {
+                loadingSpinner.style.display = "none";
+
+        });
     }
 
 
@@ -91,6 +98,7 @@ function getPlayerStatistics() {
             document.getElementById('playerNumMinutes').innerText = playerStatistics[0].total_minutes_played
             document.getElementById('appearances').innerText = playerStatistics[0].appearances
 
+
         }
 
 }
@@ -108,6 +116,9 @@ function getPlayerStatistics() {
         document.getElementById('player_height').innerText = playerInfo.heightInCm;
         document.getElementById('squad_player').innerText = playerInfo.currentClubName;
         document.getElementById('age_player').innerText = eta;
+        document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur+" €"
+        document.getElementById('playerRole').innerText = playerInfo.subPosition;
+        document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL+playerInfo.currentClubId+".png")
         if(playerNumber===-1){
             document.getElementById('player_number').innerText = "No data available"
         }else {
