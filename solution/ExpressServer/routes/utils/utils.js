@@ -6,8 +6,10 @@
     Dopo che ottengo i dati dal db,controlla che non siano vuoti.
 */
 function isDataEmpty(data) {
-    return !data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && Object.keys(data).length === 0 && data.constructor === Object);
-
+    return !data || (Array.isArray(data) && data.length === 0) ||
+        (typeof data === 'object' && Object.keys(data).length === 0 && data.constructor === Object) ||
+        (data instanceof Set && data.size === 0) ||
+        (data instanceof Map && data.size === 0);
 }
 
 module.exports = {
