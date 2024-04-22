@@ -3,6 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        manageFilterButton()
         initLogin();
         fetchAndCategorizePlayers();
         const searchInput = document.getElementById('search-players');
@@ -11,7 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error during initialization:', error);
     }
 });
+function manageFilterButton(){
+    let filterButton= document.getElementById('filterButton')
+    let filterContainer= document.getElementById('filterContainer')
+    document.addEventListener('click',function (event){
+        if(filterButton.contains(event.target))
+            filterContainer.style.display='flex'
+        else
+            filterContainer.style.display='none'
+    })
 
+}
 /**
  * Funzione per il debounce per limitare la velocità con cui viene chiamata una funzione.
  * @param func
@@ -111,9 +122,11 @@ function renderPlayers(players, containerId) {
     container.innerHTML = '';
 
     players.forEach(player => {
-
         const playerDiv = document.createElement('div');
         playerDiv.className = 'player-card2';
+        playerDiv.setAttribute('data-playerid',player.playerId)
+        playerDiv.setAttribute('data-name',player.name)
+        playerDiv.setAttribute('data-imageurl',player.imageUrl)
 
         const playerContent = `
             <img src="${player.imageUrl}" alt="${player.name}" class="player-image">
@@ -124,9 +137,16 @@ function renderPlayers(players, containerId) {
             </div>
         `;
 
-
         playerDiv.innerHTML = playerContent;
-
+        playerDiv.addEventListener('click',()=>{
+            let playerInfo ={
+                playerId:playerDiv.getAttribute('data-playerid'),
+                name:playerDiv.getAttribute('data-name'),
+                imageUrl:playerDiv.getAttribute('data-imageurl'),
+            }
+            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
+            window.location.href='../player_page.html'
+        })
         container.appendChild(playerDiv);
     });
 }

@@ -70,7 +70,6 @@ function setPlayersEventListener(playerCards){
                 playerId:card.getAttribute('data-playerid'),
                 name:card.getAttribute('data-name'),
                 imageUrl:card.getAttribute('data-imageurl'),
-                countryOfBirth:card.getAttribute('data-countryofbirth'),
             }
             sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
             window.location.href='../player_page.html'

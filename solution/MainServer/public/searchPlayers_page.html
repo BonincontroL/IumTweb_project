@@ -76,6 +76,10 @@
 </header>
 
 <div class="matches-header">
+    <div class="filter-button" id="filterButton">
+        <i class='bx bx-filter-alt'></i>
+        <h6>Filtra</h6>
+    </div>
     <div class="search-button" style="margin: auto">
         <input id="search-players" class="search-button-input" type="text" placeholder="Cerca players...">
         <i class='bx bx-search'></i>
@@ -83,6 +87,45 @@
 </div>
 
 <div class="main-container" id="GeneralPlayers">
+    <div class="filter-container" id="filterContainer">
+        <h6>Filtra in base a...</h6>
+        <div class="single-filter">
+            <p>Nazionalità</p>
+            <select id="playerNationalities" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+        <div class="single-filter">
+            <p>Ruolo</p>
+            <select id="playerRoles" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+        <div class="single-filter">
+            <p>Campionato</p>
+            <select id="playerCompetitions" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+        <div class="selected-filters">
+            <h6>Selezionati</h6>
+            <div class="selected-filter-container">
+                <div class="selected-filter">
+                    <p>Serie A</p>
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+        </div>
+        <div class="filter-buttons">
+            <div class="filter-button-accept">
+                <h6>Esegui ricerca</h6>
+            </div>
+            <div class="filter-button-reject">
+                <h6>Elimina Filtri</h6>
+            </div>
+        </div>
+    </div>
+
     <div class="star-icon-container">
         <h1> <span class="blue-words">Tutti i </span>giocatori</h1>
     </div>

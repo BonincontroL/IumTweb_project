@@ -528,7 +528,7 @@ header ul li ul li a{
     justify-content: center;
     cursor: pointer;
     border: 1px solid var(--black);
-    padding: var(--padding-10px) var(--padding-lgi);
+    padding: var(--padding-5px) var(--padding-10px);
     background-color: var(--white);
     border-radius: var(--br-12px);
     box-sizing: border-box;
@@ -537,14 +537,26 @@ header ul li ul li a{
     flex-direction: row;
     gap: var(--gap-3xs);
 }
-.date-days-picker:hover{
-    background-color: var(--primary-blue-900);
-    color: white;
+
+.date-days-picker > option{
+    font-family: var(--fontfamily);
+    font-size: var(--p-size)
 }
-.date-days-picker-active{
+
+.filter-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-4xs);
+    padding: var(--padding-10px) var(--padding-20px);
+    box-sizing: border-box;
     background-color: var(--primary-blue-900);
-    border: 1px solid var(--white);
-    color: white;
+    color: var(--white);
+    border-radius: var(--br-12px);
+}
+.filter-button > i{
+    font-size: var(--h6-size);
 }
 
 .arrow-btn{
@@ -631,7 +643,119 @@ header ul li ul li a{
     gap: var(--gap-11xl);
     height: 92vh;
 }
-
+#playerValutation{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.valutation-table-header{
+    background-color: var(--primary-blue-900);
+    color:var(--white);
+}
+.table-valutation{
+    width: 50%;
+}
+.filter-container{
+    position: absolute;
+    top: 18vh;
+    text-align: left;
+    background-color: var(--primary-blue-900);
+    color:var(--white);
+    width: 20vw;
+    flex-direction: column;
+    gap: var(--gap-3xs);
+    justify-content: flex-start;
+    padding: var(--padding-10px);
+    box-sizing: border-box;
+    display: none;
+    z-index: 999;
+}
+.selected-filters{
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    align-self: stretch;
+    width: 100%;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.selected-filter-container{
+    display: flex;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    align-self: stretch;
+    overflow: hidden;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-3xs);
+    align-items: center;
+    padding: var(--padding-10px);
+}
+.selected-filter{
+    border: 0;
+    padding: var(--padding-8xs);
+    background-color: var(--primary-blue-50);
+    border-radius: var(--br-12px);
+    overflow: hidden;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-8xs);
+    white-space: nowrap;
+    align-self: unset;
+    display: flex;
+    box-sizing: border-box;
+    color:var(--black)
+}
+.single-filter{
+    align-self: stretch;
+    gap: var(--gap-xl);
+    justify-content: space-between;
+    padding: var(--padding-11xs) 0;
+    display: flex;
+    width: auto;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+}
+.filter-buttons{
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    height: auto;
+    align-self: stretch;
+    width: auto;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.filter-button-accept,
+.filter-button-reject{
+    cursor: pointer;
+    border: 0;
+    overflow: hidden;
+    display: flex;
+    align-self: unset;
+    flex-direction: row;
+    gap: var(--gap-8xs);
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: var(--br-12px);
+    padding: var(--padding-8xs);
+    box-sizing: border-box;
+}
+.filter-button-reject{
+    background-color: var(--color-lose);
+    color: var(--white);
+}
+.filter-button-accept{
+    background-color: var(--color-win);
+    color: var(--black);
+}
 .slogan {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font particolare */
     font-size: 28px;
@@ -3104,11 +3228,11 @@ tbody > tr:hover{
 
 .loading-spinner {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 8vh;
+    left: 20vw;
+    width: 80vw;
+    height: 92vh;
     background-color: rgba(255, 255, 255, 0.7);
     z-index: 9999;
 }

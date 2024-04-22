@@ -212,10 +212,7 @@ function initLogin(){
                     sessionStorage.removeItem('username');
                     window.location.href = 'landing_page.html';
                 });
-
-            }else if(user_popup.contains(event.target)){
-
-            }else{
+            }else if(!user_popup.contains(event.target)) {
                 user_popup.style.display = 'none';
             }
 
