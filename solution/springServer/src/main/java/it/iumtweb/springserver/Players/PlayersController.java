@@ -123,12 +123,12 @@ public class PlayersController {
 
     /**
      *
-     * @param playerId to find a player
+     * @param player_id to find a player
      * @return an object with  player information
      */
-    @GetMapping("/getPlayerById")
-    public ResponseEntity<Players> getById(@RequestParam(name = "player_id") Long playerId) {
-        Optional<Players> result = playersService.findById(playerId);
+    @GetMapping("/getPlayerById/{player_id}")
+    public ResponseEntity<Players> getById(@PathVariable long player_id) {
+        Optional<Players> result = playersService.findById(player_id);
         return result.map(club -> ResponseEntity.ok().body(result.get())).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

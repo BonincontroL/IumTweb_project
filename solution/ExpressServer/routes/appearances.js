@@ -30,7 +30,7 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
            if(data && data.length>0){
                res.status(200).json(data);
            }else{
-               res.status(404).json({error: 'Nessuna statistica trovata'});
+               res.status(204).json({error: 'Nessuna statistica trovata'});
            }
         })
         .catch(err=>{

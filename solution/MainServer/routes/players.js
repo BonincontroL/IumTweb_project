@@ -135,6 +135,20 @@ router.get("/findPlayersByLetterInName", function (req,res){
 })
 
 
+router.get("/getPlayerById/:playerId", function (req,res){
+    axios.get(SPRING_SERVER+`/players/getPlayerById/${req.params.playerId}`)
+        .then(data=>{
+            if (data.status === 200) {
+                res.send(data.data);
+            }else{
+                res.status(data.status).send(data.data);
+            }
+        }).catch(err=>{
+        res.status(err.status).send(err)
+    })
+})
+
+
 
 
 
