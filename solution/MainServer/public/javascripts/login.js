@@ -3,6 +3,8 @@
  */
 function onLogin(){
     showLoginForm();
+    addListenersRegister()
+    addListenersLogin()
 }
 
 /**
@@ -10,17 +12,14 @@ function onLogin(){
  */
 function addListenersLogin(){
     document.getElementById("showSingupPage").addEventListener('click', showRegisterForm);
-
     document.getElementById('login_button').addEventListener('click', function (event) {
         event.preventDefault()
-        const requestBody = ExtractDataLog();
-        console.log(requestBody); //da eliminare solo per vedere se stampa i dati
+        const requestBody = extractDataLog();
         if (requestBody !== null) {
             sendDataLog(requestBody);
         }
         resetLoginForm();
     });
-
 }
 
 /**
@@ -28,13 +27,11 @@ function addListenersLogin(){
  */
 function addListenersRegister(){
     document.getElementById("showLoginPage").addEventListener('click', showLoginForm);
-
     document.getElementById('singUp_button').addEventListener('click', function(event) {
         event.preventDefault();
-        const requestBody = ExtractDataReg();
-        console.log(requestBody); // da eliminare solo per vedere se stampa
+        const requestBody = extractDataReg();
         if (requestBody !== null) {
-            SendDataReg(requestBody);
+            sendDataReg(requestBody);
             showLoginForm();
         }
         resetRegisterForm();
@@ -48,7 +45,6 @@ function showLoginForm(event) {
     if (event) event.preventDefault();
     document.getElementById("singup_form").style.display = "none";
     document.getElementById("login_form").style.display = "flex";
-    addListenersLogin();
 }
 
 /**
@@ -58,17 +54,16 @@ function showRegisterForm(event){
     if (event) event.preventDefault();
     document.getElementById("singup_form").style.display = "flex";
     document.getElementById("login_form").style.display = "none";
-    addListenersRegister();
 }
 
 
 
 /**
  * Estrae i dati dal form di login
- * @returns requestBody struttura con i dati del form se son validi , se no ritorna null;
+ * @returns requestBody struttura con i dati del form se son validi, se no ritorna null;
  * @constructor
  */
-function ExtractDataLog() {
+function extractDataLog() {
     const formData = new FormData(document.getElementById('login_form'));
     const requestBody = Object.fromEntries(formData.entries());
 
@@ -85,13 +80,12 @@ function ExtractDataLog() {
     return requestBody;
 }
 
-
 /**
  * Estrae i dati dal form di registrazione
  * @returns requestBody struttura con i dati del form se son validi , se no ritorna null
  * @constructor
  */
-function ExtractDataReg() {
+function extractDataReg() {
     const formData = new FormData(document.getElementById('singup_form'));
     const requestBody = Object.fromEntries(formData.entries()); //trasforma i dati del form in un oggetto
 
@@ -126,8 +120,6 @@ function resetLoginForm() {
     document.getElementById('login_form').reset();
 }
 
-
-
 /**
  * regex per la validazione dell'email
  * @param email estratta dal form
@@ -138,12 +130,10 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-
-
 /**
  * Funzione per mandare i dati di registrazione al ExpressServer
  */
-function SendDataReg(requestBody) {
+function sendDataReg(requestBody) {
     axios.post('http://localhost:3000/users/register', requestBody)
         .then(response => {
             if (response.status === 201) {
@@ -166,7 +156,6 @@ function sendDataLog(requestBody){
         .then(response => {
             if (response.status === 200) {
                 alert('Login completato con successo');
-                console.log(response.data);
                 const username = response.data.username;
                 logged(username);
             } else {
@@ -186,17 +175,13 @@ function sendDataLog(requestBody){
 function logged(username){
     sessionStorage.setItem('username', username);
     window.location.href = 'landing_page.html';
-
-
 }
 
 /**
- * funzione per settare  il login in ogni pagina
+ * funzione per settare il login in ogni pagina
  */
 function initLogin(){
-
     if (sessionStorage.getItem('username') !== null) {
-
         const user_icon= document.getElementById('user_icon');
         const user_popup=document.getElementById('user_popup');
         document.getElementById('doLogin').style.display = 'none';
@@ -217,7 +202,6 @@ function initLogin(){
             }
 
         });
-
 
     } else {
         document.getElementById('doLogin').addEventListener('click', () => {

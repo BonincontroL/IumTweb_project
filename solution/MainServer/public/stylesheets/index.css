@@ -223,7 +223,7 @@ header ul li ul li a{
 
 .login-btn{
     font-family: var(--fontfamily);
-    font-size: clamp(14px, 2vw, var(--h5-size));
+    font-size: clamp(14px, 2vw, var(--h6-size));
     cursor: pointer;
     border: 0;
     padding: var(--padding-10px);
@@ -1443,6 +1443,13 @@ tbody > tr:hover{
     justify-content: flex-start;
     padding: var(--padding-10px);
     box-sizing: border-box;
+}
+.user-popup-item:hover{
+    background-color: var(--primary-blue-900-active);
+    cursor: pointer;
+}
+.user-popup-item:hover > h6{
+    font-weight: bold;
 }
 .user-popup-item-icon{
     position: relative;
