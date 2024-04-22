@@ -11,12 +11,8 @@ router.get('/getMatchEvents', function (req,res){
                 game_id:req.query.game_id
             }})
         .then(data=>{
-            if (data.status === 200) {
-                res.send(data.data);
-            }else{
-                res.status(data.status).send(data.data);
-            }
+            res.status(data.status).send(data.data);
         }).catch(err=>{
-        res.status(err.status).send(err)
+            res.status(err.response.status).send(err)
     })
 })

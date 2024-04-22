@@ -10,13 +10,9 @@ router.get('/searchByCompetitionAndSeason', function (req,res){
         }
     })
         .then(data=>{
-            if (data.status === 200) {
-                res.send(data.data);
-            }else{
-                res.status(data.status).send(data.data);
-            }
+            res.status(data.status).send(data.data)
         }).catch(err=>{
-        res.status(500).send(err)
+        res.status(err.response.status).send(err)
     });
 })
 router.get('/getLastSeason', function (req,res){
@@ -24,13 +20,9 @@ router.get('/getLastSeason', function (req,res){
             club_id: +req.query.club_id,
         }
     }).then(data=>{
-        if (data.status === 200) {
-            res.send(data.data);
-        }else{
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data)
     }).catch(err=>{
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     });
 })
 

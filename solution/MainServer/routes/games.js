@@ -10,13 +10,9 @@ const SPRING_SERVER = "http://localhost:8081";
 router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getLastMatchesByCompetition/" + req.params.competitionId)
         .then(data => {
-            if (data.status === 200) {
-                res.send(data.data);
-            } else {
-                res.status(data.status).send(data.data);
-            }
+            res.status(data.status).send(data.data);
         }).catch(err => {
-        res.status(err.status).send(err)
+            res.status(err.response.status).send(err)
     })
 })
 
@@ -31,13 +27,9 @@ router.get('/getRoundNumbers', function (req, res) {
             season: req.query.season
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data.map(item=>item.round));
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 
@@ -53,13 +45,9 @@ router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
             currentRound: req.query.currentRound
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 router.get('/getRefreeAndStadium', function (req, res) {
@@ -68,13 +56,9 @@ router.get('/getRefreeAndStadium', function (req, res) {
             game_id: req.query.game_id
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 
@@ -87,14 +71,10 @@ router.get('/getLastManager', function (req, res) {
             club_id: req.query.club_id
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
         //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 /**
@@ -106,14 +86,10 @@ router.get('/getLast5GamesByClubId', function (req, res) {
             club_id: req.query.club_id
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
         //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 router.get('/getTableByCompSeasonAndType', function (req, res) {
@@ -125,14 +101,9 @@ router.get('/getTableByCompSeasonAndType', function (req, res) {
             round: req.query.round
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 
@@ -145,8 +116,7 @@ router.get('/getCompetitionIdsWithGroup', function (req, res) {
         .then(data => {
             res.send(data.data)
         }).catch(err => {
-        //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 
@@ -157,14 +127,9 @@ router.get('/getClubsDividedByGroups', function (req, res) {
             season: req.query.season
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 router.get('/getCompetitionSeasonsSorted', function (req, res) {
@@ -173,14 +138,9 @@ router.get('/getCompetitionSeasonsSorted', function (req, res) {
             competition_id: req.query.competition_id,
         }
     }).then(data => {
-        if (data.status === 200) {
-            res.send(data.data);
-        } else {
-            res.status(data.status).send(data.data);
-        }
+        res.status(data.status).send(data.data);
     }).catch(err => {
-        //throw new Error(err)
-        res.status(err.status).send(err)
+        res.status(err.response.status).send(err)
     })
 })
 module.exports = router;

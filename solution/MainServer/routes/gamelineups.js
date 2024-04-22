@@ -10,13 +10,9 @@ const SPRING_SERVER="http://localhost:8081";
 router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
     axios.get(EXPRESS_SERVER+"/gamelineups/getPlayerNumberByIdPlayer/"+req.params.idPlayer)
         .then(data=>{
-            if (data.status === 200) {
-                res.send(data.data);
-            }else{
-                res.status(data.status).send(data.data);
-            }
+            res.status(data.status).send(data.data);
         }).catch(err=>{
-        res.status(err.status).send(err)
+            res.status(err.response.status).send(err)
     })
 })
 
@@ -27,13 +23,9 @@ router.get('/getMatchPlayers', function (req,res){
             away_club_id: req.query.away_club_id
         }})
         .then(data=>{
-            if (data.status === 200) {
-                res.send(data.data);
-            }else{
-                res.status(data.status).send(data.data);
-            }
+            res.status(data.status).send(data.data);
         }).catch(err=>{
-        res.status(err.status).send(err)
+            res.status(err.status).send(err)
     })
 })
 
