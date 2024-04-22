@@ -519,9 +519,7 @@ header ul li ul li a{
 
 /****************************************/
 
-
-
-
+.date-days-button ,
 .date-days-picker{
     display: flex;
     align-items: center;
@@ -537,7 +535,11 @@ header ul li ul li a{
     flex-direction: row;
     gap: var(--gap-3xs);
 }
-
+.date-days-button-active{
+    background-color: var(--primary-blue-900);
+    color: var(--white);
+    border: 2px solid var(--white)
+}
 .date-days-picker > option{
     font-family: var(--fontfamily);
     font-size: var(--p-size)

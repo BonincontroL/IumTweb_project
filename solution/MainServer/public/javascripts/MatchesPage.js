@@ -45,7 +45,7 @@ function attachSelectEventHandlers() {
  */
 function handleSelectChange() {
     const competitionId = document.getElementById('competition-select').value;
-    const dayOfWeek = document.querySelector('.date-days-picker-active')?.textContent || 'Sunday';
+    const dayOfWeek = document.querySelector('.date-days-button-active')?.textContent || 'Sunday';
 
     fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek);
 }
@@ -134,10 +134,10 @@ function createDayButtons() {
     daysOfWeek.forEach(day => {
         const button = document.createElement('button');
         button.textContent = day;
-        button.className = 'date-days-picker';
+        button.className = 'date-days-button';
         button.addEventListener('click', function () {
-            document.querySelectorAll('.date-days-picker').forEach(btn => btn.classList.remove('date-days-picker-active'));
-            button.classList.add('date-days-picker-active');
+            document.querySelectorAll('.date-days-button').forEach(btn => btn.classList.remove('date-days-button-active'));
+            button.classList.add('date-days-button-active');
             const competitionId = document.getElementById('competition-select').value;
 
             fetchMatchesByCompetitionAndDay(competitionId, day);
@@ -306,7 +306,7 @@ function triggerDefaultCompetitionLoad(defaultCompetitionId, defaultDay) {
     const selectElement = document.getElementById('competition-select');
     selectElement.value = defaultCompetitionId;
 
-    const defaultDayButton = Array.from(document.querySelectorAll('.date-days-picker')).find(btn => btn.textContent === defaultDay);
+    const defaultDayButton = Array.from(document.querySelectorAll('.date-days-button')).find(btn => btn.textContent === defaultDay);
     defaultDayButton?.click();
 }
 
