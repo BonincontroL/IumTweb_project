@@ -70,14 +70,7 @@ function getRoundNumbers(comp_id,season){
                 _id: 0
             }
         }
-    ]).then(data=>{
-        if(!data || data.length ===0)
-            throw new Error("Errore durante il recupero dei nomi dei round")
-        else
-            return data
-    }).catch(err=>{
-        throw new Error("Errore durante il recupero dei nomi dei round"+err.message)
-    })
+    ])
 }
 
 function getTableByCompSeasonAndType(comp_id,season,type,round){

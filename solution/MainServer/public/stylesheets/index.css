@@ -4,7 +4,6 @@ p{
     margin:0;
 }
 html, body{
-    height: 100%;
     margin:0;
 }
 h1{
@@ -436,9 +435,11 @@ header ul li ul li a{
     align-items: center;
     justify-content: center;
 }
-/*.matches-header{
-    overflow: hidden;
+
+.matches-header{
     display: flex;
+    position: sticky;
+    top: 8vh;
     flex-direction: row;
     box-sizing: border-box;
     background-color: var(--primary-blue-50);
@@ -446,28 +447,11 @@ header ul li ul li a{
     align-items: center;
     justify-content: space-between;
     padding: var(--padding-10px) var(--padding-10px);
-    top: 0;
     gap: var(--gap-xl);
     text-align: center;
     color: var(--black);
     width: 100%;
-}*/
-
-.matches-header{
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    background-color: var(--primary-blue-50);
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: flex-start;
-    padding: var(--padding-10px) var(--padding-10px);
-    top: 0;
-    gap: var(--gap-xl);
-    text-align: center;
-    color: var(--black);
-    width: 100%;
+    z-index: 98;
 }
 
 
@@ -660,6 +644,7 @@ header ul li ul li a{
 .filter-container{
     position: absolute;
     top: 18vh;
+    left: 10px;
     text-align: left;
     background-color: var(--primary-blue-900);
     color:var(--white);
@@ -671,6 +656,7 @@ header ul li ul li a{
     box-sizing: border-box;
     display: none;
     z-index: 999;
+    border-radius:var(--br-8px)
 }
 .selected-filters{
     overflow: hidden;
@@ -749,14 +735,15 @@ header ul li ul li a{
     border-radius: var(--br-12px);
     padding: var(--padding-8xs);
     box-sizing: border-box;
+    background-color: var(--white);
+    color: var(--black);
+
 }
 .filter-button-reject{
-    background-color: var(--color-lose);
-    color: var(--white);
+    border: 3px solid var(--color-lose);
 }
 .filter-button-accept{
-    background-color: var(--color-win);
-    color: var(--black);
+    border: 3px solid var(--color-win);
 }
 .slogan {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font particolare */
@@ -2371,19 +2358,18 @@ tbody > tr:hover{
 }
 
 .player-role-description {
-    height: 91px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     padding: 0 var(--padding-20px);
     box-sizing: border-box;
-    gap: var(--gap-11xl);
+    gap: var(--gap-xl);
     max-width: 100%;
 }
 .player-role-image{
-    height: 91px;
-    width: 102px;
+    height: clamp(50px,5vw,100px);
+    min-width: clamp(50px,5vw,100px);
     position: relative;
     object-fit: cover;
 }
@@ -2910,16 +2896,16 @@ tbody > tr:hover{
     position: sticky;
     display: flex;
     align-self: stretch;
-    width: auto;
-    height: auto;
+    width: 100%;
     gap: var(--gap-3xs);
     align-items: center;
     justify-content: center;
     padding: var(--padding-10px);
     box-sizing: border-box;
     flex-shrink: 0;
-    overflow: hidden;
     flex-direction: row;
+    top:8vh;
+    z-index: 98;
 }
 .search-button{
     display: flex;
@@ -2941,7 +2927,7 @@ tbody > tr:hover{
 .search-button-input[type="text"]{
     border: 0;
     background-color: transparent;
-    font-size: var(--h6-size);
+    font-size: clamp(14px, 1.5vw, var(--h6-size));
     color: var(--white);
     width: 100%;
 

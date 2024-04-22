@@ -43,9 +43,12 @@ router.get('/getRoundNumbers',async (req,res)=>{
         const comp_id = req.query.comp_id;
         const season = +req.query.season;
         const lastRounds = await GamesController.getRoundNumbers(comp_id,season)
-        res.status(200).json(lastRounds.map(item=>item.round))
+        if(lastRounds.length===0)
+            res.status(204).json([])
+        else
+            res.status(200).json(lastRounds.map(item=>item.round))
     }catch (error){
-        console.error('Errore durante il recupero delle giornate della competizione'+req.query.comp_id+' durante la stagione '+req.query.season)
+        console.error('Errore durante il recupero delle giornate della competizione '+req.query.comp_id+' durante la stagione '+req.query.season)
         res.status(500).json({error:error})
     }
 })
