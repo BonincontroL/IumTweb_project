@@ -4,6 +4,8 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001";
 const SPRING_SERVER="http://localhost:8081";
 
+const {handleAxiosError} = require('./utils/utils');
+
 /**
  * Get player number by player id
  */
@@ -12,7 +14,7 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -25,7 +27,7 @@ router.get('/getMatchPlayers', function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 

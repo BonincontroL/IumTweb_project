@@ -1,28 +1,32 @@
 var express = require('express');
-let axios=require('axios')
+let axios = require('axios')
 var router = express.Router();
-const SPRING_SERVER="http://localhost:8081"
+const SPRING_SERVER = "http://localhost:8081"
 
-router.get('/searchByCompetitionAndSeason', function (req,res){
-    axios.get(SPRING_SERVER + "/clubs/searchByCompetitionAndSeason",{params:{
+const {handleAxiosError} = require('./utils/utils');
+
+router.get('/searchByCompetitionAndSeason', function (req, res) {
+    axios.get(SPRING_SERVER + "/clubs/searchByCompetitionAndSeason", {
+        params: {
             competition_id: req.query.competition_id,
-            season:req.query.season
+            season: req.query.season
         }
     })
-        .then(data=>{
+        .then(data => {
             res.status(data.status).send(data.data)
-        }).catch(err=>{
-        res.status(err.response.status).send(err)
+        }).catch(err => {
+        handleAxiosError(err, res)
     });
 })
-router.get('/getLastSeason', function (req,res){
-    axios.get(SPRING_SERVER + "/clubs/getLastSeason",{params:{
+router.get('/getLastSeason', function (req, res) {
+    axios.get(SPRING_SERVER + "/clubs/getLastSeason", {
+        params: {
             club_id: +req.query.club_id,
         }
-    }).then(data=>{
+    }).then(data => {
         res.status(data.status).send(data.data)
-    }).catch(err=>{
-        res.status(err.response.status).send(err)
+    }).catch(err => {
+        handleAxiosError(err, res)
     });
 })
 
@@ -30,19 +34,18 @@ router.get('/getLastSeason', function (req,res){
  * get al SpringServer per tutte le squadre suddivise per il carattere iniziale
  */
 router.get('/getAllClubsByInitial', function (req, res) {
-    axios.get(SPRING_SERVER+"/clubs/getAllClubsByInitial")
+    axios.get(SPRING_SERVER + "/clubs/getAllClubsByInitial")
         .then(response => {
             if (response.status === 200) {
                 res.send(response.data);
-            }else{
+            } else {
                 res.status(response.status).send(response.data);
             }
-        }).catch(error => {
-        res.status(error.status).send(error)
+        }).catch(err => {
+        handleAxiosError(err, res)
     });
 });
 
 
-
-module.exports= router
+module.exports = router
 

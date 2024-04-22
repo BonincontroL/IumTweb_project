@@ -4,6 +4,8 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001";
 const SPRING_SERVER="http://localhost:8081";
 
+const {handleAxiosError} = require('./utils/utils');
+
 /**
  * Get player by competitionID
  */
@@ -12,7 +14,7 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
         })
 })
 
@@ -24,7 +26,7 @@ router.get('/getPlayersByCompetitionAndLastSeason/:competition_id/:last_season',
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
         })
 })
 
@@ -40,7 +42,7 @@ router.get("/getPlayersImgUrlById", function (req,res){
     }).then(data=>{
         res.status(data.status).send(data.data);
     }).catch(err=>{
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -56,7 +58,7 @@ router.get("/searchByClubIdAndSeason", function (req,res){
     }).then(data=>{
         res.status(data.status).send(data.data);
     }).catch(err=>{
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -68,7 +70,7 @@ router.get("/getAllPlayers", function (req,res){
         .then(data=>{
                 res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
         })
 })
 router.get("/getTop50PlayersByMarketValue", function (req,res){
@@ -76,7 +78,7 @@ router.get("/getTop50PlayersByMarketValue", function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -85,7 +87,7 @@ router.get("/getTop150PlayersByMarketValue", function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
         })
 })
 
@@ -98,7 +100,7 @@ router.get("/findPlayersByLetterInName", function (req,res){
     }).then(data=>{
         res.status(data.status).send(data.data);
     }).catch(err=>{
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -108,7 +110,7 @@ router.get("/getPlayerById/:playerId", function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 

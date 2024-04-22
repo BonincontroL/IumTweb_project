@@ -4,6 +4,8 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001"
 const SPRING_SERVER="http://localhost:8081"
 
+const {handleAxiosError} = require('./utils/utils');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.redirect('landing_page.html');
@@ -22,7 +24,7 @@ router.get('/getCompetitionInformation', function (req,res){
           }
       })
       .catch(err=>{
-          res.status(err.status).send(err)
+          handleAxiosError(err, res)
       })
 })
 

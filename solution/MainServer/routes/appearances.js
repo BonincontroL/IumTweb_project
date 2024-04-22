@@ -4,7 +4,7 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001"
 const SPRING_SERVER="http://localhost:8081"
 
-
+const { handleAxiosError } = require('./utils/utils');
 
 /**
  * ritorna le statistiche del giocatore (cartellini gialli, rossi, goal e assist totali).
@@ -20,8 +20,7 @@ router.get("/getPlayerStatistics/:playerId", function (req, res) {
         })
         .catch(err => {
             console.error('Errore durante il recupero delle statistiche del giocatore', err);
-            res.status(err.status).send(err)
-
+            handleAxiosError(err,res)
         });
 });
 

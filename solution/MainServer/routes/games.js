@@ -4,6 +4,8 @@ var router = express.Router();
 const EXPRESS_SERVER = "http://localhost:3001";
 const SPRING_SERVER = "http://localhost:8081";
 
+
+const {handleAxiosError} = require('./utils/utils');
 /**
  * Get last matches (games) by competition id
  */
@@ -12,7 +14,7 @@ router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
         .then(data => {
             res.status(data.status).send(data.data);
         }).catch(err => {
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -29,7 +31,7 @@ router.get('/getRoundNumbers', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -47,7 +49,7 @@ router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 router.get('/getRefreeAndStadium', function (req, res) {
@@ -58,7 +60,7 @@ router.get('/getRefreeAndStadium', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -74,7 +76,7 @@ router.get('/getLastManager', function (req, res) {
         res.status(data.status).send(data.data);
     }).catch(err => {
         //throw new Error(err)
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 /**
@@ -89,7 +91,7 @@ router.get('/getLast5GamesByClubId', function (req, res) {
         res.status(data.status).send(data.data);
     }).catch(err => {
         //throw new Error(err)
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 router.get('/getTableByCompSeasonAndType', function (req, res) {
@@ -103,7 +105,7 @@ router.get('/getTableByCompSeasonAndType', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -116,7 +118,7 @@ router.get('/getCompetitionIdsWithGroup', function (req, res) {
         .then(data => {
             res.send(data.data)
         }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 
@@ -129,7 +131,7 @@ router.get('/getClubsDividedByGroups', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 router.get('/getCompetitionSeasonsSorted', function (req, res) {
@@ -140,7 +142,7 @@ router.get('/getCompetitionSeasonsSorted', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
 module.exports = router;

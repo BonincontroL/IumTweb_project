@@ -4,6 +4,8 @@ var router = express.Router();
 const EXPRESS_SERVER="http://localhost:3001"
 const SPRING_SERVER="http://localhost:8081"
 
+const {handleAxiosError} = require('./utils/utils');
+
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
@@ -17,11 +19,7 @@ router.post('/register', function (req, res) {
             res.status(response.status).send(response.data);
         })
         .catch(err => {
-            if (err.response) {
-                res.status(err.response.status).send(err.response.data);
-            } else {
-                res.status(500).send({ message: 'Errore di connessione al server di registrazione' });
-            }
+            handleAxiosError(err, res)
         });
 });
 
@@ -40,11 +38,7 @@ router.post('/login', function (req, res) {
             }
         })
         .catch(err => {
-            if (err.response) {
-                res.status(err.response.status).send(err.response.data);
-            } else {
-                res.status(500).send({ message: 'Errore di connessione al server di autenticazione' });
-            }
+            handleAxiosError(err, res)
         });
 });
 

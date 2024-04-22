@@ -5,6 +5,8 @@ const EXPRESS_SERVER="http://localhost:3001"
 
 module.exports=router
 
+const {handleAxiosError} = require('./utils/utils');
+
 router.get('/getMatchEvents', function (req,res){
     axios.get(EXPRESS_SERVER+"/gameevents/getMatchEvents",
         {params:{
@@ -13,6 +15,6 @@ router.get('/getMatchEvents', function (req,res){
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
-            res.status(err.response.status).send(err)
+        handleAxiosError(err, res)
     })
 })
