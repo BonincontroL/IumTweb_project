@@ -1,12 +1,10 @@
 package it.iumtweb.springserver.Players;
 
+import it.iumtweb.springserver.Clubs.Clubs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,5 +53,9 @@ public class PlayersService {
 
     public List<Players> findPlayersByLetterInName(String letter) {
         return playersRepository.findByNameContainingIgnoreCase(letter);
+    }
+
+    public Optional<Players> findById(Long playerId) {
+        return playersRepository.findById(playerId);
     }
 }

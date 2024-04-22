@@ -1,11 +1,13 @@
 package it.iumtweb.springserver.Players;
 
+import it.iumtweb.springserver.Clubs.Clubs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/players")
@@ -116,5 +118,17 @@ public class PlayersController {
         } else {
             return ResponseEntity.ok().body(players);
         }
+    }
+
+
+    /**
+     *
+     * @param playerId to find a player
+     * @return an object with  player information
+     */
+    @GetMapping("/getPlayerById")
+    public ResponseEntity<Players> getById(@RequestParam(name = "player_id") Long playerId) {
+        Optional<Players> result = playersService.findById(playerId);
+        return result.map(club -> ResponseEntity.ok().body(result.get())).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
