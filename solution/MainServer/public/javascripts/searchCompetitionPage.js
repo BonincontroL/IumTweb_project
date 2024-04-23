@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('search-competitions').addEventListener('input',(e)=>
         debouncedSearch(e.target.value)
     );
+    
     const debouncedSearch = _.debounce(function (searchText){
         axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
             params:{name:searchText}

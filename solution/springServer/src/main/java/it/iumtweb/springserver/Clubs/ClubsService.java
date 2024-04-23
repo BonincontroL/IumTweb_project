@@ -34,6 +34,15 @@ public class ClubsService {
         return clubs.stream().collect(Collectors.groupingBy(club -> Character.toUpperCase(club.getName().charAt(0))));
     }
 
+    public Map<Character, List<Clubs>> getClubsGroupedByInitialAndLikeName(String nameSubstr) {
+        List<Clubs> filteredClubs = clubsRepository.findAll().stream()
+                .filter(club -> club.getName().toLowerCase().contains(nameSubstr.toLowerCase()))
+                .collect(Collectors.toList());
+
+        return filteredClubs.stream()
+                .collect(Collectors.groupingBy(club -> Character.toUpperCase(club.getName().charAt(0))));
+    }
+
     public String getLastSeason(Long clubId) {
         return clubsRepository.getLastSeason(clubId);
     }

@@ -75,6 +75,16 @@ public class ClubsController {
         }
     }
 
+    @GetMapping("/getClubsGroupedByInitialAndLikeName/{name}")
+    public ResponseEntity<Map<Character, List<Clubs>>> getClubsGroupedByInitialAndLikeName(@PathVariable("name") String nameSubstr) {
+        Map<Character, List<Clubs>> result = clubsService.getClubsGroupedByInitialAndLikeName(nameSubstr);
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
+    }
+
     @GetMapping("/getLastSeason")
     public ResponseEntity<Map<String,Integer>> getLastSeason(@RequestParam(name="club_id") Long clubId){
         Map<String,Integer> map = new HashMap<>();
