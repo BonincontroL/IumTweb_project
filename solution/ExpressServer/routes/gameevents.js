@@ -10,7 +10,12 @@ router.get('/getTopScorer', async (req, res, next) => {
     const season = +req.query.season;
     gameeventsController.getTopScorer(comp_id,season)
         .then(data=>{
-            res.status(200).json(data);
+            //res.status(200).json(data);
+            if(!isDataEmpty(data)){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({error: 'Nessun top scorer trovato'});
+            }
         })
         .catch(err=>{
             console.error('Errore durante il recupero dei caponannonieri:', err);
@@ -22,7 +27,12 @@ router.get('/getMatchEvents', async (req, res) => {
     const gameId=+req.query.game_id;
     gameeventsController.getMatchEvents(gameId)
         .then(data=>{
-            res.status(200).json(data);
+           // res.status(200).json(data);
+            if(!isDataEmpty(data)){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({error: 'Nessun match evento trovato'});
+            }
         })
         .catch(err=>{
             console.error('Errore durante il recupero di tutti gli eventi:', err);
