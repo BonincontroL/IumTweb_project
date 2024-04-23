@@ -1050,8 +1050,80 @@
           }
         }
       }
+    },
+    "/player_valuations/getPlayerValuationPerYear/{idPlayer}": {
+      "get": {
+        "tags": ["Player Valuations"],
+        "summary": "Get  player valuation per year",
+        "description": "Retrieves the valuation of a player for each year in which the player has been valued, based on the player's ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idPlayer",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the player.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns average market values per year for the player.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "year": {
+                        "type": "integer",
+                        "description": "Year of the valuation."
+                      },
+                      "averageMarketValue": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Average market value of the player in EUR for the year."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
     }
-  },
+
+    },
+
+
+
+
+
   "components": {
     "schemas": {
       "Competition": {
