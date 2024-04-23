@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const cors = require('cors');
 router.use(cors());
-
+const { isDataEmpty } = require('./utils/utils');
 const userController = require("../controllers/users.js")
 
 /**

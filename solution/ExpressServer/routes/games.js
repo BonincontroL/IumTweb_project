@@ -8,7 +8,7 @@ router.use(cors());
  * Importa il controller per i games
  */
 const GamesController = require("../controllers/games")
-
+const { isDataEmpty } = require('./utils/utils');
 /**
  * GET http://localhost:3001/games/getAllGames
  *

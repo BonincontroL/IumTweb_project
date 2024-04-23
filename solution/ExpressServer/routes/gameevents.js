@@ -4,7 +4,7 @@ var router = express.Router();
 const cors = require('cors');
 router.use(cors());
 const gameeventsController = require("../controllers/gameevents")
-
+const { isDataEmpty } = require('./utils/utils');
 router.get('/getTopScorer', async (req, res, next) => {
     const comp_id=req.query.comp_id;
     const season = +req.query.season;
