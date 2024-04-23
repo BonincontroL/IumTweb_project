@@ -52,7 +52,7 @@ public class PlayersService {
     }
 
     public List<Players> findPlayersByLetterInName(String letter) {
-        return playersRepository.findByNameOrSurname(letter+'%');
+        return playersRepository.findByNameOrSurname(letter);
     }
     public List<String> findAllCountryOfCitizenship(){ return playersRepository.findAllCountryOfCitizenship();}
     public List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions(){ return playersRepository.findAllDomesticCompetitions();}

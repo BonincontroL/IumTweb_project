@@ -274,29 +274,10 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
         `;
         container.appendChild(roundDiv);
     });
-    manageGameContainers()
+    let matchesCard=document.querySelectorAll('.game-information')
+    setMatchesCardEventListener(matchesCard)
 }
-function manageGameContainers(){
-    let gameContainers= document.querySelectorAll('.game-information')
-    gameContainers.forEach(game=>{
-        game.addEventListener('click',()=>{
-            let gameInfo={
-                competitionId:game.getAttribute('data-competitionid'),
-                gameId: game.getAttribute('data-gameid'),
-                homeClubId: game.getAttribute('data-homeclubid'),
-                awayClubId:game.getAttribute('data-awayclubid'),
-                homeClubName: game.getAttribute('data-homeclubname'),
-                awayClubName:game.getAttribute('data-awayclubname'),
-                aggregate:game.getAttribute('data-aggregate'),
-                date:game.getAttribute('data-date'),
-                round:game.getAttribute('data-round'),
-                season:game.getAttribute('data-season')
-            }
-            sessionStorage.setItem('gameInfo',JSON.stringify(gameInfo))
-            window.location.href='../competition_page.html?isFromMatchesPage=true'
-        })
-    })
-}
+
 /**
  * Imposta la competizione predefinita e il giorno predefinito
  * @param defaultCompetitionId
@@ -325,7 +306,4 @@ function formatDate(dateString) {
     });
 }
 
-module.exports={
-    manageGameContainers
-}
 

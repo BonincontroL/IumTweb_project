@@ -247,13 +247,13 @@ function getTopPlayers(){
     let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${lastSeason}`
     axios.get(url)
         .then(res=>{
-            renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
+            if(res.data.length!==0)
+                renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
         })
         .catch(err=>{
             alert(err)
         })
 }
-
 function renderTopPlayers(players){
     let playersContainer= document.getElementById('playersTopMarketValueContainer')
     playersContainer.innerHTML=''

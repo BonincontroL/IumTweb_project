@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     getMatchInformation(matchInfo.gameId)
     getMatchFormation(matchIds)
     getMatchEvents(matchIds,matchInfo.aggregate)
-
     initLogin();
 })
 function renderBannerInfo(){
