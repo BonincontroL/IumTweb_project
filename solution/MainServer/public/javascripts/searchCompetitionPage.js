@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     );
     
     const debouncedSearch = _.debounce(function (searchText){
+        if(!searchText){
+            return;
+        }
         axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
             params:{name:searchText}
         }).then(async res => {
