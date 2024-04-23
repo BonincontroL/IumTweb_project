@@ -711,6 +711,15 @@ header ul li ul li a{
     align-items: center;
     box-sizing: border-box;
 }
+.option-competition-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: row;
+    gap: var(--gap-8xs);
+}
 .filter-buttons{
     overflow: hidden;
     display: flex;

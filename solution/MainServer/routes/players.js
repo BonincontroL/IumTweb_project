@@ -114,10 +114,21 @@ router.get("/getPlayerById/:playerId", function (req,res){
     })
 })
 
-
-
-
-
-
+router.get("/getAllDomesticCompetitions", function (req,res){
+    axios.get(SPRING_SERVER+`/players/getAllDomesticCompetitions`)
+        .then(data=>{
+            res.status(data.status).send(data.data);
+        }).catch(err=>{
+        handleAxiosError(err, res)
+    })
+})
+router.get("/getAllCountryOfCitizenship", function (req,res){
+    axios.get(SPRING_SERVER+`/players/getAllCountryOfCitizenship`)
+        .then(data=>{
+            res.status(data.status).send(data.data);
+        }).catch(err=>{
+        handleAxiosError(err, res)
+    })
+})
 module.exports = router;
 

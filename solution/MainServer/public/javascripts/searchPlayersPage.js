@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         manageFilterButton()
         getAndRenderNationalities()
+        getAndRenderDomesticCompetitions()
         initLogin();
         fetchAndCategorizePlayers();
         const searchInput = document.getElementById('search-players');
@@ -13,14 +14,49 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error during initialization:', error);
     }
 });
+function getAndRenderDomesticCompetitions(){
+    let url="http://localhost:3000/players/getAllDomesticCompetitions"
+    axios.get(url)
+        .then(res=>{
+            renderCompetitionsDropdown(res.data)
+        })
+        .catch(err=>{
+            alert(err)
+        })
+}
 function getAndRenderNationalities(){
-    let url=""
+    let url="http://localhost:3000/players/getAllCountryOfCitizenship"
+    axios.get(url)
+        .then(res=>{
+            renderNationalitiesDropdown(res.data)
+        })
+        .catch(err=>{
+            alert(err)
+        })
+}
+
+function renderCompetitionsDropdown(competitions){
+    let selectCompetition = document.getElementById('playerCompetitions')
+    competitions.forEach(competition=>{
+        let option= document.createElement('option')
+        option.value=competition.id;
+        option.text=competition.name;
+        selectCompetition.appendChild(option)
+    })
+}
+function renderNationalitiesDropdown(nationalities){
+    let optionContainer= document.getElementById('playerNationalities')
+    nationalities.forEach(nation=>{
+        let newOption= document.createElement('option')
+        newOption.value= newOption.text= nation
+        optionContainer.appendChild(newOption)
+    })
 }
 function manageFilterButton(){
     let filterButton= document.getElementById('filterButton')
     let filterContainer= document.getElementById('filterContainer')
     document.addEventListener('click',function (event){
-        if(filterButton.contains(event.target))
+        if(filterContainer.contains(event.target) || filterButton.contains(event.target))
             filterContainer.style.display='flex'
         else
             filterContainer.style.display='none'

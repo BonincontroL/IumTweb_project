@@ -752,6 +752,77 @@
         }
       }
     },
+    "/players/getAllDomesticCompetitions": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get information about domestic competition",
+        "description": "Retrives all the current domestic competition basic info(id and name) that are in the Players table, sorted alphabetically by name.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful - A list of small competition object with two fields: id and name."
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+    "/players/getAllCountryOfCitizenship": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get all the nationalities",
+        "description": "Retrives all the country of citizenship that are in the Players table, sorted alphabetically.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful - A list of string that are all the nationalities (Without null)."
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          }
+        }
+      }
+    },
+
     "/players/getTop150PlayersByMarketValue": {
       "get": {
         "tags": ["Players"],
