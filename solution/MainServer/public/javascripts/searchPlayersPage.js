@@ -1,10 +1,13 @@
 /**
  * Funzione per inizializzare la pagina di ricerca dei giocatori.
  */
+const DOMESTIC_COMPETITION_ROUTE = "/getAllDomesticCompetitions"
+const POSITIONS_ROUTE="/getSubPositionsGroupedByPosition"
+const NATIONALITIES_ROUTE="/getAllCountryOfCitizenship"
 let filteredCompetition=null, filteredNation=null, filteredRole=null
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        manageFilterButton()
+        manageFilterPopup() //gestisce la comparsa e scomparsa del popup dei filtri
         manageDropdownFilters()
         manageApplyAndResetButtons()
         initLogin();
@@ -15,23 +18,32 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error during initialization:', error);
     }
 });
+
+/**
+ * execute different get to server to obtain the dropdown menu values
+ * and then call the render of the different dropdown menus
+ */
 function manageDropdownFilters(){
     Promise.all([
-        getDomesticCompetitions(),
-        getNationalities()
+        getDropdownValues(DOMESTIC_COMPETITION_ROUTE),
+        getDropdownValues(NATIONALITIES_ROUTE),
+        getDropdownValues(POSITIONS_ROUTE)
     ]).then(res=>{
         renderCompetitionsDropdown(res[0].data)
         renderNationalitiesDropdown(res[1].data)
+        renderPositionsDropdown(res[2].data)
     }).catch(err=>{
-            alert(err)
-        })
+        alert(err)
+    })
 }
-function getDomesticCompetitions(){
-    let url="http://localhost:3000/players/getAllDomesticCompetitions"
-    return axios.get(url)
-}
-function getNationalities(){
-    let url="http://localhost:3000/players/getAllCountryOfCitizenship"
+
+/**
+ * generic function that get dropdown values
+ * @param route the specific route in players api
+ * @returns {*}
+ */
+function getDropdownValues(route){
+    let url= "http://localhost:3000/players"+route
     return axios.get(url)
 }
 function manageApplyAndResetButtons(){
@@ -39,13 +51,22 @@ function manageApplyAndResetButtons(){
     let resetFilterBtn= document.getElementById('resetFilters')
     let errorLabel=document.getElementById('errorLabel')
     applyFilterBtn.addEventListener('click',()=>{
-        if(filteredCompetition===null && filteredNation ===null)
+        if(filteredCompetition===null && filteredNation ===null && filteredRole ===null)
             errorLabel.style.display='block'
         else{
             errorLabel.style.display='none'
             doFilteredSearch()
         }
     })
+    resetFilterBtn.addEventListener('click',()=>{
+        filteredRole=filteredNation=filteredCompetition=null;
+        resetDropdownMenus() //resettiamo tutti i dropdown
+    })
+}
+function resetDropdownMenus(){
+    document.getElementById('playerRoles').selectedIndex=0;
+    document.getElementById('playerNationalities').selectedIndex=0;
+    document.getElementById('playerCompetitions').selectedIndex=0;
 }
 function doFilteredSearch(){
     axios.get("http://localhost:3000/players/getByCompIdNationalityAndRole",{
@@ -61,6 +82,8 @@ function doFilteredSearch(){
             displayPlayersByRole(categorizedPlayers);
         }else
             alert("Nessun giocatore trovato con i seguenti filtri, riprova!")
+    }).catch(err=>{
+        alert(err)
     })
 }
 function renderCompetitionsDropdown(competitions){
@@ -86,7 +109,24 @@ function renderNationalitiesDropdown(nationalities){
         filteredNation=this.value;
     })
 }
-function manageFilterButton(){
+function renderPositionsDropdown(positions){
+    const optionContainer = document.getElementById('playerRoles')
+    Object.keys(positions).forEach(position=>{
+        const optionGroup=document.createElement('optgroup')
+        optionGroup.label=position
+
+        positions[position].forEach(subPosition=>{
+            const option =document.createElement('option')
+            option.value=option.textContent=subPosition
+            optionGroup.appendChild(option)
+        })
+        optionContainer.appendChild(optionGroup)
+    })
+    optionContainer.addEventListener('change',function (){
+        filteredRole=this.value
+    })
+}
+function manageFilterPopup(){
     let filterButton= document.getElementById('filterButton')
     let filterContainer= document.getElementById('filterContainer')
     document.addEventListener('click',function (event){
