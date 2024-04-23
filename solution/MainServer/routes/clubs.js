@@ -1,7 +1,8 @@
 var express = require('express');
 let axios = require('axios')
 var router = express.Router();
-const SPRING_SERVER = "http://localhost:8081"
+
+const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 
 const {handleAxiosError} = require('./utils/utils');
 
