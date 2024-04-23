@@ -130,5 +130,27 @@ router.get("/getAllCountryOfCitizenship", function (req,res){
         handleAxiosError(err, res)
     })
 })
+router.get("/getSubPositionsGroupedByPosition", function (req,res){
+    axios.get(SPRING_SERVER+`/players/getSubPositionsGroupedByPosition`)
+        .then(data=>{
+            res.status(data.status).send(data.data);
+        }).catch(err=>{
+        handleAxiosError(err, res)
+    })
+})
+router.get("/getByCompIdNationalityAndRole", function (req,res){
+    axios.get(SPRING_SERVER+`/players/getByCompIdNationalityAndRole`,{
+        params:{
+            competitionId:req.query.competitionId,
+            nation:req.query.nation,
+            specificRole:req.query.specificRole
+        }
+    })
+        .then(data=>{
+            res.status(data.status).send(data.data);
+        }).catch(err=>{
+        handleAxiosError(err, res)
+    })
+})
 module.exports = router;
 

@@ -63,4 +63,14 @@ public class PlayersService {
         Specification<Players> filters =PlayerSpecification.buildSpecification(competitionId,nationality,specificRole);
         return playersRepository.findAll(filters);
     }
+    public Map<String,List<String>> findSubPositionsGroupedByPosition(){
+        List<Object[]> positionsCouple=  playersRepository.findAllPositions();
+        Map<String,List<String>> result=new HashMap<>();
+        for(Object[] positionCouple: positionsCouple){
+            String position= (String) positionCouple[0];
+            String subPosition= (String) positionCouple[1];
+            result.computeIfAbsent(position,k-> new ArrayList<>()).add(subPosition);
+        }
+        return result;
+    }
 }

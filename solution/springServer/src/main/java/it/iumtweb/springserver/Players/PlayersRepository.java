@@ -34,5 +34,6 @@ public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpec
     @Query(value="select distinct new it.iumtweb.springserver.Players.PlayerDomesticCompetitionDTO(p.currentClubDomesticCompetitionId,c.name) from Players p JOIN Competitions c on (p.currentClubDomesticCompetitionId = c.competitionId) order by c.name asc")
     List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions();
 
-    List<Players> findByCurrentClubDomesticCompetitionIdAndCountryOfCitizenshipAndSubPosition(String currentClubDomesticCompetitionId, String countryOfCitizenship, String subPosition);
+    @Query(value = "select distinct p.position, p.subPosition from Players p where p.position is not null and p.subPosition is not null")
+    List<Object[]> findAllPositions();
 }
