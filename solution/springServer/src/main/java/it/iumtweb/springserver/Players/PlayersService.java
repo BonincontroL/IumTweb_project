@@ -1,6 +1,7 @@
 package it.iumtweb.springserver.Players;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -57,5 +58,9 @@ public class PlayersService {
     public List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions(){ return playersRepository.findAllDomesticCompetitions();}
     public Optional<Players> findById(Long playerId) {
         return playersRepository.findById(playerId);
+    }
+    public List<Players> findByCompIdNationalityAndRole(String competitionId, String nationality, String specificRole){
+        Specification<Players> filters =PlayerSpecification.buildSpecification(competitionId,nationality,specificRole);
+        return playersRepository.findAll(filters);
     }
 }

@@ -711,6 +711,10 @@ header ul li ul li a{
     align-items: center;
     box-sizing: border-box;
 }
+#errorLabel{
+    color: var(--color-lose);
+    display: none;
+}
 .option-competition-container{
     display: flex;
     justify-content: center;

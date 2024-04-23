@@ -2,6 +2,7 @@ package it.iumtweb.springserver.Players;
 
 import it.iumtweb.springserver.Clubs.Clubs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -147,5 +148,14 @@ public class PlayersController {
             return ResponseEntity.noContent().build();
         else
             return ResponseEntity.ok().body(countries);
+    }
+
+    @GetMapping("/getByCompIdNationalityAndRole")
+    public ResponseEntity<List<Players>> getByCompIdNationalityAndRole(@RequestParam(required = false,name="competitionId") String competitionId, @RequestParam(required = false,name="nation") String nation, @RequestParam(required = false, name="specificRole") String specificRole){
+        List<Players> filteredPlayers = playersService.findByCompIdNationalityAndRole(competitionId,nation,specificRole);
+        if(filteredPlayers.isEmpty())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok().body(filteredPlayers);
     }
 }

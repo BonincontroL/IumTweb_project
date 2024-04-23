@@ -1,15 +1,13 @@
 package it.iumtweb.springserver.Players;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.Objects;
-
 
 @Repository
-public interface PlayersRepository extends JpaRepository<Players, Long>{
+public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpecificationExecutor<Players> {
     List<Players> findPlayersByCurrentClubIdAndLastSeason(Long currentClubId, Integer lastSeason);
     List<Players> findByCurrentClubDomesticCompetitionId(String competitionId);
 
@@ -35,4 +33,6 @@ public interface PlayersRepository extends JpaRepository<Players, Long>{
 
     @Query(value="select distinct new it.iumtweb.springserver.Players.PlayerDomesticCompetitionDTO(p.currentClubDomesticCompetitionId,c.name) from Players p JOIN Competitions c on (p.currentClubDomesticCompetitionId = c.competitionId) order by c.name asc")
     List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions();
+
+    List<Players> findByCurrentClubDomesticCompetitionIdAndCountryOfCitizenshipAndSubPosition(String currentClubDomesticCompetitionId, String countryOfCitizenship, String subPosition);
 }

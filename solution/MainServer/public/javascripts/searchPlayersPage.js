@@ -1,11 +1,12 @@
 /**
  * Funzione per inizializzare la pagina di ricerca dei giocatori.
  */
+let filteredCompetition=null, filteredNation=null, filteredRole=null
 document.addEventListener('DOMContentLoaded', () => {
     try {
         manageFilterButton()
-        getAndRenderNationalities()
-        getAndRenderDomesticCompetitions()
+        manageDropdownFilters()
+        manageApplyAndResetButtons()
         initLogin();
         fetchAndCategorizePlayers();
         const searchInput = document.getElementById('search-players');
@@ -14,27 +15,54 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error during initialization:', error);
     }
 });
-function getAndRenderDomesticCompetitions(){
+function manageDropdownFilters(){
+    Promise.all([
+        getDomesticCompetitions(),
+        getNationalities()
+    ]).then(res=>{
+        renderCompetitionsDropdown(res[0].data)
+        renderNationalitiesDropdown(res[1].data)
+    }).catch(err=>{
+            alert(err)
+        })
+}
+function getDomesticCompetitions(){
     let url="http://localhost:3000/players/getAllDomesticCompetitions"
-    axios.get(url)
-        .then(res=>{
-            renderCompetitionsDropdown(res.data)
-        })
-        .catch(err=>{
-            alert(err)
-        })
+    return axios.get(url)
 }
-function getAndRenderNationalities(){
+function getNationalities(){
     let url="http://localhost:3000/players/getAllCountryOfCitizenship"
-    axios.get(url)
-        .then(res=>{
-            renderNationalitiesDropdown(res.data)
-        })
-        .catch(err=>{
-            alert(err)
-        })
+    return axios.get(url)
 }
-
+function manageApplyAndResetButtons(){
+    let applyFilterBtn = document.getElementById('doFilteredSearch')
+    let resetFilterBtn= document.getElementById('resetFilters')
+    let errorLabel=document.getElementById('errorLabel')
+    applyFilterBtn.addEventListener('click',()=>{
+        if(filteredCompetition===null && filteredNation ===null)
+            errorLabel.style.display='block'
+        else{
+            errorLabel.style.display='none'
+            doFilteredSearch()
+        }
+    })
+}
+function doFilteredSearch(){
+    axios.get("http://localhost:3000/players/getByCompIdNationalityAndRole",{
+        params: {
+            competitionId:filteredCompetition,
+            nation:filteredNation,
+            specificRole:filteredRole
+        }
+    }).then(res=>{
+        let players=res.data
+        if(players.length!==0) {
+            let categorizedPlayers = categorizePlayersByRole(res.data)
+            displayPlayersByRole(categorizedPlayers);
+        }else
+            alert("Nessun giocatore trovato con i seguenti filtri, riprova!")
+    })
+}
 function renderCompetitionsDropdown(competitions){
     let selectCompetition = document.getElementById('playerCompetitions')
     competitions.forEach(competition=>{
@@ -43,6 +71,9 @@ function renderCompetitionsDropdown(competitions){
         option.text=competition.name;
         selectCompetition.appendChild(option)
     })
+    selectCompetition.addEventListener('change',function (){
+        filteredCompetition=this.value;
+    })
 }
 function renderNationalitiesDropdown(nationalities){
     let optionContainer= document.getElementById('playerNationalities')
@@ -50,6 +81,9 @@ function renderNationalitiesDropdown(nationalities){
         let newOption= document.createElement('option')
         newOption.value= newOption.text= nation
         optionContainer.appendChild(newOption)
+    })
+    optionContainer.addEventListener('change',function (){
+        filteredNation=this.value;
     })
 }
 function manageFilterButton(){
