@@ -992,7 +992,7 @@ header ul li ul li a{
     box-sizing: border-box;
 }
 #match-details-formation{
-    display: flex; /*inizialmente non deve essere mostrato*/
+    display: none; /*inizialmente non deve essere mostrato*/
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;

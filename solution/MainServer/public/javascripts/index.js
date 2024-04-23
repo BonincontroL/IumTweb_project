@@ -76,3 +76,20 @@ function setPlayersEventListener(playerCards){
         })
     })
 }
+function setMatchesCardEventListener(matchCards){
+    matchCards.forEach(match=>{
+        match.addEventListener('click',()=>{
+            let matchInfo ={
+                gameId:match.getAttribute('data-gameid'),
+                homeClubId:match.getAttribute('data-homeclubid'),
+                awayClubId:match.getAttribute('data-awayclubid'),
+                homeClubName:match.getAttribute('data-homeclubname'),
+                awayClubName:match.getAttribute('data-awayclubname'),
+                aggregate:match.getAttribute('data-aggregate'),
+                date:match.getAttribute('data-date')
+            }
+            sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
+            window.location.href='../match_page.html'
+        })
+    })
+}
