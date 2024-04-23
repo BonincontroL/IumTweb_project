@@ -6,7 +6,7 @@ router.use(cors());
 
 
 const gamelineupsController = require("../controllers/gamelineups")
-
+const { isDataEmpty } = require('./utils/utils');
 
 
 /**
@@ -18,7 +18,12 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
     try {
         const { idPlayer } = req.params;
         const playerNumber = await gamelineupsController.getPlayerNumberByIdPlayer(idPlayer);
-        res.status(200).json({ playerNumber });
+        if(!isDataEmpty(playerNumber)){
+            res.status(200).json(playerNumber);
+        }else{
+            res.status(404).json({error: 'Nessun player Number trovato'});
+        }
+        //res.status(200).json({ playerNumber });
     } catch (error) {
         console.error('Errore durante il recupero del numero del giocatore:', error);
         res.status(500).json({ error: 'Errore durante il recupero del numero del giocatore' });
@@ -38,7 +43,12 @@ router.get('/getMatchPlayers', async(req,res)=>{
         const home_club_id = +req.query.home_club_id
         const away_club_id = +req.query.away_club_id
         const allPlayers = await gamelineupsController.getMatchPlayers(game_id,home_club_id,away_club_id)
-        res.status(200).json(allPlayers)
+        //res.status(200).json(allPlayers)
+        if(!isDataEmpty(allPlayers)){
+            res.status(200).json(allPlayers);
+        }else{
+            res.status(404).json({error: 'Nessun match player trovato'});
+        }
     }catch (error){
         res.status(500).json({error:error})
     }
