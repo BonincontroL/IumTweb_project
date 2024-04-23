@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/playerValuations")
+@RequestMapping("/player_valuations")
 public class PlayerValuationsController {
 
     private final PlayerValuationsService playerValuationsService;

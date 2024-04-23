@@ -12,6 +12,7 @@ var gamesRouter = require('./routes/games');
 var clubsRouter = require('./routes/clubs');
 var gameeventsRouter = require('./routes/gameevents');
 var appearancesRouter = require('./routes/appearances');
+var playervaluationsRouter = require('./routes/player_valuations');
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use('/players', playersRouter);
 app.use('/games', gamesRouter);
 app.use('/clubs', clubsRouter);
 app.use('/gameevents', gameeventsRouter);
+app.use('/player_valuations', playervaluationsRouter)
 
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/swaggerDocumentation.json');

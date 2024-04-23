@@ -2,6 +2,7 @@ let lateralPlayerButtons, playerInfoBtn
 const playerPageName= 'player-page'
 let playerId;
 let isStatsLoaded = false;
+let isValutationLoaded = false;
 
 document.addEventListener('DOMContentLoaded',()=> {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
@@ -27,10 +28,17 @@ document.addEventListener('DOMContentLoaded',()=> {
     document.getElementById('playerInformation').style.display = "flex"
     document.getElementById('player-statistic-btn').addEventListener('click', () => {
         if(!isStatsLoaded){
-            getPlayerStatistics()
-            isStatsLoaded = true
+            getPlayerStatistics();
+            isStatsLoaded = true;
         }
-    })
+    });
+    document.getElementById('player-valuation-btn').addEventListener('click', () => {
+        if (!isValutationLoaded) {
+            getPlayerValutation();
+            isValutationLoaded = true;
+           }
+    });
+
 
 
 
@@ -145,6 +153,61 @@ function getPlayerStatistics() {
     }
 
 
+/**
+ * get al server con parametro playerId per ottenere le valutazioni del giocatore per ogni anno medie.
+ * restituisce un array di oggetti con la seguente struttura: [[year: number, market_value media: number]]
+ */
+function getPlayerValutation() {
+        axios.get(`http://localhost:3000/player_valuations/getPlayerValuationPerYear/${playerId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    renderPlayerValuations(response.data)
+                } else {
+                    renderPlayerValuations([])
+                }
+            })
+            .catch(error => {
+                console.error(`Error not found statistics for player ${playerId}:`, error);
+            })
+    }
+
+/**
+ * funzione che scrive le valutazioni del giocatore nella pagina.
+ * @param playerValuations tutte le valutazioni del giocatore medie per ogni anno
+ */
+function renderPlayerValuations(playerValuations) {
+    var titleElement = document.getElementById('title_valuation');
+    if (playerValuations.length === 0) {
+        document.getElementById('playerValuation').innerText = "No data available";
+        titleElement.innerText = "Valutazione";
+    } else {
+        var minYear = Infinity;
+        var maxYear = -Infinity;
+        var tableBody = document.querySelector('.table-valutation tbody');
+        tableBody.innerHTML = '';
+
+        playerValuations.forEach(function(valuation) {
+            var year = valuation[0];
+            if (year < minYear) minYear = year;
+            if (year > maxYear) maxYear = year;
+
+            var row = document.createElement('tr');
+            var yearCell = document.createElement('td');
+            yearCell.textContent = year;
+            row.appendChild(yearCell);
+            var valuationCell = document.createElement('td');
+            valuationCell.textContent = valuation[1].toLocaleString() + ' €';
+            row.appendChild(valuationCell);
+            tableBody.appendChild(row);
+        });
+
+        if (minYear < Infinity && maxYear > -Infinity) {
+            titleElement.innerText = `Valutazione (Da ${minYear} a ${maxYear})`;
+        } else {
+            titleElement.innerText = "Valutazione";
+        }
+    }
+}
 
 
 

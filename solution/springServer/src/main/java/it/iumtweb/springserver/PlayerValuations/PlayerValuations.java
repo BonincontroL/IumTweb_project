@@ -1,6 +1,7 @@
 package it.iumtweb.springserver.PlayerValuations;
 
 import jakarta.persistence.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
 
