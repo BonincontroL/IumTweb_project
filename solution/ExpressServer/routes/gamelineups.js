@@ -19,7 +19,7 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
         const { idPlayer } = req.params;
         const playerNumber = await gamelineupsController.getPlayerNumberByIdPlayer(idPlayer);
         if(!isDataEmpty(playerNumber)){
-            res.status(200).json(playerNumber);
+            res.status(200).json({playerNumber});
         }else{
             res.status(404).json({error: 'Nessun player Number trovato'});
         }
