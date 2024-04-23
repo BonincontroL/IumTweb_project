@@ -2,6 +2,23 @@
 document.addEventListener('DOMContentLoaded',()=>{
     initLogin();
     getAllClubsByInitial();
+    document.getElementById('search-clubs').addEventListener('input',(e)=>
+        debouncedSearch(e.target.value)
+    );
+    const debouncedSearch = _.debounce(function (searchText){
+        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName/"+ searchText)
+
+         .then(async res => {
+            if (res.data.length !== 0 ) {
+                await renderClubsGroupedByInitial(res.data)
+            }
+        }).catch(err=> {
+            alert(JSON.stringify(err))
+        })
+
+    },200)
+
+
 });
 
 /**
