@@ -131,4 +131,21 @@ public class PlayersController {
         Optional<Players> result = playersService.findById(player_id);
         return result.map(club -> ResponseEntity.ok().body(result.get())).orElseGet(() -> ResponseEntity.noContent().build());
     }
+    @GetMapping("/getAllCountryOfCitizenship")
+    public ResponseEntity<List<String>> getAllCountryOfCitizenship(){
+        List<String> countries = playersService.findAllCountryOfCitizenship();
+        if(countries.isEmpty())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok().body(countries);
+    }
+
+    @GetMapping("/getAllDomesticCompetitions")
+    public ResponseEntity<List<PlayerDomesticCompetitionDTO>> getAllDomesticCompetitionIdsAndName(){
+        List<PlayerDomesticCompetitionDTO> countries = playersService.findAllDomesticCompetitions();
+        if(countries.isEmpty())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok().body(countries);
+    }
 }

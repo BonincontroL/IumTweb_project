@@ -4,6 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     try {
         manageFilterButton()
+        getAndRenderNationalities()
         initLogin();
         fetchAndCategorizePlayers();
         const searchInput = document.getElementById('search-players');
@@ -12,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error during initialization:', error);
     }
 });
+function getAndRenderNationalities(){
+    let url=""
+}
 function manageFilterButton(){
     let filterButton= document.getElementById('filterButton')
     let filterContainer= document.getElementById('filterContainer')

@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Repository
@@ -26,5 +27,12 @@ public interface PlayersRepository extends JpaRepository<Players, Long>{
     @Query(value="SELECT * FROM Players p where p.current_club_domestic_competition_id = :competitionId AND p.last_season=:lastSeason ORDER BY CASE WHEN p.market_value_in_eur IS NULL THEN 1 ELSE 0 END, p.market_value_in_eur DESC LIMIT 50", nativeQuery = true)
     List<Players> findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(String competitionId, Integer lastSeason);
 
-    List<Players> findByNameContainingIgnoreCase(String letter);
+    @Query(value="SELECT p from Players p where lower(p.firstName) LIKE lower(:searchTerm) OR lower(p.lastName) LIKE lower(:searchTerm)")
+    List<Players> findByNameOrSurname(String searchTerm);
+
+    @Query(value="select distinct p.countryOfCitizenship from Players p where p.countryOfCitizenship is not null ORDER BY p.countryOfCitizenship ASC")
+    List<String> findAllCountryOfCitizenship();
+
+    @Query(value="select distinct new it.iumtweb.springserver.Players.PlayerDomesticCompetitionDTO(p.currentClubDomesticCompetitionId,c.name) from Players p JOIN Competitions c on (p.currentClubDomesticCompetitionId = c.competitionId) order by c.name asc")
+    List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions();
 }
