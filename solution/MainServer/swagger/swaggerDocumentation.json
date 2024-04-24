@@ -1235,10 +1235,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1302,10 +1302,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1378,10 +1378,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1433,10 +1433,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1488,10 +1488,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1546,10 +1546,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1613,10 +1613,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
@@ -1671,10 +1671,10 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found - No player number found for the specified player ID."
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
