@@ -375,7 +375,7 @@ function getCompetitionSeasonsSorted(competition_id){
         },
         {
             $sort:{
-                _id:1
+                _id:-1
             }
         },
         {

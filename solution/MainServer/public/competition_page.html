@@ -218,10 +218,17 @@
                 <div class="table-navbar">
                     <!--il menu a tendina verrà completato dinamicamente in base al numero delle giornate
                     che una competizione ha (ad esempio, se una competizione ha 20 squadre, allora durante l'anno ha 38 giornate di partite-->
-                    <div class="dropdown-menu-season-wrapper">
-                        <h6><label for="competitionSelectMatchday">Giornata</label></h6>
-                        <select id="competitionSelectMatchday" class="date-days-picker">
-                        </select>
+                    <div class="dropdown-group">
+                        <div class="dropdown-menu-season-wrapper">
+                            <h6><label for="matchesSeasonSelector">Stagione</label></h6>
+                            <select id="matchesSeasonSelector" class="date-days-picker">
+                            </select>
+                        </div>
+                        <div class="dropdown-menu-season-wrapper">
+                            <h6><label for="competitionSelectMatchday">Giornata</label></h6>
+                            <select id="competitionSelectMatchday" class="date-days-picker">
+                            </select>
+                        </div>
                     </div>
                     <div class="left-right-arrows-wrapper">
                         <i id="loadPrevMatchday" class='bx bx-chevrons-left'></i>
@@ -265,91 +272,101 @@
         <div class="main-container" id="competitionSquads">
         </div>
         <div class="main-container" id="competitionKnockout">
-            <div class="matches-knockout-group">
-                <div class="matches-knockout-group-header">
-                    <h3>Finale</h3>
+            <div class="table-navbar">
+                <h5>Fase a eliminazione diretta</h5>
+                <div class="dropdown-menu-season-wrapper">
+                    <h6><label for="knockoutSeasonSelector">Stagione</label></h6>
+                    <select id="knockoutSeasonSelector" class="date-days-picker">
+                    </select>
                 </div>
-                <div class="matches-knockout-group-container">
-                    <div class="game-information">
-                        <div class="match-result-vertical">
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/roma.webp"
-                                />
+            </div>
+            <div class="knockout-body" id="knockoutBody">
+                <div class="matches-knockout-group">
+                    <div class="matches-knockout-group-header">
+                        <h3>Finale</h3>
+                    </div>
+                    <div class="matches-knockout-group-container">
+                        <div class="game-information">
+                            <div class="match-result-vertical">
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/roma.webp"
+                                    />
 
-                                <p>Roma
-                                <p>
-                                <div class="home-result">
-                                    <p>2</p>
+                                    <p>Roma
+                                    <p>
+                                    <div class="home-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/salernitana.webp"
-                                />
-                                <p>Salernitana</p>
-                                <div class="away-result">
-                                    <p>2</p>
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/salernitana.webp"
+                                    />
+                                    <p>Salernitana</p>
+                                    <div class="away-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="game-information">
-                        <div class="match-result-vertical">
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/roma.webp"
-                                />
+                        <div class="game-information">
+                            <div class="match-result-vertical">
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/roma.webp"
+                                    />
 
-                                <p>Roma
-                                <p>
-                                <div class="home-result">
-                                    <p>2</p>
+                                    <p>Roma
+                                    <p>
+                                    <div class="home-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/salernitana.webp"
-                                />
-                                <p>Salernitana</p>
-                                <div class="away-result">
-                                    <p>2</p>
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/salernitana.webp"
+                                    />
+                                    <p>Salernitana</p>
+                                    <div class="away-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="game-information">
-                        <div class="match-result-vertical">
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/roma.webp"
-                                />
+                        <div class="game-information">
+                            <div class="match-result-vertical">
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/roma.webp"
+                                    />
 
-                                <p>Roma
-                                <p>
-                                <div class="home-result">
-                                    <p>2</p>
+                                    <p>Roma
+                                    <p>
+                                    <div class="home-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="squad-icon-container">
-                                <img
-                                        class="squad-icon"
-                                        alt=""
-                                        src="images/salernitana.webp"
-                                />
-                                <p>Salernitana</p>
-                                <div class="away-result">
-                                    <p>2</p>
+                                <div class="squad-icon-container">
+                                    <img
+                                            class="squad-icon"
+                                            alt=""
+                                            src="images/salernitana.webp"
+                                    />
+                                    <p>Salernitana</p>
+                                    <div class="away-result">
+                                        <p>2</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -89,10 +89,10 @@ function renderGoalsRow(){
  */
 function renderGoalsColumn(columnContainer,goalEvents){
     goalEvents = goalEvents.reduce((acc,goal)=>{
-        if(!acc[goal.player_name]){
-            acc[goal.player_name]=[]
+        if(!acc[goal.player]){
+            acc[goal.player]=[]
         }
-        acc[goal.player_name].push(goal)
+        acc[goal.player].push(goal)
         return acc
     },{})
     Object.keys(goalEvents).forEach(player=>{
@@ -130,23 +130,27 @@ function renderEvent(event,homeClubId,awayClubId){
     let eventLogo = document.createElement('img')
     eventLogo.className='game-event-icon'
     let minutesContainer= document.createElement('p')
-    minutesContainer.innerText=event.minute
+    minutesContainer.innerText=event.minute+'°'
     let containers=[eventLogo,minutesContainer]
     switch (event.type){
         case 'Substitutions': {
             eventLogo.setAttribute('src', 'images/gameeventsLogos/substitution-icon.svg');
             let playerInContainer= document.createElement('h6')
-            playerInContainer.innerHTML=`Entra: <b>${event.player_in_id}</b>`//bisogna trovare il modo per ottenere il nome del giocatore
+            playerInContainer.innerHTML=`Entra: <b>${event.substitute}</b>`//bisogna trovare il modo per ottenere il nome del giocatore
             let playerOutContainer = document.createElement('h6')
-            playerOutContainer.innerHTML= `Esce: <b>${event.player_name}</b>`
+            playerOutContainer.innerHTML= `Esce: <b>${event.player}</b>`
             containers.push(playerInContainer,playerOutContainer)
             break
         }case 'Goals':
-            if(event.description.search('Penalty')!==-1)
-                eventLogo.setAttribute('src','images/gameeventsLogos/penaltyScored-icon.svg');
-            else
+            let assistPhrase='Assist:'
+            if(event.description.search('Penalty')!==-1) {
+                eventLogo.setAttribute('src', 'images/gameeventsLogos/penaltyScored-icon.svg');
+                assistPhrase='Rigore procurato da:'
+            }else if(event.description.search('Own-goal')!==-1)
+                eventLogo.setAttribute('src','images/gameeventsLogos/owngoal-icon.svg');
+            else{
                 eventLogo.setAttribute('src','images/gameeventsLogos/goal-icon.svg');
-
+            }
             let partialResultContainer = document.createElement('h6')
             partialResultContainer.innerHTML=`${currentHomeGoals}-${currentAwayGoals}`
             containers.push(partialResultContainer)
@@ -157,11 +161,11 @@ function renderEvent(event,homeClubId,awayClubId){
                 currentAwayGoals--
                 awayGoalEvents.push(event)
             }let scorerContainer= document.createElement('h6')
-            scorerContainer.innerHTML=`<b>${event.player_name}</b>`
+            scorerContainer.innerHTML=`<b>${event.player}</b>`
             containers.push(scorerContainer)
-            if(event.player_assist_id){
+            if(event.assist){
                 let assistmanContainer= document.createElement('h6')
-                assistmanContainer.innerHTML=`Assist:<b>${event.player_assist_id}</b>`
+                assistmanContainer.innerHTML=`${assistPhrase}<b>${event.assist}</b>`
                 containers.push(assistmanContainer)
             }
             break;
@@ -171,7 +175,7 @@ function renderEvent(event,homeClubId,awayClubId){
             else if(event.description.search('Yellow')!==-1) //potrebbe essere migliorato,
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/yellow-icon.svg')
             let playercardContainer= document.createElement('h6')
-            playercardContainer.innerHTML=`<b>${event.player_name}</b>`
+            playercardContainer.innerHTML=`<b>${event.player}</b>`
             containers.push(playercardContainer)
             break;
     }

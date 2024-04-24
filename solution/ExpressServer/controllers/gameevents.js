@@ -1,6 +1,7 @@
 const Model = require('../models/gameevents')
 const Games= require("../models/games")
 const GameLineups = require("../models/gamelineups")
+const Appearences= require("../models/appearances")
 function getTopScorer(comp_id, season){
     return Model.aggregate([
         {
@@ -64,17 +65,27 @@ function getMatchEvents(gameId){
         },
         {
             $lookup:{
-                from:GameLineups.collection.name,
-                let:{player_id:'$player_id', club_id:'$club_id'},
-                pipeline:[
-                    { $match: { $expr: { $and: [{ $eq: ['$player_id', '$$player_id'] }, { $eq: ['$game_id', gameId] }] } }},
-                    { $project: { player_name: 1} }
-                ],
-                as:'playerDetails'
+                from:Appearences.collection.name,
+                localField: 'player_id',
+                foreignField: 'player_id',
+                as:'player_info'
             }
         },
         {
-            $unwind:{path:'$playerDetails',preserveNullAndEmptyArrays:true}
+            $lookup:{
+                from:Appearences.collection.name,
+                localField: 'player_assist_id',
+                foreignField: 'player_id',
+                as:'assist_info'
+            }
+        },
+        {
+            $lookup:{
+                from:Appearences.collection.name,
+                localField: 'player_in_id',
+                foreignField: 'player_id',
+                as:'substitute_info'
+            }
         },
         {
             $project:{
@@ -83,15 +94,15 @@ function getMatchEvents(gameId){
                 type:1,
                 minute:1,
                 description:1,
-                player_name:'$playerDetails.player_name',
-                player_id:'$playerDetails.player_id',
-                player_assist_id:1,
-                player_in_id:1
+                player:{$arrayElemAt:['$player_info.player_name',0]},
+                assist:{$arrayElemAt:['$assist_info.player_name',0]},
+                substitute:{$arrayElemAt:['$substitute_info.player_name',0]},
             }
         },
         {
             $sort:{minute:-1}
-        }])
+        }
+        ])
 }
 module.exports={
     getTopScorer,

@@ -376,7 +376,7 @@ header ul li ul li a{
     display: flex;
     justify-content: flex-start;
     box-sizing: border-box;
-    height: 92vh;
+    min-height: 92vh;
     width: 20vw;
     background-color: var(--primary-blue-900);
     flex-shrink: 0;
@@ -856,9 +856,17 @@ header ul li ul li a{
     gap: var(--gap-xl);
     overflow-y:auto;
 }
-
+.knockout-body{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+    width: 100%;
+    gap: var(--gap-xl);
+    overflow-y:auto;
+}
 #competitionKnockout{
-    flex-direction: row;
+    flex-direction: column;
 }
 .matches-generic-container{
     flex-direction: column;
@@ -1037,6 +1045,9 @@ header ul li ul li a{
 }
 .match-details-header{
     display: flex;
+    position: sticky;
+    top: 8vh;
+    z-index: 98;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -1182,7 +1193,7 @@ header ul li ul li a{
     align-self: stretch;
     gap: var(--gap-xl);
     justify-content: center;
-    padding: var(--padding-20px) var(--padding-10px);
+    padding:  var(--padding-20px) var(--padding-10px) 0 var(--padding-20px);
 }
 .squadLogo-big{
     position: relative;
@@ -1750,12 +1761,20 @@ tbody > tr:hover{
 }
 .competition-image-wrapper{
     display: flex;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
     background-color: var(--white);
     border-radius: 50%;
     min-width: clamp(70px,7vw,120px);
     height: clamp(70px,7vw,120px);
+}
+.dropdown-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    box-sizing: border-box;
 }
 .competition-logo-wrapper {
     background-color: var(--black);
