@@ -61,6 +61,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -103,6 +106,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -156,6 +162,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -209,6 +218,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -275,6 +287,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -328,6 +343,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -370,6 +388,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -426,6 +447,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -572,6 +596,9 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
@@ -635,13 +662,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/players/getPlayersByCompetition/{competition_id}": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Get player by competition ID",
         "description": "Retrieves players based on a competition ID.",
         "servers": [
@@ -687,13 +719,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/players/getPlayersByCompetitionAndLastSeason/{competition_id}/{last_season}": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Get player by competition ID and last season",
         "description": "Retrieves players based on a competition ID and the last season.",
         "servers": [
@@ -748,13 +785,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/players/getAllDomesticCompetitions": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Get information about domestic competition",
         "description": "Retrives all the current domestic competition basic info(id and name) that are in the Players table, sorted alphabetically by name.",
         "servers": [
@@ -767,7 +809,6 @@
             "description": "SpringServer"
           }
         ],
-
         "responses": {
           "200": {
             "description": "Successful - A list of small competition object with two fields: id and name."
@@ -783,13 +824,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/players/getAllCountryOfCitizenship": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Get all the nationalities",
         "description": "Retrives all the country of citizenship that are in the Players table, sorted alphabetically.",
         "servers": [
@@ -802,7 +848,6 @@
             "description": "SpringServer"
           }
         ],
-
         "responses": {
           "200": {
             "description": "Successful - A list of string that are all the nationalities (Without null)."
@@ -818,14 +863,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
-
     "/players/getTop150PlayersByMarketValue": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Get top 150 players by market value",
         "description": "Retrieves a list of the top 150 players sorted by their market value.",
         "servers": [
@@ -860,13 +909,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/players/findPlayersByLetterInName": {
       "get": {
-        "tags": ["Players"],
+        "tags": [
+          "Players"
+        ],
         "summary": "Find players by letter in name",
         "description": "Retrieves a list of players whose names contain a specified letter.",
         "servers": [
@@ -912,13 +966,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/gamelineups/getPlayerNumberByIdPlayer/{idPlayer}": {
       "get": {
-        "tags": ["Game Lineups"],
+        "tags": [
+          "Game Lineups"
+        ],
         "summary": "Get player number by player ID",
         "description": "Retrieves the player number assigned to a player for a specific game based on the player's ID.",
         "servers": [
@@ -974,13 +1033,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/gamelineups/getMatchPlayers": {
       "get": {
-        "tags": ["Game Lineups"],
+        "tags": [
+          "Game Lineups"
+        ],
         "summary": "Retrieve players participating in a match",
         "description": "Fetches a list of all players participating in a specific match, categorized by home and away teams.",
         "servers": [
@@ -1047,13 +1111,18 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     },
     "/player_valuations/getPlayerValuationPerYear/{idPlayer}": {
       "get": {
-        "tags": ["Player Valuations"],
+        "tags": [
+          "Player Valuations"
+        ],
         "summary": "Get  player valuation per year",
         "description": "Retrieves the valuation of a player for each year in which the player has been valued, based on the player's ID.",
         "servers": [
@@ -1113,17 +1182,510 @@
           },
           "500": {
             "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getLastMatchesByCompetition/{competitionId}": {
+      "get": {
+        "tags": [
+          "Games"
+        ],
+        "summary": "Get last matches by competition ID",
+        "description": "Retrieves the last matches (games) based on the provided competition ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "competitionId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the last matches.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getRoundNumbers": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get round numbers by competition ID and season",
+        "description": "Retrieves the round numbers based on the provided competition ID and season.",
+        "parameters": [
+          {
+            "name": "comp_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season year.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the round numbers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getMatchesByCompAndSeasonAndRound": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get matches by competition, season, and round",
+        "description": "Retrieves matches (games) based on the provided competition, season, and round.",
+        "parameters": [
+          {
+            "name": "comp_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season year.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currentRound",
+            "in": "query",
+            "required": true,
+            "description": "The round of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the matches.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getRefreeAndStadium": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get referee and stadium by game ID",
+        "description": "Retrieves the referee and stadium information based on the provided game ID.",
+        "parameters": [
+          {
+            "name": "game_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the game.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the referee and stadium information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Game"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getLastManager": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get last manager by club ID",
+        "description": "Retrieves the last manager based on the provided club ID.",
+        "parameters": [
+          {
+            "name": "club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the club.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the last manager.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Game"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getLast5GamesByClubId": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get last 5 games by club ID",
+        "description": "Retrieves the last 5 games based on the provided club ID.",
+        "parameters": [
+          {
+            "name": "club_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the club.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the last 5 games.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getClubsDividedByGroups": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get clubs divided by groups",
+        "description": "Retrieves clubs divided by groups based on the provided competition ID and season.",
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season year.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns clubs divided by groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
+    "/games/getCompetitionSeasonsSorted": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get competition seasons sorted",
+        "description": "Retrieves competition seasons sorted based on the provided competition ID.",
+        "parameters": [
+          {
+            "name": "competition_id",
+            "in": "query",
+            "required": true,
+            "description": "The unique identifier of the competition.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns the sorted competition seasons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request - The request could not be understood by the server due to malformed syntax."
+          },
+          "404": {
+            "description": "Not Found - No player number found for the specified player ID."
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request."
+          },
+          "504": {
+            "description": "Gateway Timeout"
           }
         }
       }
     }
-
-    },
-
-
-
-
-
+  },
   "components": {
     "schemas": {
       "Competition": {
@@ -1306,7 +1868,11 @@
           "type": {
             "type": "string",
             "description": "Type of the lineup (starting_lineup, substitute, reserve).",
-            "enum": ["starting_lineup", "substitute", "reserve"]
+            "enum": [
+              "starting_lineup",
+              "substitute",
+              "reserve"
+            ]
           },
           "number": {
             "type": "integer",
@@ -1490,7 +2056,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "RegistrationData": {
         "type": "object",
@@ -1506,7 +2075,11 @@
             "type": "string"
           }
         },
-        "required": ["email", "password", "username"]
+        "required": [
+          "email",
+          "password",
+          "username"
+        ]
       },
       "LoginCredentials": {
         "type": "object",
@@ -1519,7 +2092,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "ClubGame": {
         "type": "object",
@@ -1563,12 +2139,18 @@
           "hosting": {
             "type": "string",
             "description": "Indicates whether the club was playing at home or away.",
-            "enum": ["Home", "Away"]
+            "enum": [
+              "Home",
+              "Away"
+            ]
           },
           "is_win": {
             "type": "integer",
             "description": "Indicates the game result from the club's perspective. 1 for win, 0 for draw or loss.",
-            "enum": [0, 1]
+            "enum": [
+              0,
+              1
+            ]
           }
         }
       },
@@ -1717,8 +2299,6 @@
           }
         }
       },
-
-
       "Error": {
         "type": "object",
         "properties": {
