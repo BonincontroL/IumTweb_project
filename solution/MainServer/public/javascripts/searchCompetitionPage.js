@@ -1,4 +1,5 @@
-const COUNTRY_NAME_INTERNATIONAL="Resto del mondo"
+const COUNTRY_NAME_INTERNATIONAL="Internazionale"
+const FLAG_NOT_FETCHABLE =["Scotland","England"]
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
     document.getElementById('search-competitions').addEventListener('input',(e)=>
@@ -47,48 +48,59 @@ async function renderCompetitionsGroupedByCountry(competitions) {
     mainContainer.innerHTML = '';
     //itera per ogni Nazione
     for (const countryName of Object.keys(competitions)) {
-        const competitionsGroup = document.createElement('div')
-        let imgUrl
-        competitionsGroup.className = 'competitions-group'
-        if (countryName === COUNTRY_NAME_INTERNATIONAL)
-            imgUrl = "images/worldImage.jpg"
-        else {
-            try {
-                let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
-                let res = await axios.get(queryUrl)
-                imgUrl=res.data[0].flags.png
-            }catch (err){
-                imgUrl=null
-            }
-        }
-        const header = `<div class="competitions-group-header">
+        let imgUrl=await fetchFlag(countryName)
+        let competitionsGroup= renderCompetitionsGroup(competitions,imgUrl,countryName)
+        mainContainer.appendChild(competitionsGroup)
+    }
+    let competitionCards = document.querySelectorAll('.competition-card-mini')
+    setCompetitionsCardEventListener(competitionCards)
+}
+function renderCompetitionsGroup(competitions,imgUrl,countryName){
+    const competitionsGroup = document.createElement('div')
+    competitionsGroup.className = 'competitions-group'
+
+    competitionsGroup.innerHTML = `<div class="competitions-group-header">
                                 <div class="header-flag-container">
                                     <img class="nationFlag" src=${imgUrl} alt="${countryName} flag">
                                 </div>    
                                 <h2>${countryName}</h2>
                             </div>`;
-        competitionsGroup.innerHTML = header;
 
-        const competitionsContainer = document.createElement('div')
-        competitionsContainer.className = 'competitions-group-container'
+    const competitionsContainer = document.createElement('div')
+    competitionsContainer.className = 'competitions-group-container'
 
-        competitions[countryName].forEach(competition => {
-            const competitionCard = document.createElement('div')
-            competitionCard.className = 'competition-card-mini'
-            competitionCard.setAttribute('data-competitionId', competition.competitionId)
-            competitionCard.setAttribute('data-competitionName', competition.name)
-            competitionCard.setAttribute('data-competitionType', competition.type)
-
-            const cardContainer = `
+    competitions[countryName].forEach(competition => {
+        competitionsContainer.appendChild(renderCompetitionCard(competition))
+    })
+    competitionsGroup.appendChild(competitionsContainer)
+    return competitionsGroup
+}
+function renderCompetitionCard(competition){
+    const competitionCard = document.createElement('div')
+    competitionCard.className = 'competition-card-mini'
+    competitionCard.setAttribute('data-competitionId', competition.competitionId)
+    competitionCard.setAttribute('data-competitionName', competition.name)
+    competitionCard.setAttribute('data-competitionType', competition.type)
+    competitionCard.innerHTML = `
                     <img class="competition-big-logo" src="${competitionLogoImgUrl}${competition.competitionId.toLowerCase()}.png">
                     <h3>${competition.name}</h3>
-            `;
-            competitionCard.innerHTML = cardContainer
-            competitionsContainer.appendChild(competitionCard)
-        })
-        competitionsGroup.appendChild(competitionsContainer)
-        mainContainer.appendChild(competitionsGroup)
+            `
+    return competitionCard
+}
+async function fetchFlag(countryName){
+    let imgUrl ="images/defaultFlag.svg"
+
+    if (countryName === COUNTRY_NAME_INTERNATIONAL)
+        imgUrl = "images/worldImage.jpg" //immagine ad hoc nel caso degli internazionali
+    else if(!FLAG_NOT_FETCHABLE.includes(countryName)){
+        try {
+            let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
+            let res = await axios.get(queryUrl)
+            imgUrl=res.data[0].flags.png
+        }catch (err){
+            alert(err)
+            imgUrl=null
+        }
     }
-    let competitionCards = document.querySelectorAll('.competition-card-mini')
-    setCompetitionsCardEventListener(competitionCards)
+    return imgUrl
 }

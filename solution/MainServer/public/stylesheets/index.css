@@ -3,9 +3,10 @@ p{
     font-size:  clamp(12px, 1.5vw, var(--p-size));
     margin:0;
 }
+
 html, body{
     margin:0;
-    height: 100%;
+    height: auto;
 }
 body{
     position: relative;
@@ -1551,7 +1552,7 @@ tbody > tr:hover{
     justify-content: flex-start;
     padding: var(--padding-10px) var(--padding-10px);
     gap: 15px;
-    width: 25vw;
+    min-width: 25vw;
     min-height: 12vh;
 }
 .stats-container-and-icon{

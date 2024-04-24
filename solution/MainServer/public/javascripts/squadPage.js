@@ -4,6 +4,7 @@ let clubInfo
 const MAIN_SERVER="http://localhost:3000"
 import {getTable,renderTableRow} from './competitionPage.js'
 document.addEventListener('DOMContentLoaded',init)
+let isTableLoaded=false, isPlayersLoaded
 function init(){
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
@@ -43,27 +44,36 @@ function init(){
     document.getElementById('squadInformation').style.display="flex"
 
     document.getElementById('squad-table-btn').addEventListener('click',()=>{
-        Promise.all([
-            getTable( clubInfo.competition.competitionId, clubInfo.lastSeason,"full"),
-            getLast5Games()
-        ]).then(res=>{
-            renderMiniTable(res[0].data)
-            renderLast5Games(res[1].data)
-        }).catch(err=>{
-            alert(err)
-        })
+        if(!isTableLoaded){
+            getTableAndLastMatches()
+        }
     })
     document.getElementById('squad-players-btn').addEventListener('click',()=>{
-        getClubPlayers()
-            .then(res=>{
-                let playerCardList=renderClubPlayers(res.data)
-                setPlayersEventListener(playerCardList)
-            })
-            .catch(err=>{
-                alert(err)
-            })
+        if(!isPlayersLoaded) {
+            getClubPlayers()
+                .then(res => {
+                    let playerCardList = renderClubPlayers(res.data)
+                    setPlayersEventListener(playerCardList)
+                    isPlayersLoaded=true
+                })
+                .catch(err => {
+                    alert(err)
+                })
+        }
     })
     initLogin();
+}
+function getTableAndLastMatches(){
+    Promise.all([
+        getTable( clubInfo.competition.competitionId, clubInfo.lastSeason,"full"),
+        getLast5Games()
+    ]).then(res=>{
+        renderMiniTable(res[0].data)
+        renderLast5Games(res[1].data)
+        isTableLoaded=true
+    }).catch(err=>{
+        alert(err)
+    })
 }
 function getCompetitionName(){
     let url="http://localhost:3000/competitions/getName"
