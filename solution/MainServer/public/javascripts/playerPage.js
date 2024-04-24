@@ -10,11 +10,10 @@ document.addEventListener('DOMContentLoaded',()=> {
 
     Promise.all([
         getPlayerInfo(),
-        getPlayerNumber()
+        getPlayerNumber(),
     ]).then(res=>{
         renderPlayerInfo(res[0].data,res[1].data.playerNumber)
     })
-
 
     renderPlayerImg(playerInfo)
 
@@ -99,11 +98,11 @@ function getPlayerStatistics() {
  * @param playerInfo tutte le informazioni del player
  * @param playerNumber numero della maglia del giocatore
  */
-    function renderPlayerInfo(playerInfo,playerNumber) {
+    function renderPlayerInfo(playerInfo,playerNumber,flagUrl) {
         let oggi = new Date();
         let compleanno = new Date(playerInfo.dateOfBirth);
         let eta = oggi.getFullYear() - compleanno.getFullYear();
-        document.getElementById('nazionality').innerText = playerInfo.countryOfCitizenship;
+        document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
         document.getElementById('player_height').innerText = playerInfo.heightInCm;
         document.getElementById('squad_player').innerText = playerInfo.currentClubName;
         document.getElementById('age_player').innerText = eta;

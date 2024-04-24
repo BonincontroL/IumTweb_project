@@ -25,7 +25,7 @@ public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpec
     @Query(value="SELECT * FROM Players p where p.current_club_domestic_competition_id = :competitionId AND p.last_season=:lastSeason ORDER BY CASE WHEN p.market_value_in_eur IS NULL THEN 1 ELSE 0 END, p.market_value_in_eur DESC LIMIT 50", nativeQuery = true)
     List<Players> findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(String competitionId, Integer lastSeason);
 
-    @Query(value="SELECT p from Players p where lower(p.name) LIKE concat(lower(:searchTerm),'%') OR lower(p.name) LIKE concat('%',lower(:searchTerm))")
+    @Query(value="SELECT p from Players p where lower(p.name) LIKE concat(lower(:searchTerm),'%') OR lower(p.lastName) LIKE concat(lower(:searchTerm),'%')")
     List<Players> findByNameOrSurname(String searchTerm);
 
     @Query(value="select distinct p.countryOfCitizenship from Players p where p.countryOfCitizenship is not null ORDER BY p.countryOfCitizenship ASC")

@@ -173,6 +173,48 @@
             </div>
         </div>
         <div class="main-container" id="squadLastMatches">
+            <div class="table-navbar">
+                <!--il menu a tendina verrà completato dinamicamente in base alle competizioni
+                che la squadra gioca
+                -->
+                <div class="dropdown-menu-season-wrapper">
+                    <h6><label for="selectPossibleCompetition">Scegli competizione</label></h6>
+                    <select id="selectPossibleCompetition" class="date-days-picker">
+                    </select>
+                </div>
+            </div> <!--anche qui abbiamo una navbar che ci permette di scorrere le partite in base alla giornata-->
+            <!-- competitionMatchesContainer è l'elemento a cui vanno aggiunte le partite recenti della squadra-->
+            <div id="competitionMatchesContainer" class="matches-vertical-container">
+                <div class="single-horizontal-match">
+                    <h6>20 AGO 2023</h6>
+                    <div class="squad-names-and-result-container">
+                        <div class="squad-name-wrapper">
+                            <h6>ROMA</h6>
+                        </div>
+                        <img
+                                class="squadLogo"
+                                loading="lazy"
+                                alt=""
+                                src="./public/rectangle-20@2x.png"
+                        />
+
+                        <h6>2-2</h6>
+                        <img
+                                class="squadLogo"
+                                loading="lazy"
+                                alt=""
+                                src="./public/rectangle-19@2x.png"
+                        />
+
+                        <div class="squad-name-wrapper">
+                            <h6>ROMA</h6>
+                        </div>
+                    </div>
+                    <button class='btn-load-match-details'>
+                        <i class='bx bxs-right-arrow-circle'></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="main-container" id="squadPositionInLeauge">
             <div class="squadTable-container">

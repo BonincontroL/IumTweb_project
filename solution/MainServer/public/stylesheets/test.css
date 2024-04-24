@@ -1,0 +1,337 @@
+.gen-2024-1800,
+.giornata {
+    margin: 0;
+}
+.giornata-20-ago-container {
+    position: relative;
+    display: flex;
+}
+.giornata-20-ago-container:hover {
+    font-family: var(--h6);
+    font-size: var(--h4-size);
+    text-align: left;
+    color: var(--black);
+    display: flex;
+}
+.squad-info-row-child8 {
+    height: 61px;
+    width: 60px;
+    object-fit: cover;
+    min-height: 61;
+}
+.squad-info-row-child8:hover {
+    display: flex;
+    width: 60px;
+    height: 61px;
+    min-height: 61;
+}
+.roma8,
+.squad-info-row-child8 {
+    position: relative;
+    display: flex;
+}
+.roma8:hover {
+    font-family: var(--h6);
+    font-size: var(--font-size-14xl-2);
+    text-align: right;
+    color: var(--black);
+    display: flex;
+}
+.new-ball-icon,
+.new-ball-icon:hover {
+    font-weight: 500;
+    display: flex;
+    height: 35px;
+    min-width: 15;
+}
+.new-ball-icon {
+    position: relative;
+    align-items: center;
+}
+.new-ball-icon:hover {
+    font-family: var(--h6);
+    font-size: var(--h5-size);
+    text-align: right;
+    color: var(--color-limegreen);
+}
+.soccer-ball-icon1 {
+    position: relative;
+    object-fit: cover;
+}
+.soccer-ball-icon1,
+.soccer-ball-icon1:hover {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    min-height: 35;
+}
+.basic-player-icons {
+    overflow: hidden;
+}
+.basic-player-icons,
+.basic-player-icons:hover {
+    display: flex;
+    width: auto;
+    align-self: unset;
+    height: auto;
+    flex-direction: row;
+    gap: var(--gap-0);
+    align-items: center;
+    justify-content: center;
+}
+.soccer-ball-icon2 {
+    position: relative;
+    object-fit: contain;
+}
+.soccer-ball-icon2,
+.soccer-ball-icon2:hover {
+    display: flex;
+    width: 35px;
+    height: 35px;
+}
+.new-container-game,
+.new-container-game:hover {
+    font-weight: 500;
+    font-size: var(--font-size-14xl-2);
+    color: var(--black);
+    display: flex;
+    width: 16px;
+}
+.new-container-game {
+    position: relative;
+    align-items: center;
+}
+.new-container-game:hover {
+    font-family: var(--h6);
+    text-align: right;
+}
+.new-container-player-icons {
+    background-color: var(--color-white);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+    font-size: var(--h5-size);
+    color: var(--color-limegreen);
+}
+.new-container-player-icons,
+.new-container-player-icons:hover {
+    flex: 1;
+    gap: var(--gap-xl);
+    justify-content: space-between;
+    padding: var(--padding-3xs) var(--padding-3xs) var(--padding-3xs)
+    var(--padding-508xl);
+    min-width: 101;
+}
+.squad-info-row15 {
+    overflow: hidden;
+}
+.new-container-player-icons:hover,
+.squad-info-row15,
+.squad-info-row15:hover {
+    background-color: var(--color-white);
+    display: flex;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+.squad-info-row15,
+.squad-info-row15:hover {
+    align-self: stretch;
+    width: auto;
+    gap: var(--gap-3xs);
+    justify-content: flex-start;
+    padding: 0 var(--padding-mini);
+}
+.squad-info-row-child9 {
+    position: relative;
+    object-fit: cover;
+}
+.squad-info-row-child9,
+.squad-info-row-child9:hover {
+    display: flex;
+    width: 60px;
+    height: 61px;
+    min-height: 61;
+}
+.salernitana10 {
+    position: relative;
+    display: flex;
+    min-width: 105;
+}
+.salernitana10:hover {
+    font-family: var(--h6);
+    font-size: var(--font-size-14xl-2);
+    text-align: right;
+    color: var(--black);
+    display: flex;
+    min-width: 105;
+}
+.div42,
+.div42:hover {
+    font-weight: 500;
+    display: flex;
+    width: 16px;
+}
+.div42 {
+    position: relative;
+    align-items: center;
+}
+.div42:hover {
+    font-family: var(--h6);
+    font-size: var(--font-size-14xl-2);
+    text-align: right;
+    color: var(--black);
+}
+.wrapper12 {
+    flex: 1;
+    overflow: hidden;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--padding-3xs);
+    min-width: 16;
+    max-width: 100%;
+    gap: var(--gap-11xl);
+}
+.squad-info-row16,
+.wrapper12,
+.wrapper12:hover {
+    background-color: var(--color-white);
+    display: flex;
+    box-sizing: border-box;
+    height: auto;
+}
+.wrapper12:hover {
+    flex: 1;
+    flex-direction: row;
+    gap: var(--gap-11xl);
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--padding-3xs);
+    min-width: 16;
+    max-width: 100%;
+}
+.squad-info-row16 {
+    overflow: hidden;
+    justify-content: flex-start;
+    gap: var(--gap-3xs);
+}
+.squad-info-row16,
+.squad-info-row16:hover {
+    align-self: stretch;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 var(--padding-mini);
+    max-width: 100%;
+}
+.game-information8,
+.match-result-vertical8 {
+    overflow: hidden;
+    color: var(--black);
+    font-family: var(--h6);
+}
+.match-result-vertical8,
+.squad-info-row16:hover {
+    background-color: var(--color-white);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--gap-3xs);
+    height: auto;
+}
+.match-result-vertical8 {
+    border-left: 1px solid var(--color-darkgray);
+    text-align: right;
+    font-size: var(--font-size-14xl-2);
+}
+.match-result-vertical8,
+.match-result-vertical8:hover {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--padding-3xs) var(--padding-4xs);
+    min-width: 631;
+    max-width: 100%;
+}
+.game-information8 {
+    position: relative;
+    text-align: left;
+    font-size: var(--h4-size);
+}
+.game-information8,
+.game-information8:hover,
+.match-result-vertical8:hover {
+    background-color: var(--color-white);
+    display: flex;
+    height: auto;
+    gap: var(--gap-3xs);
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+.game-information8,
+.game-information8:hover {
+    width: 1260px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: var(--padding-3xs);
+    line-height: normal;
+    letter-spacing: normal;
+}
+@media screen and (max-width: 800px) {
+    .new-container-game,
+    .roma8 {
+        font-size: var(--font-size-8xl);
+    }
+    .new-container-game {
+        width: 100%;
+        height: 16px;
+    }
+    .new-container-player-icons {
+        flex-wrap: wrap;
+        padding-left: 263px;
+        box-sizing: border-box;
+    }
+    .squad-info-row15 {
+        flex-wrap: wrap;
+    }
+    .div42,
+    .salernitana10 {
+        font-size: var(--font-size-8xl);
+    }
+    .squad-info-row16 {
+        flex-wrap: wrap;
+    }
+    .match-result-vertical8 {
+        min-width: 100%;
+    }
+}
+@media screen and (max-width: 450px) {
+    .giornata-20-ago-container {
+        font-size: var(--font-size-3xl);
+    }
+    .roma8 {
+        font-size: var(--font-size-xl);
+    }
+    .new-ball-icon {
+        font-size: var(--font-size-lg);
+    }
+    .new-container-game {
+        font-size: var(--font-size-xl);
+    }
+    .new-container-player-icons {
+        padding-left: var(--padding-xl);
+        box-sizing: border-box;
+    }
+    .div42,
+    .salernitana10 {
+        font-size: var(--font-size-xl);
+    }
+}
