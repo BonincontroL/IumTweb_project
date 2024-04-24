@@ -1,10 +1,9 @@
 let lateralButtons
 const competitionPageName = 'competition-page'
-let competitionId, competitionName, competitionType,lastSeason = 2023 //la stagione corrente di default è 2023
+let competitionId, competitionName, competitionType
 let competitionSeasons=[] //array globale che rappresenta tutte le annate giocate.
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
-let currentSeason=0
 let knockoutRounds =[]
 let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 document.addEventListener('DOMContentLoaded',init)
@@ -20,18 +19,12 @@ async function init() {
     competitionInfoBtn.classList.add('active')
     hideAllMainContainers(competitionPageName)
     document.getElementById('competitionInformation').style.display = "flex"
-
-    Promise.all([
-        getCompetitionSeasons(), //ottieni gli anni in cui la competizione corrente è stata giocata
-        getCompetitionInformation()  //ottieni informazioni di base sulla competizione
-    ]).then(res => {
-        competitionSeasons = res[0].data
-        lastSeason = currentSeason =competitionSeasons[0]
-        renderCompetitionInformation(res[1].data)
-    }).catch(err => {
-        alert(err)
-    })
     try {
+        competitionSeasons= await getCompetitionSeasons() //ottieni gli anni in cui la competizione corrente è stata giocata
+        competitionSeasons=competitionSeasons.data
+        let competitionInformation = await getCompetitionInformation()  //ottieni informazioni di base sulla competizione
+        renderCompetitionInformation(competitionInformation.data)
+
         let competitionsWithGroup = await getCompetitionsWithGroup()
         if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId)) {
             isWithGroup = true
@@ -105,11 +98,16 @@ async function init() {
         if (isWithGroup)
             await getGroupTables()
         else {
-            getTable(competitionId, lastSeason, "full")//di default vogliamo la classifica completa
+            getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
                 .then(res => {
                     let tableContainer = document.getElementById('competitionTable')
                     tableContainer.innerHTML = ''
                     tableContainer.appendChild(renderGroupTable(competitionName, res.data))
+                    if(!isWithGroup) {
+                        createSeasonDropdown()
+                        renderSeasonDropdownMenu('tableSeasonSelector')
+                        addSeasonDropdownTableListener()
+                    }
                     //parte dedicata alla gestione dei bottoni della classifica
                     let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
                     manageTableBtns(tableBtns)
@@ -130,17 +128,14 @@ async function init() {
  */
 async function getGroupTables(){
     let groupTables={}
-    if(competitionSeasons.length===0){
-        competitionSeasons=await fetchAllSeasons()
-        competitionSeasons=competitionSeasons.data
-    }
+
     if(matchRounds.length===0){//se non abbiamo ancora caricato matchRounds...
         let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
         matchRounds=rounds.data.filter(round=>round.startsWith('Group'))
         knockoutRounds=rounds.data.filter(round=>!round.startsWith('Group'))
     }
     for (const group of matchRounds) {
-        let table =await getTable(competitionId,lastSeason, 'full', group)
+        let table =await getTable(competitionId,competitionSeasons[0], 'full', group)
         groupTables[group] = table.data
     }
     renderGroupTables(groupTables)
@@ -172,7 +167,8 @@ function manageTableVariants(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
             let group= isWithGroup ? button.getAttribute('data-group'):null
-            getTable(competitionId,lastSeason,button.getAttribute('data-type'), group)
+            let actualYear= document.getElementById('tableSeasonSelector').value
+            getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
                 .then(res=>{
                     let groupTable = res.data
                     let groupName = button.getAttribute('data-group')
@@ -197,6 +193,29 @@ function renderGroupTable(groupName,groupTable){
     renderTableBody(table,groupName,groupTable,`${groupName}FullTable`) //di default, poi si potrà rendere dinamico questo valore
     return finalContainer
 }
+function createSeasonDropdown(){
+    let container =document.getElementById('tableNavbar')
+    let dropdown = document.createElement('div')
+        dropdown.className='dropdown-menu-season-wrapper';
+    dropdown.innerHTML=
+        '        <h6><label for="tableSeasonSelector">Stagione</label></h6>\n' +
+        '    <select id="tableSeasonSelector" class="date-days-picker">\n' +
+        '        </select>'
+    container.appendChild(dropdown)
+}
+function addSeasonDropdownTableListener(){
+    document.getElementById('tableSeasonSelector').addEventListener('change',function (){
+        getTable(competitionId,this.value,"full")
+            .then(res=>{
+                let groupTable = res.data
+                let table=document.getElementById(competitionName)
+                renderTableBody(table,competitionName,groupTable,`${competitionName}FullTable`) //di default, poi si potrà rendere dinamico questo valore
+            })
+            .catch(err=>{
+                alert(err)
+            })
+    })
+}
 function renderTableBody(table,groupName,groupTable,tbodyId){
     let groupTableTbody= document.getElementById(tbodyId)
     if(groupTableTbody===null) {
@@ -219,7 +238,7 @@ function renderTableStructure(groupName,finalContainer){
     let tableContiner = document.createElement('div')
     tableContiner.className='table-container'
     tableContiner.innerHTML=
-        `<div class="table-navbar">
+        `<div class="table-navbar" id="tableNavbar">
             <div class="date-days-picker-wrapper">
                             <button data-type="full" data-group="${groupName}" data-tbodyid="${groupName}FullTable" class="date-days-button date-days-button-active">
                                 <h6>Tutti</h6>
@@ -252,8 +271,7 @@ function renderTableStructure(groupName,finalContainer){
     return table
 }
 /**
- * fetch all the current competition seasons, save it into a global variabile
- * called seasons and update lastSeason
+ * fetch all the current competition seasons
  */
 function getCompetitionSeasons(){
     let url="http://localhost:3000/games/getCompetitionSeasonsSorted"
@@ -272,7 +290,7 @@ function getCompetitionsWithGroup(){
     return axios.get(url)
 }
 function getTopPlayers(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${lastSeason}`
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${competitionSeasons[0]}`
     axios.get(url)
         .then(res=>{
             if(res.data.length!==0)
@@ -386,7 +404,7 @@ function getClubsDividedByGroup(){
     axios.get(url,{
         params:{
             competition_id:competitionId,
-            season:lastSeason
+            season:competitionSeasons[0]
         }
     }).then(res=>{
         if(res.data!==0) {
@@ -452,7 +470,7 @@ function getClubs(){
     axios.get(url, {
         params:{
             competition_id: competitionId,
-            season:lastSeason
+            season:competitionSeasons[0]
         }
     }).then(res=> {
         if(res.data.length!==0) {
@@ -503,7 +521,7 @@ function getCompetitionInformation(){
 function renderCompetitionInformation(competitionInfo){
     competitionName=competitionInfo.name
     competitionType=competitionInfo.type
-    document.getElementById('competitionName').innerText=competitionInfo.name+`\n${lastSeason}`;
+    document.getElementById('competitionName').innerText=competitionInfo.name;
     document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
