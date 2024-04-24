@@ -11,16 +11,15 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
         axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName/"+ searchText)
 
-         .then(async res => {
+         .then(res => {
             if (res.data.length !== 0 ) {
-                await renderClubsGroupedByInitial(res.data)
+                renderClubsGroupedByInitial(res.data)
             }
         }).catch(err=> {
             alert(JSON.stringify(err))
         })
 
-    },200)
-
+    },300)
 
 });
 
@@ -63,7 +62,7 @@ function renderClubsGroupedByInitial(clubsGrouped) {
         clubsGrouped[initial].forEach(club => {
             const clubCard = document.createElement('div');
             clubCard.className = 'squad-card-mini';
-            clubCard.setAttribute('data-clubId', club.clubId);
+            clubCard.setAttribute('data-clubid', club.clubId);
             clubCard.setAttribute('data-name', club.name);
             clubCard.setAttribute('data-stadiumname', club.stadiumName);
             clubCard.setAttribute('data-stadiumseats', club.stadiumSeats);
@@ -76,6 +75,8 @@ function renderClubsGroupedByInitial(clubsGrouped) {
         });
         clubsGroup.appendChild(clubsContainer);
         mainContainer.appendChild(clubsGroup);
+        let clubCards=document.querySelectorAll('.squad-card-mini')
+        setAllClubButtonsListener(clubCards,null,null)
     }
 }
 

@@ -1,7 +1,15 @@
 //questo JS è per le funzioni comuni
 let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
 let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
-
+document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('openBurgerMenu').addEventListener('click',()=>{
+        let dropdownMenu= document.getElementById('burgerMenu')
+        if(dropdownMenu.style.display==='flex')
+            document.getElementById('burgerMenu').style.display='none'
+        else
+            document.getElementById('burgerMenu').style.display='flex'
+    })
+})
 function manageLateralButtons(lateralButtons,pageName){
     lateralButtons.forEach(btn=>{
         btn.addEventListener('click',function (){

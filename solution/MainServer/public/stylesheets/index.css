@@ -5,6 +5,10 @@ p{
 }
 html, body{
     margin:0;
+    height: 100%;
+}
+body{
+    position: relative;
 }
 h1{
     font-family: var(--fontfamily);
@@ -217,6 +221,8 @@ header ul li ul li a{
 .navbar-burger-menu{
     display: none;
     color:var(--white);
+    background-color: transparent;
+    border: 0;
 }
 
 
@@ -365,7 +371,7 @@ header ul li ul li a{
  }
 .lateral-navbar{
     position: sticky;
-    top:12vh;
+    top:8vh;
     display: flex;
     justify-content: flex-start;
     box-sizing: border-box;
@@ -379,7 +385,15 @@ header ul li ul li a{
     color: var(--white);
     overflow: auto;
 }
-
+.lateral-navbar-buttons{
+    display: flex;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--gap-8xs);
+    width: 100%;
+    flex-direction: column;
+}
 .lateral-navbar-header{
     width: 100%;
     display: flex;
@@ -395,8 +409,8 @@ header ul li ul li a{
 .lateral-navbar-squad-logo{
     position: relative;
     object-fit: contain;
-    width: 5vw;
-    height: 5vw;
+    min-width: clamp(50px,6vw,100px);
+    height: clamp(50px,6vw,100px);
 }
 
 .lateral-menu-button{
@@ -632,8 +646,44 @@ header ul li ul li a{
 #playerValutation{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    overflow: auto;
 }
+.lateral-navbar-player-img{
+    height: clamp(100px,10vw,150px);
+    min-width: clamp(100px,10vw,150px);
+    position: relative;
+    object-fit: contain;
+}
+.burger-menu{
+    display: none;
+    position: absolute;
+    top:8vh;
+    width: 100%;
+    background-color: var(--primary-blue-900);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    z-index: 99;
+}
+.burger-menu-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: var(--padding-10px);
+    width: 100%;
+    border-bottom: 1px solid var(--white);
+    color: var(--white);
+}
+.burger-menu-item > a{
+    color: var(--white);
+    font-size: var(--h6-size);
+    font-family: var(--fontfamily);
+    text-decoration: none;
+}
+
 .valutation-table-header{
     background-color: var(--primary-blue-900);
     color:var(--white);
@@ -641,6 +691,14 @@ header ul li ul li a{
 .table-valutation{
     width: 50%;
 }
+.table-valutation > tbody >tr >td,
+.table-valutation >thead > tr >td{
+    text-align: center;
+}
+.table-valutation > thead > tr{
+    border-radius: 12px;
+}
+
 .filter-container{
     position: absolute;
     top: 18vh;
@@ -840,7 +898,7 @@ header ul li ul li a{
     align-items: flex-start;
     flex-direction: row;
     width: 100%;
-    height: 92vh;
+    height: 100%;
 }
 #competitionSquads,
 #competitionStats{
@@ -853,7 +911,7 @@ header ul li ul li a{
 
 .main-container{
     width: 100%;
-    height: 92vh;
+    height: 100%;
 }
 #matches-page{
     display: flex;
@@ -1494,7 +1552,7 @@ tbody > tr:hover{
     padding: var(--padding-10px) var(--padding-10px);
     gap: 15px;
     width: 25vw;
-    min-height: 17vh;
+    min-height: 12vh;
 }
 .stats-container-and-icon{
     display: flex;
@@ -1684,8 +1742,8 @@ tbody > tr:hover{
     align-items: center;
     background-color: var(--white);
     border-radius: 50%;
-    width: 7vw;
-    height: 7vw;
+    min-width: clamp(70px,7vw,120px);
+    height: clamp(70px,7vw,120px);
 }
 .competition-logo-wrapper {
     background-color: var(--black);
@@ -3073,7 +3131,12 @@ tbody > tr:hover{
         height: auto;
     }
 }
-@media screen and (max-width: 1150px) {
+@media screen and (min-width: 1000px){
+    .burger-menu{
+        display: none !important;
+    }
+}
+@media screen and (max-width: 1000px) {
     .navbar {
         display: none;
     }
@@ -3083,9 +3146,13 @@ tbody > tr:hover{
     }
     .navbar-burger-menu{
         display: block;
+        cursor: pointer;
     }
     .navbar-burger-menu i{
         font-size: clamp(30px,3.5vw,50px);
+    }
+    .navbar-burger-menu:hover > i{
+        font-weight: bold;
     }
     .navbar {
         padding-left: var(--padding-6xl);
@@ -3115,7 +3182,6 @@ tbody > tr:hover{
     .img-container-icon {
         min-width: 100%;
     }
-
     .day-picker-container {
         flex-wrap: wrap;
     }
@@ -3125,14 +3191,40 @@ tbody > tr:hover{
         box-sizing: border-box;
         min-width: 100%;
     }
-
     .star-icon-container {
         width: calc(100% - 40px);
     }
     .formation-players-container{
         width: 50%;
     }
+    .lateral-navbar{
+        width: 100%;
+        height: auto;
+        z-index: 99;
+    }
+    .lateral-navbar-header{
+        flex-direction: row;
+        padding: var(--padding-5px);
+    }
+    .lateral-menu-button{
+        padding: var(--padding-5px);
+        flex-direction: column;
+    }
+    .lateral-menu-button.active{
+        border-right: 0;
+        border-bottom: 2px solid var(--black);
+    }
+    .lateral-navbar-buttons{
+        flex-direction: row;
+    }
+    #competition-page,
+    #player-page,
+    #squad-page{
+        flex-direction: column;
+    }
+
 }
+
 @media screen and (max-width: 450px) {
 
     .vertical-line {
@@ -3272,6 +3364,50 @@ tbody > tr:hover{
     top: calc(50% + 30px); /* Posiziona il testo sotto lo spinner */
     left: 50%;
     transform: translateX(-50%);
-    font-size: 16px;
+    font-size: var(--p-size);
     color: #333;
+}
+footer {
+    padding: 40px;
+    background-color: var(--primary-blue-900);
+}
+.footer-grid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: row;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 30px;
+    color: var(--white);
+}
+.footer-grid > div {
+    margin-bottom: 20px;
+}
+.footer-grid a {
+    font-family: var(--fontfamily);
+    color: var(--white);
+    text-decoration: none;
+    display: block;
+}
+.footer-grid a:hover {
+    text-decoration: underline;
+}
+.footer-bottom {
+    color: var(--white);
+    border-top: 1px solid var(--white);
+    padding-top: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+.footer-info-and-logo{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap:var(--gap-8xs);
+    box-sizing: border-box;
+}
+.social-links a {
+    margin-right: 10px;
 }

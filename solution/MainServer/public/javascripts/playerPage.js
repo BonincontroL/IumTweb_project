@@ -38,28 +38,11 @@ document.addEventListener('DOMContentLoaded',()=> {
             isValutationLoaded = true;
            }
     });
-
-
-
-
     initLogin();
 })
 function renderPlayerImg(player){
     document.getElementById('playerName').innerText=player.name;
     document.getElementById('playerImage').setAttribute('src', player.imageUrl)
-}
-
-
-/**
- * get di tutti i player
- * @returns {Promise<unknown | void>}
- */
-function getAllPlayers(){
-    return axios.get('http://localhost:3000/players/getAllPlayers')
-        .then(response => {
-            return response.data
-        })
-        .catch(error => console.error('Error not found players:', error));
 }
 
 /**
@@ -117,9 +100,9 @@ function getPlayerStatistics() {
  * @param playerNumber numero della maglia del giocatore
  */
     function renderPlayerInfo(playerInfo,playerNumber) {
-        var oggi = new Date();
-        var compleanno = new Date(playerInfo.dateOfBirth);
-        var eta = oggi.getFullYear() - compleanno.getFullYear();
+        let oggi = new Date();
+        let compleanno = new Date(playerInfo.dateOfBirth);
+        let eta = oggi.getFullYear() - compleanno.getFullYear();
         document.getElementById('nazionality').innerText = playerInfo.countryOfCitizenship;
         document.getElementById('player_height').innerText = playerInfo.heightInCm;
         document.getElementById('squad_player').innerText = playerInfo.currentClubName;
@@ -145,7 +128,6 @@ function getPlayerStatistics() {
     function getPlayerInfo(){
         return axios.get(`http://localhost:3000/players/getPlayerById/${playerId}`)
     }
-
 
 
     function getPlayerNumber(){
@@ -176,26 +158,26 @@ function getPlayerValutation() {
  * @param playerValuations tutte le valutazioni del giocatore medie per ogni anno
  */
 function renderPlayerValuations(playerValuations) {
-    var titleElement = document.getElementById('title_valuation');
+    let titleElement = document.getElementById('title_valuation');
     if (playerValuations.length === 0) {
         document.getElementById('playerValuation').innerText = "No data available";
         titleElement.innerText = "Valutazione";
     } else {
-        var minYear = Infinity;
-        var maxYear = -Infinity;
-        var tableBody = document.querySelector('.table-valutation tbody');
+        let minYear = Infinity;
+        let maxYear = -Infinity;
+        let tableBody = document.querySelector('.table-valutation tbody');
         tableBody.innerHTML = '';
 
         playerValuations.forEach(function(valuation) {
-            var year = valuation[0];
+            let year = valuation[0];
             if (year < minYear) minYear = year;
             if (year > maxYear) maxYear = year;
 
-            var row = document.createElement('tr');
-            var yearCell = document.createElement('td');
+            let row = document.createElement('tr');
+            let yearCell = document.createElement('td');
             yearCell.textContent = year;
             row.appendChild(yearCell);
-            var valuationCell = document.createElement('td');
+            let valuationCell = document.createElement('td');
             valuationCell.textContent = valuation[1].toLocaleString() + ' €';
             row.appendChild(valuationCell);
             tableBody.appendChild(row);

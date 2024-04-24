@@ -20,9 +20,9 @@
 <body>
     <header>
     <div class="logo">
-        <a class="navbar-burger-menu" href="#">
+        <button class="navbar-burger-menu" id="openBurgerMenu">
             <i class='bx bx-menu'></i>
-        </a>
+        </button>
         <h3>LOGO</h3>
     </div>
     <nav>
@@ -74,48 +74,68 @@
         </div>
     </div> <!--popup che si apre quando l'utente clicca l'icona in alto a destra.-->
 </header>
+    <div class="burger-menu" id="burgerMenu">
+        <div class="burger-menu-item">
+            <a href="/landing_page.html">Homepage</a>
+        </div>
+        <div class="burger-menu-item">
+            <a href="/matches_page.html">Partite</a>
+        </div>
+        <div class="burger-menu-item">
+            <a href="/searchCompetition_page.html">Competizioni</a>
+        </div>
+        <div class="burger-menu-item">
+            <a href="/searchClub_page.html">Giocatori</a>
+        </div>
+        <div class="burger-menu-item">
+            <a href="/searchPlayers_page.html">Squadre</a>
+        </div>
+        <div class="burger-menu-item">
+            <a href="/chat_page.html">Chat</a>
+        </div>
+    </div>
     <div id="player-page">
         <div id="playerLateralNavbar" class="lateral-navbar">
             <div class="lateral-navbar-header">
-                <div class="lateral-navbar-squad-logo">
-                    <img id="playerImage" class="lateral-navbar-squad-logo" alt="Player image" src="">
-                </div>
+                <img id="playerImage" class="lateral-navbar-player-img" alt="Player image" src="">
                 <h3 id="playerName">
                 </h3>
                 <h4 id="playerRole">Left Winger</h4>
             </div>
-            <button class="lateral-menu-button" id="player-info-btn" data-showContainer="playerInformation">
-                <img
-                        loading="eager"
-                        alt="info icon"
-                        src="images/lateralNavbarIcons/infoActive.svg"
-                />
-                <h6>Informazioni</h6>
-            </button>
-            <button class="lateral-menu-button" id="player-valuation-btn" data-showContainer="playerValutation">
-                <img
-                        loading="eager"
-                        alt="matches icon"
-                        src="images/lateralNavbarIcons/valutation.svg"
-                />
-                <h6>Valutazione</h6>
-            </button>
-            <button class="lateral-menu-button" id="player-lastMatches-btn" data-showContainer="playerLastMatches">
-                <img
-                        loading="eager"
-                        alt="leauge icon"
-                        src="images/lateralNavbarIcons/games.svg"
-                />
-                <h6>Ultime partite</h6>
-            </button>
-            <button class="lateral-menu-button" id="player-statistic-btn" data-showContainer="playerStatistic">
-                <img
-                        loading="eager"
-                        alt="players icon"
-                        src="images/lateralNavbarIcons/stats.svg"
-                />
-                <h6>Statistiche</h6>
-            </button>
+            <div class="lateral-navbar-buttons">
+                <button class="lateral-menu-button" id="player-info-btn" data-showContainer="playerInformation">
+                    <img
+                            loading="eager"
+                            alt="info icon"
+                            src="images/lateralNavbarIcons/infoActive.svg"
+                    />
+                    <h6>Informazioni</h6>
+                </button>
+                <button class="lateral-menu-button" id="player-valuation-btn" data-showContainer="playerValutation">
+                    <img
+                            loading="eager"
+                            alt="matches icon"
+                            src="images/lateralNavbarIcons/valutation.svg"
+                    />
+                    <h6>Valutazione</h6>
+                </button>
+                <button class="lateral-menu-button" id="player-lastMatches-btn" data-showContainer="playerLastMatches">
+                    <img
+                            loading="eager"
+                            alt="leauge icon"
+                            src="images/lateralNavbarIcons/games.svg"
+                    />
+                    <h6>Ultime partite</h6>
+                </button>
+                <button class="lateral-menu-button" id="player-statistic-btn" data-showContainer="playerStatistic">
+                    <img
+                            loading="eager"
+                            alt="players icon"
+                            src="images/lateralNavbarIcons/stats.svg"
+                    />
+                    <h6>Statistiche</h6>
+                </button>
+            </div>
         </div>
         <div class="main-container" id="playerInformation">
             <div class="squad-info">
@@ -247,5 +267,64 @@
             <p class="loading-text">Caricamento... Attendere</p>
         </div>
     </div>
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h5>FOOTBALL WEBSITE</h5>
+                <div class="footer-group">
+                    <a href="#">Home</a>
+                    <a href="#">Chi siamo</a>
+                    <a href="#">Contatti</a>
+                    <a href="#">Politiche di privacy</a>
+                </div>
+            </div>
+            <div>
+                <h5>LEGALE</h5>
+                <div class="footer-group">
+                    <a href="#">Condizioni generali</a>
+                    <a href="#">Politica per i Cookie </a>
+                </div>
+            </div>
+            <div>
+                <h5>CONTATTI</h5>
+                <div class="footer-group">
+                    <div class="footer-info-and-logo">
+                        <i class='bx bx-phone-call'></i>
+                        <a href="#">123 456 789</a>
+                    </div>
+                    <div class="footer-info-and-logo">
+                        <i class='bx bxl-whatsapp'></i>
+                        <a href="#">Whatsapp</a>
+                    </div>
+                    <div class="footer-info-and-logo">
+                        <i class='bx bx-envelope' ></i>
+                        <a href="#">footballwebsite@Logo.com</a>
+                    </div>
+                    <div class="footer-info-and-logo">
+                        <i class='bx bxs-calendar'></i>
+                        <a href="#">Dal Lunedi al Venerdi <br>dalle 09:00 alle 20:00</a>
+                    </div>
+                </div>
+            </div>
+            <div class="social-links">
+                <h5>LINK SOCIAL</h5>
+                <div class="footer-info-and-logo">
+                    <i class='bx bxl-facebook-circle' ></i>
+                    <a href="#">Facebook</a>
+                </div>
+                <div class="footer-info-and-logo">
+                    <i class='bx bxl-twitter'></i>
+                    <a href="#">Twitter</a>
+                </div>
+                <div class="footer-info-and-logo">
+                    <i class='bx bxl-instagram'></i>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Football website. - Via Pessinetto 12, Torino(TO).</p>
+        </div>
+    </footer>
 </body>
 </html>
