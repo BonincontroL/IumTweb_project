@@ -5,6 +5,9 @@ let isStatsLoaded = false;
 let isValutationLoaded = false;
 
 document.addEventListener('DOMContentLoaded',()=> {
+
+    fetchPlayerLastMatches();
+
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
 
@@ -188,6 +191,92 @@ function renderPlayerValuations(playerValuations) {
             titleElement.innerText = "Valutazione";
         }
     }
+}
+
+function fetchPlayerLastMatches(){
+    const button = document.getElementById('player-lastMatches-btn');
+    const lastMatchesContainer = document.getElementById('playerLastMatches');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    lastMatchesContainer.innerHTML = '';
+
+    button.addEventListener('click', async function () {
+        try {
+            loadingSpinner.style.display = 'block';
+
+            const playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'));
+            const playerId = playerInfo.playerId;
+
+            const playerLastMatchesResponse = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
+            const playerLastMatches = playerLastMatchesResponse.data;
+
+            if (playerLastMatches.length === 0) {
+                lastMatchesContainer.innerHTML = '<h1>N.D. - Nessuna partita trovata.</h1>';
+                loadingSpinner.style.display = 'none';
+                return;
+            }
+
+            lastMatchesContainer.innerHTML = '';
+
+            for (const match of playerLastMatches) {
+                const gameId = match.game_id;
+
+                const gameResponse = await axios.get(`http://localhost:3001/games/getGamesByGameId/${gameId}`);
+                const game = gameResponse.data;
+
+                const gameInfoContainer = document.createElement('div');
+                gameInfoContainer.classList.add('main-container');
+                gameInfoContainer.classList.add('game-information');
+                gameInfoContainer.classList.add('game-information-in-player');
+
+                const roundAndDateContainer = document.createElement('div');
+                roundAndDateContainer.classList.add('round-and-date-container');
+                roundAndDateContainer.innerHTML = `
+                    <p>${game.round}</p>
+                    <p>${moment(game.date).format('DD MMM YYYY')}</p>
+                `;
+                gameInfoContainer.appendChild(roundAndDateContainer);
+
+                const matchResultContainer = document.createElement('div');
+                matchResultContainer.classList.add('match-result-vertical');
+
+                const homeTeamContainer = createTeamContainer(game.home_club_name, game.home_club_goals, game.home_club_id);
+                matchResultContainer.appendChild(homeTeamContainer);
+
+                const awayTeamContainer = createTeamContainer(game.away_club_name, game.away_club_goals, game.away_club_id);
+                matchResultContainer.appendChild(awayTeamContainer);
+
+                gameInfoContainer.appendChild(matchResultContainer);
+                lastMatchesContainer.appendChild(gameInfoContainer);
+            }
+            loadingSpinner.style.display = 'none';
+        } catch (error) {
+            console.error('Errore durante il recupero delle partite:', error);
+            loadingSpinner.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Crea un container con le informazioni di una squadra.
+ * @param teamName
+ * @param goals
+ * @param teamId
+ * @returns {HTMLDivElement}
+ */
+function createTeamContainer(teamName, goals, teamId) {
+    const teamContainer = document.createElement('div');
+    teamContainer.classList.add('squad-info-row');
+
+    const logoUrl = `https://tmssl.akamaized.net/images/wappen/head/${teamId}.png`;
+
+    const displayedTeamName = teamName || 'N.D.';
+
+    teamContainer.innerHTML = `
+            <img class="squadLogo" loading="lazy" alt="" src="${logoUrl}">
+            <h6 class="full-width-left">${displayedTeamName}</h6>
+            <p>${goals}</p>
+        `;
+    return teamContainer;
 }
 
 
