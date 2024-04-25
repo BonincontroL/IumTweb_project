@@ -1203,7 +1203,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "parameters": [
@@ -1281,7 +1281,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1357,7 +1357,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1415,7 +1415,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1470,7 +1470,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1525,7 +1525,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1592,7 +1592,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {
@@ -1650,7 +1650,7 @@
           },
           {
             "url": "http://localhost:3001",
-            "description": "SpringServer"
+            "description": "ExpressServer"
           }
         ],
         "responses": {

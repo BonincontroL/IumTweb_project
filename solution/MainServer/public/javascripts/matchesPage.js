@@ -1,10 +1,5 @@
 /**
- * @ToDo Migliorare grafica e query -- Aggiungere funzionalità
- * @ToDo Pulire codice + commenti puliti
- * @ToDo Aggiungere funzionalità di ricerca --> come Possibilità di scelta squadra e/o Possibilità di scelta data precisa (calendario) xx/yy/kk
- * @ToDo migliorare selezione anno e season
- *
- * @ToDo >>>>>> FARE TEST codice
+ * @ToDo Migliorare codice + controllo + coomenti
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -45,7 +40,7 @@ function attachSelectEventHandlers() {
  */
 function handleSelectChange() {
     const competitionId = document.getElementById('competition-select').value;
-    const dayOfWeek = document.querySelector('.date-days-button-active')?.textContent || 'Sunday';
+    const dayOfWeek = document.querySelector('.date-days-button-active')?.textContent;
 
     fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek);
 }
