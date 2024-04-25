@@ -387,6 +387,22 @@ function getCompetitionSeasonsSorted(competition_id){
     ])
 }
 
+function getGamesByGameId(gameId) {
+    return new Promise((resolve, reject) => {
+        Model.findOne({ game_id: gameId })
+            .then(result => {
+                if (!result) {
+                    reject('Nessun match trovato per questo ID games.');
+                } else {
+                    resolve(result);
+                }
+            })
+            .catch(error => {
+                reject(error);
+            });
+    });
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -401,4 +417,5 @@ module.exports = {
     getClubsDividedByGroups,
     getCompetitionIdsWithGroup,
     getCompetitionSeasonsSorted,
+    getGamesByGameId
 };

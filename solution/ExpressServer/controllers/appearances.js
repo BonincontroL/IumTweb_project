@@ -68,9 +68,36 @@ function getPlayerStatistics(playerId) {
         });
 }
 
+function getPlayerLast5Games(playerId) {
+    const numericPlayerId = parseInt(playerId, 10);
+
+    try {
+        const playerLast5Games =  Model.aggregate([
+            {
+                $match: {
+                    player_id: numericPlayerId,
+                    minutes_played: { $gt: 0 }
+                }
+            },
+            {
+                $sort: { date: -1 }
+            },
+            {
+                $limit: 5
+            }
+        ]);
+
+        return playerLast5Games;
+    } catch (err) {
+        console.error(`Error retrieving last 5 games for player ID ${playerId}`, err);
+        throw err;
+    }
+}
+
 
 
 module.exports={
     getTopScorer,
     getPlayerStatistics,
+    getPlayerLast5Games
 }

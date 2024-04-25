@@ -170,4 +170,18 @@ router.get('/getCompetitionSeasonsSorted', async(req,res)=>{
         })
 })
 
+router.get("/getGamesByGameId/:game_id", async (req, res) => {
+    const game_id = req.params.game_id;
+    GamesController.getGamesByGameId(game_id)
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero delle partite per game_id:', error);
+            res.status(500).json({error: 'Errore durante il recupero delle partite per game_id'});
+        })
+
+})
+
+
 module.exports = router;

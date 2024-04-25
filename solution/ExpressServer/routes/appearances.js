@@ -41,6 +41,21 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
         });
 })
 
+router.get("/getPlayerLast5Games/:playerId", async (req, res) => {
+    const playerId = req.params.playerId;
+    appearancesController.getPlayerLast5Games(playerId)
+        .then(data => {
+            if (!isDataEmpty(data)) {
+                res.status(200).json(data);
+            } else {
+                res.status(204).json({error: 'Nessuna partita trovata'});
+            }
+        })
+        .catch(err => {
+            console.error('Errore durante il recupero delle ultime 5 partite del giocatore', err);
+            res.status(500).json({error: 'Errore durante il recupero delle ultime 5 partite del giocatore'});
+        });
+})
 
 
 
