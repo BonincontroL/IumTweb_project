@@ -5,6 +5,8 @@ let competitionSeasons=[] //array globale che rappresenta tutte le annate giocat
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
 let knockoutRounds =[]
+let isSeasonDropdownRendered=false, isTableSeasonDropdownRendered=false, isKnockoutSeasonDropdown=false;
+let currentMatchesSeason=0, currentKnockoutSeason=0
 let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 document.addEventListener('DOMContentLoaded',init)
 
@@ -80,9 +82,11 @@ async function init() {
     let matchesSeasonSelector = document.getElementById('matchesSeasonSelector')
     if (matchesSeasonSelector)
         matchesSeasonSelector.addEventListener('change', async function () {
-            currentRound=0 //si riparte dal primo round ogni volta
-            matchRounds = await fetchAllRoundNumbers(this.value)
-            matchRounds=matchRounds.data
+            currentRound=0 //si riparte dal primo round ogni cambiamento di season
+            currentMatchesSeason=this.value
+            let rounds = await fetchAllRoundNumbers(this.value)
+            matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
             renderMatchesDropdownMenu()
             getAndRenderMatchesInRound(matchRounds[currentRound],this.value)
         })
@@ -90,8 +94,8 @@ async function init() {
     if (knockoutSeasonSelector)
         knockoutSeasonSelector.addEventListener('change', async function () {
             let rounds = await fetchAllRoundNumbers(this.value)
-            matchRounds = rounds.data.filter(round => round.startsWith('Group'))
             knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+            currentKnockoutSeason=this.value
             await getAllMatchesInKnockoutRounds(this.value)
         })
     document.getElementById('competition-table-btn').addEventListener('click', async () => {
@@ -547,11 +551,19 @@ async function getGroupMatches() {
             competitionSeasons=await fetchAllSeasons()
             competitionSeasons=competitionSeasons.data
         }
-        renderSeasonDropdownMenu('matchesSeasonSelector')
-        matchRounds = await fetchAllRoundNumbers(competitionSeasons[0])
-        matchRounds = matchRounds.data
-        renderMatchesDropdownMenu()
-        await getAndRenderGroupMatches()
+        if(!isSeasonDropdownRendered) {
+            renderSeasonDropdownMenu('matchesSeasonSelector')
+            isSeasonDropdownRendered=true
+        }
+        let selectedSeason =document.getElementById('matchesSeasonSelector').value
+        if(currentMatchesSeason!==selectedSeason) {
+            matchRounds = await fetchAllRoundNumbers(selectedSeason)
+            matchRounds = matchRounds.data
+            if(isWithGroup)
+                matchRounds=matchRounds.filter(round=>round.startsWith('Group'))
+            renderMatchesDropdownMenu()
+        }
+        await getAndRenderGroupMatches(selectedSeason)
     }catch (e){
         alert(e)
     }
@@ -574,25 +586,25 @@ function renderSeasonDropdownMenu(selectorId){
     })
 }
 async function getKnockoutMatches(){
-    let season
     if(competitionSeasons.length!==0) {
         competitionSeasons=await fetchAllSeasons()
         competitionSeasons=competitionSeasons.data
-        season=competitionSeasons[0]//di default prendi la season con anno più grande
     }
-    renderSeasonDropdownMenu('knockoutSeasonSelector')
-
-    if(matchRounds.length===0 && knockoutRounds.length===0) {
+    if(!isKnockoutSeasonDropdown) {
+        renderSeasonDropdownMenu('knockoutSeasonSelector')
+        isKnockoutSeasonDropdown=true
+    }
+    let season= document.getElementById('knockoutSeasonSelector').value
+    if(currentKnockoutSeason!==season) {
         let rounds = await fetchAllRoundNumbers(season)
-        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
         knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+        await getAllMatchesInKnockoutRounds(season)
     }
-    await getAllMatchesInKnockoutRounds(season)
 }
 
-async function getAndRenderGroupMatches() {
+async function getAndRenderGroupMatches(season) {
     try {
-        let matches = await getAllMatchesInRound(matchRounds[currentRound],competitionSeasons[0])
+        let matches = await getAllMatchesInRound(matchRounds[currentRound],season)
         renderMatchesRound(matches.data)
         let matchesCard =document.querySelectorAll('#competitionMatchesContainer > div> button')
         setMatchesCardEventListener(matchesCard)
