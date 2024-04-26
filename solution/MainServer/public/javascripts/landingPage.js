@@ -199,7 +199,6 @@ function getPlayerNumber(idPlayer) {
  * @returns {Promise<Array>} Un promise che, se risolto, restituisce un array dei match.
  */
 function getLastMatchesByCompetition(competitionId) {
-    //const matchesUrl = `http://localhost:3001/games/getLastMatchesByCompetition/${competitionId}`;
     const url=`http://localhost:3000/games/getLastMatchesByCompetition/${competitionId}`;
     return axios.get(url)
         .then(matchesResponse => {
@@ -207,7 +206,6 @@ function getLastMatchesByCompetition(competitionId) {
             if (matches.length === 0) {
                 throw new Error(`Nessun match trovato per la competizione con ID: ${competitionId}.`);
             }
-
             return matches;
         })
         .catch(error => {
@@ -223,6 +221,8 @@ function getLastMatchesByCompetition(competitionId) {
 function getAndRenderLastMatches(competitionId) {
     getLastMatchesByCompetition(competitionId).then(matches => {
         renderMatches(matches, competitionId);
+        let matchCards = document.querySelectorAll('.multiple-matches-container >.game-information')
+        setMatchesCardEventListener(matchCards)
     }).catch(error => {
         console.error(`Errore durante il recupero dei match della ${competitionId}:`, error);
     });
@@ -235,13 +235,10 @@ function getAndRenderLastMatches(competitionId) {
  */
 function renderMatches(matches, competitionId) {
     const secondContainerCompetitionIds = ['EL', 'POSU', 'NL1', 'BE1', 'CLQ'];
-
     let matchesContainer;
     if (secondContainerCompetitionIds.includes(competitionId)) {
-
         matchesContainer = document.querySelectorAll('.multiple-matches-container')[1];
     } else {
-
         matchesContainer = document.querySelector('.multiple-matches-container');
     }
 
@@ -268,18 +265,18 @@ function adaptMatchData(match) {
         season: match.season,
         round: match.round,
         homeTeam: {
+            id:match.home_club_id,
             name: match.home_club_name,
             logo: `https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png`,
             score: match.home_club_goals
         },
         awayTeam: {
+            id:match.away_club_id,
             name: match.away_club_name,
             logo: `https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png`,
             score: match.away_club_goals
         },
         time: new Date(match.date).toLocaleString([], {
-            hour: '2-digit',
-            minute: '2-digit',
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
@@ -294,6 +291,16 @@ function adaptMatchData(match) {
  */
 function createMatchDiv(match) {
     const matchDiv = document.createElement('div');
+    matchDiv.setAttribute('data-gameId',match.game_id)
+    matchDiv.setAttribute('data-homeclubid',match.homeTeam.id)
+    matchDiv.setAttribute('data-awayclubid',match.awayTeam.id)
+    matchDiv.setAttribute('data-homeclubname',match.homeTeam.name)
+    matchDiv.setAttribute('data-awayclubname',match.awayTeam.name)
+    matchDiv.setAttribute('data-aggregate',`${match.homeTeam.score}-${match.awayTeam.score}`)
+    matchDiv.setAttribute('data-date',match.time)
+    matchDiv.setAttribute('data-competitionid',match.competition_id)
+    matchDiv.setAttribute('data-round',match.round)
+
     matchDiv.classList.add('game-information');
 
     const homeTeamLogo = `<img class="squad-icon" src="${match.homeTeam.logo}" alt="${match.homeTeam.name} logo" />`;

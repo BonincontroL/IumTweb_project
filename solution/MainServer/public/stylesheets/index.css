@@ -665,6 +665,14 @@ header ul li ul li a{
     justify-content: center;
     align-items: flex-start;
     overflow: auto;
+    padding: var(--padding-20px);
+}
+.valutation-and-icon{
+    display: flex;
+    flex-direction: row;
+    gap:var(--gap-8xs);
+    align-items: center;
+    justify-content: center;
 }
 .lateral-navbar-player-img{
     height: clamp(100px,10vw,150px);
@@ -2463,8 +2471,8 @@ tbody > tr:hover{
 .player-number-container {
     display: flex;
     align-items: center;
-    height: 50px;
-    width: 50px;
+    height: clamp(25px,3vw,50px);
+    min-width: clamp(25px,3vw,50px);
     margin: 0;
     position: absolute;
     top: 4px;
@@ -2475,7 +2483,13 @@ tbody > tr:hover{
     justify-content: center;
     color: white;
     font-weight: bold;
-    z-index: 99;
+    z-index: 97;
+}
+.money-icon{
+    position: relative;
+    min-width: clamp(25px,3vw,50px);
+    height:clamp(25px,3vw,50px) ;
+    object-fit: contain;
 }
 
 .player-role-description {

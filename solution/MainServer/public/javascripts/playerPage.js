@@ -3,28 +3,32 @@ const playerPageName= 'player-page'
 let playerId;
 let isStatsLoaded = false;
 let isValutationLoaded = false;
-
-document.addEventListener('DOMContentLoaded',()=> {
-
-    fetchPlayerLastMatches();
-
+let isLastMatchesLoaded=false;
+document.addEventListener('DOMContentLoaded',async()=> {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
 
-    Promise.all([
-        getPlayerInfo(),
-        getPlayerNumber(),
-    ]).then(res=>{
-        renderPlayerInfo(res[0].data,res[1].data.playerNumber)
-    })
-
+    try{
+        let flagSrc ="images/defaultFlag.svg"
+        let playerInfo =await getPlayerInfo()
+        try {
+            flagSrc = await getCountryFlag(playerInfo.data.countryOfCitizenship)
+            flagSrc=flagSrc.data[0].flags.png
+        }catch (flagErr){
+            if(flagErr.response.status!==404)
+                alert(flagErr)
+        }
+        let playerNumber =await getPlayerNumber()
+        renderPlayerInfo(playerInfo.data,playerNumber.data.playerNumber,flagSrc)
+    }catch (e){
+        alert(e)
+    }
     renderPlayerImg(playerInfo)
 
     playerInfoBtn = document.getElementById('player-info-btn')
     lateralPlayerButtons = document.querySelectorAll('#playerLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralPlayerButtons, playerPageName)
     //inizialmente solo il bottone Informazioni è premuto
-
     playerInfoBtn.classList.add('active')
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display = "flex"
@@ -40,8 +44,18 @@ document.addEventListener('DOMContentLoaded',()=> {
             isValutationLoaded = true;
            }
     });
+    document.getElementById('player-lastMatches-btn').addEventListener('click', async () => {
+        if (!isLastMatchesLoaded) {
+            await fetchPlayerLastMatches();
+            isLastMatchesLoaded = true;
+        }
+    });
     initLogin();
 })
+function getCountryFlag(countryName){
+    let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
+    return axios.get(queryUrl)
+}
 function renderPlayerImg(player){
     document.getElementById('playerName').innerText=player.name;
     document.getElementById('playerImage').setAttribute('src', player.imageUrl)
@@ -102,16 +116,18 @@ function getPlayerStatistics() {
  * @param playerNumber numero della maglia del giocatore
  */
     function renderPlayerInfo(playerInfo,playerNumber,flagUrl) {
-        let oggi = new Date();
-        let compleanno = new Date(playerInfo.dateOfBirth);
-        let eta = oggi.getFullYear() - compleanno.getFullYear();
+        let today = new Date();
+        let birthdayDate = new Date(playerInfo.dateOfBirth);
+        let age = today.getFullYear() - birthdayDate.getFullYear();
+        document.getElementById('nationalityFlag').setAttribute('src',flagUrl)
         document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
         document.getElementById('player_height').innerText = playerInfo.heightInCm;
         document.getElementById('squad_player').innerText = playerInfo.currentClubName;
-        document.getElementById('age_player').innerText = eta;
+        document.getElementById('age_player').innerText = age;
         document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur+" €"
         document.getElementById('playerRole').innerText = playerInfo.subPosition;
         document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL+playerInfo.currentClubId+".png")
+
         if(playerNumber===-1){
             document.getElementById('player_number').innerText = "No data available"
         }else {
@@ -170,7 +186,7 @@ function renderPlayerValuations(playerValuations) {
         let tableBody = document.querySelector('.table-valutation tbody');
         tableBody.innerHTML = '';
 
-        playerValuations.forEach(function(valuation) {
+        playerValuations.forEach(function(valuation,index) {
             let year = valuation[0];
             if (year < minYear) minYear = year;
             if (year > maxYear) maxYear = year;
@@ -180,7 +196,22 @@ function renderPlayerValuations(playerValuations) {
             yearCell.textContent = year;
             row.appendChild(yearCell);
             let valuationCell = document.createElement('td');
-            valuationCell.textContent = valuation[1].toLocaleString() + ' €';
+            let moneyIcon = null
+            if(playerValuations[index-1]!==undefined) {
+                moneyIcon = document.createElement('img')
+                moneyIcon.className='money-icon'
+                if (valuation[1] > playerValuations[index - 1][1]) {
+                    moneyIcon.setAttribute('src', 'images/price-up.svg')
+                } else {
+                    moneyIcon.setAttribute('src', 'images/price-down.svg')
+                }
+            }
+            valuationCell.innerHTML=
+                `<div class="valutation-and-icon">
+                    <p>${valuation[1].toLocaleString()} €</p>
+                    ${moneyIcon!==null ? moneyIcon.outerHTML:''}
+                </div>
+                `
             row.appendChild(valuationCell);
             tableBody.appendChild(row);
         });
@@ -193,32 +224,27 @@ function renderPlayerValuations(playerValuations) {
     }
 }
 
-function fetchPlayerLastMatches(){
-    const button = document.getElementById('player-lastMatches-btn');
+async function fetchPlayerLastMatches() {
     const lastMatchesContainer = document.getElementById('playerLastMatches');
     const loadingSpinner = document.getElementById('loading-spinner');
     lastMatchesContainer.innerHTML = '';
-
-    button.addEventListener('click', async function () {
-        try {
-            loadingSpinner.style.display = 'block';
-            let playerLastMatches = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
-            playerLastMatches = playerLastMatches.data;
-            if (playerLastMatches.length === 0) {
-                lastMatchesContainer.innerHTML = '<h1>N.D. - Nessuna partita trovata.</h1>';
-            }else {
-                renderPlayerMatches(playerLastMatches)
-            }
-            loadingSpinner.style.display = 'none';
-        } catch (error) {
-            console.error('Errore durante il recupero delle partite:', error);
-            loadingSpinner.style.display = 'none';
+    try {
+        loadingSpinner.style.display = 'block';
+        let playerLastMatches = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
+        playerLastMatches = playerLastMatches.data;
+        if (playerLastMatches.length === 0) {
+            lastMatchesContainer.innerHTML = '<h1>N.D. - Nessuna partita trovata.</h1>';
+        } else {
+            renderPlayerMatches(playerLastMatches)
         }
-    });
+        loadingSpinner.style.display = 'none';
+    } catch (error) {
+        console.error('Errore durante il recupero delle partite:', error);
+        loadingSpinner.style.display = 'none';
+    }
 }
 function renderPlayerMatches(matches){
     const lastMatchesContainer = document.getElementById('playerLastMatches');
-    lastMatchesContainer.innerHTML=''
     matches.forEach(match=>{
         let matchCard= renderPlayerMatch(match)
         lastMatchesContainer.appendChild(matchCard)

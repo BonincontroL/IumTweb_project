@@ -35,7 +35,7 @@ function manageLateralButtons(lateralButtons,pageName){
 }
 
 function hideAllMainContainers(pageName){
-    const mainContainers=document.querySelectorAll(`#${pageName} .main-container`)
+    const mainContainers=document.querySelectorAll(`#${pageName} > .main-container`)
     mainContainers.forEach(container=>{container.style.display="none"})
 }
 
@@ -90,7 +90,8 @@ function setMatchesCardEventListener(matchCards){
                 awayClubName:match.getAttribute('data-awayclubname'),
                 aggregate:match.getAttribute('data-aggregate'),
                 date:match.getAttribute('data-date'),
-                competitionId:match.getAttribute('data-competitionId')
+                competitionId:match.getAttribute('data-competitionId'),
+                round:match.getAttribute('data-round')
             }
             sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
             window.location.href='../match_page.html'
