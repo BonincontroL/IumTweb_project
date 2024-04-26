@@ -30,7 +30,7 @@ function init() {
 
 //test di prova per getAndRenderLastMatches in home page --> da rivedere lo stile
 // ToDo  sistemare commenti + pulizia e sistemazione codice
-// ToDo aggiungere i listeners per i bottoni delle competizioni + giocatori
+
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -38,19 +38,15 @@ function init() {
  * @returns {Promise<unknown>}
  */
 function getPlayersByCompetition(competitionId) {
-    const url = `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${LAST_SEASON}`;
+    const url = `http://localhost:3000/players/get5RandomPlayersByCompIdAndLastSeason/${competitionId}/${LAST_SEASON}`;
     return axios.get(url)
         .then(playersResponse => {
             const players = playersResponse.data;
             // Controlla se sono stati trovati giocatori
             if (players.length === 0) {
                 throw new Error(`Nessun giocatore trovato per la competizione con ID: ${competitionId}`);
-            }
-            // Mescola i giocatori della competizione
-            const shuffledPlayers = shuffleArray(players);
-            // Limita i risultati ai primi 5 giocatori
-            const limitedPlayers = shuffledPlayers.slice(0, 5);
-            return limitedPlayers;
+            }else
+                return players;
         })
         .catch(error => {
             console.error('Errore durante il recupero dei dati:', error);
@@ -63,11 +59,14 @@ function getPlayersByCompetition(competitionId) {
  * @param {Array} players - Array di giocatori da renderizzare.
  * @param {String} competitionIdentifier - competizione.
  */
-function renderPlayers(players, competitionIdentifier) {
+async function renderPlayers(players, competitionIdentifier) {
     // Mappa l'identificatore della competizione all'indice specifico del container
     const competitionContainerMap = {
         'Serie-A': 0,
-        'Premier-League': 1
+        'Premier-League': 1,
+        'La-Liga': 2,
+        'Bundesliga': 3,
+        'Ligue-1': 4
     };
 
     // Ottiene l'indice del container basato sulla competizione
@@ -79,98 +78,101 @@ function renderPlayers(players, competitionIdentifier) {
     playersContainer.innerHTML = ''; // Pulisce il container prima di aggiungere nuovi giocatori
 
     // Itera su ogni giocatore e costruisce la card
-    players.forEach(player => {
-        const playerCard = document.createElement('button');
-        playerCard.setAttribute('data-playerid', player.playerId)
-        playerCard.setAttribute('data-imageurl', player.imageUrl)
-        playerCard.setAttribute('data-name', player.name)
-
-        playerCard.classList.add('player-card-for-homepage');
-        playerCard.style.padding = '10px'; // Aggiunge spazio intorno al contenuto della card
-
-        const competitionLogoContainer = document.createElement('div');
-        competitionLogoContainer.classList.add('competition-logo-container1');
-
-        const playerName = document.createElement('h5');
-        playerName.classList.add('player-name');
-        playerName.style.marginBottom = '10px'; // Aggiunge spazio sotto il nome del giocatore
-
-        const firstName = player.firstName ? player.firstName : " ";
-        const lastName = player.lastName ? player.lastName : " ";
-
-        playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${firstName}</span><br><span style="font-size: smaller">${lastName}</span>`;
-
-        const squadCard = document.createElement('div');
-        squadCard.classList.add('squad-card');
-
-        const squadLogoContainer = document.createElement('div');
-        squadLogoContainer.classList.add('squad-logo-container');
-
-        const squadLogo = document.createElement('img');
-        squadLogo.classList.add('squad-logo-in-starplayers');
-        squadLogo.setAttribute('loading', 'eager');
-        squadLogo.alt = player.teamName + ' Logo';
-        squadLogo.src = `https://tmssl.akamaized.net/images/wappen/head/${player.currentClubId}.png`; // URL del logo del club
-        squadLogoContainer.appendChild(squadLogo);
-        squadCard.appendChild(squadLogoContainer);
-
-        const teamName = document.createElement('h5');
-        teamName.classList.add('team-name');
-        teamName.style.fontWeight = 'normal';
-        teamName.style.fontStyle = 'italic';
-        teamName.textContent = player.currentClubName;
-        squadCard.appendChild(teamName);
-
-        competitionLogoContainer.appendChild(playerName);
-        competitionLogoContainer.appendChild(squadCard);
-        playerCard.appendChild(competitionLogoContainer);
-
-        const playerImage = document.createElement('img');
-        playerImage.classList.add('squad-info-frame', 'rounded-image');
-        playerImage.style.borderRadius = '50%'; // Rende l'immagine del giocatore arrotondata
-        playerImage.setAttribute('loading', 'eager');
-        playerImage.alt = player.firstName + ' ' + player.lastName + ' image';
-        playerImage.src = player.imageUrl;
-        playerImage.style.marginRight='25px';
-        playerCard.appendChild(playerImage);
+    for (const player of players) {
+        let playerCard = renderPlayerCard(player)
 
         /**
          * Aggiunge il numero del giocatore alla card del giocatore.
          */
-        getPlayerNumber(player.playerId)
-            .then(playerNumber => {
-
-                if (playerNumber !== null) {
-                    const playerNumberValue = playerNumber.playerNumber;
-                    const playerNumberContainer = document.createElement('div');
-                    playerNumberContainer.classList.add('player-number-container');
-                    const playerNumberElement = document.createElement('h5');
-                    playerNumberElement.textContent = playerNumberValue !== -1 ? String(playerNumberValue) : 'N.D.';
-
-                    playerNumberContainer.appendChild(playerNumberElement);
-                    playerCard.appendChild(playerNumberContainer);
-                }
-            })
-            .catch(error => {
-                console.error('Errore durante il recupero del numero del giocatore:', error);
-            });
-
-
+        try {
+            let playerNumber = await getPlayerNumber(player.playerId)
+            if (playerNumber.data !== null) {
+                playerCard.appendChild(renderPlayerNumber(playerNumber.data.playerNumber));
+            }
+        } catch (e) {
+            alert(e)
+            console.error('Errore durante il recupero del numero del giocatore:', error);
+        }
         playersContainer.appendChild(playerCard);
-    });
+    }
 
 }
+function renderPlayerCard(player){
+    const playerCard = document.createElement('button');
+    playerCard.setAttribute('data-playerid', player.playerId)
+    playerCard.setAttribute('data-imageurl', player.imageUrl)
+    playerCard.setAttribute('data-name', player.name)
 
+    playerCard.classList.add('player-card-for-homepage');
+
+    const competitionLogoContainer = document.createElement('div');
+    competitionLogoContainer.classList.add('competition-logo-container1');
+
+    const playerName = document.createElement('h5');
+    playerName.classList.add('player-name');
+
+    const firstName = player.firstName ? player.firstName : " ";
+    const lastName = player.lastName ? player.lastName : " ";
+
+    playerName.innerHTML = `<span style="font-weight: normal; font-size: smaller">${firstName}</span><br><span style="font-size: smaller">${lastName}</span>`;
+
+    const squadCard = document.createElement('div');
+    squadCard.classList.add('squad-card');
+
+    const squadLogoContainer = document.createElement('div');
+    squadLogoContainer.classList.add('squad-logo-container');
+
+    const squadLogo = document.createElement('img');
+    squadLogo.classList.add('squad-logo-in-starplayers');
+    squadLogo.setAttribute('loading', 'eager');
+    squadLogo.alt = player.teamName + ' Logo';
+    squadLogo.src = `https://tmssl.akamaized.net/images/wappen/head/${player.currentClubId}.png`; // URL del logo del club
+    squadLogoContainer.appendChild(squadLogo);
+    squadCard.appendChild(squadLogoContainer);
+
+    const teamName = document.createElement('h5');
+    teamName.classList.add('team-name');
+    teamName.textContent = player.currentClubName;
+    squadCard.appendChild(teamName);
+    competitionLogoContainer.appendChild(playerName);
+    competitionLogoContainer.appendChild(squadCard);
+
+    const playerImage = document.createElement('img');
+    playerImage.classList.add('squad-info-frame');
+    playerImage.alt = player.firstName + ' ' + player.lastName + ' image';
+    playerImage.src = player.imageUrl;
+    playerCard.appendChild(playerImage);
+
+    playerCard.appendChild(competitionLogoContainer);
+
+    return playerCard
+}
+function renderPlayerNumber(playerNumber){
+    const playerNumberContainer = document.createElement('div');
+    playerNumberContainer.classList.add('player-number-container');
+    const playerNumberElement = document.createElement('h5');
+    playerNumberElement.textContent = playerNumber !== -1 ? String(playerNumber) : 'N.D.';
+    playerNumberContainer.appendChild(playerNumberElement);
+
+    return playerNumberContainer
+}
 /**
  * Ottiene i giocatori da una competizione specifica e li renderizza utilizzando la mappa identificatore-container.
  */
 function getAndRenderPlayers() {
     Promise.all([
         getPlayersByCompetition('IT1'),
-        getPlayersByCompetition('GB1')
-    ]).then(res=>{
-        renderPlayers(res[0],'Serie-A')
-        renderPlayers(res[1],'Premier-League')
+        getPlayersByCompetition('GB1'),
+        getPlayersByCompetition('ES1'),
+        getPlayersByCompetition('L1'),
+        getPlayersByCompetition('FR1'),
+    ]).then(async res => {
+        await renderPlayers(res[0], 'Serie-A')
+        await renderPlayers(res[1], 'Premier-League')
+        await renderPlayers(res[2], 'La-Liga')
+        await renderPlayers(res[3], 'Bundesliga')
+        await renderPlayers(res[4], 'Ligue-1')
+
         let playerCards = document.querySelectorAll('.players-container-in-homepage > .player-card-for-homepage')
         setPlayersEventListener(playerCards) //imposto i listener per far si che quando l'utente clicca si vada sulla pagina del giocatore
     }).catch(error => {
@@ -178,18 +180,6 @@ function getAndRenderPlayers() {
     });
 }
 
-/**
- * Funzione per mescolare un array
- * @param array
- * @returns {*}
- */
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
 
 /**
  * Funzione per ottenere il numero di maglia di un giocatore
@@ -200,15 +190,6 @@ function getPlayerNumber(idPlayer) {
     //const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
     const url=`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
     return axios.get(url)
-        .then(playerNumberResponse => {
-            const playerNumber = playerNumberResponse.data;
-
-            return playerNumber;
-        })
-        .catch(error => {
-            console.error('Errore durante il recupero del numero di maglia del giocatore:', error);
-            throw error;
-        });
 }
 
 

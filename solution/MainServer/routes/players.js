@@ -18,10 +18,10 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
 })
 
 /**
- * Get player by competitionID and last season
+ * return 5 random players that play in a competition in a certain season.
  */
-router.get('/getPlayersByCompetitionAndLastSeason/:competition_id/:last_season', function (req,res){
-    axios.get(`http://localhost:8081/players/getPlayersByCompetitionAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
+router.get('/get5RandomPlayersByCompIdAndLastSeason/:competition_id/:last_season', function (req,res){
+    axios.get(`http://localhost:8081/players/get5RandomPlayersByCompIdAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{

@@ -38,8 +38,10 @@ public class PlayersService {
         return lineup;
     }
 
-    public List<Players> getPlayersByCompIdAndSeasonOrderByValue(String competitionId, Integer lastSeason) {
-        return playersRepository.findTop50ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
+    public List<Players> get5RandomPlayersByCompIdAndLastSeason(String competitionId, Integer lastSeason) {
+        List<Players> players = playersRepository.findTop150ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
+        Collections.shuffle(players);
+        return players.subList(0,5);
     }
 
 

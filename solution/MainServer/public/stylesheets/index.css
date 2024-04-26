@@ -875,7 +875,7 @@ header ul li ul li a{
 
 .knockout-body{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     box-sizing: border-box;
     width: 100%;
@@ -2465,7 +2465,7 @@ tbody > tr:hover{
     align-items: center;
     height: 50px;
     width: 50px;
-    margin: 0 !important;
+    margin: 0;
     position: absolute;
     top: 4px;
     right: 9px;
@@ -2475,6 +2475,7 @@ tbody > tr:hover{
     justify-content: center;
     color: white;
     font-weight: bold;
+    z-index: 99;
 }
 
 .player-role-description {
@@ -2520,6 +2521,8 @@ tbody > tr:hover{
     box-sizing: border-box;
 }
 .squad-info-frame {
+    min-width: clamp(75px,10vw,150px);
+    height: clamp(75px,10vw,150px);
     align-self: stretch;
     position: relative;
     object-fit:contain ;

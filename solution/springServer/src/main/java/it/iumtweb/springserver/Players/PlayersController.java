@@ -86,9 +86,9 @@ public class PlayersController {
      * @param lastSeason: the season we want to filter
      * @return a list of most valuable players in a certain competitition and season.
      */
-    @GetMapping("/getPlayersByCompetitionAndLastSeason/{competitionId}/{lastSeason}")
-    public ResponseEntity<List<Players>> getPlayersByCompIdAndSeasonOrderByValue(@PathVariable String competitionId, @PathVariable Integer lastSeason) {
-        List<Players> players = playersService.getPlayersByCompIdAndSeasonOrderByValue(competitionId,lastSeason);
+    @GetMapping("/get5RandomPlayersByCompIdAndLastSeason/{competitionId}/{lastSeason}")
+    public ResponseEntity<List<Players>> get5RandomPlayersByCompIdAndLastSeason(@PathVariable String competitionId, @PathVariable Integer lastSeason) {
+        List<Players> players = playersService.get5RandomPlayersByCompIdAndLastSeason(competitionId,lastSeason);
         if (players.isEmpty()) {
             System.out.println("No Players found for competition ID: " + competitionId);
             return ResponseEntity.noContent().build();
@@ -118,8 +118,6 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
-
-
     /**
      *
      * @param player_id to find a player

@@ -99,6 +99,8 @@ async function init() {
             knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
             currentKnockoutSeason=this.value
             await getAllMatchesInKnockoutRounds(this.value)
+            let knockoutCards=document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
+            setMatchesCardEventListener(knockoutCards)
         })
     document.getElementById('competition-table-btn').addEventListener('click', async () => {
         if (isWithGroup)
@@ -602,6 +604,8 @@ async function getKnockoutMatches(){
         let rounds = await fetchAllRoundNumbers(season)
         knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
         await getAllMatchesInKnockoutRounds(season)
+        let knockoutCards=document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
+        setMatchesCardEventListener(knockoutCards)
     }
 }
 
@@ -763,7 +767,7 @@ function renderMatchesRound(matches){
                                     <h6>${match.away_club_name}</h6>
                                 </div>
                             </div>
-                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${formattedDate}" class='btn-load-match-details'>
+                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${formattedDate}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
                                 <i class='bx bxs-right-arrow-circle'></i>
                             </button>`
         matchesContainer.appendChild(singleMatchElement)
