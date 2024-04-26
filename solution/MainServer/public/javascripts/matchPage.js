@@ -47,14 +47,14 @@ function renderMatchEvents(events, homeClubId, awayClubId,finalResult){
     let isFirstHalfBannerRendered=false
     homeGoalEvents=[]
     awayGoalEvents=[]
-    currentHomeGoals=finalResult.split(':')[0]
-    currentAwayGoals=finalResult.split(':')[1]
+    currentHomeGoals= +finalResult.split(':')[0]
+    currentAwayGoals= +finalResult.split(':')[1]
     eventsContainer.innerHTML=''
     //aggiungiamo il banner per il risultato finale.
     eventsContainer.appendChild(renderResultBanner(finalResult,"Partita finita"))
     //aggiungiamo tutti gli altri eventi
     events.forEach((event,index,arr)=>{
-        let eventDiv= renderEvent(event,homeClubId,awayClubId,currentHomeGoals,currentAwayGoals)
+        let eventDiv= renderEvent(event,homeClubId,awayClubId)
         eventsContainer.appendChild(eventDiv)
         //controlliamo il banner del primo tempo
         if(index+1<arr.length && !isFirstHalfBannerRendered){

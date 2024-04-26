@@ -119,16 +119,12 @@ function renderPlayerCard(player){
     const squadCard = document.createElement('div');
     squadCard.classList.add('squad-card');
 
-    const squadLogoContainer = document.createElement('div');
-    squadLogoContainer.classList.add('squad-logo-container');
-
     const squadLogo = document.createElement('img');
     squadLogo.classList.add('squad-logo-in-starplayers');
     squadLogo.setAttribute('loading', 'eager');
     squadLogo.alt = player.teamName + ' Logo';
     squadLogo.src = `https://tmssl.akamaized.net/images/wappen/head/${player.currentClubId}.png`; // URL del logo del club
-    squadLogoContainer.appendChild(squadLogo);
-    squadCard.appendChild(squadLogoContainer);
+    squadCard.appendChild(squadLogo);
 
     const teamName = document.createElement('h5');
     teamName.classList.add('team-name');

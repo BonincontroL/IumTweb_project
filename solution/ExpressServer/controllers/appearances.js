@@ -101,7 +101,7 @@ function getPlayerLast5Games(playerId) {
                 home_club_name:"$game_info.home_club_name",
                 away_club_name:"$game_info.away_club_name",
                 aggregate:"$game_info.aggregate",
-                player_current_club_id:1,
+                player_club_id:1,
                 yellow_cards:1,
                 red_cards:1,
                 goals:1,

@@ -268,7 +268,7 @@ function renderPlayerMatch(match){
 
     const matchResultContainer = document.createElement('div');
     matchResultContainer.classList.add('match-result-vertical');
-    if(match.player_current_club_id ===match.home_club_id)
+    if(match.player_club_id ===match.home_club_id)
         homeStats=createStats(match)
     else
         awayStats=createStats(match)
@@ -310,7 +310,7 @@ function createTeamContainer(teamName, goals, teamId,stats) {
     const displayedTeamName = teamName || 'N.D.';
     if(Object.keys(stats).length!==0) {//se l'oggetto stats c'è
         if (stats.goals !== 0)
-            goalsContainer = renderGenericStatsContainer(stats.goals, "images/gameeventsLogos/goal-icon.svg")
+            goalsContainer = renderGenericStatsContainer(stats.goals, "images/playerStatsIcons/goal-icon.svg")
         if (stats.assists !== 0)
             assistsContainer = renderGenericStatsContainer(stats.assists, "images/playerStatsIcons/assist-icon.svg")
         if (stats.yellow_cards !== 0 || stats.red_cards !== 0) {
@@ -323,8 +323,8 @@ function createTeamContainer(teamName, goals, teamId,stats) {
     teamContainer.innerHTML = `
             <img class="squadLogo" loading="lazy" alt="" src="${logoUrl}">
             <h6 class="full-width-left">${displayedTeamName}</h6>
-            ${goalsContainer!==null? goalsContainer.innerHTML: ''}
-            ${assistsContainer!==null? assistsContainer.innerHTML: ''}
+            ${goalsContainer!==null? goalsContainer.outerHTML: ''}
+            ${assistsContainer!==null? assistsContainer.outerHTML: ''}
             ${yellowOrRedContainer!==null? yellowOrRedContainer.outerHTML: ''}
             <p>${goals}</p>
         `;

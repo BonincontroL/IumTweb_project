@@ -682,7 +682,7 @@ header ul li ul li a{
 }
 .burger-menu{
     display: none;
-    position: absolute;
+    position: sticky;
     top:8vh;
     width: 100%;
     background-color: var(--primary-blue-900);
@@ -2509,17 +2509,16 @@ tbody > tr:hover{
     object-fit: cover;
 }
 .squad-logo-in-starplayers {
-    height: 74px;
-    width: 42px;
+    height: clamp(30px,3vw,60px);
+    min-width: clamp(30px,3vw,60px);
     position: relative;
     object-fit: contain;
 }
 
 .squad-card {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    height: 76px;
-    border-radius: var(--br-20px);
     flex-shrink: 0;
     justify-content: flex-start;
     padding: var(--padding-15px) var(--padding-3xl) var(--padding-15px)
