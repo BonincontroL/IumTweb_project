@@ -3,7 +3,9 @@ const Model = require('../models/appearances')
 function getTopScorer(competitionId){
     return Model.aggregate([
         {
-            $match:{competition_id:competitionId}
+            $match:{
+                competition_id:competitionId
+            }
         },
         {
             $group:{
@@ -70,28 +72,50 @@ function getPlayerStatistics(playerId) {
 
 function getPlayerLast5Games(playerId) {
     const numericPlayerId = parseInt(playerId, 10);
-
-    try {
-        const playerLast5Games =  Model.aggregate([
-            {
-                $match: {
-                    player_id: numericPlayerId,
-                    minutes_played: { $gt: 0 }
-                }
-            },
-            {
-                $sort: { date: -1 }
-            },
-            {
-                $limit: 5
+    return Model.aggregate([
+        {
+            $match: {
+                player_id: numericPlayerId,
+                minutes_played: {$gt: 0}
             }
-        ]);
-
-        return playerLast5Games;
-    } catch (err) {
-        console.error(`Error retrieving last 5 games for player ID ${playerId}`, err);
-        throw err;
-    }
+        },
+        {
+            $lookup:{
+                from:"games",
+                localField:"game_id",
+                foreignField:"game_id",
+                as:"game_info"
+            }
+        },
+        {
+            $unwind:"$game_info"
+        },
+        {
+            $project:{
+                _id:0,
+                season:"$game_info.season",
+                round:"$game_info.round",
+                date:"$game_info.date",
+                home_club_id:"$game_info.home_club_id",
+                away_club_id:"$game_info.away_club_id",
+                home_club_name:"$game_info.home_club_name",
+                away_club_name:"$game_info.away_club_name",
+                aggregate:"$game_info.aggregate",
+                player_current_club_id:1,
+                yellow_cards:1,
+                red_cards:1,
+                goals:1,
+                assists:1,
+                minutes_played:1
+            }
+        },
+        {
+            $sort: {date: -1}
+        },
+        // {
+        //     $limit: 5
+        // }
+    ]);
 }
 
 

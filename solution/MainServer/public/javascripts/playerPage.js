@@ -202,51 +202,12 @@ function fetchPlayerLastMatches(){
     button.addEventListener('click', async function () {
         try {
             loadingSpinner.style.display = 'block';
-
-            const playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'));
-            const playerId = playerInfo.playerId;
-
-            const playerLastMatchesResponse = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
-            const playerLastMatches = playerLastMatchesResponse.data;
-
+            let playerLastMatches = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
+            playerLastMatches = playerLastMatches.data;
             if (playerLastMatches.length === 0) {
                 lastMatchesContainer.innerHTML = '<h1>N.D. - Nessuna partita trovata.</h1>';
-                loadingSpinner.style.display = 'none';
-                return;
-            }
-
-            lastMatchesContainer.innerHTML = '';
-
-            for (const match of playerLastMatches) {
-                const gameId = match.game_id;
-
-                const gameResponse = await axios.get(`http://localhost:3001/games/getGamesByGameId/${gameId}`);
-                const game = gameResponse.data;
-
-                const gameInfoContainer = document.createElement('div');
-                gameInfoContainer.classList.add('main-container');
-                gameInfoContainer.classList.add('game-information');
-                gameInfoContainer.classList.add('game-information-in-player');
-
-                const roundAndDateContainer = document.createElement('div');
-                roundAndDateContainer.classList.add('round-and-date-container');
-                roundAndDateContainer.innerHTML = `
-                    <p>${game.round}</p>
-                    <p>${moment(game.date).format('DD MMM YYYY')}</p>
-                `;
-                gameInfoContainer.appendChild(roundAndDateContainer);
-
-                const matchResultContainer = document.createElement('div');
-                matchResultContainer.classList.add('match-result-vertical');
-
-                const homeTeamContainer = createTeamContainer(game.home_club_name, game.home_club_goals, game.home_club_id);
-                matchResultContainer.appendChild(homeTeamContainer);
-
-                const awayTeamContainer = createTeamContainer(game.away_club_name, game.away_club_goals, game.away_club_id);
-                matchResultContainer.appendChild(awayTeamContainer);
-
-                gameInfoContainer.appendChild(matchResultContainer);
-                lastMatchesContainer.appendChild(gameInfoContainer);
+            }else {
+                renderPlayerMatches(playerLastMatches)
             }
             loadingSpinner.style.display = 'none';
         } catch (error) {
@@ -255,30 +216,109 @@ function fetchPlayerLastMatches(){
         }
     });
 }
+function renderPlayerMatches(matches){
+    const lastMatchesContainer = document.getElementById('playerLastMatches');
+    lastMatchesContainer.innerHTML=''
+    matches.forEach(match=>{
+        let matchCard= renderPlayerMatch(match)
+        lastMatchesContainer.appendChild(matchCard)
+    })
+}
 
+function renderPlayerMatch(match){
+    let homeStats={}, awayStats={}
+    const gameInfoContainer = document.createElement('div');
+    gameInfoContainer.classList.add('main-container');
+    gameInfoContainer.classList.add('game-information');
+    gameInfoContainer.classList.add('game-information-in-player');
+
+    const roundAndDateContainer = document.createElement('div');
+    roundAndDateContainer.classList.add('round-and-date-container');
+    roundAndDateContainer.innerHTML = `
+                    <p>${match.round}</p>
+                    <p>${match.date.split('T')[0]}</p>
+                `;
+    gameInfoContainer.appendChild(roundAndDateContainer);
+
+    const matchResultContainer = document.createElement('div');
+    matchResultContainer.classList.add('match-result-vertical');
+    if(match.player_current_club_id ===match.home_club_id)
+        homeStats=createStats(match)
+    else
+        awayStats=createStats(match)
+
+    const homeTeamContainer = createTeamContainer(match.home_club_name, match.aggregate.split(':')[0], match.home_club_id,homeStats);
+    matchResultContainer.appendChild(homeTeamContainer);
+
+    const awayTeamContainer = createTeamContainer(match.away_club_name, match.aggregate.split(':')[1], match.away_club_id,awayStats);
+    matchResultContainer.appendChild(awayTeamContainer);
+
+    gameInfoContainer.appendChild(matchResultContainer);
+
+    return gameInfoContainer
+}
+function createStats(game){
+    return {
+        goals: game.goals,
+        assists: game.assists,
+        yellow_cards: game.yellow_cards,
+        red_cards: game.red_cards,
+        minutes_played: game.minutes_played
+    }
+}
 /**
  * Crea un container con le informazioni di una squadra.
  * @param teamName
  * @param goals
  * @param teamId
+ * @param stats
  * @returns {HTMLDivElement}
  */
-function createTeamContainer(teamName, goals, teamId) {
+function createTeamContainer(teamName, goals, teamId,stats) {
     const teamContainer = document.createElement('div');
+    let goalsContainer = null,assistsContainer = null,yellowOrRedContainer =null
     teamContainer.classList.add('squad-info-row');
 
     const logoUrl = `https://tmssl.akamaized.net/images/wappen/head/${teamId}.png`;
 
     const displayedTeamName = teamName || 'N.D.';
-
+    if(Object.keys(stats).length!==0) {//se l'oggetto stats c'è
+        if (stats.goals !== 0)
+            goalsContainer = renderGenericStatsContainer(stats.goals, "images/gameeventsLogos/goal-icon.svg")
+        if (stats.assists !== 0)
+            assistsContainer = renderGenericStatsContainer(stats.assists, "images/playerStatsIcons/assist-icon.svg")
+        if (stats.yellow_cards !== 0 || stats.red_cards !== 0) {
+            yellowOrRedContainer = document.createElement('img')
+            yellowOrRedContainer.className = 'game-event-icon'
+            yellowOrRedContainer.setAttribute('src', `${stats.yellow_cards === 0 ? 'images/gameeventsLogos/red-icon.svg' : 'images/gameeventsLogos/yellow-icon.svg'}`)
+            yellowOrRedContainer.setAttribute('alt', `${stats.yellow_cards === 0 ? 'red card' : 'yellow card'}`)
+        }
+    }
     teamContainer.innerHTML = `
             <img class="squadLogo" loading="lazy" alt="" src="${logoUrl}">
             <h6 class="full-width-left">${displayedTeamName}</h6>
+            ${goalsContainer!==null? goalsContainer.innerHTML: ''}
+            ${assistsContainer!==null? assistsContainer.innerHTML: ''}
+            ${yellowOrRedContainer!==null? yellowOrRedContainer.outerHTML: ''}
             <p>${goals}</p>
         `;
     return teamContainer;
 }
 
+function renderGenericStatsContainer(statistic, imageSrc){
+    let container =document.createElement('div');
+    container.className='match-goal-icon-container';
+    container.innerHTML=
+        `<p>${statistic}</p>
+        <img
+            class="game-event-icon"
+            loading="lazy"
+            alt=""
+            src="${imageSrc}"
+        />`
+
+    return container
+}
 
 
 

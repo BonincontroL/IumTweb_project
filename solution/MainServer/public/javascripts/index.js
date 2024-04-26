@@ -89,7 +89,8 @@ function setMatchesCardEventListener(matchCards){
                 homeClubName:match.getAttribute('data-homeclubname'),
                 awayClubName:match.getAttribute('data-awayclubname'),
                 aggregate:match.getAttribute('data-aggregate'),
-                date:match.getAttribute('data-date')
+                date:match.getAttribute('data-date'),
+                competitionId:match.getAttribute('data-competitionId')
             }
             sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
             window.location.href='../match_page.html'

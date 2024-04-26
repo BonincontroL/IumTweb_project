@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     manageMatchButtons()
     renderBannerInfo()
-    getMatchInformation(matchInfo.gameId)
+    getMatchInformation()
     getMatchFormation(matchIds)
     getMatchEvents(matchIds,matchInfo.aggregate)
     initLogin();
@@ -194,21 +194,41 @@ function renderEvent(event,homeClubId,awayClubId){
  * get some match information like refree,stadium, home club manager and away club manager
  * @param gameId the identifier of the game
  */
-function getMatchInformation(gameId){
-    let url = "http://localhost:3000/games/getRefreeAndStadium";
-    axios.get(url,{params:{
-            game_id:gameId
-        }}).then(res=>{
-        document.getElementById('match-details-refree').innerText=res.data.referee
-        document.getElementById('match-details-stadium').innerText=res.data.stadium
-        homeManagerName=res.data.home_club_manager_name
-        awayManagerName=res.data.away_club_manager_name
+function getMatchInformation(){
+    Promise.all([
+        getRefreeAndStadium(),
+        getCompetitionName()
+    ]).then(res=>{
+        homeManagerName=res[0].data.home_club_manager_name
+        awayManagerName=res[0].data.away_club_manager_name
+        renderMatchInformation(res[0].data, res[1].data)
     }).catch(err=>{
         alert(err)
     })
 
 }
-
+function renderMatchInformation(infos,competition){
+    document.getElementById('match-details-refree').innerText=infos.referee
+    document.getElementById('match-details-stadium').innerText=infos.stadium
+    document.getElementById('match-details-competition').innerText=competition
+    document.getElementById('match-details-competitionImg').setAttribute('src',`${competitionLogoImgUrl}${matchInfo.competitionId.toLowerCase()}.png`)
+}
+function getCompetitionName(){
+    let url = "http://localhost:3000/competitions/getName";
+    return axios.get(url, {
+        params: {
+            competition_id: matchInfo.competitionId
+        }
+    })
+}
+function getRefreeAndStadium() {
+    let url = "http://localhost:3000/games/getRefreeAndStadium";
+    return axios.get(url, {
+        params: {
+            game_id: matchInfo.gameId
+        }
+    })
+}
 /**
  * this function is used to switch to the correct container into the single match page
  * it's also used to manage the correct active class of the button

@@ -2070,6 +2070,7 @@ tbody > tr:hover{
     justify-content: flex-start;
     padding: var(--padding-10px);
     gap: var(--gap-lgi);
+    transition: 0.2s ease-in-out;
 }
 
 
@@ -2540,6 +2541,7 @@ tbody > tr:hover{
     padding: var(--padding-lgi) 0;
     position: relative;
     gap: var(--gap-3xs);
+    transition: 0.3s ease-in-out;
 }
 .player-card-for-competition,
 .manager-card-for-competition{
@@ -2939,7 +2941,10 @@ tbody > tr:hover{
     align-items: center;
     align-content: flex-start;
     padding: var(--padding-10px) 0;
-    gap:var(--gap-4xs)
+    gap:var(--gap-4xs);
+}
+.player-card-for-homepage:hover{
+    transform:scale(1.03);
 }
 
 .top-players-container-for-comp {
@@ -3497,6 +3502,11 @@ footer {
     width: 80%;
     border-radius: var(--br-12px);
     box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    transition: 0.2s ease-out;
+}
+.game-information:hover{
+    cursor: pointer;
+    transform: scale(1.02);
 }
 .full-width-left{
     width: 100%;
