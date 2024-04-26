@@ -32,12 +32,14 @@ async function init() {
             isWithGroup = true
             document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
         }
-        if (competitionType === 'domestic_league') { //questo perchè in una domestic_leauge non ho la fase finale
+        if (competitionType === 'domestic_league') { //in una domestic_leauge non ho la fase finale
             document.getElementById('competition-knockout-btn').remove()
             document.getElementById('competitionKnockout').remove()
-        } else if (!isWithGroup) {
+        } else if (!isWithGroup) {//se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
             document.getElementById('competition-matches-btn').remove()
             document.getElementById('competitionMatches').remove()
+            document.getElementById('competition-table-btn').remove()
+            document.getElementById('competitionTable').remove()
         }
     } catch (e) {
         alert(e)
@@ -326,7 +328,7 @@ function renderFirstPlayerCard(player,index){
             <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-first-img">
             <div class="player-stats-goals-container">
                 <h6>${player.marketValueInEur}</h6>
-                <h6>MLN</h6>
+                <h6>EUR</h6>
             </div> 
         </div>`
     return playerCard
@@ -423,7 +425,7 @@ function getClubsDividedByGroup(){
                 renderClubsDividedByGroup(clubs)
                 clubCards= document.querySelectorAll('.competitions-group-container > .squad-card-mini')
             }
-            setAllClubButtonsListener(clubCards, competitionId, competitionName)
+            setAllClubButtonsListener(clubCards)
         }
     })
 }
@@ -464,8 +466,10 @@ function renderGroup(group){
     groupContainer.appendChild(squadsContainer)
     //creazione delle varie card per le squadre.
     group.clubs.forEach(club=>{
-        let clubCard = renderClubCard(club)
-        squadsContainer.appendChild(clubCard)
+        if(club.name!==undefined) {
+            let clubCard = renderClubCard(club)
+            squadsContainer.appendChild(clubCard)
+        }
     })
     return groupContainer
 }
@@ -480,7 +484,7 @@ function getClubs(){
         if(res.data.length!==0) {
             renderAllClubs(res.data)
             let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
-            setAllClubButtonsListener(clubCards, competitionId, competitionName)
+            setAllClubButtonsListener(clubCards)
         }
     }).catch(err=>{
         alert(err)
@@ -490,8 +494,10 @@ function renderAllClubs(clubs){
     let clubContainer= document.getElementById('competitionSquads')
     clubContainer.innerHTML=''
     clubs.forEach(club=>{
-        let clubCard = renderClubCard(club)
-        clubContainer.appendChild(clubCard)
+        if(club.name!==undefined) {
+            let clubCard = renderClubCard(club)
+            clubContainer.appendChild(clubCard)
+        }
     })
 }
 function renderClubCard(club){
@@ -499,9 +505,6 @@ function renderClubCard(club){
     clubCard.className='squad-card-mini'
     clubCard.setAttribute('data-clubId', club.clubId)
     clubCard.setAttribute('data-name', club.name)
-    clubCard.setAttribute('data-stadiumName', club.stadiumName)
-    clubCard.setAttribute('data-stadiumSeats', club.stadiumSeats)
-    clubCard.setAttribute('data-competitionId', competitionId)
     clubCard.innerHTML=
         `<img src="${clubLogoImgURL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
           </img>

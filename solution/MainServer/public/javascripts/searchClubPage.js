@@ -31,7 +31,7 @@ function getAllClubsByInitial() {
         .then(response => {
             renderClubsGroupedByInitial(response.data);
             let clubCards = document.querySelectorAll('#clubs-container .squad-card-mini')
-            setAllClubButtonsListener(clubCards,null,null)//non conosciamo il competition name, dovremo fare una query per ottenerlo quando arriviamo in squadPage
+            setAllClubButtonsListener(clubCards)
         })
         .catch(error => {
             alert(error);
@@ -76,7 +76,7 @@ function renderClubsGroupedByInitial(clubsGrouped) {
         clubsGroup.appendChild(clubsContainer);
         mainContainer.appendChild(clubsGroup);
         let clubCards=document.querySelectorAll('.squad-card-mini')
-        setAllClubButtonsListener(clubCards,null,null)
+        setAllClubButtonsListener(clubCards)
     }
 }
 

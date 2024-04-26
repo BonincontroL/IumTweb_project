@@ -59,6 +59,19 @@ router.get('/getClubsGroupedByInitialAndLikeName/:name', function (req, res) {
         handleAxiosError(err, res)
     })
 })
+router.get('/get', function (req, res) {
+    // Utilizzo del parametro "name" direttamente dall'URL
+    axios.get(SPRING_SERVER+`/clubs/get`,{
+        params:{
+            club_id:req.query.club_id
+        }
+    })
+        .then(data => {
+            res.status(data.status).send(data.data);
+        }).catch(err => {
+        handleAxiosError(err, res)
+    })
+})
 
 
 

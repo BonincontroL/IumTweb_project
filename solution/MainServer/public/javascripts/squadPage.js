@@ -5,35 +5,27 @@ const MAIN_SERVER="http://localhost:3000"
 import {getTable,renderTableRow} from './competitionPage.js'
 document.addEventListener('DOMContentLoaded',init)
 let isTableLoaded=false, isPlayersLoaded
-function init(){
+async function init(){
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
     clubInfo={
         clubId:parseInt(urlParam.get('club_id'),10),
         name :urlParam.get('name'),
-        stadium:{
-            stadiumName:urlParam.get('stadiumName'),
-            stadiumSeats:urlParam.get('stadiumSeats')
-        },
-        competition:{
-            competitionId: urlParam.get('competitionId'),
-            competitionName: urlParam.get('competitionName')
-        },
-        lastSeason:undefined
     }
-
-    Promise.all([
-        getManagerName(),
-        getLastSeason(),
-        getCompetitionName()
-    ]).then(res=>{
-        clubInfo.managerName=res[0].data[0].name;
-        clubInfo.lastSeason=res[1].data.lastSeason
-        clubInfo.competition.competitionName=res[2].data
-        renderBasicInfo()
-    }).catch(err=>{
+    try{
+        let managerName= await getManagerName()
+        clubInfo.managerName = managerName.data[0].name;
+        let club=await getClubInfo()
+        clubInfo.lastSeason=club.data.lastSeason
+        clubInfo.stadiumName=club.data.stadiumName
+        clubInfo.stadiumSeats=club.data.stadiumSeats
+        clubInfo.competitionId=club.data.domesticCompetitionId
+        let competitionName=await getCompetitionName()
+        clubInfo.competitionName = competitionName.data
+        renderCompetitionInfo()
+    }catch(err){
         alert(err)
-    })
+    }
 
     squadInfoBtn= document.getElementById('squad-info-btn')
     lateralSquadButtons=document.querySelectorAll('#squadLateralNavbar .lateral-menu-button')
@@ -65,7 +57,7 @@ function init(){
 }
 function getTableAndLastMatches(){
     Promise.all([
-        getTable( clubInfo.competition.competitionId, clubInfo.lastSeason,"full"),
+        getTable( clubInfo.competitionId, clubInfo.lastSeason,"full"),
         getLast5Games()
     ]).then(res=>{
         renderMiniTable(res[0].data)
@@ -79,12 +71,12 @@ function getCompetitionName(){
     let url="http://localhost:3000/competitions/getName"
     return axios.get(url,{
         params:{
-            competition_id:clubInfo.competition.competitionId
+            competition_id:clubInfo.competitionId
         }
     })
 }
-function getLastSeason(){
-    let url="http://localhost:3000/clubs/getLastSeason"
+function getClubInfo(){
+    let url="http://localhost:3000/clubs/get"
     return axios.get(url,{params:{
         club_id:clubInfo.clubId
     }
@@ -96,6 +88,9 @@ function renderMiniTable(completeCompetitionTable){
     let startingIndex= Math.max(0,index-1)
     const lastIndex=Math.min(completeCompetitionTable.length, index+2)
     let miniCompetitionTable=completeCompetitionTable.slice(startingIndex,lastIndex)
+    //setta le informazioni del banner
+    document.getElementById('squadCompetitionImageInTable').setAttribute('src',`${competitionLogoImgUrl}${clubInfo.competitionId.toLowerCase()}.png`)
+    document.getElementById('squadCompetitionNameInTable').innerText=clubInfo.competitionName
 
     miniCompetitionTable.forEach(tableRowData=>{
         let tableRow =renderTableRow(tableRowData,startingIndex)
@@ -103,6 +98,10 @@ function renderMiniTable(completeCompetitionTable){
             tableRow.classList.add('table-row-active')
         miniTable.appendChild(tableRow)
     })
+
+}
+function manageClubTableVariants(){
+
 }
 /**
  * function that do an axios request to get all the club players
@@ -248,17 +247,17 @@ function getManagerName(){
         }
     })
 }
-function renderBasicInfo() {
+function renderCompetitionInfo() {
     //nome e logo del club nella barra laterale
     document.getElementById('clubName').innerText = clubInfo.name
     document.getElementById('clubImage').setAttribute('src', `${clubLogoImgURL}${clubInfo.clubId}.png`)
     //nome della competizione + logo
-    document.getElementById('squadCompetitionImage').setAttribute('src', `${competitionLogoImgUrl}${clubInfo.competition.competitionId.toLowerCase()}.png`)
-    document.getElementById('squadCompetitionName').innerText= clubInfo.competition.competitionName
+    document.getElementById('squadCompetitionImage').setAttribute('src', `${competitionLogoImgUrl}${clubInfo.competitionId.toLowerCase()}.png`)
+    document.getElementById('squadCompetitionName').innerText= clubInfo.competitionName
     //info sullo stadio+numero massimo di spettatori
-    document.getElementById('squadStadiumName').innerText=clubInfo.stadium.stadiumName
+    document.getElementById('squadStadiumName').innerText=clubInfo.stadiumName
     document.getElementById('squadStadiumCapacity').innerHTML=
-        `<b>Spettatori</b><br>${clubInfo.stadium.stadiumSeats}`
+        `<b>Spettatori</b><br>${clubInfo.stadiumSeats}`
     //nome allenatore
     document.getElementById('squadManagerName').innerText=clubInfo.managerName
 }
