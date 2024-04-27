@@ -12,16 +12,23 @@ const { handleAxiosError } = require('./utils/utils');
 router.get("/getPlayerStatistics/:playerId", function (req, res) {
     axios.get(EXPRESS_SERVER+'/appearances/getPlayerStatistics/'+req.params.playerId)
         .then(response => {
-            if (response.status === 200) {
-                res.send(response.data);
-            }else{
-                res.status(response.status).send(response.data);
-            }
+            res.status(response.status).send(response.data);
         })
         .catch(err => {
-            console.error('Errore durante il recupero delle statistiche del giocatore', err);
-            handleAxiosError(err,res)
+            handleAxiosError(err, res)
         });
+});
+
+router.get("/getTopScorer", function (req, res) {
+    axios.get(EXPRESS_SERVER + '/appearances/getTopScorer', {
+        params: {
+            comp_id: req.query.comp_id
+        }
+    }).then(response => {
+        res.status(response.status).send(response.data);
+    }).catch(err => {
+        handleAxiosError(err, res)
+    });
 });
 
 

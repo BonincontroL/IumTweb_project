@@ -80,7 +80,6 @@ function getPlayerStatistics() {
 
             }).finally(()=> {
                 loadingSpinner.style.display = "none";
-
         });
     }
 

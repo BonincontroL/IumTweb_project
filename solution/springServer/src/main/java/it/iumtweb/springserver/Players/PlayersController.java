@@ -72,7 +72,7 @@ public class PlayersController {
      *  the second is "substitutes" and contains a list of couples with id,url of all the players that bench the match.
      */
     @GetMapping("/getPlayersImgUrlById")
-    public ResponseEntity<Map<String,List<PlayersDTO>>> getPlayersImgUrlById(@RequestParam List<Long> starting, @RequestParam List<Long> substitutes){
+    public ResponseEntity<Map<String,List<PlayersDTO>>> getPlayersImgUrlById(@RequestParam List<Long> starting, @RequestParam(required = false) List<Long> substitutes){
         Map<String,List<PlayersDTO>> result = playersService.getPlayersImgUrlById(starting,substitutes);
         if(result.isEmpty())
             return ResponseEntity.noContent().build();
@@ -96,7 +96,16 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
-
+    @GetMapping("/getPlayersByCompetitionAndLastSeasonSortedByValue/{competitionId}/{lastSeason}")
+    public ResponseEntity<List<Players>> getPlayersByCompetitionAndLastSeasonSortedByValue(@PathVariable String competitionId,@PathVariable Integer lastSeason ){
+        List<Players> players = playersService.getPlayersByCompetitionAndLastSeasonSortedByValue(competitionId,lastSeason);
+        if (players.isEmpty()) {
+            System.out.println("No Players found for competition ID: " + competitionId+" and lastSeason: "+lastSeason);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(players);
+        }
+    }
     @GetMapping("/getTop150PlayersByMarketValue")
     public ResponseEntity<List<Players>> getTop150PlayersByMarketValue() {
         List<Players> players = playersService.getTop150PlayersByMarketValue();
