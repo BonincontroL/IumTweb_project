@@ -75,4 +75,9 @@ public class PlayersService {
         }
         return result;
     }
+
+    public List<Players> getPlayersByCompetitionAndLastSeasonSortedByValue(String competitionId, Integer lastSeason) {
+        List<Players> players = playersRepository.findTop150ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
+        return players.subList(0,Math.min(10,players.size())); //prendiamo i primi 10
+    }
 }

@@ -2,14 +2,14 @@ var express = require('express');
 let axios=require('axios')
 var router = express.Router();
 
-const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
+const { SPRING_SERVER } = require('./utils/constants');
 const {handleAxiosError} = require('./utils/utils');
 
 /**
  * Get player by competitionID
  */
 router.get('/getPlayersByCompetition/:competition_id', function (req,res){
-    axios.get(`http://localhost:8081/players/getPlayersByCompetition/${req.params.competition_id}`)
+    axios.get(SPRING_SERVER+`/players/getPlayersByCompetition/${req.params.competition_id}`)
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
@@ -21,14 +21,24 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
  * return 5 random players that play in a competition in a certain season.
  */
 router.get('/get5RandomPlayersByCompIdAndLastSeason/:competition_id/:last_season', function (req,res){
-    axios.get(`http://localhost:8081/players/get5RandomPlayersByCompIdAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
+    axios.get(`${SPRING_SERVER}/players/get5RandomPlayersByCompIdAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
             res.status(data.status).send(data.data);
         }).catch(err=>{
         handleAxiosError(err, res)
         })
 })
-
+/**
+ * get the top market value players in a certain competition and year
+ */
+router.get('/getPlayersByCompetitionAndLastSeasonSortedByValue/:competition_id/:last_season', function (req,res){
+    axios.get(`${SPRING_SERVER}/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${req.params.competition_id}/${req.params.last_season}`)
+        .then(data=>{
+            res.status(data.status).send(data.data);
+        }).catch(err=>{
+        handleAxiosError(err, res)
+    })
+})
 /**
  * Get player Img Url by player id
  */

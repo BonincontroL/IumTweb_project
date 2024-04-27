@@ -936,11 +936,16 @@ header ul li ul li a{
 }
 #competitionSquads,
 #competitionStats{
-    align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: center;
-    flex-wrap:wrap;
     overflow-x: auto;
+    padding: var(--padding-20px);
     gap: var(--gap-xl);
+}
+#competitionSquads{
+    flex-wrap: wrap;
 }
 
 #playerLastMatches{

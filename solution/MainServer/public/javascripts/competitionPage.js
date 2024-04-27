@@ -8,6 +8,7 @@ let knockoutRounds =[]
 let isSeasonDropdownRendered=false, isTableSeasonDropdownRendered=false, isKnockoutSeasonDropdown=false;
 let currentMatchesSeason=0, currentKnockoutSeason=0
 let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
+let isTopPlayersLoaded=false
 document.addEventListener('DOMContentLoaded',init)
 
 async function init() {
@@ -87,8 +88,11 @@ async function init() {
             currentRound=0 //si riparte dal primo round ogni cambiamento di season
             currentMatchesSeason=this.value
             let rounds = await fetchAllRoundNumbers(this.value)
-            matchRounds = rounds.data.filter(round => round.startsWith('Group'))
-            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+            if(isWithGroup) {
+                matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+                knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+            }else
+                matchRounds=rounds.data
             renderMatchesDropdownMenu()
             getAndRenderMatchesInRound(matchRounds[currentRound],this.value)
         })
@@ -102,31 +106,38 @@ async function init() {
             let knockoutCards=document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
             setMatchesCardEventListener(knockoutCards)
         })
-    document.getElementById('competition-table-btn').addEventListener('click', async () => {
-        if (isWithGroup)
-            await getGroupTables()
-        else {
-            getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
-                .then(res => {
-                    let tableContainer = document.getElementById('competitionTable')
-                    tableContainer.innerHTML = ''
-                    tableContainer.appendChild(renderGroupTable(competitionName, res.data))
-                    if(!isWithGroup) {
-                        createSeasonDropdown()
-                        renderSeasonDropdownMenu('tableSeasonSelector')
-                        addSeasonDropdownTableListener()
-                    }
-                    //parte dedicata alla gestione dei bottoni della classifica
-                    let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
-                    manageTableBtns(tableBtns)
-                    manageTableVariants(tableBtns)
-                })
-                .catch(err => {
-                    alert(err)
-                })
+    let tableButton = document.getElementById('competition-table-btn')
+    if (tableButton)
+        tableButton.addEventListener('click', async () => {
+            if (isWithGroup)
+                await getGroupTables()
+            else {
+                getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
+                    .then(res => {
+                        let tableContainer = document.getElementById('competitionTable')
+                        tableContainer.innerHTML = ''
+                        tableContainer.appendChild(renderGroupTable(competitionName, res.data))
+                        if (!isWithGroup) {
+                            createSeasonDropdown()
+                            renderSeasonDropdownMenu('tableSeasonSelector')
+                            addSeasonDropdownTableListener()
+                        }
+                        //parte dedicata alla gestione dei bottoni della classifica
+                        let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
+                        manageTableBtns(tableBtns)
+                        manageTableVariants(tableBtns)
+                    })
+                    .catch(err => {
+                        alert(err)
+                    })
+            }
+        })
+    document.getElementById('competition-statistic-btn').addEventListener('click',()=>{
+        if(!isTopPlayersLoaded){
+            getTopPlayers()
+            isTopPlayersLoaded=true
         }
     })
-    document.getElementById('competition-statistic-btn').addEventListener('click', getTopPlayers)
     initLogin();
 }
 
@@ -297,31 +308,79 @@ function getCompetitionsWithGroup(){
     let url ="http://localhost:3000/games/getCompetitionIdsWithGroup"
     return axios.get(url)
 }
-function getTopPlayers(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeason/${competitionId}/${competitionSeasons[0]}`
-    axios.get(url)
-        .then(res=>{
-            if(res.data.length!==0)
-                renderTopPlayers(res.data.slice(0,5)) //prendi solo i primi 5 giocatori
-        })
-        .catch(err=>{
-            alert(err)
-        })
-}
-function renderTopPlayers(players){
-    let playersContainer= document.getElementById('playersTopMarketValueContainer')
-    playersContainer.innerHTML=''
-    players.forEach((player,index)=>{
-        let playerCard
-        if(index===0)
-            playerCard=renderFirstPlayerCard(player,index)
-        else
-            playerCard=renderNormalPlayerCard(player,index)
-        playersContainer.appendChild(playerCard)
+
+function getTopPlayers() {
+    const loadingSpinner= document.getElementById('loading-spinner');
+    loadingSpinner.style.display = "block";
+    Promise.all([
+        getTopPlayersByMarketValue(),
+        getTopPlayersByGoals(),
+    ]).then(res => {
+        renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', 'VALUE')
+        renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer','GOALS')
+    }).catch(err => {
+        alert(err)
+    }).finally(()=>{
+        loadingSpinner.style.display = "none";
     })
 }
+function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
+    let idList = playersInfo.map(item => item._id)
+    axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
+        params: {
+            starting: idList.join(","),
+        }
+    }).then(imageRes => {
+        let players = mergePlayersAndImage(playersInfo, imageRes.data.starting_lineup)
+        renderTopPlayers(players, containerId, type)
+    }).catch(err => {
+        alert(err)
+    })
+}
+function mergePlayersAndImage(players,images){
+    return players.map(player=>{
+        const imageInfo= images.find(image=> image.playerId===player._id)
+        return{
+            playerId:player._id,
+            name:player.player_name,
+            total_goals:player.total_goals,
+            imageUrl: imageInfo? imageInfo.imageUrl:null
+        }
+    })
+}
+function getTopPlayersByMarketValue(){
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}`
+    return axios.get(url)
+}
+function getTopPlayersByGoals(){
+    let url= `http://localhost:3000/appearances/getTopScorer`
+    return axios.get(url,{
+        params:{
+            comp_id:competitionId
+        }
+    })
+}
+function renderTopPlayers(players,containerId,type){
+    let playersContainer= document.getElementById(containerId)
+    playersContainer.innerHTML=''
+    if(players.length!==0)
+        players.forEach((player,index)=>{
+            let playerCard
+            if(index===0)
+                playerCard=renderFirstPlayerCard(player,index,type)
+            else
+                playerCard=renderNormalPlayerCard(player,index,type)
+            playersContainer.appendChild(playerCard)
+        })
+    else{
+        let banner = document.createElement('h3')
+        banner.innerText='Nessun giocatore trovato...'
+        playersContainer.appendChild(banner)
+    }
 
-function renderFirstPlayerCard(player,index){
+}
+
+function renderFirstPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
     playerCard.className='player-stats-container-first';
     playerCard.innerHTML=
@@ -329,20 +388,20 @@ function renderFirstPlayerCard(player,index){
         <div class="player-stats-first-img-container">
             <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-first-img">
             <div class="player-stats-goals-container">
-                <h6>${player.marketValueInEur}</h6>
-                <h6>EUR</h6>
+                <h6>${type==='VALUE'?player.marketValueInEur: player.total_goals}</h6>
+                <h6>${type==='VALUE'? 'EUR': 'Goals'}</h6>
             </div> 
         </div>`
     return playerCard
 }
-function renderNormalPlayerCard(player,index){
+function renderNormalPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
     playerCard.className='player-stats-container';
     playerCard.innerHTML=
         `<h3>${index+1}°</h3>
          <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-img">
          <h6 class="player-name-in-card">${player.name}</h6>
-         <h6>${player.marketValueInEur}</h6>
+         <h6>${type==='VALUE'?player.marketValueInEur: player.total_goals}</h6>
         `
     return playerCard
 }
