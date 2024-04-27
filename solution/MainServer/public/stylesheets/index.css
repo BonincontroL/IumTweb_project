@@ -2309,8 +2309,7 @@ tbody > tr:hover{
     background-color: var(--primary-blue-900);
     display: flex;
     align-self: stretch;
-    width: auto;
-    height: auto;
+
     flex-direction: column;
     gap: var(--gap-xl);
     align-items: flex-start;
@@ -2318,6 +2317,11 @@ tbody > tr:hover{
     border-radius: var(--br-8px);
     padding: var(--padding-20px) var(--padding-10px);
     box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+}
+.player-stats-container-first:hover,
+.player-stats-container:hover{
+    transform: scale(1.03);
 }
 .player-stats-first-img-container{
     display: flex;
@@ -2389,6 +2393,8 @@ tbody > tr:hover{
     border-radius: var(--br-8px);
     padding: var(--padding-10px);
     box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
 }
 .player-stats-img{
     display: flex;

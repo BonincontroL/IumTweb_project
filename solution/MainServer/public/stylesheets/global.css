@@ -40,14 +40,6 @@ body {
     --primary-blue-700: #2100B5;
     --primary-blue-800: #1A008C;
 
-    /*for Serie A Card*/
-    --serieA-primary:#008fd7;
-    /*for PL card*/
-    --premierLeauge-primary: #3D195B;
-    /*for LaLiga card*/
-    --laliga-primary:#FF4C45;
-    --bundesliga-primary:#D10214;
-    --ligue1-primary: #091C3E;
     /* Gaps */
     --gap-mini: 15px;
     --gap-3xs: 10px;

@@ -19,10 +19,13 @@ async function init(){
         clubInfo.lastSeason=club.data.lastSeason
         clubInfo.stadiumName=club.data.stadiumName
         clubInfo.stadiumSeats=club.data.stadiumSeats
+        clubInfo.squadSize=club.data.squadSize
+        clubInfo.foreignersPercentage=club.data.foreignersPercentage
         clubInfo.competitionId=club.data.domesticCompetitionId
         let competitionName=await getCompetitionName()
         clubInfo.competitionName = competitionName.data
         renderCompetitionInfo()
+        renderGraph()
     }catch(err){
         alert(err)
     }
@@ -54,6 +57,27 @@ async function init(){
         }
     })
     initLogin();
+}
+function renderGraph(){
+    const nationalPlayers = 100-clubInfo.foreignersPercentage
+    const graph=document.getElementById('squadChart').getContext('2d')
+    const squadChart= new Chart(graph,{
+        type:'pie',
+        data:{
+            labels:['Giocatori Stranieri', 'Giocatori della nazionale'],
+            datasets:[{
+                data:[clubInfo.foreignersPercentage,nationalPlayers],
+                backgroundColor:[
+                    getComputedStyle(document.body).getPropertyValue('--primary-blue-900'),
+                    getComputedStyle(document.body).getPropertyValue('--primary-blue-100')
+                ],
+                borderWidth:1
+            }]
+        },
+        options:{
+            responsive:true
+        }
+    })
 }
 function getTableAndLastMatches(){
     Promise.all([
@@ -160,11 +184,11 @@ function renderPlayerCard(player){
             <div class="player-card-generic-info-container">
                    <div class="player-card-generic-info">
                         <p><b>Nazionalità</b></p>
-                        <p>${player.countryOfBirth}</p>
+                        <p>${player.countryOfCitizenship}</p>
                    </div>
                    <div class="player-card-generic-info">
                         <p><b>Valore Mercato</b></p>
-                        <p>${player.marketValueInEur} Mln</p>
+                        <p>${player.marketValueInEur} Eur</p>
                    </div>
             </div>
            <img src="${player.imageUrl}" alt="${player.name} image" class="imgplayer-name-child">
