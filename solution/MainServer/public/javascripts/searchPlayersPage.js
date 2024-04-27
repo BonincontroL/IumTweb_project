@@ -181,10 +181,19 @@ function fetchAndCategorizePlayers() {
  * Funzione per recuperare i giocatori dal server.
  * @returns {Promise<unknown>}
  */
+
+
 function fetchPlayers() {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    loadingSpinner.style.display = 'block';
+
     return axios.get('http://localhost:3000/players/getTop150PlayersByMarketValue')
-        .then(response => response.data)
+        .then(response => {
+            loadingSpinner.style.display = 'none';
+            return response.data;
+        })
         .catch(error => {
+            loadingSpinner.style.display = 'none';
             console.error('Failed to fetch players:', error);
             throw error;
         });
