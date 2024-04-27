@@ -97,29 +97,37 @@
             <a href="/chat_page.html">Chat</a>
         </div>
     </div>
+    <div class="filter-container" id="filterContainer">
+        <h6>Filtra in base a...</h6>
+        <div class="single-filter">
+            <p>Competizione</p>
+            <select id="competition-select" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+        <div class="single-filter">
+            <p>Anno</p>
+            <select id="year-select" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+        <div class="single-filter">
+            <p>Stagione</p>
+            <select id="season-select" class="date-days-picker">
+                <option value="" disabled selected>Scegli...</option>
+            </select>
+        </div>
+    </div>
+
     <div id="matches-page">
         <div class="matches-header">
-
-            <div class="container">
-                <!--<p class="text">Seleziona una competizione</p>-->
-                <select id="competition-select" class="competitions-picker">
-
-                </select>
+            <div class="filter-button" id="filterButton">
+                <i class='bx bx-filter-alt'></i>
+                <h6>Filtra</h6>
             </div>
-            <div class="vertical-line"></div>
-            <div class="matches-filter-container">
-                <div class="year-picker-container">
-                    <label for="year-select">Seleziona anno</label>
-                    <select id="year-select">
-                    </select>
-                </div>
-                <div class="season-picker-container">
-                    <label for="season-select">Seleziona season</label>
-                    <select id="season-select"></select>
-                </div>
-            </div>
-            <div class="vertical-line"></div>
+            <div class="date-days-picker-wrapper">
 
+            </div>
         </div>
         <div class="matches-container">
             <!--<div id="serieaMatchesContainer" class="matches-container-competition">

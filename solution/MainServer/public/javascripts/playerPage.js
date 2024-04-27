@@ -232,13 +232,15 @@ async function fetchPlayerLastMatches() {
         let playerLastMatches = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
         playerLastMatches = playerLastMatches.data;
         if (playerLastMatches.length === 0) {
-            lastMatchesContainer.innerHTML = '<h1>N.D. - Nessuna partita trovata.</h1>';
+            lastMatchesContainer.innerHTML = '<h1>Nessuna partita trovata...</h1>';
         } else {
             renderPlayerMatches(playerLastMatches)
+            let matchCards=document.querySelectorAll('.game-information-in-player')
+            setMatchesCardEventListener(matchCards)
         }
-        loadingSpinner.style.display = 'none';
     } catch (error) {
         console.error('Errore durante il recupero delle partite:', error);
+    }finally { //nel blocco finally togliamo lo spinner
         loadingSpinner.style.display = 'none';
     }
 }
@@ -256,6 +258,17 @@ function renderPlayerMatch(match){
     gameInfoContainer.classList.add('main-container');
     gameInfoContainer.classList.add('game-information');
     gameInfoContainer.classList.add('game-information-in-player');
+    //set all the necessary attributes
+    gameInfoContainer.setAttribute('data-gameid',match.game_id)
+    gameInfoContainer.setAttribute('data-homeclubid',match.home_club_id)
+    gameInfoContainer.setAttribute('data-awayclubid',match.away_club_id)
+    gameInfoContainer.setAttribute('data-homeclubname',match.home_club_name)
+    gameInfoContainer.setAttribute('data-awayclubname',match.away_club_name)
+    gameInfoContainer.setAttribute('data-round',match.round)
+    gameInfoContainer.setAttribute('data-season',match.season)
+    gameInfoContainer.setAttribute('data-date',match.date)
+    gameInfoContainer.setAttribute('data-aggregate',match.aggregate)
+    gameInfoContainer.setAttribute('data-competitionid',match.competition_id)
 
     const roundAndDateContainer = document.createElement('div');
     roundAndDateContainer.classList.add('round-and-date-container');
