@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     initLogin();
+    manageFilterPopup();
     const competitionsEndpoint = 'http://localhost:3000/competitions/getAllCompetitions';
     axios.get(competitionsEndpoint)
         .then(response => {
@@ -123,8 +124,7 @@ function groupCompetitionsByCountry(competitions) {
  */
 function createDayButtons() {
     const daysOfWeek = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
-
-    const container = document.querySelector('.matches-header');
+    const container = document.querySelector('.date-days-picker-wrapper');
 
     daysOfWeek.forEach(day => {
         const button = document.createElement('button');
@@ -134,7 +134,6 @@ function createDayButtons() {
             document.querySelectorAll('.date-days-button').forEach(btn => btn.classList.remove('date-days-button-active'));
             button.classList.add('date-days-button-active');
             const competitionId = document.getElementById('competition-select').value;
-
             fetchMatchesByCompetitionAndDay(competitionId, day);
         });
         container.appendChild(button);

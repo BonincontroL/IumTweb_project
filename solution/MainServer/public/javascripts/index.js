@@ -33,7 +33,16 @@ function manageLateralButtons(lateralButtons,pageName){
         })
     })
 }
-
+function manageFilterPopup(){
+    let filterButton= document.getElementById('filterButton')
+    let filterContainer= document.getElementById('filterContainer')
+    document.addEventListener('click',function (event){
+        if(filterContainer.contains(event.target) || filterButton.contains(event.target))
+            filterContainer.style.display='flex'
+        else
+            filterContainer.style.display='none'
+    })
+}
 function hideAllMainContainers(pageName){
     const mainContainers=document.querySelectorAll(`#${pageName} > .main-container`)
     mainContainers.forEach(container=>{container.style.display="none"})

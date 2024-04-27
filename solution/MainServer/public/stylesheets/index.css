@@ -737,7 +737,7 @@ header ul li ul li a{
     justify-content: flex-start;
     padding: var(--padding-10px);
     box-sizing: border-box;
-    display: none;
+    display: flex;
     z-index: 999;
     border-radius:var(--br-8px)
 }

@@ -126,17 +126,7 @@ function renderPositionsDropdown(positions){
         filteredRole=this.value
     })
 }
-function manageFilterPopup(){
-    let filterButton= document.getElementById('filterButton')
-    let filterContainer= document.getElementById('filterContainer')
-    document.addEventListener('click',function (event){
-        if(filterContainer.contains(event.target) || filterButton.contains(event.target))
-            filterContainer.style.display='flex'
-        else
-            filterContainer.style.display='none'
-    })
 
-}
 /**
  * Funzione per il debounce per limitare la velocità con cui viene chiamata una funzione.
  * @param func

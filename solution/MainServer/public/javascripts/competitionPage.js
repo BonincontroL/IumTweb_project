@@ -372,12 +372,8 @@ function renderTopPlayers(players,containerId,type){
                 playerCard=renderNormalPlayerCard(player,index,type)
             playersContainer.appendChild(playerCard)
         })
-    else{
-        let banner = document.createElement('h3')
-        banner.innerText='Nessun giocatore trovato...'
-        playersContainer.appendChild(banner)
-    }
-
+    else
+        playersContainer.innerHTML='<h4>Nessun giocatore trovato...</h4>'
 }
 
 function renderFirstPlayerCard(player,index,type){
