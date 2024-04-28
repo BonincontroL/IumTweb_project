@@ -177,11 +177,6 @@ header ul li ul li:hover i{
 header ul li ul li:hover a{
     color:var(--white);
 }
-/*for internal icon into the dropdown menu*/
-header ul li ul li i{
-    position: absolute;
-    right: 0;
-}
 
 header ul li ul li a{
     color:var(--black);
@@ -341,8 +336,6 @@ header ul li ul li a{
     transform: scale(1.1);
 }
 
-
-
 .form-button{
     cursor: pointer;
     border: 0;
@@ -461,7 +454,6 @@ header ul li ul li a{
     border-right: 6px solid var(--black);
 }
 #competitionInformation{
-    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -571,6 +563,8 @@ header ul li ul li a{
     background-color: var(--primary-blue-900);
     color: var(--white);
     border-radius: var(--br-12px);
+    cursor: pointer;
+    z-index: 99;
 }
 .filter-button > i{
     font-size: var(--h6-size);
@@ -635,7 +629,6 @@ header ul li ul li a{
 }
 #squadInformation{
     overflow-y:auto;
-    display: flex;
     flex-direction: row;
     align-items: flex-start;
     width: 100%;
@@ -650,7 +643,6 @@ header ul li ul li a{
 #playerInformation,
 #playerStatistic{
     overflow-y:auto;
-    display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -661,7 +653,6 @@ header ul li ul li a{
     height: 92vh;
 }
 #playerValutation{
-    display: flex;
     justify-content: center;
     align-items: flex-start;
     overflow: auto;
@@ -737,7 +728,7 @@ header ul li ul li a{
     justify-content: flex-start;
     padding: var(--padding-10px);
     box-sizing: border-box;
-    display: flex;
+    display: none;
     z-index: 999;
     border-radius:var(--br-8px)
 }
@@ -853,7 +844,6 @@ header ul li ul li a{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 #squadPlayers{
-    display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -863,7 +853,6 @@ header ul li ul li a{
 }
 #competitionTable,
 #competitionMatches{
-    display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -872,7 +861,6 @@ header ul li ul li a{
 }
 .matches-generic-container,
 #competitionKnockout{
-    display: flex;
     justify-content: center;
     align-items: flex-start;
     box-sizing: border-box;
@@ -890,10 +878,14 @@ header ul li ul li a{
     gap: var(--gap-xl);
     overflow-y:auto;
 }
+#GeneralPlayers{
+    display: block;
+}
 #competitionKnockout{
     flex-direction: column;
 }
 .matches-generic-container{
+    display: flex;
     flex-direction: column;
 }
 .matches-knockout-group{
@@ -926,8 +918,7 @@ header ul li ul li a{
 #squad-page ,
 #chat-page,
 #player-page,
-#competition-page,
-#competitionSquads{
+#competition-page{
     display: flex;
     align-items: flex-start;
     flex-direction: row;
@@ -936,7 +927,6 @@ header ul li ul li a{
 }
 #competitionSquads,
 #competitionStats{
-    display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
@@ -949,7 +939,6 @@ header ul li ul li a{
 }
 
 #playerLastMatches{
-    display: flex;
     flex-direction: column;
     gap: var(--gap-8xs);
     width: 100%;
@@ -961,6 +950,7 @@ header ul li ul li a{
 .main-container{
     width: 100%;
     height: 100%;
+    display: none;
 }
 #matches-page{
     display: flex;
@@ -1004,6 +994,7 @@ header ul li ul li a{
 #squadPlayers{
     width: 100%;
     overflow-x:auto;
+    display: none;
 }
 .players-role-and-card-container{
     display: flex;
@@ -1308,7 +1299,7 @@ header ul li ul li a{
     align-self: stretch;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: var(--padding-20px);
     gap: var(--gap-xl);
 }
@@ -1316,12 +1307,15 @@ header ul li ul li a{
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--br-40px);
+    border-radius: var(--br-12px);
     flex-direction: column;
     padding: var(--padding-10px);
     box-sizing: border-box;
-    border: 3px solid var(--primary-blue-900);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease;
 }
+
 .player-card-info-image-container{
     align-self: stretch;
     flex: 1;
@@ -1400,7 +1394,6 @@ header ul li ul li a{
 
 #squadPositionInLeauge ,
 #squadLastMatches{
-    display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -1493,6 +1486,9 @@ tbody > tr:hover{
     font-weight: bold;
     background-color: var(--primary-blue-900);
     color: var(--white);
+}
+.table-row-active:hover{
+    background-color: var(--primary-blue-900-active) !important;
 }
 
 .user-popup{
@@ -1603,7 +1599,7 @@ tbody > tr:hover{
     flex-direction: column;
     justify-content: flex-start;
     padding: var(--padding-10px) var(--padding-10px);
-    gap: 15px;
+    gap: var(--gap-8xs);
     min-width: 25vw;
     min-height: 12vh;
 }
@@ -1633,8 +1629,8 @@ tbody > tr:hover{
 }
 
 .nationality-card-image{
-    height: 4vw;
-    width: 4vw;
+    height: clamp(25px,3vw,50px);
+    min-width: clamp(25px,3vw,50px);
     position: relative;
     object-fit: contain;
 }
@@ -2303,13 +2299,19 @@ tbody > tr:hover{
     padding: var(--padding-10px);
     gap: var(--gap-8xs);
 }
+.chart-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 50vw;
+}
 .player-stats-container-first{
     text-align: left;
     color: var(--white);
     background-color: var(--primary-blue-900);
     display: flex;
     align-self: stretch;
-
     flex-direction: column;
     gap: var(--gap-xl);
     align-items: flex-start;
@@ -3368,8 +3370,9 @@ tbody > tr:hover{
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     background-color: var(--white);
     transition: transform 0.3s ease;
+    cursor: pointer;
 }
-.player-card2:hover {
+.player-card2:hover , .player-card:hover{
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
@@ -3406,15 +3409,24 @@ tbody > tr:hover{
     position: relative;
 }
 
-.loading-spinner {
+.loading-spinner,
+.loading-spinner-full-width{
     display: none;
     position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+}
+.loading-spinner{
     top: 8vh;
     left: 20vw;
     width: 80vw;
     height: 92vh;
-    background-color: rgba(255, 255, 255, 0.7);
-    z-index: 9999;
+}
+.loading-spinner-full-width{
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .spinner {

@@ -219,19 +219,24 @@ function categorizePlayersByRole(players) {
  */
 function displayPlayersByRole(playersByRole) {
     Object.keys(playersByRole).forEach(role => {
-        const containerId = `${role}Container`;
-        renderPlayers(playersByRole[role], containerId);
+        const mainContainer= document.getElementById(`${role}MainContainer`)
+        if(playersByRole[role].length===0)
+            mainContainer.style.display='none'
+        else {
+            mainContainer.style.display='flex'
+            const playersContainer = mainContainer.querySelector('.player-row-container')
+            renderPlayers(playersByRole[role], playersContainer);
+        }
     });
 }
 
 /**
  * Funzione per renderizzare per visualizzare i giocatori.
  * @param players
- * @param containerId
+ * @param container
  */
-function renderPlayers(players, containerId) {
+function renderPlayers(players, container) {
 
-    const container = document.getElementById(containerId);
     container.innerHTML = '';
 
     players.forEach(player => {

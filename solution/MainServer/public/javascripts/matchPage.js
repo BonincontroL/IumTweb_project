@@ -31,7 +31,7 @@ function renderBannerInfo(){
     document.getElementById('awayClubLogo').setAttribute('src',clubLogoImgURL+matchInfo.awayClubId+".png")
     document.getElementById('aggregate').innerText=matchInfo.aggregate
     //aggiungi la data
-    document.getElementById('match-details-date').innerText=matchInfo.date
+    document.getElementById('match-details-date').innerText=matchInfo.date.split('T')[0]
 }
 function getMatchEvents(matchIds,finalResult){
     axios.get("http://localhost:3000/gameevents/getMatchEvents",{params:{

@@ -123,7 +123,7 @@ function getPlayerStatistics() {
         document.getElementById('player_height').innerText = playerInfo.heightInCm;
         document.getElementById('squad_player').innerText = playerInfo.currentClubName;
         document.getElementById('age_player').innerText = age;
-        document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur+" €"
+        document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
         document.getElementById('playerRole').innerText = playerInfo.subPosition;
         document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL+playerInfo.currentClubId+".png")
 

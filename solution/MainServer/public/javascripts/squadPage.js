@@ -62,7 +62,7 @@ function renderGraph(){
     const nationalPlayers = 100-clubInfo.foreignersPercentage
     const graph=document.getElementById('squadChart').getContext('2d')
     const squadChart= new Chart(graph,{
-        type:'pie',
+        type:'doughnut',
         data:{
             labels:['Giocatori Stranieri', 'Giocatori della nazionale'],
             datasets:[{
@@ -70,12 +70,18 @@ function renderGraph(){
                 backgroundColor:[
                     getComputedStyle(document.body).getPropertyValue('--primary-blue-900'),
                     getComputedStyle(document.body).getPropertyValue('--primary-blue-100')
-                ],
-                borderWidth:1
+                ]
             }]
         },
         options:{
-            responsive:true
+            responsive:true,
+            borderWidth:10,
+            borderRadius:2,
+            hoverBorderWidth:0,
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
         }
     })
 }
@@ -281,7 +287,7 @@ function renderCompetitionInfo() {
     //info sullo stadio+numero massimo di spettatori
     document.getElementById('squadStadiumName').innerText=clubInfo.stadiumName
     document.getElementById('squadStadiumCapacity').innerHTML=
-        `<b>Spettatori</b><br>${clubInfo.stadiumSeats}`
+        `Spettatori: ${clubInfo.stadiumSeats}`
     //nome allenatore
     document.getElementById('squadManagerName').innerText=clubInfo.managerName
 }
