@@ -25,9 +25,7 @@ function getTopScorer(competitionId){
 
 
 function getPlayerStatistics(playerId) {
-
     const numericPlayerId = parseInt(playerId, 10);
-
 
     return Model.aggregate([
         {

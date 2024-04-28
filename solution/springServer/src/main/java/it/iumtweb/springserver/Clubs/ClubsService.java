@@ -22,7 +22,7 @@ public class ClubsService {
     }
 
     public List<Clubs> findByCompetitionAndSeason(String competitionId, String season) {
-        return clubsRepository.findByDomesticCompetitionIdAndLastSeason(competitionId, season);
+        return clubsRepository.findByDomesticCompetitionIdAndLastSeasonOrderByName(competitionId, season);
     }
 
     public Optional<Clubs> findById(Long clubId) {

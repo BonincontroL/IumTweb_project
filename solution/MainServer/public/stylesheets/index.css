@@ -1601,7 +1601,6 @@ tbody > tr:hover{
     padding: var(--padding-10px) var(--padding-10px);
     gap: var(--gap-8xs);
     min-width: 25vw;
-    min-height: 12vh;
 }
 .stats-container-and-icon{
     display: flex;
@@ -2373,6 +2372,7 @@ tbody > tr:hover{
     background-color: var(--primary-blue-900);
     color: var(--white);
 }
+.player-name-and-role-container,
 .player-stats-goals-container{
     display: flex;
     align-items: center;
@@ -3184,8 +3184,8 @@ tbody > tr:hover{
     padding: var(--padding-10px);
 }
 .competition-big-logo{
-    width: 10vw;
-    height: 10vw;
+    min-width: clamp(100px,9vw,200px);
+    height: clamp(100px,9vw,200px);
     object-fit: contain;
     position: relative;
 }

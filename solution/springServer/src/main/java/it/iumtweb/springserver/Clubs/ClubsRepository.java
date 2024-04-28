@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ClubsRepository extends JpaRepository<Clubs, Long> {
-    List<Clubs> findByDomesticCompetitionIdAndLastSeason(String domesticCompetitionId, String lastSeason);
+    List<Clubs> findByDomesticCompetitionIdAndLastSeasonOrderByName(String domesticCompetitionId, String lastSeason);
 
     @Query("select lastSeason from Clubs where clubId=:clubId")
     String getLastSeason(Long clubId);
