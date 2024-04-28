@@ -229,7 +229,7 @@ async function fetchPlayerLastMatches() {
     lastMatchesContainer.innerHTML = '';
     try {
         loadingSpinner.style.display = 'block';
-        let playerLastMatches = await axios.get(`http://localhost:3001/appearances/getPlayerLast5Games/${playerId}`);
+        let playerLastMatches = await axios.get(`http://localhost:3000/appearances/getPlayerLast5Games/${playerId}`);
         playerLastMatches = playerLastMatches.data;
         if (playerLastMatches.length === 0) {
             lastMatchesContainer.innerHTML = '<h1>Nessuna partita trovata...</h1>';
