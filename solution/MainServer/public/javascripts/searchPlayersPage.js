@@ -63,6 +63,10 @@ function manageApplyAndResetButtons(){
         resetDropdownMenus() //resettiamo tutti i dropdown
     })
 }
+
+/**
+ * Funzione per resettare i dropdown menu.
+ */
 function resetDropdownMenus(){
     document.getElementById('playerRoles').selectedIndex=0;
     document.getElementById('playerNationalities').selectedIndex=0;
