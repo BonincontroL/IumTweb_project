@@ -48,7 +48,12 @@ function getLast5GamesByClubId(club_id){
         .limit(5)
 }
 
-
+/**
+ * Get the round numbers of a competition and season
+ * @param comp_id
+ * @param season
+ * @returns {Aggregate<Array<any>>}
+ */
 function getRoundNumbers(comp_id,season){
     return Model.aggregate([
         {
@@ -204,6 +209,12 @@ function getRefreeStadiumAndManagers(game_id){
             throw new Error("Errore durante il recupero di una singola partita con game_id:"+game_id+"\n L'errore è il seguente: "+err+"\n")
         })
 }
+
+/**
+ * Get the last manager of a club
+ * @param club_id
+ * @returns {Promise<Array<any>>}
+ */
 function getLastManager(club_id){
     return Model.aggregate([
         {
@@ -271,6 +282,12 @@ function getGamesByCompetitionIdAndSeason(competitionId,season) {
     });
 }
 
+/**
+ * get the competitions that a club played in a certain season
+ * @param club_id
+ * @param season
+ * @returns {Aggregate<Array<any>>}
+ */
 function getCompetitionsByClubAndSeason(club_id,season){
     return Model.aggregate([
         {
@@ -361,7 +378,9 @@ function getCompetitionIdsWithGroup(){
 }
 
 /**
- * return all the seasons when the competition played
+ * Get all the seasons of a competition sorted by descending order
+ * @param competition_id
+ * @returns {Aggregate<Array<any>>}
  */
 function getCompetitionSeasonsSorted(competition_id){
     return Model.aggregate([
@@ -389,6 +408,11 @@ function getCompetitionSeasonsSorted(competition_id){
     ])
 }
 
+/**
+ * Get games by game ID
+ * @param gameId
+ * @returns {Promise<unknown>}
+ */
 function getGamesByGameId(gameId) {
     return new Promise((resolve, reject) => {
         Model.findOne({ game_id: gameId })
@@ -405,7 +429,11 @@ function getGamesByGameId(gameId) {
     });
 }
 
-
+/**
+ * Get the last 5 games of a club in a certain season
+ * @param club_id
+ * @param season
+ */
 function getLast5GamesByClubIdandSeason(club_id, season) {
     return Model.find({
         $or: [

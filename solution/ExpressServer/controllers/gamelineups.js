@@ -1,7 +1,5 @@
 const Model = require('../models/gamelineups');
 
-
-//ToDo migliorare tale funzione + error
 /**
  * Get player number by player ID
  * @param  playerId - ID of the player

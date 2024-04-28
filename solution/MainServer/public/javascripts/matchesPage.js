@@ -1,7 +1,3 @@
-/**
- * @ToDo Migliorare codice + controllo + commenti
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     initLogin();
     manageFilterPopup();

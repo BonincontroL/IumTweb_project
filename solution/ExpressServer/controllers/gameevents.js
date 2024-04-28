@@ -2,6 +2,13 @@ const Model = require('../models/gameevents')
 const Games= require("../models/games")
 const GameLineups = require("../models/gamelineups")
 const Appearences= require("../models/appearances")
+
+/**
+ * return the top scorers in a competition in a season
+ * @param comp_id
+ * @param season
+ * @returns {Aggregate<Array<any>>}
+ */
 function getTopScorer(comp_id, season){
     return Model.aggregate([
         {

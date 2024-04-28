@@ -30,7 +30,7 @@ function getPlayerStatistics(playerId) {
     return Model.aggregate([
         {
             $match: {
-                player_id: numericPlayerId  // Assicurati che 'player_id' nel database sia dello stesso tipo (es. Number)
+                player_id: numericPlayerId
             }
         },
         {
@@ -42,7 +42,7 @@ function getPlayerStatistics(playerId) {
                 total_red_cards: { $sum: '$red_cards' },
                 total_minutes_played: { $sum: '$minutes_played' },
                 appearances: { $sum: 1 },
-                player_name: { $first: '$player_name' } // Assicurati che 'player_name' esista sempre nei documenti
+                player_name: { $first: '$player_name' }
             }
         },
         {

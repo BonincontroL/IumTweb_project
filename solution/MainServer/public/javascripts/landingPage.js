@@ -28,9 +28,6 @@ function init() {
 
 }
 
-//test di prova per getAndRenderLastMatches in home page --> da rivedere lo stile
-// ToDo  sistemare commenti + pulizia e sistemazione codice
-
 
 /**
  * Funzione per ottenere i giocatori per una competizione specifica
@@ -97,6 +94,12 @@ async function renderPlayers(players, competitionIdentifier) {
     }
 
 }
+
+/**
+ * Funzione per renderizzare la card di un giocatore.
+ * @param player
+ * @returns {HTMLButtonElement}
+ */
 function renderPlayerCard(player){
     const playerCard = document.createElement('button');
     playerCard.setAttribute('data-playerid', player.playerId)
@@ -143,6 +146,12 @@ function renderPlayerCard(player){
 
     return playerCard
 }
+
+/**
+ * Funzione per renderizzare il numero del giocatore.
+ * @param playerNumber
+ * @returns {HTMLDivElement}
+ */
 function renderPlayerNumber(playerNumber){
     const playerNumberContainer = document.createElement('div');
     playerNumberContainer.classList.add('player-number-container');
