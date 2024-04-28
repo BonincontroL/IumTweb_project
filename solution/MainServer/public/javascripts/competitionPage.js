@@ -7,8 +7,13 @@ let matchRounds=[] //array in cui sono contenuti tutte le giornate di una compet
 let knockoutRounds =[]
 let isSeasonDropdownRendered=false, isTableSeasonDropdownRendered=false, isKnockoutSeasonDropdown=false;
 let currentMatchesSeason=0, currentKnockoutSeason=0
-let isWithGroup = false //questo booleano serve per indicare se la competizione corrente (visualizzata nella pagina) ha i gruppi oppure no
 let isTopPlayersLoaded=false
+let typology
+const competitionTypology={
+    GROUP:'GROUP',
+    DOMESTIC_LEAUGE:'DOMESTIC_LEAUGE',
+    CUP:'CUP'
+}
 document.addEventListener('DOMContentLoaded',init)
 
 async function init() {
@@ -29,118 +34,118 @@ async function init() {
         renderCompetitionInformation(competitionInformation.data)
 
         let competitionsWithGroup = await getCompetitionsWithGroup()
-        if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId)) {
-            isWithGroup = true
-            document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
-        }
-        if (competitionType === 'domestic_league') { //in una domestic_leauge non ho la fase finale
-            document.getElementById('competition-knockout-btn').remove()
-            document.getElementById('competitionKnockout').remove()
-        } else if (!isWithGroup) {//se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
+        if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
+            typology=competitionTypology.GROUP
+        else if (competitionType === 'domestic_league')
+            typology=competitionTypology.DOMESTIC_LEAUGE
+        else
+            typology=competitionTypology.CUP
+        adaptPageToTypology()
+        adaptButtonListenersToTypology()
+        lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
+        manageLateralButtons(lateralButtons, competitionPageName)
+        initLogin();
+    } catch (e) {
+        alert(e)
+    }
+}
+function adaptPageToTypology(){
+    switch (typology){
+        case competitionTypology.CUP://se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
             document.getElementById('competition-matches-btn').remove()
             document.getElementById('competitionMatches').remove()
             document.getElementById('competition-table-btn').remove()
             document.getElementById('competitionTable').remove()
-        }
-    } catch (e) {
-        alert(e)
+            break
+        case competitionTypology.GROUP:
+            document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
+            break
+        case competitionTypology.DOMESTIC_LEAUGE: //in una domestic_leauge non ho la fase finale (knockout)
+            document.getElementById('competition-knockout-btn').remove()
+            document.getElementById('competitionKnockout').remove()
+            break
+        default:
+            throw new Error("Tipologia della competizione sconosciuta:"+typology)
     }
-    lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
-    manageLateralButtons(lateralButtons, competitionPageName)
+}
+async function manageMatchesSeasonChange(selectedSeason){
+    currentRound=0 //si riparte dal primo round ogni cambiamento di season
+    let rounds = await fetchAllRoundNumbers(selectedSeason)
+    if(typology===competitionTypology.GROUP) {
+        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+        knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+    }else
+        matchRounds=rounds.data
 
-    let competitionMatchesBtn = document.getElementById('competition-matches-btn')
-    if (competitionMatchesBtn)    //questo perchè non in tutte le leghe esiste questo bottone!
-        competitionMatchesBtn.addEventListener('click', async function () {
-            await getGroupMatches()
+    renderMatchesDropdownMenu()
+    getAndRenderMatchesInRound(matchRounds[currentRound],selectedSeason)
+}
+async function manageTableButtonListener(){
+    if (typology===competitionTypology.GROUP)
+        await getGroupTables()
+    else {
+        getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
+            .then(res => {
+                let tableContainer = document.getElementById('competitionTable')
+                tableContainer.innerHTML = ''
+                tableContainer.appendChild(renderGroupTable(competitionName, res.data))
+                if (typology!==competitionTypology.GROUP) {
+                    createSeasonDropdown()
+                    renderSeasonDropdownMenu('tableSeasonSelector')
+                    addSeasonDropdownTableListener()
+                }
+                //parte dedicata alla gestione dei bottoni della classifica
+                let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
+                manageTableBtns(tableBtns)
+                manageTableVariants(tableBtns)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+}
+function adaptButtonListenersToTypology(){
+    if(typology===competitionTypology.CUP || typology===competitionTypology.GROUP) {
+        document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
+        document.getElementById('knockoutSeasonSelector').addEventListener('change', async function () {
+            let rounds = await fetchAllRoundNumbers(this.value)
+            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+            currentKnockoutSeason = this.value
+            await getAllMatchesInKnockoutRounds(this.value)
+            let knockoutCards = document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
+            setMatchesCardEventListener(knockoutCards)
         })
-    let competitionKnockoutBtn = document.getElementById('competition-knockout-btn')
-    if (competitionKnockoutBtn)     //questo perchè non in tutte le leghe esiste questo bottone!
-        competitionKnockoutBtn.addEventListener('click', async function () {
-            await getKnockoutMatches()
+    }if(typology===competitionTypology.GROUP || typology === competitionTypology.DOMESTIC_LEAUGE){
+        document.getElementById('competition-matches-btn').addEventListener('click', getGroupMatches)
+        document.getElementById('matchesSeasonSelector').addEventListener('change', async function () {
+            await manageMatchesSeasonChange(this.value)
         })
-
-    document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
-
-    let loadPrevMatchday = document.getElementById('loadPrevMatchday')
-    if (loadPrevMatchday)
-        loadPrevMatchday.addEventListener('click', ()=>{
+        document.getElementById('loadPrevMatchday').addEventListener('click', ()=>{
             let currentSeason= document.getElementById('matchesSeasonSelector').value
             getPrevMatchday(currentSeason)
         })
-
-    let loadNextMatchday = document.getElementById('loadNextMatchday')
-    if (loadNextMatchday) {
-        loadNextMatchday.addEventListener('click', ()=>{
+        document.getElementById('loadNextMatchday').addEventListener('click', ()=>{
             let currentSeason= document.getElementById('matchesSeasonSelector').value
             getNextMatchday(currentSeason)
         })
-    }
-    let matchdaySelector = document.getElementById('competitionSelectMatchday')
-    if (matchdaySelector)
-        matchdaySelector.addEventListener('change', function () {
+        document.getElementById('competitionSelectMatchday').addEventListener('change', function () {
             currentRound = matchRounds.indexOf(this.value)
             let currentSeason= document.getElementById('matchesSeasonSelector').value
             getAndRenderMatchesInRound(matchRounds[currentRound],currentSeason)
         })
-    let matchesSeasonSelector = document.getElementById('matchesSeasonSelector')
-    if (matchesSeasonSelector)
-        matchesSeasonSelector.addEventListener('change', async function () {
-            currentRound=0 //si riparte dal primo round ogni cambiamento di season
-            currentMatchesSeason=this.value
-            let rounds = await fetchAllRoundNumbers(this.value)
-            if(isWithGroup) {
-                matchRounds = rounds.data.filter(round => round.startsWith('Group'))
-                knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
-            }else
-                matchRounds=rounds.data
-            renderMatchesDropdownMenu()
-            getAndRenderMatchesInRound(matchRounds[currentRound],this.value)
+        document.getElementById('competition-table-btn').addEventListener('click', async function(){
+            await manageTableButtonListener()
         })
-    let knockoutSeasonSelector = document.getElementById('knockoutSeasonSelector')
-    if (knockoutSeasonSelector)
-        knockoutSeasonSelector.addEventListener('change', async function () {
-            let rounds = await fetchAllRoundNumbers(this.value)
-            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
-            currentKnockoutSeason=this.value
-            await getAllMatchesInKnockoutRounds(this.value)
-            let knockoutCards=document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
-            setMatchesCardEventListener(knockoutCards)
-        })
-    let tableButton = document.getElementById('competition-table-btn')
-    if (tableButton)
-        tableButton.addEventListener('click', async () => {
-            if (isWithGroup)
-                await getGroupTables()
-            else {
-                getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
-                    .then(res => {
-                        let tableContainer = document.getElementById('competitionTable')
-                        tableContainer.innerHTML = ''
-                        tableContainer.appendChild(renderGroupTable(competitionName, res.data))
-                        if (!isWithGroup) {
-                            createSeasonDropdown()
-                            renderSeasonDropdownMenu('tableSeasonSelector')
-                            addSeasonDropdownTableListener()
-                        }
-                        //parte dedicata alla gestione dei bottoni della classifica
-                        let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
-                        manageTableBtns(tableBtns)
-                        manageTableVariants(tableBtns)
-                    })
-                    .catch(err => {
-                        alert(err)
-                    })
-            }
-        })
+    }
+    //in ogni caso il bottone delle statistiche ha lo stesso listener
     document.getElementById('competition-statistic-btn').addEventListener('click',()=>{
         if(!isTopPlayersLoaded){
             getTopPlayers()
             isTopPlayersLoaded=true
         }
     })
-    initLogin();
+    document.getElementById('competition-squad-btn').addEventListener('click', getClubsWrapper)
 }
-
 /**
  * get all the group tables of a competition (obviously ,used only for a competition with groups)
  * @returns {Promise<void>}
@@ -185,7 +190,7 @@ function renderGroupTables(groupTables){
 function manageTableVariants(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
-            let group= isWithGroup ? button.getAttribute('data-group'):null
+            let group= (typology===competitionTypology.GROUP) ? button.getAttribute('data-group'):null
             let actualYear= document.getElementById('tableSeasonSelector').value
             getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
                 .then(res=>{
@@ -457,9 +462,9 @@ function renderTableTDWithLogo(squadId,squadName){
     return singleTd
 }
 function getClubsWrapper(){
-    if(isWithGroup || competitionType!=='domestic_league')
+    if(typology===competitionTypology.GROUP || typology===competitionTypology.CUP)
         getClubsDividedByGroup()
-    else if(competitionType==='domestic_league')
+    else
         getClubs()
 }
 function getClubsDividedByGroup(){
@@ -473,7 +478,7 @@ function getClubsDividedByGroup(){
         if(res.data!==0) {
             let clubs=res.data
             let clubCards
-            if(competitionType!=='domestic_league' && !isWithGroup) {
+            if(typology===competitionTypology.CUP) {
                 clubs = unifyClubs(clubs)
                 renderAllClubs(clubs)
                 clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
@@ -619,7 +624,7 @@ async function getGroupMatches() {
         if(currentMatchesSeason!==selectedSeason) {
             matchRounds = await fetchAllRoundNumbers(selectedSeason)
             matchRounds = matchRounds.data
-            if(isWithGroup)
+            if(typology===competitionTypology.GROUP)
                 matchRounds=matchRounds.filter(round=>round.startsWith('Group'))
             renderMatchesDropdownMenu()
         }
