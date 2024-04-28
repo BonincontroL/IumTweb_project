@@ -183,5 +183,26 @@ router.get("/getGamesByGameId/:game_id", async (req, res) => {
 
 })
 
+/**
+ * Restituisce le ultime 5 partite di un club per una stagione specifica
+ */
+router.get('/getLast5GamesByClubIdandSeason', async (req, res, next) => {
+    const club_id = req.query.club_id;
+    const season = req.query.season;
+
+    if (!club_id || !season) {
+        res.status(400).json({ error: 'Manca l\'ID del club o la stagione' });
+        return;
+    }
+
+    try {
+        const data = await GamesController.getLast5GamesByClubIdandSeason(club_id, season);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Errore durante il recupero delle ultime 5 partite di un club per una stagione specifica:', error);
+        res.status(500).json({ error: 'Errore durante il recupero delle ultime 5 partite di un club per una stagione specifica' });
+    }
+});
+
 
 module.exports = router;

@@ -47,6 +47,8 @@ function getLast5GamesByClubId(club_id){
         .sort({date:-1})
         .limit(5)
 }
+
+
 function getRoundNumbers(comp_id,season){
     return Model.aggregate([
         {
@@ -403,6 +405,25 @@ function getGamesByGameId(gameId) {
     });
 }
 
+
+function getLast5GamesByClubIdandSeason(club_id, season) {
+    return Model.find({
+        $or: [
+            { home_club_id: club_id },
+            { away_club_id: club_id }
+        ],
+        season: season
+    }, {
+        home_club_id: 1,
+        away_club_id: 1,
+        home_club_goals: 1,
+        away_club_goals: 1,
+        date: 1
+    })
+        .sort({ date: -1 })
+        .limit(5);
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -417,5 +438,6 @@ module.exports = {
     getClubsDividedByGroups,
     getCompetitionIdsWithGroup,
     getCompetitionSeasonsSorted,
-    getGamesByGameId
+    getGamesByGameId,
+    getLast5GamesByClubIdandSeason
 };
