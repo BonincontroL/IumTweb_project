@@ -80,7 +80,7 @@ async function manageMatchesSeasonChange(selectedSeason){
     renderMatchesDropdownMenu()
     getAndRenderMatchesInRound(matchRounds[currentRound],selectedSeason)
 }
-async function manageTableButtonListener(){
+async function getTableWrapper(){
     if (typology===competitionTypology.GROUP)
         await getGroupTables()
     else {
@@ -89,11 +89,9 @@ async function manageTableButtonListener(){
                 let tableContainer = document.getElementById('competitionTable')
                 tableContainer.innerHTML = ''
                 tableContainer.appendChild(renderGroupTable(competitionName, res.data))
-                if (typology!==competitionTypology.GROUP) {
-                    createSeasonDropdown()
-                    renderSeasonDropdownMenu('tableSeasonSelector')
-                    addSeasonDropdownTableListener()
-                }
+                createSeasonDropdown()
+                renderSeasonDropdownMenu('tableSeasonSelector')
+                addSeasonDropdownTableListener()
                 //parte dedicata alla gestione dei bottoni della classifica
                 let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
                 manageTableBtns(tableBtns)
@@ -134,7 +132,7 @@ function adaptButtonListenersToTypology(){
             getAndRenderMatchesInRound(matchRounds[currentRound],currentSeason)
         })
         document.getElementById('competition-table-btn').addEventListener('click', async function(){
-            await manageTableButtonListener()
+            await getTableWrapper()
         })
     }
     //in ogni caso il bottone delle statistiche ha lo stesso listener
@@ -158,11 +156,25 @@ async function getGroupTables(){
         matchRounds=rounds.data.filter(round=>round.startsWith('Group'))
         knockoutRounds=rounds.data.filter(round=>!round.startsWith('Group'))
     }
+    renderSeasonDropdownMenu('groupTablesSelector')
+    manageSeasonDropdownMenuChange('groupTablesSelector')
     for (const group of matchRounds) {
         let table =await getTable(competitionId,competitionSeasons[0], 'full', group)
         groupTables[group] = table.data
     }
     renderGroupTables(groupTables)
+}
+function manageSeasonDropdownMenuChange(selectorId){
+    document.getElementById(selectorId).addEventListener('change',async function () {
+        let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
+        let groupTables={}
+        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+        for (const group of matchRounds) {
+            let table =await getTable(competitionId,this.value, 'full', group)
+            groupTables[group] = table.data
+        }
+        renderGroupTables(groupTables)
+    })
 }
 
 /**
@@ -171,7 +183,7 @@ async function getGroupTables(){
  * @param groupTables
  */
 function renderGroupTables(groupTables){
-    let groupTablesContainer= document.getElementById('competitionTable')
+    let groupTablesContainer= document.getElementById('tablesContainer')
     groupTablesContainer.innerHTML=''
     for (const groupName of Object.keys(groupTables)){
         let groupTableContainer = renderGroupTable(groupName, groupTables[groupName])
@@ -191,7 +203,7 @@ function manageTableVariants(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
             let group= (typology===competitionTypology.GROUP) ? button.getAttribute('data-group'):null
-            let actualYear= document.getElementById('tableSeasonSelector').value
+            let actualYear= typology===competitionTypology.GROUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
             getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
                 .then(res=>{
                     let groupTable = res.data
@@ -233,7 +245,12 @@ function addSeasonDropdownTableListener(){
             .then(res=>{
                 let groupTable = res.data
                 let table=document.getElementById(competitionName)
+                let buttons = document.querySelectorAll('.table-navbar>.date-days-picker-wrapper>.date-days-button')
+                buttons.forEach(btn=>{btn.classList.remove('date-days-button-active')})
+                buttons[0].classList.add('date-days-button-active') //il primo è quello che serve per la classifica Full
+                let tbodyToShow=document.getElementById(buttons[0].getAttribute('data-tbodyid'))
                 renderTableBody(table,competitionName,groupTable,`${competitionName}FullTable`) //di default, poi si potrà rendere dinamico questo valore
+                hideTbodiesExceptOne(tbodyToShow,table.querySelectorAll('tbody'))
             })
             .catch(err=>{
                 alert(err)
@@ -242,6 +259,7 @@ function addSeasonDropdownTableListener(){
 }
 function renderTableBody(table,groupName,groupTable,tbodyId){
     let groupTableTbody= document.getElementById(tbodyId)
+
     if(groupTableTbody===null) {
         groupTableTbody = document.createElement('tbody')
         groupTableTbody.id=tbodyId
@@ -644,6 +662,7 @@ async function fetchAllSeasons(){
 }
 function renderSeasonDropdownMenu(selectorId){
     let seasonsContainer= document.getElementById(selectorId)
+    seasonsContainer.innerHTML=''
     competitionSeasons.forEach(season=>{
         let option= document.createElement('option')
         option.value= option.text=season;
