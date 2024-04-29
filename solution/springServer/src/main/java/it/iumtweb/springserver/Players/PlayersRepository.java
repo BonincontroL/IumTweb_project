@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
@@ -28,7 +30,7 @@ public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpec
     @Query(value="SELECT p from Players p where " +
             "(p.firstName is not NULL AND lower(p.firstName) LIKE concat(lower(:searchTerm),'%') OR lower(p.lastName) LIKE concat(lower(:searchTerm),'%'))" +
             "or (p.firstName is null and lower(p.name) like concat('%',lower(:searchTerm),'%'))")
-    List<Players> findByNameOrSurname(String searchTerm);
+    Page<Players> findByNameOrSurname(String searchTerm, Pageable pageable);
 
     @Query(value="select distinct p.countryOfCitizenship from Players p where p.countryOfCitizenship is not null ORDER BY p.countryOfCitizenship ASC")
     List<String> findAllCountryOfCitizenship();

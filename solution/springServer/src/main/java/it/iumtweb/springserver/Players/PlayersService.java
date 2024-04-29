@@ -1,6 +1,8 @@
 package it.iumtweb.springserver.Players;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -54,11 +56,7 @@ public class PlayersService {
     }
 
     public List<Players> findPlayersByLetterInName(String letter) {
-        List<Players> result = playersRepository.findByNameOrSurname(letter);
-        if(result.size() > 1000)
-            return result.subList(0,1000);
-        else
-            return result;
+        return playersRepository.findByNameOrSurname(letter, PageRequest.of(0,1000)).stream().toList();
     }
     public List<String> findAllCountryOfCitizenship(){ return playersRepository.findAllCountryOfCitizenship();}
     public List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions(){ return playersRepository.findAllDomesticCompetitions();}

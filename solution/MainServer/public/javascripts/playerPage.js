@@ -11,15 +11,18 @@ document.addEventListener('DOMContentLoaded',async()=> {
     try{
         let flagSrc ="images/defaultFlag.svg"
         let playerInfo =await getPlayerInfo()
-        try {
-            flagSrc = await getCountryFlag(playerInfo.data.countryOfCitizenship)
-            flagSrc=flagSrc.data[0].flags.png
-        }catch (flagErr){
-            if(flagErr.response.status!==404)
-                alert(flagErr)
+        playerInfo=playerInfo.data
+        if(playerInfo!=="") {
+            try {
+                flagSrc = await getCountryFlag(playerInfo.countryOfCitizenship)
+                flagSrc = flagSrc.data[0].flags.png
+            } catch (flagErr) {
+                if (flagErr.response.status !== 404)
+                    alert(flagErr)
+            }
+            let playerNumber = await getPlayerNumber()
+            renderPlayerInfo(playerInfo, playerNumber.data.playerNumber, flagSrc)
         }
-        let playerNumber =await getPlayerNumber()
-        renderPlayerInfo(playerInfo.data,playerNumber.data.playerNumber,flagSrc)
     }catch (e){
         alert(e)
     }
@@ -126,6 +129,7 @@ function getPlayerStatistics() {
         document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
         document.getElementById('playerRole').innerText = playerInfo.subPosition;
         document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL+playerInfo.currentClubId+".png")
+        document.getElementById('player_number').innerText = playerNumber===-1? "No data available":playerNumber
 
         if(playerNumber===-1){
             document.getElementById('player_number').innerText = "No data available"
@@ -177,12 +181,12 @@ function getPlayerValutation() {
 function renderPlayerValuations(playerValuations) {
     let titleElement = document.getElementById('title_valuation');
     if (playerValuations.length === 0) {
-        document.getElementById('playerValuation').innerText = "No data available";
-        titleElement.innerText = "Valutazione";
+        document.getElementById('tableValutation').remove()
+        titleElement.innerText = "No data avaiable";
     } else {
         let minYear = Infinity;
         let maxYear = -Infinity;
-        let tableBody = document.querySelector('.table-valutation tbody');
+        let tableBody = document.querySelector('#tableValutation > tbody');
         tableBody.innerHTML = '';
 
         playerValuations.forEach(function(valuation,index) {
@@ -262,8 +266,10 @@ function renderPlayerMatch(match){
     gameInfoContainer.setAttribute('data-gameid',match.game_id)
     gameInfoContainer.setAttribute('data-homeclubid',match.home_club_id)
     gameInfoContainer.setAttribute('data-awayclubid',match.away_club_id)
-    gameInfoContainer.setAttribute('data-homeclubname',match.home_club_name)
-    gameInfoContainer.setAttribute('data-awayclubname',match.away_club_name)
+    if(match.home_club_name!==undefined)
+        gameInfoContainer.setAttribute('data-homeclubname',match.home_club_name)
+    if(match.away_club_name!==undefined)
+        gameInfoContainer.setAttribute('data-awayclubname',match.away_club_name)
     gameInfoContainer.setAttribute('data-round',match.round)
     gameInfoContainer.setAttribute('data-season',match.season)
     gameInfoContainer.setAttribute('data-date',match.date)

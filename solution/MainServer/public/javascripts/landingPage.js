@@ -27,6 +27,9 @@ function init() {
     document.getElementById('goToAllCompetitions').addEventListener('click', () => {
         window.location.href = "../searchCompetition_page.html"
     })
+    document.getElementById('goToMatchesPage').addEventListener('click', () => {
+        window.location.href = "../matches_page.html"
+    })
 
     let competition_cards = document.querySelectorAll('.competition-card');
     setCompetitionsCardEventListener(competition_cards);
@@ -313,7 +316,7 @@ function createMatchDiv(match) {
     matchDiv.setAttribute('data-awayclubid',match.awayTeam.id)
     matchDiv.setAttribute('data-homeclubname',match.homeTeam.name)
     matchDiv.setAttribute('data-awayclubname',match.awayTeam.name)
-    matchDiv.setAttribute('data-aggregate',`${match.homeTeam.score}-${match.awayTeam.score}`)
+    matchDiv.setAttribute('data-aggregate',`${match.homeTeam.score}:${match.awayTeam.score}`)
     matchDiv.setAttribute('data-date',match.time)
     matchDiv.setAttribute('data-competitionid',match.competition_id)
     matchDiv.setAttribute('data-round',match.round)
@@ -324,6 +327,10 @@ function createMatchDiv(match) {
     const awayTeamLogo = `<img class="squad-icon" src="${match.awayTeam.logo}" alt="${match.awayTeam.name} logo" />`;
 
     const matchResultVertical = `
+            <div class="round-and-date-container">
+                    <p>${match.round}</p>
+                    <p>${match.time}</p>
+               </div>
         <div class="match-result-vertical">
             <div class="squad-icon-container">
                 ${homeTeamLogo}
