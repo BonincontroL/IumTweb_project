@@ -1,6 +1,23 @@
 //questo JS è per le funzioni comuni
+/**
+ * Common functions for managing UI elements and interactions.
+ */
+
+/**
+ * URL for competition logo images.
+ * @type {string}
+ */
 let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
+
+/**
+ * URL for club logo images.
+ * @type {string}
+ */
 let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
+
+/**
+ * Event listener for DOMContentLoaded event.
+ */
 document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('openBurgerMenu').addEventListener('click',()=>{
         let dropdownMenu= document.getElementById('burgerMenu')
@@ -10,6 +27,12 @@ document.addEventListener('DOMContentLoaded',()=>{
             document.getElementById('burgerMenu').style.display='flex'
     })
 })
+
+/**
+ * Manages lateral buttons behavior.
+ * @param {NodeList} lateralButtons - List of lateral buttons.
+ * @param {string} pageName - Name of the page.
+ */
 function manageLateralButtons(lateralButtons,pageName){
     lateralButtons.forEach(btn=>{
         btn.addEventListener('click',function (){
@@ -33,6 +56,10 @@ function manageLateralButtons(lateralButtons,pageName){
         })
     })
 }
+
+/**
+ * Manages filter popup visibility.
+ */
 function manageFilterPopup(){
     let filterButton= document.getElementById('filterButton')
     let filterContainer= document.getElementById('filterContainer')
@@ -43,11 +70,21 @@ function manageFilterPopup(){
             filterContainer.style.display='none'
     })
 }
+
+/**
+ * Hides all main containers of the specified page.
+ * @param {string} pageName - Name of the page.
+ */
 function hideAllMainContainers(pageName){
     const mainContainers=document.querySelectorAll(`#${pageName} > .main-container`)
     mainContainers.forEach(container=>{container.style.display="none"})
 }
 
+
+/**
+ * Sets event listener for competition cards to navigate to competition page.
+ * @param {NodeList} competitionCards - List of competition cards.
+ */
 function setCompetitionsCardEventListener(competitionCards){
     competitionCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -58,6 +95,11 @@ function setCompetitionsCardEventListener(competitionCards){
         })
     })
 }
+
+/**
+ * Sets event listener for club buttons to navigate to club squad page.
+ * @param {NodeList} clubCards - List of club cards.
+ */
 function setAllClubButtonsListener(clubCards){
     clubCards.forEach(card=>{
         card.addEventListener('click', function (){
@@ -88,6 +130,12 @@ function setPlayersEventListener(playerCards){
         })
     })
 }
+
+
+/**
+ * Sets event listener for match cards to navigate to match page.
+ * @param {NodeList} matchCards - List of match cards.
+ */
 function setMatchesCardEventListener(matchCards){
     matchCards.forEach(match=>{
         match.addEventListener('click',()=>{

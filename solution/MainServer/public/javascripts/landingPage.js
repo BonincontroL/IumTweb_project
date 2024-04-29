@@ -1,4 +1,14 @@
+
+/**
+ * Constant for managing last season information.
+ * @type {number}
+ */
 const LAST_SEASON=2023
+
+
+/**
+ * Initializes the homepage.
+ */
 function init() {
     let swiper = new Swiper(".competition-swiper", {
         slidesPerView: 1,
@@ -30,9 +40,9 @@ function init() {
 
 
 /**
- * Funzione per ottenere i giocatori per una competizione specifica
- * @param competitionId
- * @returns {Promise<unknown>}
+ * Function to get players for a specific competition.
+ * @param {string} competitionId - The competition identifier.
+ * @returns {Promise<Array>} A promise resolving to an array of players.
  */
 function getPlayersByCompetition(competitionId) {
     const url = `http://localhost:3000/players/get5RandomPlayersByCompIdAndLastSeason/${competitionId}/${LAST_SEASON}`;
@@ -52,9 +62,9 @@ function getPlayersByCompetition(competitionId) {
 }
 
 /**
- * Funzione unificata per renderizzare i giocatori in un container specifico basato sulla competizione.
- * @param {Array} players - Array di giocatori da renderizzare.
- * @param {String} competitionIdentifier - competizione.
+ * Unified function to render players in specific container based on competition.
+ * @param {Array} players - Array of players to render.
+ * @param {String} competitionIdentifier - The competition identifier.
  */
 async function renderPlayers(players, competitionIdentifier) {
     // Mappa l'identificatore della competizione all'indice specifico del container
@@ -96,9 +106,9 @@ async function renderPlayers(players, competitionIdentifier) {
 }
 
 /**
- * Funzione per renderizzare la card di un giocatore.
- * @param player
- * @returns {HTMLButtonElement}
+ * Function to render a player card.
+ * @param player - The player data.
+ * @returns {HTMLButtonElement} - The player card element.
  */
 function renderPlayerCard(player){
     const playerCard = document.createElement('button');
@@ -148,9 +158,9 @@ function renderPlayerCard(player){
 }
 
 /**
- * Funzione per renderizzare il numero del giocatore.
- * @param playerNumber
- * @returns {HTMLDivElement}
+ * Function to render player number.
+ * @param playerNumber - The player number.
+ * @returns {HTMLDivElement} - The player number container.
  */
 function renderPlayerNumber(playerNumber){
     const playerNumberContainer = document.createElement('div');
@@ -161,8 +171,10 @@ function renderPlayerNumber(playerNumber){
 
     return playerNumberContainer
 }
+
+
 /**
- * Ottiene i giocatori da una competizione specifica e li renderizza utilizzando la mappa identificatore-container.
+ * Retrieves players from specific competitions and renders them using the identifier-container map.
  */
 function getAndRenderPlayers() {
     Promise.all([
@@ -187,9 +199,9 @@ function getAndRenderPlayers() {
 
 
 /**
- * Funzione per ottenere il numero di maglia di un giocatore
- * @param idPlayer
- * @returns {Promise<unknown>}
+ * Function to get player number.
+ * @param idPlayer - The player ID.
+ * @returns {Promise<unknown>} - A promise resolving to player number data.
  */
 function getPlayerNumber(idPlayer) {
     //const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
@@ -199,7 +211,7 @@ function getPlayerNumber(idPlayer) {
 
 
 /**
- * Recupera gli ultimi match di una specifica competizione utilizzando il competition_id.
+ * Retrieve the latest matches of a specific competition using the competition_id.
  * @param {string} competitionId - L'identificativo della competizione (ad esempio, 'IT1' per la Serie A).
  * @returns {Promise<Array>} Un promise che, se risolto, restituisce un array dei match.
  */
@@ -220,7 +232,7 @@ function getLastMatchesByCompetition(competitionId) {
 }
 
 /**
- * Funzione per ottenere e renderizzare gli ultimi match (games) di una competizione specifica.
+ * Function to obtain and render the latest matches (games) of a specific competition.
  * @param competitionId
  */
 function getAndRenderLastMatches(competitionId) {
@@ -234,7 +246,7 @@ function getAndRenderLastMatches(competitionId) {
 }
 
 /**
- * Funzione per renderizzare i match (games) in container specifico.
+ * Function to render matches (games) in specific container.
  * @param matches
  * @param competitionId
  */
@@ -258,7 +270,7 @@ function renderMatches(matches, competitionId) {
 }
 
 /**
- * Funzione per adattare i dati del match (game) in un formato più leggibile.
+ * Function to adapt match (game) data into a more readable format.
  * @param match
  * @returns {{_id: *, game_id: *, competition_id: *, season: *, round: *, homeTeam: {name: *, logo: string, score: *}, awayTeam: {name: *, logo: string, score: *}, time: string}}
  */
@@ -290,7 +302,7 @@ function adaptMatchData(match) {
 }
 
 /**
- * Funzione per creare un div per un match (game) specifico.
+ * Function to create a div for a specific match (game).
  * @param match
  * @returns {HTMLDivElement}
  */
@@ -335,7 +347,7 @@ function createMatchDiv(match) {
 }
 
 /**
- * Aggiunge un listener a tutti i loghi delle competizioni
+ * Adds a listener to all competition logos
  */
 function addCompetitionLogosListeners() {
     const logos = document.querySelectorAll('.competition-logos-container [data-competition-id]');

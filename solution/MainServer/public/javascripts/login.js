@@ -1,5 +1,5 @@
 /**
- * Inizializza la pagina di login chiamata quando la pagina viene caricata
+ * Initializes the login page called when the page is loaded.
  */
 function onLogin(){
     showLoginForm();
@@ -8,7 +8,7 @@ function onLogin(){
 }
 
 /**
- * Aggiunge i listener ai pulsanti del form di login e registrazione
+ * Adds listeners to the login and registration form buttons.
  */
 function addListenersLogin(){
     document.getElementById("showSingupPage").addEventListener('click', showRegisterForm);
@@ -23,7 +23,7 @@ function addListenersLogin(){
 }
 
 /**
- * aggiunge i listener ai pulsanti del form di registrazione
+ * Adds listeners to the registration form buttons.
  */
 function addListenersRegister(){
     document.getElementById("showLoginPage").addEventListener('click', showLoginForm);
@@ -39,7 +39,7 @@ function addListenersRegister(){
 }
 
 /**
- * mostra il form di login e nasconde il form di registrazione
+ * Shows the login form and hides the registration form.
  */
 function showLoginForm(event) {
     if (event) event.preventDefault();
@@ -48,7 +48,7 @@ function showLoginForm(event) {
 }
 
 /**
- * mostra il form di registrazione e nasconde il form di login
+ * Shows the registration form and hides the login form.
  */
 function showRegisterForm(event){
     if (event) event.preventDefault();
@@ -59,9 +59,8 @@ function showRegisterForm(event){
 
 
 /**
- * Estrae i dati dal form di login
- * @returns requestBody struttura con i dati del form se son validi, se no ritorna null;
- * @constructor
+ * Extracts data from the login form.
+ * @returns {Object|null} - Data structure with form data if valid, otherwise returns null.
  */
 function extractDataLog() {
     const formData = new FormData(document.getElementById('login_form'));
@@ -81,9 +80,8 @@ function extractDataLog() {
 }
 
 /**
- * Estrae i dati dal form di registrazione
- * @returns requestBody struttura con i dati del form se son validi , se no ritorna null
- * @constructor
+ * Extracts data from the registration form.
+ * @returns {Object|null} - Data structure with form data if valid, otherwise returns null.
  */
 function extractDataReg() {
     const formData = new FormData(document.getElementById('singup_form'));
@@ -106,24 +104,24 @@ function extractDataReg() {
 }
 
 /**
- * Pulisce il form di registrazione
-
+ * Resets the registration form.
  */
 function resetRegisterForm() {
     document.getElementById('singup_form').reset();
 }
 
 /**
- * Resetta il form di login
+ * Resets the login form.
  */
 function resetLoginForm() {
     document.getElementById('login_form').reset();
 }
 
+
 /**
- * regex per la validazione dell'email
- * @param email estratta dal form
- * @returns {boolean} true se l'email è valida, false altrimenti
+ * Validates an email address.
+ * @param {string} email - Email extracted from the form.
+ * @returns {boolean} - True if the email is valid, false otherwise.
  */
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -131,7 +129,8 @@ function validateEmail(email) {
 }
 
 /**
- * Funzione per mandare i dati di registrazione al ExpressServer
+ * Sends registration data to the Server.
+ * @param {Object} requestBody - Data structure with registration information.
  */
 function sendDataReg(requestBody) {
     axios.post('http://localhost:3000/users/register', requestBody)
@@ -150,7 +149,10 @@ function sendDataReg(requestBody) {
 }
 
 
-
+/**
+ * Sends login data to the Server.
+ * @param {Object} requestBody - Data structure with login information.
+ */
 function sendDataLog(requestBody){
     axios.post('http://localhost:3000/users/login', requestBody)
         .then(response => {
@@ -169,16 +171,17 @@ function sendDataLog(requestBody){
 }
 
 /**
- * Funzione per salvare l'username in session storage e reindirizzare alla landing page
- * @param username
+ * Saves the username in session storage and redirects to the landing page.
+ * @param {string} username - The username.
  */
 function logged(username){
     sessionStorage.setItem('username', username);
     window.location.href = 'landing_page.html';
 }
 
+
 /**
- * funzione per settare il login in ogni pagina
+ * Function to set login on every page.
  */
 function initLogin(){
     if (sessionStorage.getItem('username') !== null) {

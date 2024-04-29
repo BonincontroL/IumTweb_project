@@ -4,7 +4,7 @@ let currentRoom ="";
 
 
 /**
- * Inizializzazione di chat_page.html
+ * Initializes the chat page.
  */
 function onChat(){
     myName = sessionStorage.getItem('username');
@@ -13,8 +13,9 @@ function onChat(){
     setupSocketListeners();
 }
 
+
 /**
- * Imposta i listeners per i socket
+ * Sets up listeners for socket events.
  */
 function setupSocketListeners() {
     socket.on('chat message', (room,msg) => {
@@ -27,7 +28,7 @@ function setupSocketListeners() {
 }
 
 /**
- * Richiesta al server la lista di tutte le competizioni e richiamo di renderCompetitionOnChat per visualizzarle.
+ * Requests all competitions from the server and renders them on the chat interface.
  */
 function getAllCompetitions() {
     axios.get('http://localhost:3000/competitions/getAllCompetitions')
@@ -43,8 +44,8 @@ function getAllCompetitions() {
 }
 
 /**
- * Manipolazione html per la corretta visualizzazione della lista delle competizioni sia per i messaggi ricevuti che inviati
- * @param competitions lista di tutte le competizioni
+ * Renders the competition list on the chat interface.
+ * @param {Array} competitions - List of all competitions.
  */
 function renderCompetitionOnChat(competitions) {
 
@@ -104,8 +105,8 @@ function renderCompetitionOnChat(competitions) {
 }
 
 /**
- * Richiamata quando si clicca su una competizione per unirsi alla chat
- * @param competition competizione su cui si ha cliccato
+ * Called when clicking on a competition to join the chat.
+ * @param {Object} competition - Clicked competition.
  */
 function joinCompetitionRoom(competition) {
     myName=sessionStorage.getItem("username");
@@ -126,8 +127,8 @@ function joinCompetitionRoom(competition) {
 }
 
 /**
- * Invia il messaggio tramite socket al server e richiama insertMessage per visualizzarlo nella chat
- * @param message messaggio di testo da inviare
+ * Sends a message via socket to the server and calls insertMessage to display it in the chat.
+ * @param {string} message - The text message to send.
  */
 function sendMessage(message) {
     myName=sessionStorage.getItem("username");
@@ -150,9 +151,9 @@ function sendMessage(message) {
 }
 
 /**
- * Inserisce il messaggio nella chat
- * @param msgData dati del messaggio(nome, messaggio)
- * @param isOwnMessage booleano per verificare se il messaggio è inviato o ricevuto
+ * Inserts the message into the chat.
+ * @param {Object} msgData - Message data (name, message).
+ * @param {boolean} isOwnMessage - Boolean to indicate whether the message is sent or received.
  */
 function insertMessage(msgData, isOwnMessage) {
     const messagesContainer = document.getElementById('messages-container-'+currentRoom.toLowerCase());
@@ -188,7 +189,7 @@ function insertMessage(msgData, isOwnMessage) {
 
 
 /**
- * Aggiunge listeners al pulsante di invio del messaggio
+ * Adds listeners to the message send button.
  */
 function setupSendMessage() {
     const sendButton = document.getElementById('send_message');
@@ -214,6 +215,10 @@ function setupSendMessage() {
     });
 }
 
+/**
+ * Manages lateral chat buttons behavior.
+ * @param {NodeList} lateralbuttons - List of lateral chat buttons.
+ */
 function manageLateralChatButtons(lateralbuttons){
     lateralbuttons.forEach(button=>{
         button.addEventListener('click',()=>{
@@ -234,6 +239,10 @@ function manageLateralChatButtons(lateralbuttons){
         })
     })
 }
+
+/**
+ * Hides all messages containers.
+ */
 function hideAllMessagesContainers(){
     let chatContainers= document.querySelectorAll('.chat-messages-container')
     chatContainers.forEach(container=>{container.style.display='none'})
