@@ -145,4 +145,21 @@ router.get('/getCompetitionSeasonsSorted', function (req, res) {
         handleAxiosError(err, res)
     })
 })
+
+router.get('/getLastGamesByClubIdandSeason', function (req, res) {
+    axios.get(EXPRESS_SERVER + "/games/getLastGamesByClubIdandSeason", {
+        params: {
+            club_id: req.query.club_id,
+            season: req.query.season
+        }
+    }).then(data => {
+        res.status(data.status).send(data.data);
+    }).catch(err => {
+        //throw new Error(err)
+        handleAxiosError(err, res)
+    })
+})
+
+
+
 module.exports = router;

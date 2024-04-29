@@ -430,19 +430,32 @@ function getGamesByGameId(gameId) {
 }
 
 /**
- * Get the last 5 games of a club in a certain season
+ * Get the last  games of a club in a certain season
  * @param club_id
  * @param season
  */
 function getLastGamesByClubIdandSeason(club_id, season) {
     return Model.find({
         $or: [
-            { home_club_id: club_id },
-            { away_club_id: club_id }
+            {home_club_id: club_id},
+            {away_club_id: club_id}
         ],
         season: season
+
+    }, {
+        _id: 0,
+        season: 1,
+        round: 1,
+        date: 1,
+        game_id: 1,
+        home_club_id: 1,
+        away_club_id: 1,
+        home_club_name: 1,
+        away_club_name: 1,
+        competition_id: 1,
     })
-        .sort({ date: -1 })
+
+        .sort({date: -1})
 
 }
 
