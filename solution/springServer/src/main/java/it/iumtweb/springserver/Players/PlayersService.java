@@ -54,7 +54,11 @@ public class PlayersService {
     }
 
     public List<Players> findPlayersByLetterInName(String letter) {
-        return playersRepository.findByNameOrSurname(letter);
+        List<Players> result = playersRepository.findByNameOrSurname(letter);
+        if(result.size() > 1000)
+            return result.subList(0,1000);
+        else
+            return result;
     }
     public List<String> findAllCountryOfCitizenship(){ return playersRepository.findAllCountryOfCitizenship();}
     public List<PlayerDomesticCompetitionDTO> findAllDomesticCompetitions(){ return playersRepository.findAllDomesticCompetitions();}

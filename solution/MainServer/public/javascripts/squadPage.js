@@ -68,7 +68,7 @@ async function init(){
 
             // renderMatchesRound(matches.data)
         }catch(err){
-            alert("Errore nella richiesta delle partite del club",err);
+            alert("Errore nella richiesta delle partite del club"+err);
         }
     });
     document.getElementById('squad-players-btn').addEventListener('click',()=>{

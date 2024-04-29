@@ -152,8 +152,10 @@ function debounce(func, wait) {
  */
 function handleSearch(event) {
     const searchText = event.target.value.trim();
-    if (searchText.length > 0) {
+    if (searchText.length !== 0) {
         findPlayersByLetter(searchText);
+    }else{
+        document.getElementById('popupNoContent').style.display='none'
     }
 }
 
@@ -161,13 +163,22 @@ function handleSearch(event) {
  * Funzione per recuperare i giocatori dal server e categorizzarli.
  */
 function fetchAndCategorizePlayers() {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    loadingSpinner.style.display = 'block';
     fetchPlayers()
         .then(players => {
-            const playersByRole = categorizePlayersByRole(players);
-            displayPlayersByRole(playersByRole);
+            if(players.data.length!==0) {
+                const playersByRole = categorizePlayersByRole(players.data);
+                displayPlayersByRole(playersByRole);
+                document.getElementById('popupNoContent').style.display='none'
+            }else{
+                document.getElementById('popupNoContent').style.display='flex'
+            }
         })
         .catch(error => {
             console.error('Errore durante il recupero e la categorizzazione dei giocatori:', error);
+        }).finally(()=>{
+            loadingSpinner.style.display = 'none';
         });
 }
 
@@ -182,15 +193,6 @@ function fetchPlayers() {
     loadingSpinner.style.display = 'block';
 
     return axios.get('http://localhost:3000/players/getTop150PlayersByMarketValue')
-        .then(response => {
-            loadingSpinner.style.display = 'none';
-            return response.data;
-        })
-        .catch(error => {
-            loadingSpinner.style.display = 'none';
-            console.error('Failed to fetch players:', error);
-            throw error;
-        });
 }
 
 /**
@@ -281,8 +283,13 @@ function findPlayersByLetter(letter) {
     axios.get(`http://localhost:3000/players/findPlayersByLetterInName`, { params: { letter } })
         .then(response => {
             const players = response.data;
-            const playersByRole = categorizePlayersByRole(players);
-            displayPlayersByRole(playersByRole);
+            if(players.length!==0) {
+                const playersByRole = categorizePlayersByRole(players);
+                displayPlayersByRole(playersByRole);
+                document.getElementById('popupNoContent').style.display='none'
+            }else{
+                document.getElementById('popupNoContent').style.display='flex'
+            }
         })
         .catch(error => {
             console.error('Error during search:', error);

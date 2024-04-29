@@ -879,7 +879,11 @@ header ul li ul li a{
     overflow-y:auto;
 }
 #GeneralPlayers{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-8xs);
 }
 #competitionKnockout{
     flex-direction: column;
@@ -2354,6 +2358,16 @@ tbody > tr:hover{
     flex-wrap: wrap;
     gap:var(--gap-8xs)
 }
+.popup-no-content-found{
+    width: fit-content;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-10px);
+    background-color: var(--white);
+    border: 1px solid var(--color-lose);
+    border-radius: var(--br-12px);
+}
 .formation-not-found{
     width: 100%;
     height: 100%;
@@ -3222,6 +3236,8 @@ tbody > tr:hover{
 #searchCompetitionContainer{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: var(--gap-3xs);
 }
 @media screen and (max-width: 1350px) {

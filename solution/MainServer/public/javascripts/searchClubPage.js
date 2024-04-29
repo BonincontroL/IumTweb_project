@@ -1,31 +1,31 @@
 
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',()=> {
     initLogin();
     getAllClubsByInitial();
-    document.getElementById('search-clubs').addEventListener('input',(e)=>
+    document.getElementById('search-clubs').addEventListener('input', (e) =>
         debouncedSearch(e.target.value)
     );
-    const debouncedSearch = _.debounce(function (searchText){
-        if(!searchText){
+    const debouncedSearch = _.debounce(function (searchText) {
+        if (!searchText) {
+            document.getElementById('popupNoContent').style.display = 'none'
             return;
         }
-        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName",{
-            params:{
-                name:searchText
+        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName", {
+            params: {
+                name: searchText
             }
 
         })
             .then(res => {
-                if (res.data.length !== 0 ) {
-                 renderClubsGroupedByInitial(res.data)
-             }
-        }).catch(err=> {
-            alert(JSON.stringify(err))
-        })
-
-    },300)
-
-});
+                if (res.data.length !== 0) {
+                    document.getElementById('popupNoContent').style.display='none'
+                    renderClubsGroupedByInitial(res.data)
+                }else{
+                    document.getElementById('popupNoContent').style.display='flex'
+                }
+            })
+    },300);
+})
 
 /**
  * Get al server per tutti i club suddivisi in base al carattere iniziale

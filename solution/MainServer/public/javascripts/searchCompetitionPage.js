@@ -8,14 +8,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     
     const debouncedSearch = _.debounce(function (searchText){
         if(!searchText){
+            document.getElementById('popupNoContent').style.display='none'
             return;
         }
         axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
             params:{name:searchText}
         }).then(async res => {
             if (res.data.length !== 0) {
+                document.getElementById('popupNoContent').style.display='none'
                 await renderCompetitionsGroupedByCountry(res.data)
-            }
+            }else
+                document.getElementById('popupNoContent').style.display='flex'
+
         }).catch(err=>{
             alert(JSON.stringify(err))
         })
