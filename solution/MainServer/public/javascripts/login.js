@@ -185,9 +185,11 @@ function initLogin(){
         const user_icon= document.getElementById('user_icon');
         const user_popup=document.getElementById('user_popup');
         document.getElementById('doLogin').style.display = 'none';
-        const chat_button = document.getElementById("chat_button");
+        const chat_buttons = document.querySelectorAll(".chat_button");
         user_icon.style.display='flex';
-        chat_button.style.display='flex';
+        chat_buttons.forEach(chat_button=>{
+            chat_button.style.display='flex'
+        })
 
         document.addEventListener('click', function(event) {
             if(user_icon.contains(event.target)){

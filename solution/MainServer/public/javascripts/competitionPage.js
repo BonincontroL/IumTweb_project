@@ -5,7 +5,6 @@ let competitionSeasons=[] //array globale che rappresenta tutte le annate giocat
 let currentRound=0
 let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
 let knockoutRounds =[]
-let isSeasonDropdownRendered=false, isTableSeasonDropdownRendered=false, isKnockoutSeasonDropdown=false;
 let currentMatchesSeason=0, currentKnockoutSeason=0
 let isTopPlayersLoaded=false
 let typology
@@ -40,6 +39,7 @@ async function init() {
             typology=competitionTypology.DOMESTIC_LEAUGE
         else
             typology=competitionTypology.CUP
+        preRenderDropdowns()
         adaptPageToTypology()
         adaptButtonListenersToTypology()
         lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
@@ -47,6 +47,16 @@ async function init() {
         initLogin();
     } catch (e) {
         alert(e)
+    }
+}
+function preRenderDropdowns(){
+    if(typology===competitionTypology.DOMESTIC_LEAUGE || typology===competitionTypology.GROUP) {
+        renderSeasonDropdownMenu('matchesSeasonSelector')
+    }else if(typology===competitionTypology.CUP|| typology===competitionTypology.GROUP)
+        renderSeasonDropdownMenu('knockoutSeasonSelector')
+    else if(typology===competitionTypology.GROUP) {
+        renderSeasonDropdownMenu('groupSeasonSelector')
+        manageSeasonDropdownMenuChange('groupTablesSelector')
     }
 }
 function adaptPageToTypology(){
@@ -156,8 +166,7 @@ async function getGroupTables(){
         matchRounds=rounds.data.filter(round=>round.startsWith('Group'))
         knockoutRounds=rounds.data.filter(round=>!round.startsWith('Group'))
     }
-    renderSeasonDropdownMenu('groupTablesSelector')
-    manageSeasonDropdownMenuChange('groupTablesSelector')
+
     for (const group of matchRounds) {
         let table =await getTable(competitionId,competitionSeasons[0], 'full', group)
         groupTables[group] = table.data
@@ -634,10 +643,6 @@ async function getGroupMatches() {
             competitionSeasons=await fetchAllSeasons()
             competitionSeasons=competitionSeasons.data
         }
-        if(!isSeasonDropdownRendered) {
-            renderSeasonDropdownMenu('matchesSeasonSelector')
-            isSeasonDropdownRendered=true
-        }
         let selectedSeason =document.getElementById('matchesSeasonSelector').value
         if(currentMatchesSeason!==selectedSeason) {
             matchRounds = await fetchAllRoundNumbers(selectedSeason)
@@ -673,10 +678,6 @@ async function getKnockoutMatches(){
     if(competitionSeasons.length!==0) {
         competitionSeasons=await fetchAllSeasons()
         competitionSeasons=competitionSeasons.data
-    }
-    if(!isKnockoutSeasonDropdown) {
-        renderSeasonDropdownMenu('knockoutSeasonSelector')
-        isKnockoutSeasonDropdown=true
     }
     let season= document.getElementById('knockoutSeasonSelector').value
     if(currentKnockoutSeason!==season) {
