@@ -50,13 +50,17 @@ async function init() {
     }
 }
 function preRenderDropdowns(){
-    if(typology===competitionTypology.DOMESTIC_LEAUGE || typology===competitionTypology.GROUP) {
-        renderSeasonDropdownMenu('matchesSeasonSelector')
-    }else if(typology===competitionTypology.CUP|| typology===competitionTypology.GROUP)
+    if(typology===competitionTypology.GROUP) {
         renderSeasonDropdownMenu('knockoutSeasonSelector')
-    else if(typology===competitionTypology.GROUP) {
-        renderSeasonDropdownMenu('groupSeasonSelector')
+        renderSeasonDropdownMenu('groupTablesSelector')
         manageSeasonDropdownMenuChange('groupTablesSelector')
+        renderSeasonDropdownMenu('matchesSeasonSelector')
+    }else if(typology===competitionTypology.CUP)
+        renderSeasonDropdownMenu('knockoutSeasonSelector')
+    else{
+        renderSeasonDropdownMenu('groupTablesSelector')
+        manageSeasonDropdownMenuChange('groupTablesSelector')
+        renderSeasonDropdownMenu('matchesSeasonSelector')
     }
 }
 function adaptPageToTypology(){
@@ -822,14 +826,14 @@ export function renderMatchesRound(matches){
     let matchesContainer=document.getElementById('competitionMatchesContainer')
     matchesContainer.innerHTML=''
     matches.forEach(match=>{
-        let formattedDate= match.date.split('T')[0];
+        adaptMatchDate(match)
         let singleMatchElement=document.createElement('div')
         singleMatchElement.className='single-horizontal-match'
         singleMatchElement.innerHTML=
             `
                 <div class="date-and-season">
-                    <h6>${formattedDate}</h6>
                     <h6>${match.round}</h6>
+                    <h6>${match.date}</h6>
                 </div>
                  <div class="squad-names-and-result-container">
                                 <div class="squad-name-wrapper-home">
@@ -853,7 +857,7 @@ export function renderMatchesRound(matches){
                                     <h6>${match.away_club_name === undefined? 'N.D' : match.away_club_name}</h6>
                                 </div>
                             </div>
-                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name !==undefined? match.home_club_name:''}" data-awayClubName="${match.away_club_name !==undefined? match.away_club_name:''}" data-aggregate="${match.aggregate}" data-date="${formattedDate}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
+                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name !==undefined? match.home_club_name:''}" data-awayClubName="${match.away_club_name !==undefined? match.away_club_name:''}" data-aggregate="${match.aggregate}" data-date="${match.date}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
                                 <i class='bx bxs-right-arrow-circle'></i>
                             </button>`
         matchesContainer.appendChild(singleMatchElement)

@@ -119,7 +119,7 @@ public class PlayersController {
 
     @GetMapping("/findPlayersByLetterInName")
     public ResponseEntity<List<Players>> findPlayersByLetterInName(@RequestParam String letter) {
-        List<Players> players = playersService.findPlayersByLetterInName(letter);
+        List<Players> players = playersService.findPlayersByLetterInName(letter).stream().toList();
         if (players.isEmpty()) {
             System.out.println("No Players found");
             return ResponseEntity.noContent().build();

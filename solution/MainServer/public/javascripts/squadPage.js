@@ -46,31 +46,7 @@ async function init(){
             getTableAndLastMatches()
         }
     })
-    document.getElementById('squad-matches-btn').addEventListener('click',async ()=>{
-        try {
-            if(!isSeasonsLoaded) {
-                let seasons = await getSeasonsGames();
-                seasons = seasons.data.map(item => item.season);
-                insertSeasons(seasons);
-                isSeasonsLoaded=true;
-            }
-            const matches = await getClubGamesInfo();
-            renderMatchesRound(matches.data);
-            if(!isListenerLoaded) {
-                document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
-                    lastSeason = this.value;
-                    const matches = await getClubGamesInfo();
-                    renderMatchesRound(matches.data)
-                })
-                isListenerLoaded=true
-            }
-
-
-            // renderMatchesRound(matches.data)
-        }catch(err){
-            alert("Errore nella richiesta delle partite del club"+err);
-        }
-    });
+    document.getElementById('squad-matches-btn').addEventListener('click',getLastMatchesWrapper);
     document.getElementById('squad-players-btn').addEventListener('click',()=>{
         if(!isPlayersLoaded) {
             getClubPlayers()
@@ -85,6 +61,33 @@ async function init(){
         }
     })
     initLogin();
+}
+async function getLastMatchesWrapper(){
+    try {
+        if(!isSeasonsLoaded) {
+            let seasons = await getSeasonsGames();
+            seasons = seasons.data.map(item => item.season);
+            insertSeasons(seasons);
+            isSeasonsLoaded=true;
+        }
+        const matches = await getClubGamesInfo();
+        renderMatchesRound(matches.data);
+        setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
+        manageSeasonEventListener()
+    }catch(err){
+        alert("Errore nella richiesta delle partite del club"+err);
+    }
+}
+function manageSeasonEventListener(){
+    if(!isListenerLoaded) {
+        document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
+            lastSeason = this.value;
+            const matches = await getClubGamesInfo();
+            renderMatchesRound(matches.data)
+            setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
+        })
+        isListenerLoaded=true
+    }
 }
 function renderGraph(){
     const nationalPlayers = 100-clubInfo.foreignersPercentage

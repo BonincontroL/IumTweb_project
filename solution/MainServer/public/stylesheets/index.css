@@ -1401,10 +1401,12 @@ header ul li ul li a{
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    padding-top: var(--padding-20px);
-    gap: var(--gap-xl);
     width: 100%;
     overflow: auto;
+}
+#squadPositionInLeauge{
+    gap: var(--gap-xl);
+    padding-top: var(--padding-20px);
 }
 
 .squadTable-container {
