@@ -44,6 +44,14 @@ async function init(){
             getTableAndLastMatches()
         }
     })
+    document.getElementById('squad-matches-btn').addEventListener('click',async ()=>{
+        try {
+            const matches = await getClubGamesInfo()
+            renderMatchesRound(matches.data)
+        }catch(err){
+            alert("Errore nella richiesta delle partite del club",err);
+        }
+    });
     document.getElementById('squad-players-btn').addEventListener('click',()=>{
         if(!isPlayersLoaded) {
             getClubPlayers()
@@ -282,6 +290,8 @@ function getClubGamesInfo() {
             club_id: clubInfo.clubId,
             season: lastSeason
         }
+
+
     });
 }
 function renderCompetitionInfo() {

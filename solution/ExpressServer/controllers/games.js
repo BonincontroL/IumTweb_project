@@ -453,6 +453,7 @@ function getLastGamesByClubIdandSeason(club_id, season) {
         home_club_name: 1,
         away_club_name: 1,
         competition_id: 1,
+        aggregate: 1
     })
 
         .sort({date: -1})
