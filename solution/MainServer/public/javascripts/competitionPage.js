@@ -816,7 +816,7 @@ function getAllMatchesInRound(round,season){
  * the matches are into an array sorted by date
  * @param matches the array of all matches in a round sorted by date
  */
-function renderMatchesRound(matches){
+export function renderMatchesRound(matches){
     let matchesContainer=document.getElementById('competitionMatchesContainer')
     matchesContainer.innerHTML=''
     matches.forEach(match=>{
@@ -824,7 +824,11 @@ function renderMatchesRound(matches){
         let singleMatchElement=document.createElement('div')
         singleMatchElement.className='single-horizontal-match'
         singleMatchElement.innerHTML=
-            `<h6>${formattedDate}</h6>
+            `
+                <div class="date-and-season">
+                    <h6>${formattedDate}</h6>
+                    <h6>${match.round}</h6>
+                </div>
                  <div class="squad-names-and-result-container">
                                 <div class="squad-name-wrapper-home">
                                     <h6>${match.home_club_name}</h6>
@@ -870,3 +874,4 @@ function renderMatchesDropdownMenu(){
         dropdownContainer.appendChild(dropdownItem)
     })
 }
+

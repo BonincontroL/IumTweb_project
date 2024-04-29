@@ -120,5 +120,5 @@ function getPlayerLastGames(playerId) {
 module.exports={
     getTopScorer,
     getPlayerStatistics,
-    getPlayerLast5Games: getPlayerLastGames
+    getPlayerLastGames
 }
