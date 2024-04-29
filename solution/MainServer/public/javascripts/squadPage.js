@@ -1,6 +1,7 @@
 let lateralSquadButtons, squadInfoBtn
 const squadPageName= 'squad-page'
 let clubInfo
+let lastSeason= 2023;
 const MAIN_SERVER="http://localhost:3000"
 import {getTable,renderTableRow} from './competitionPage.js'
 document.addEventListener('DOMContentLoaded',init)
@@ -130,9 +131,7 @@ function renderMiniTable(completeCompetitionTable){
     })
 
 }
-function manageClubTableVariants(){
 
-}
 /**
  * function that do an axios request to get all the club players
  * in a certain season
@@ -277,6 +276,13 @@ function getManagerName(){
         }
     })
 }
+function getClubGamesInfo(){
+    return axios.get(MAIN_SERVER+'/games/getLastGamesByClubIdandSeason',{
+        params:{
+            club_id:clubInfo.clubId,
+            season: lastSeason
+        }
+    });
 function renderCompetitionInfo() {
     //nome e logo del club nella barra laterale
     document.getElementById('clubName').innerText = clubInfo.name

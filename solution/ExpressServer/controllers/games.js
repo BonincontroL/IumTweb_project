@@ -459,6 +459,39 @@ function getLastGamesByClubIdandSeason(club_id, season) {
 
 }
 
+
+/**
+ * ritornano tutte le stagioni in cui la squadra ha almeno giocato una partita
+ * @param club_id
+ * @returns {Aggregate<Array<any>>}
+ */
+function getSeasonsByClubId(club_id) {
+    return Model.aggregate([
+        {
+            $match: {
+                $or: [
+                    { home_club_id: club_id },
+                    { away_club_id: club_id }
+                ]
+            }
+        },
+        {
+            $group: {
+                _id: "$season"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                season: "$_id"
+            }
+        },
+        {
+            $sort: { season: 1 }
+        }
+    ]);
+}
+
 module.exports = {
     getAllGames,
     getLast5Games,
@@ -474,5 +507,6 @@ module.exports = {
     getCompetitionIdsWithGroup,
     getCompetitionSeasonsSorted,
     getGamesByGameId,
-    getLastGamesByClubIdandSeason
+    getLastGamesByClubIdandSeason,
+    getSeasonsByClubId
 };

@@ -199,9 +199,25 @@ router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
         const data = await GamesController.getLastGamesByClubIdandSeason(club_id, season);
         res.status(200).json(data);
     } catch (error) {
-        console.error('Errore durante il recupero delle ultime 5 partite di un club per una stagione specifica:', error);
-        res.status(500).json({ error: 'Errore durante il recupero delle ultime 5 partite di un club per una stagione specifica' });
+        console.error('Errore durante il recupero delle  partite di un club per una stagione specifica:', error);
+        res.status(500).json({ error: 'Errore durante il recupero delle ultime partite di un club per una stagione specifica' });
     }
+});
+
+
+/**
+ * restituisce tutte le stagioni in cui il club ha giocato almeno una partita.
+ */
+router.get('/getSeasonsByClubId', async (req, res, next) => {
+    const club_id =+req.query.club_id;
+    GamesController.getSeasonsByClubId(club_id)
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero delle stagioni del Club:', error);
+            res.status(500).json({error: 'Errore durante il recupero delle stagioni'});
+        })
 });
 
 
