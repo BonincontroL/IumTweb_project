@@ -50,9 +50,13 @@ router.get('/getAllClubsByInitial', function (req, res) {
 /**
  * get al SpringServer per tutte le squadre suddivise per il carattere iniziale e il nome che si digita nella barra di ricerca
  */
-router.get('/getClubsGroupedByInitialAndLikeName/:name', function (req, res) {
+router.get('/getClubsGroupedByInitialAndLikeName', function (req, res) {
     // Utilizzo del parametro "name" direttamente dall'URL
-    axios.get(SPRING_SERVER+`/clubs/getClubsGroupedByInitialAndLikeName/${req.params.name}`)
+    axios.get(SPRING_SERVER+`/clubs/getClubsGroupedByInitialAndLikeName`, {
+        params: {
+            name: req.query.name,
+        }
+    })
         .then(data => {
             res.status(data.status).send(data.data);
         }).catch(err => {

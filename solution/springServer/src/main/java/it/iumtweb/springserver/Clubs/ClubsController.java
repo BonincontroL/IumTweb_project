@@ -75,8 +75,8 @@ public class ClubsController {
         }
     }
 
-    @GetMapping("/getClubsGroupedByInitialAndLikeName/{name}")
-    public ResponseEntity<Map<Character, List<Clubs>>> getClubsGroupedByInitialAndLikeName(@PathVariable("name") String nameSubstr) {
+    @GetMapping("/getClubsGroupedByInitialAndLikeName")
+    public ResponseEntity<Map<Character, List<Clubs>>> getClubsGroupedByInitialAndLikeName(@RequestParam("name") String nameSubstr) {
         Map<Character, List<Clubs>> result = clubsService.getClubsGroupedByInitialAndLikeName(nameSubstr);
         if (result.isEmpty()) {
             return ResponseEntity.noContent().build();

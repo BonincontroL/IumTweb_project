@@ -9,12 +9,16 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(!searchText){
             return;
         }
-        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName/"+ searchText)
-
-         .then(res => {
-            if (res.data.length !== 0 ) {
-                renderClubsGroupedByInitial(res.data)
+        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName",{
+            params:{
+                name:searchText
             }
+
+        })
+            .then(res => {
+                if (res.data.length !== 0 ) {
+                 renderClubsGroupedByInitial(res.data)
+             }
         }).catch(err=> {
             alert(JSON.stringify(err))
         })
