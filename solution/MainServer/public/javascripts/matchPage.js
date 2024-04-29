@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 })
 function renderBannerInfo(){
     //renderizza le informazioni del banner del match
-    document.getElementById('homeClubName').innerText=matchInfo.homeClubName
-    document.getElementById('awayClubName').innerText=matchInfo.awayClubName
+    document.getElementById('homeClubName').innerText=matchInfo.homeClubName===null?'N.D':matchInfo.homeClubName
+    document.getElementById('awayClubName').innerText=matchInfo.awayClubName === null? 'N.D':matchInfo.awayClubName
     document.getElementById('homeClubLogo').setAttribute('src',clubLogoImgURL+matchInfo.homeClubId+".png")
     document.getElementById('awayClubLogo').setAttribute('src',clubLogoImgURL+matchInfo.awayClubId+".png")
     document.getElementById('aggregate').innerText=matchInfo.aggregate
@@ -262,9 +262,13 @@ function getMatchFormation(matchIds){
     try{
         axios.get(url,{params:matchIds})
             .then(res=>{
-                let homeLineup = res.data[0].home_lineup[0].lineup
-                let awayLineup = res.data[0].away_lineup[0].lineup
-                renderMatchFormation(homeLineup, awayLineup)
+                if(res.data[0].home_lineup.length===0 &&res.data[0].away_lineup.length===0 )
+                    document.getElementById('formationNotFoundContainer').style.display='flex'
+                else {
+                    let homeLineup = res.data[0].home_lineup[0].lineup
+                    let awayLineup = res.data[0].away_lineup[0].lineup
+                    renderMatchFormation(homeLineup, awayLineup)
+                }
             })
     }catch(error){
         alert(error)

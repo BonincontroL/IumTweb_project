@@ -737,8 +737,10 @@ function renderSingleKnockoutMatch(match){
     matchCard.setAttribute('data-gameId',match.game_id)
     matchCard.setAttribute('data-homeClubId',match.home_club_id)
     matchCard.setAttribute('data-awayClubId',match.away_club_id)
-    matchCard.setAttribute('data-homeClubName',match.home_club_name)
-    matchCard.setAttribute('data-awayClubName',match.away_club_name)
+    if(match.home_club_name!==undefined)
+        matchCard.setAttribute('data-homeClubName',match.home_club_name)
+    if(match.away_club_name!==undefined)
+        matchCard.setAttribute('data-awayClubName',match.away_club_name)
     matchCard.setAttribute('data-aggregate',match.aggregate)
     matchCard.setAttribute('data-date',match.date)
     matchCard.setAttribute('data-round',match.round)
@@ -748,14 +750,14 @@ function renderSingleKnockoutMatch(match){
         ` <div class="match-result-vertical">
                             <div class="squad-icon-container">
                                 <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png" alt="${match.home_club_name}" />
-                                <p>${match.home_club_name}</p>
+                                <p>${match.home_club_name !== undefined ? match.home_club_name : 'N.D.'}</p>
                                 <div class="home-result">
                                     <p>${match.home_club_goals !== undefined ? match.home_club_goals : 'N.D.'}</p>
                                 </div>
                             </div>
                             <div class="squad-icon-container">
                                 <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png" alt="${match.away_club_name}" />
-                                <p> ${match.away_club_name}</p>
+                                <p> ${match.away_club_name !== undefined ? match.away_club_name : 'N.D.'}</p>
                                 <div class="away-result">
                                     <p>${match.away_club_goals !== undefined ? match.away_club_goals : 'N.D.'}</p>
                                 </div>
@@ -831,12 +833,12 @@ export function renderMatchesRound(matches){
                 </div>
                  <div class="squad-names-and-result-container">
                                 <div class="squad-name-wrapper-home">
-                                    <h6>${match.home_club_name}</h6>
+                                    <h6>${match.home_club_name === undefined? 'N.D' : match.home_club_name}</h6>
                                 </div>
                                 <img
                                         class="squadLogo"
                                         loading="lazy"
-                                        alt="${match.home_club_name} logo"
+                                        alt="${match.home_club_name === undefined? 'N.D' : match.home_club_name} logo"
                                         src="${clubLogoImgURL.concat(match.home_club_id)}.png"
                                 />
 
@@ -844,14 +846,14 @@ export function renderMatchesRound(matches){
                                 <img
                                         class="squadLogo"
                                         loading="lazy"
-                                        alt="${match.away_club_name}"
+                                        alt="${match.away_club_name === undefined? 'N.D' : match.away_club_name}"
                                         src="${clubLogoImgURL.concat(match.away_club_id)}.png"
                                 />
                                 <div class="squad-name-wrapper-away">
-                                    <h6>${match.away_club_name}</h6>
+                                    <h6>${match.away_club_name === undefined? 'N.D' : match.away_club_name}</h6>
                                 </div>
                             </div>
-                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name}" data-awayClubName="${match.away_club_name}" data-aggregate="${match.aggregate}" data-date="${formattedDate}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
+                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name !==undefined? match.home_club_name:''}" data-awayClubName="${match.away_club_name !==undefined? match.away_club_name:''}" data-aggregate="${match.aggregate}" data-date="${formattedDate}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
                                 <i class='bx bxs-right-arrow-circle'></i>
                             </button>`
         matchesContainer.appendChild(singleMatchElement)
