@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /**
- * Aggiunge gli eventi di cambio selezione
+ * Attaches selection change events.
  */
 function attachSelectEventHandlers() {
     const selectElements = ['competition-select', 'year-select', 'season-select'];
@@ -33,7 +33,7 @@ function attachSelectEventHandlers() {
 
 
 /**
- * Gestisce il cambio di selezione
+ * Handles selection change.
  */
 function handleSelectChange() {
     const competitionId = document.getElementById('competition-select').value;
@@ -43,11 +43,11 @@ function handleSelectChange() {
 }
 
 /**
- * Popola un select con gli anni
- * @param selectId
- * @param startYear
- * @param endYear
- * @param defaultValue
+ * Populates a select with years.
+ * @param {string} selectId
+ * @param {number} startYear
+ * @param {number} endYear
+ * @param {string} defaultValue
  */
 function populateSelectWithYears(selectId, startYear, endYear, defaultValue) {
     const selectElement = document.getElementById(selectId);
@@ -61,22 +61,22 @@ function populateSelectWithYears(selectId, startYear, endYear, defaultValue) {
 }
 
 /**
- * Popola il select con gli anni
+ * Populates the year select.
  */
 function yearSelect() {
     populateSelectWithYears('year-select', 2010, 2023, '2023');
 }
 
 /**
- * Popola il select con le stagioni
+ * Populates the season select.
  */
 function yearSeason() {
     populateSelectWithYears('season-select', 2010, 2023, '2023');
 }
 
 /**
- * Popola il select con le competizioni
- * @param competitions
+ * Populates the competition select.
+ * @param {Object[]} competitions
  */
 function populateCompetitionSelect(competitions) {
     const selectElement = document.getElementById('competition-select');
@@ -100,9 +100,9 @@ function populateCompetitionSelect(competitions) {
 }
 
 /**
- * Raggruppa le competizioni per paese
- * @param competitions
- * @returns {*}
+ * Groups competitions by country.
+ * @param {Object[]} competitions
+ * @returns {Object}
  */
 function groupCompetitionsByCountry(competitions) {
     return competitions.reduce((acc, competition) => {
@@ -116,7 +116,7 @@ function groupCompetitionsByCountry(competitions) {
 }
 
 /**
- * Crea i pulsanti per i giorni della settimana
+ * Creates buttons for the days of the week.
  */
 function createDayButtons() {
     const daysOfWeek = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
@@ -137,7 +137,7 @@ function createDayButtons() {
 }
 
 /**
- * Recupera i match per la competizione e il giorno specificati
+ * Fetches matches by competition and day.
  * @param competitionId
  * @param dayOfWeek
  */
@@ -165,7 +165,7 @@ function fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek) {
 
 
 /**
- * Filtra e raggruppa i match per round e data(anno), season e competizione
+ * Filters and groups matches by round and date (year), season, and competition.
  * @param matches
  * @param dayOfWeek
  * @param year
@@ -212,7 +212,7 @@ function filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId) 
 
 
 /**
- * Crea il div per la competizione con i match
+ * Creates the competition div with matches.
  * @param competitionId
  * @param matchesByRoundAndDate
  */
@@ -269,9 +269,9 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
 }
 
 /**
- * Imposta la competizione predefinita e il giorno predefinito
- * @param defaultCompetitionId
- * @param defaultDay
+ * Triggers the default competition load and default day.
+ * @param {string} defaultCompetitionId
+ * @param {string} defaultDay
  */
 function triggerDefaultCompetitionLoad(defaultCompetitionId, defaultDay) {
     const selectElement = document.getElementById('competition-select');
@@ -282,7 +282,7 @@ function triggerDefaultCompetitionLoad(defaultCompetitionId, defaultDay) {
 }
 
 /**
- * Formatta la data in modo leggibile
+ * Formats the date in a readable format.
  * @param dateString
  * @returns {string}
  */

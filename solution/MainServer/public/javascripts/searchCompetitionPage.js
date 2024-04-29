@@ -1,11 +1,18 @@
-const COUNTRY_NAME_INTERNATIONAL="Internazionale"
-const FLAG_NOT_FETCHABLE =["Scotland","England"]
+const COUNTRY_NAME_INTERNATIONAL="Internazionale"//=>Name of the international country.
+const FLAG_NOT_FETCHABLE =["Scotland","England"]//=>Array of countries for which flag fetching is not possible.
+
+/**
+ * Initializes the page on DOMContentLoaded event.
+ */
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
     document.getElementById('search-competitions').addEventListener('input',(e)=>
         debouncedSearch(e.target.value)
     );
-    
+
+    /**
+     * Debounced search function for competitions.
+     */
     const debouncedSearch = _.debounce(function (searchText){
         if(!searchText){
             document.getElementById('popupNoContent').style.display='none'
@@ -59,6 +66,14 @@ async function renderCompetitionsGroupedByCountry(competitions) {
     let competitionCards = document.querySelectorAll('.competition-card-mini')
     setCompetitionsCardEventListener(competitionCards)
 }
+
+/**
+ * Renders competitions grouped by country.
+ * @param {Object} competitions - A hash map where a list of competitions is mapped based on their name.
+ * @param {string} imgUrl - The URL of the country's flag image.
+ * @param {string} countryName - The name of the country.
+ * @returns {HTMLDivElement} - The HTML element containing the competitions grouped by country.
+ */
 function renderCompetitionsGroup(competitions,imgUrl,countryName){
     const competitionsGroup = document.createElement('div')
     competitionsGroup.className = 'competitions-group'
@@ -79,6 +94,12 @@ function renderCompetitionsGroup(competitions,imgUrl,countryName){
     competitionsGroup.appendChild(competitionsContainer)
     return competitionsGroup
 }
+
+/**
+ * Renders a competition card.
+ * @param {Object} competition - The competition object.
+ * @returns {HTMLDivElement} - The HTML element representing the competition card.
+ */
 function renderCompetitionCard(competition){
     const competitionCard = document.createElement('div')
     competitionCard.className = 'competition-card-mini'
@@ -91,6 +112,12 @@ function renderCompetitionCard(competition){
             `
     return competitionCard
 }
+
+/**
+ * Fetches the flag image URL for a given country.
+ * @param {string} countryName - The name of the country.
+ * @returns {Promise<string|null>} - The URL of the flag image or null if not found.
+ */
 async function fetchFlag(countryName){
     let imgUrl ="images/defaultFlag.svg"
 

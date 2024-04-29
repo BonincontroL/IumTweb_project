@@ -1,13 +1,17 @@
-let lateralSquadButtons, squadInfoBtn
-let isListenerLoaded=false
-let isSeasonsLoaded=false;
-const squadPageName= 'squad-page'
-let clubInfo
-let lastSeason= 2023;
-const MAIN_SERVER="http://localhost:3000"
+let lateralSquadButtons, squadInfoBtn //=> Global variables for lateral squad buttons and squad information button.
+let isListenerLoaded=false //=>Flag to check if event listeners are loaded.
+let isSeasonsLoaded=false; //=>Flag to check if seasons are loaded.
+const squadPageName= 'squad-page' //=>Constant for the squad page name.
+let clubInfo //=>Object to store club information.
+let lastSeason= 2023; //=>Variable to store the last season.
+const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
 import {getTable,renderTableRow,renderMatchesRound} from './competitionPage.js'
-document.addEventListener('DOMContentLoaded',init)
-let isTableLoaded=false, isPlayersLoaded
+document.addEventListener('DOMContentLoaded',init) //=>Function to initialize the squad page.
+let isTableLoaded=false, isPlayersLoaded //=>Flag to check if the table is loaded - Flag to check if players are loaded.
+
+/**
+ * Initializes the squad page.
+ */
 async function init(){
     const queryString= window.location.search
     const urlParam= new URLSearchParams(queryString)
@@ -62,6 +66,10 @@ async function init(){
     })
     initLogin();
 }
+
+/**
+ * Wrapper function to fetch the last matches.
+ */
 async function getLastMatchesWrapper(){
     try {
         if(!isSeasonsLoaded) {
@@ -78,6 +86,10 @@ async function getLastMatchesWrapper(){
         alert("Errore nella richiesta delle partite del club"+err);
     }
 }
+
+/**
+ * Function to manage the season event listener.
+ */
 function manageSeasonEventListener(){
     if(!isListenerLoaded) {
         document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
@@ -89,6 +101,10 @@ function manageSeasonEventListener(){
         isListenerLoaded=true
     }
 }
+
+/**
+ * Renders the squad chart.
+ */
 function renderGraph(){
     const nationalPlayers = 100-clubInfo.foreignersPercentage
     const graph=document.getElementById('squadChart').getContext('2d')
@@ -116,6 +132,11 @@ function renderGraph(){
         }
     })
 }
+
+
+/**
+ * Fetches the table and last matches.
+ */
 function getTableAndLastMatches(){
     Promise.all([
         getTable( clubInfo.competitionId, clubInfo.lastSeason,"full"),
@@ -176,6 +197,12 @@ function getClubPlayers(){
         }
     })
 }
+
+/**
+ * Renders club players into their respective containers based on position.
+ * @param {Array} players - Array of player objects.
+ * @returns {Array} - Array of player card elements.
+ */
 function renderClubPlayers(players){
     let goalkeeperContainer=document.getElementById('GoalkeepersContainer')
     let defenderContainer=document.getElementById('DefenderContainer')
@@ -207,6 +234,12 @@ function renderClubPlayers(players){
     })
     return playerCardList
 }
+
+/**
+ * Renders a player card with player information.
+ * @param {Object} player - Player object containing player information.
+ * @returns {HTMLDivElement} - Player card element.
+ */
 function renderPlayerCard(player){
     const playerCard = document.createElement('div')
     playerCard.className='player-card'
@@ -233,12 +266,22 @@ function renderPlayerCard(player){
         </div>`
     return playerCard
 }
+
+/**
+ * Fetches the last 5 games of the club.
+ * @returns {Promise} - Promise object representing the last 5 games.
+ */
 function getLast5Games(){
     return axios.get(MAIN_SERVER+'/games/getLast5GamesByClubId',{
         params:{
             club_id:clubInfo.clubId
         }})
 }
+
+/**
+ * Renders the last 5 games of the club.
+ * @param {Array} games - Array of game objects.
+ */
 function renderLast5Games(games){
     let lastMatchContainer= document.getElementById('last5MatchesContainer')
     lastMatchContainer.innerHTML=''
@@ -248,6 +291,12 @@ function renderLast5Games(games){
     })
 }
 
+
+/**
+ * Renders a miniGameCard with game information.
+ * @param {Object} game - Game object containing game information.
+ * @returns {HTMLDivElement} - Mini game card element.
+ */
 function renderMiniGameCard(game){
     let miniGameCard= document.createElement('div')
     let gameOutcome, circleClass
@@ -299,6 +348,11 @@ function renderMiniGameCard(game){
         `
     return miniGameCard
 }
+
+/**
+ * Fetches the name of the club manager.
+ * @returns {Promise} - Promise object representing the club manager name.
+ */
 function getManagerName(){
     return axios.get(MAIN_SERVER+'/games/getLastManager',{
         params:{
@@ -308,7 +362,7 @@ function getManagerName(){
 }
 
 /**
- * inserisce le stagioni nel dropdown a tendina
+ * inserts the seasons into the drop-down menu
  */
 function insertSeasons(seasons){
 
@@ -321,6 +375,11 @@ function insertSeasons(seasons){
         })
 }
 
+
+/**
+ * Fetches information about the club's games for the last season.
+ * @returns {Promise} - Promise object representing the club's games information.
+ */
 function getClubGamesInfo() {
     return axios.get(MAIN_SERVER + '/games/getLastGamesByClubIdandSeason', {
         params: {
@@ -331,6 +390,11 @@ function getClubGamesInfo() {
 
     });
 }
+
+/**
+ * Fetches the seasons for which the club has games.
+ * @returns {Promise} - Promise object representing the seasons with games.
+ */
 function getSeasonsGames(){
     return axios.get(MAIN_SERVER+'/games/getSeasonsByClubId',{
         params:{
@@ -338,6 +402,10 @@ function getSeasonsGames(){
         }
     })
 }
+
+/**
+ * Renders information about the competition, including club name, logo, competition name, stadium info, and manager name.
+ */
 function renderCompetitionInfo() {
     //nome e logo del club nella barra laterale
     document.getElementById('clubName').innerText = clubInfo.name

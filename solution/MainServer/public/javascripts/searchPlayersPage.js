@@ -1,5 +1,5 @@
 /**
- * Funzione per inizializzare la pagina di ricerca dei giocatori.
+ * Initializes the player search page.
  */
 const DOMESTIC_COMPETITION_ROUTE = "/getAllDomesticCompetitions"
 const POSITIONS_ROUTE="/getSubPositionsGroupedByPosition"
@@ -46,6 +46,10 @@ function getDropdownValues(route){
     let url= "http://localhost:3000/players"+route
     return axios.get(url)
 }
+
+/**
+ * Manages the apply and reset filter buttons.
+ */
 function manageApplyAndResetButtons(){
     let applyFilterBtn = document.getElementById('doFilteredSearch')
     let resetFilterBtn= document.getElementById('resetFilters')
@@ -65,13 +69,18 @@ function manageApplyAndResetButtons(){
 }
 
 /**
- * Funzione per resettare i dropdown menu.
+ * Resets the dropdown menus.
  */
 function resetDropdownMenus(){
     document.getElementById('playerRoles').selectedIndex=0;
     document.getElementById('playerNationalities').selectedIndex=0;
     document.getElementById('playerCompetitions').selectedIndex=0;
 }
+
+
+/**
+ * Executes a filtered search based on applied filters.
+ */
 function doFilteredSearch(){
     axios.get("http://localhost:3000/players/getByCompIdNationalityAndRole",{
         params: {
@@ -90,6 +99,11 @@ function doFilteredSearch(){
         alert(err)
     })
 }
+
+/**
+ * Renders the competitions dropdown.
+ * @param {Array} competitions - The array of competitions.
+ */
 function renderCompetitionsDropdown(competitions){
     let selectCompetition = document.getElementById('playerCompetitions')
     competitions.forEach(competition=>{
@@ -102,6 +116,11 @@ function renderCompetitionsDropdown(competitions){
         filteredCompetition=this.value;
     })
 }
+
+/**
+ * Renders the nationalities dropdown.
+ * @param {Array} nationalities - The array of nationalities.
+ */
 function renderNationalitiesDropdown(nationalities){
     let optionContainer= document.getElementById('playerNationalities')
     nationalities.forEach(nation=>{
@@ -113,6 +132,12 @@ function renderNationalitiesDropdown(nationalities){
         filteredNation=this.value;
     })
 }
+
+
+/**
+ * Renders the positions dropdown.
+ * @param {Object} positions - The object containing positions.
+ */
 function renderPositionsDropdown(positions){
     const optionContainer = document.getElementById('playerRoles')
     Object.keys(positions).forEach(position=>{
@@ -132,10 +157,10 @@ function renderPositionsDropdown(positions){
 }
 
 /**
- * Funzione per il debounce per limitare la velocità con cui viene chiamata una funzione.
- * @param func
- * @param wait
- * @returns {(function(): void)|*}
+ * Debounce a function to limit the speed of its execution.
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The debounce wait time.
+ * @returns {(function(): void)|*} - The debounced function.
  */
 function debounce(func, wait) {
     let timeout;
@@ -160,7 +185,7 @@ function handleSearch(event) {
 }
 
 /**
- * Funzione per recuperare i giocatori dal server e categorizzarli.
+ * Fetches players from the server and categorizes them.
  */
 function fetchAndCategorizePlayers() {
     const loadingSpinner = document.getElementById('loading-spinner');
@@ -183,11 +208,9 @@ function fetchAndCategorizePlayers() {
 }
 
 /**
- * Funzione per recuperare i giocatori dal server.
- * @returns {Promise<unknown>}
+ * Fetches players from the server.
+ * @returns {Promise<unknown>} - The Axios promise object.
  */
-
-
 function fetchPlayers() {
     const loadingSpinner = document.getElementById('loading-spinner');
     loadingSpinner.style.display = 'block';
@@ -196,9 +219,9 @@ function fetchPlayers() {
 }
 
 /**
- * Funzione per categorizzare i giocatori in base al ruolo.
- * @param players
- * @returns {{Goalkeepers: *[], Defender: *[], Midfield: *[], Striker: *[]}}
+ * Categorizes players by role.
+ * @param {Array} players - The array of players.
+ * @returns {Object} - The object containing categorized players.
  */
 function categorizePlayersByRole(players) {
     const roles = { Goalkeepers: [], Defender: [], Midfield: [], Striker: [] };
@@ -220,8 +243,8 @@ function categorizePlayersByRole(players) {
 }
 
 /**
- * Funzione per visualizzare i giocatori in base al ruolo.
- * @param playersByRole
+ * Displays players by role.
+ * @param {Object} playersByRole - The object containing players categorized by role.
  */
 function displayPlayersByRole(playersByRole) {
     Object.keys(playersByRole).forEach(role => {
@@ -237,9 +260,9 @@ function displayPlayersByRole(playersByRole) {
 }
 
 /**
- * Funzione per renderizzare per visualizzare i giocatori.
- * @param players
- * @param container
+ * Renders players.
+ * @param {Array} players - The array of players.
+ * @param {HTMLElement} container - The container to render players.
  */
 function renderPlayers(players, container) {
 
@@ -276,8 +299,8 @@ function renderPlayers(players, container) {
 }
 
 /**
- * Funzione per cercare i giocatori per lettera.
- * @param letter
+ * Finds players by letter.
+ * @param {string} letter - The letter to search for.
  */
 function findPlayersByLetter(letter) {
     axios.get(`http://localhost:3000/players/findPlayersByLetterInName`, { params: { letter } })

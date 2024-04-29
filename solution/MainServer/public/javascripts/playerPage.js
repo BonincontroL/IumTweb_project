@@ -1,18 +1,18 @@
-let lateralPlayerButtons, playerInfoBtn
-const playerPageName= 'player-page'
-let playerId;
-let isStatsLoaded = false;
-let isValutationLoaded = false;
-let isLastMatchesLoaded=false;
-document.addEventListener('DOMContentLoaded',async()=> {
+let lateralPlayerButtons, playerInfoBtn  //=>Buttons for lateral navigation and player information button.
+const playerPageName = 'player-page' //=>Name of the player page.
+let playerId; //=>Player ID.
+let isStatsLoaded = false; //=>Flag to indicate if player statistics are loaded.
+let isValutationLoaded = false; //=> Flag to indicate if player valuation is loaded.
+let isLastMatchesLoaded = false; //=>Flag to indicate if player's last matches are loaded.
+document.addEventListener('DOMContentLoaded', async () => {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
 
-    try{
-        let flagSrc ="images/defaultFlag.svg"
-        let playerInfo =await getPlayerInfo()
-        playerInfo=playerInfo.data
-        if(playerInfo!=="") {
+    try {
+        let flagSrc = "images/defaultFlag.svg"
+        let playerInfo = await getPlayerInfo()
+        playerInfo = playerInfo.data
+        if (playerInfo !== "") {
             try {
                 flagSrc = await getCountryFlag(playerInfo.countryOfCitizenship)
                 flagSrc = flagSrc.data[0].flags.png
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded',async()=> {
             let playerNumber = await getPlayerNumber()
             renderPlayerInfo(playerInfo, playerNumber.data.playerNumber, flagSrc)
         }
-    }catch (e){
+    } catch (e) {
         alert(e)
     }
     renderPlayerImg(playerInfo)
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded',async()=> {
     hideAllMainContainers(playerPageName)
     document.getElementById('playerInformation').style.display = "flex"
     document.getElementById('player-statistic-btn').addEventListener('click', () => {
-        if(!isStatsLoaded){
+        if (!isStatsLoaded) {
             getPlayerStatistics();
             isStatsLoaded = true;
         }
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded',async()=> {
         if (!isValutationLoaded) {
             getPlayerValutation();
             isValutationLoaded = true;
-           }
+        }
     });
     document.getElementById('player-lastMatches-btn').addEventListener('click', async () => {
         if (!isLastMatchesLoaded) {
@@ -55,128 +55,141 @@ document.addEventListener('DOMContentLoaded',async()=> {
     });
     initLogin();
 })
-function getCountryFlag(countryName){
+
+/**
+ * Retrieves the flag of a country.
+ * @param {string} countryName - Name of the country.
+ * @returns {Promise} - A promise with the flag data.
+ */
+function getCountryFlag(countryName) {
     let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
     return axios.get(queryUrl)
 }
-function renderPlayerImg(player){
-    document.getElementById('playerName').innerText=player.name;
+
+/**
+ * Renders the player image.
+ * @param {Object} player - Player object containing information.
+ */
+function renderPlayerImg(player) {
+    document.getElementById('playerName').innerText = player.name;
     document.getElementById('playerImage').setAttribute('src', player.imageUrl)
 }
 
 /**
- * get di tutte le statistiche di un singolo giocatore(cartellini gialli, rossi, goal e assist totali)
+ * Retrieves all statistics of a player (yellow cards, red cards, goals, assists).
  */
 function getPlayerStatistics() {
-    const loadingSpinner= document.getElementById('loading-spinner');
+    const loadingSpinner = document.getElementById('loading-spinner');
     loadingSpinner.style.display = "block";
-        axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
-            .then(response => {
-                if(response.status===200){
-                    renderPlayerStatistics(response.data)
-                }else{
-                    renderPlayerStatistics([])
-                }
-            })
-            .catch(error =>{
-                console.error(`Error not found statistics for player ${playerId}:`, error);
+    axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
+        .then(response => {
+            if (response.status === 200) {
+                renderPlayerStatistics(response.data)
+            } else {
+                renderPlayerStatistics([])
+            }
+        })
+        .catch(error => {
+            console.error(`Error not found statistics for player ${playerId}:`, error);
 
-            }).finally(()=> {
-                loadingSpinner.style.display = "none";
-        });
+        }).finally(() => {
+        loadingSpinner.style.display = "none";
+    });
+}
+
+
+/**
+ * Renders player statistics on the page.
+ * @param {Object[]} playerStatistics - Player statistics data.
+ */
+function renderPlayerStatistics(playerStatistics) {
+    if (playerStatistics.length === 0) {
+        document.getElementById('playerNumYellowCards').innerText = "No data available"
+        document.getElementById('playerNumRedCards').innerText = "No data available"
+        document.getElementById('playerNumGoals').innerText = "No data available"
+        document.getElementById('playerNumAssists').innerText = "No data available"
+        document.getElementById('playerNumMinutes').innerText = "No data available"
+        document.getElementById('appearances').innerText = "No data available"
+    } else {
+        document.getElementById('playerNumYellowCards').innerText = playerStatistics[0].total_yellow_cards
+        document.getElementById('playerNumRedCards').innerText = playerStatistics[0].total_red_cards
+        document.getElementById('playerNumGoals').innerText = playerStatistics[0].total_goals
+        document.getElementById('playerNumAssists').innerText = playerStatistics[0].total_assists
+        document.getElementById('playerNumMinutes').innerText = playerStatistics[0].total_minutes_played
+        document.getElementById('appearances').innerText = playerStatistics[0].appearances
+
+
     }
-
-
-    /**
-     * funzione che scrive le statistiche del giocatore nella pagina.
-     * @param playerStatistics
-     */
-    function renderPlayerStatistics(playerStatistics) {
-        if(playerStatistics.length===0){
-            document.getElementById('playerNumYellowCards').innerText = "No data available"
-            document.getElementById('playerNumRedCards').innerText = "No data available"
-            document.getElementById('playerNumGoals').innerText = "No data available"
-            document.getElementById('playerNumAssists').innerText = "No data available"
-            document.getElementById('playerNumMinutes').innerText = "No data available"
-            document.getElementById('appearances').innerText = "No data available"
-        }else{
-            document.getElementById('playerNumYellowCards').innerText = playerStatistics[0].total_yellow_cards
-            document.getElementById('playerNumRedCards').innerText = playerStatistics[0].total_red_cards
-            document.getElementById('playerNumGoals').innerText = playerStatistics[0].total_goals
-            document.getElementById('playerNumAssists').innerText = playerStatistics[0].total_assists
-            document.getElementById('playerNumMinutes').innerText = playerStatistics[0].total_minutes_played
-            document.getElementById('appearances').innerText = playerStatistics[0].appearances
-
-
-        }
 
 }
 
 /**
- * funzione che scrive le informazioni del giocatore nella pagina.
- * @param playerInfo tutte le informazioni del player
- * @param playerNumber numero della maglia del giocatore
+ * Renders player information on the page.
+ * @param {Object} playerInfo - All player information.
+ * @param {number} playerNumber - Player's shirt number.
+ * @param {string} flagUrl - URL of the player's nationality flag.
  */
-    function renderPlayerInfo(playerInfo,playerNumber,flagUrl) {
-        let today = new Date();
-        let birthdayDate = new Date(playerInfo.dateOfBirth);
-        let age = today.getFullYear() - birthdayDate.getFullYear();
-        document.getElementById('nationalityFlag').setAttribute('src',flagUrl)
-        document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
-        document.getElementById('player_height').innerText = playerInfo.heightInCm;
-        document.getElementById('squad_player').innerText = playerInfo.currentClubName;
-        document.getElementById('age_player').innerText = age;
-        document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
-        document.getElementById('playerRole').innerText = playerInfo.subPosition;
-        document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL+playerInfo.currentClubId+".png")
-        document.getElementById('player_number').innerText = playerNumber===-1? "No data available":playerNumber
+function renderPlayerInfo(playerInfo, playerNumber, flagUrl) {
+    let today = new Date();
+    let birthdayDate = new Date(playerInfo.dateOfBirth);
+    let age = today.getFullYear() - birthdayDate.getFullYear();
+    document.getElementById('nationalityFlag').setAttribute('src', flagUrl)
+    document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
+    document.getElementById('player_height').innerText = playerInfo.heightInCm;
+    document.getElementById('squad_player').innerText = playerInfo.currentClubName;
+    document.getElementById('age_player').innerText = age;
+    document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
+    document.getElementById('playerRole').innerText = playerInfo.subPosition;
+    document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL + playerInfo.currentClubId + ".png")
+    document.getElementById('player_number').innerText = playerNumber === -1 ? "No data available" : playerNumber
 
-        if(playerNumber===-1){
-            document.getElementById('player_number').innerText = "No data available"
-        }else {
-            document.getElementById('player_number').innerText = playerNumber;
-        }
-
+    if (playerNumber === -1) {
+        document.getElementById('player_number').innerText = "No data available"
+    } else {
+        document.getElementById('player_number').innerText = playerNumber;
     }
 
+}
 
 
 /**
- * funzione che restituisce le informazioni di un giocatore
- * @param playerId id del giocatore
- * @returns  object con le informazioni  di un giocatore
+ * Retrieves player information.
+ * @returns {Promise} - A promise with the player information.
  */
-    function getPlayerInfo(){
-        return axios.get(`http://localhost:3000/players/getPlayerById/${playerId}`)
-    }
-
-
-    function getPlayerNumber(){
-        return axios.get(`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${playerId}`)
-    }
+function getPlayerInfo() {
+    return axios.get(`http://localhost:3000/players/getPlayerById/${playerId}`)
+}
 
 
 /**
- * get al server con parametro playerId per ottenere le valutazioni del giocatore per ogni anno medie.
- * restituisce un array di oggetti con la seguente struttura: [[year: number, market_value media: number]]
+ * Retrieves player's shirt number.
+ * @returns {Promise} - A promise with the player's shirt number.
+ */
+function getPlayerNumber() {
+    return axios.get(`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${playerId}`)
+}
+
+
+/**
+ * Retrieves player valuation data.
  */
 function getPlayerValutation() {
-        axios.get(`http://localhost:3000/player_valuations/getPlayerValuationPerYear/${playerId}`)
-            .then(response => {
-                if (response.status === 200) {
-                    renderPlayerValuations(response.data)
-                } else {
-                    renderPlayerValuations([])
-                }
-            })
-            .catch(error => {
-                console.error(`Error not found statistics for player ${playerId}:`, error);
-            })
-    }
+    axios.get(`http://localhost:3000/player_valuations/getPlayerValuationPerYear/${playerId}`)
+        .then(response => {
+            if (response.status === 200) {
+                renderPlayerValuations(response.data)
+            } else {
+                renderPlayerValuations([])
+            }
+        })
+        .catch(error => {
+            console.error(`Error not found statistics for player ${playerId}:`, error);
+        })
+}
 
 /**
- * funzione che scrive le valutazioni del giocatore nella pagina.
- * @param playerValuations tutte le valutazioni del giocatore medie per ogni anno
+ * Renders player valuations on the page.
+ * @param {Object[]} playerValuations - Player valuations data.
  */
 function renderPlayerValuations(playerValuations) {
     let titleElement = document.getElementById('title_valuation');
@@ -189,7 +202,7 @@ function renderPlayerValuations(playerValuations) {
         let tableBody = document.querySelector('#tableValutation > tbody');
         tableBody.innerHTML = '';
 
-        playerValuations.forEach(function(valuation,index) {
+        playerValuations.forEach(function (valuation, index) {
             let year = valuation[0];
             if (year < minYear) minYear = year;
             if (year > maxYear) maxYear = year;
@@ -200,19 +213,19 @@ function renderPlayerValuations(playerValuations) {
             row.appendChild(yearCell);
             let valuationCell = document.createElement('td');
             let moneyIcon = null
-            if(playerValuations[index-1]!==undefined) {
+            if (playerValuations[index - 1] !== undefined) {
                 moneyIcon = document.createElement('img')
-                moneyIcon.className='money-icon'
+                moneyIcon.className = 'money-icon'
                 if (valuation[1] > playerValuations[index - 1][1]) {
                     moneyIcon.setAttribute('src', 'images/price-up.svg')
                 } else {
                     moneyIcon.setAttribute('src', 'images/price-down.svg')
                 }
             }
-            valuationCell.innerHTML=
+            valuationCell.innerHTML =
                 `<div class="valutation-and-icon">
                     <p>${valuation[1].toLocaleString()} €</p>
-                    ${moneyIcon!==null ? moneyIcon.outerHTML:''}
+                    ${moneyIcon !== null ? moneyIcon.outerHTML : ''}
                 </div>
                 `
             row.appendChild(valuationCell);
@@ -227,6 +240,10 @@ function renderPlayerValuations(playerValuations) {
     }
 }
 
+
+/**
+ * Fetches player's last matches from the server.
+ */
 async function fetchPlayerLastMatches() {
     const lastMatchesContainer = document.getElementById('playerLastMatches');
     const loadingSpinner = document.getElementById('loading-spinner');
@@ -239,42 +256,53 @@ async function fetchPlayerLastMatches() {
             lastMatchesContainer.innerHTML = '<h1>Nessuna partita trovata...</h1>';
         } else {
             renderPlayerMatches(playerLastMatches)
-            let matchCards=document.querySelectorAll('.game-information-in-player')
+            let matchCards = document.querySelectorAll('.game-information-in-player')
             setMatchesCardEventListener(matchCards)
         }
     } catch (error) {
         console.error('Errore durante il recupero delle partite:', error);
-    }finally { //nel blocco finally togliamo lo spinner
+    } finally { //nel blocco finally togliamo lo spinner
         loadingSpinner.style.display = 'none';
     }
 }
-function renderPlayerMatches(matches){
+
+
+/**
+ * Renders player's last matches on the page.
+ * @param {Object[]} matches - Player's last matches data.
+ */
+function renderPlayerMatches(matches) {
     const lastMatchesContainer = document.getElementById('playerLastMatches');
-    matches.forEach(match=>{
-        let matchCard= renderPlayerMatch(match)
+    matches.forEach(match => {
+        let matchCard = renderPlayerMatch(match)
         lastMatchesContainer.appendChild(matchCard)
     })
 }
 
-function renderPlayerMatch(match){
-    let homeStats={}, awayStats={}
+/**
+ * Renders a player match card.
+ * @param {Object} match - Player match data.
+ * @returns {HTMLElement} - HTML element representing the match card.
+ */
+function renderPlayerMatch(match) {
+    let homeStats = {}, awayStats = {}
     const gameInfoContainer = document.createElement('div');
     gameInfoContainer.classList.add('main-container');
     gameInfoContainer.classList.add('game-information');
     gameInfoContainer.classList.add('game-information-in-player');
     //set all the necessary attributes
-    gameInfoContainer.setAttribute('data-gameid',match.game_id)
-    gameInfoContainer.setAttribute('data-homeclubid',match.home_club_id)
-    gameInfoContainer.setAttribute('data-awayclubid',match.away_club_id)
-    if(match.home_club_name!==undefined)
-        gameInfoContainer.setAttribute('data-homeclubname',match.home_club_name)
-    if(match.away_club_name!==undefined)
-        gameInfoContainer.setAttribute('data-awayclubname',match.away_club_name)
-    gameInfoContainer.setAttribute('data-round',match.round)
-    gameInfoContainer.setAttribute('data-season',match.season)
-    gameInfoContainer.setAttribute('data-date',match.date)
-    gameInfoContainer.setAttribute('data-aggregate',match.aggregate)
-    gameInfoContainer.setAttribute('data-competitionid',match.competition_id)
+    gameInfoContainer.setAttribute('data-gameid', match.game_id)
+    gameInfoContainer.setAttribute('data-homeclubid', match.home_club_id)
+    gameInfoContainer.setAttribute('data-awayclubid', match.away_club_id)
+    if (match.home_club_name !== undefined)
+        gameInfoContainer.setAttribute('data-homeclubname', match.home_club_name)
+    if (match.away_club_name !== undefined)
+        gameInfoContainer.setAttribute('data-awayclubname', match.away_club_name)
+    gameInfoContainer.setAttribute('data-round', match.round)
+    gameInfoContainer.setAttribute('data-season', match.season)
+    gameInfoContainer.setAttribute('data-date', match.date)
+    gameInfoContainer.setAttribute('data-aggregate', match.aggregate)
+    gameInfoContainer.setAttribute('data-competitionid', match.competition_id)
 
     const roundAndDateContainer = document.createElement('div');
     roundAndDateContainer.classList.add('round-and-date-container');
@@ -286,22 +314,29 @@ function renderPlayerMatch(match){
 
     const matchResultContainer = document.createElement('div');
     matchResultContainer.classList.add('match-result-vertical');
-    if(match.player_club_id ===match.home_club_id)
-        homeStats=createStats(match)
+    if (match.player_club_id === match.home_club_id)
+        homeStats = createStats(match)
     else
-        awayStats=createStats(match)
+        awayStats = createStats(match)
 
-    const homeTeamContainer = createTeamContainer(match.home_club_name, match.aggregate.split(':')[0], match.home_club_id,homeStats);
+    const homeTeamContainer = createTeamContainer(match.home_club_name, match.aggregate.split(':')[0], match.home_club_id, homeStats);
     matchResultContainer.appendChild(homeTeamContainer);
 
-    const awayTeamContainer = createTeamContainer(match.away_club_name, match.aggregate.split(':')[1], match.away_club_id,awayStats);
+    const awayTeamContainer = createTeamContainer(match.away_club_name, match.aggregate.split(':')[1], match.away_club_id, awayStats);
     matchResultContainer.appendChild(awayTeamContainer);
 
     gameInfoContainer.appendChild(matchResultContainer);
 
     return gameInfoContainer
 }
-function createStats(game){
+
+
+/**
+ * Creates statistics object for a match.
+ * @param {Object} game - Match data.
+ * @returns {Object} - Statistics object.
+ */
+function createStats(game) {
     return {
         goals: game.goals,
         assists: game.assists,
@@ -310,23 +345,24 @@ function createStats(game){
         minutes_played: game.minutes_played
     }
 }
+
 /**
- * Crea un container con le informazioni di una squadra.
- * @param teamName
- * @param goals
- * @param teamId
- * @param stats
- * @returns {HTMLDivElement}
+ * Creates a container with team information.
+ * @param {string} teamName - Name of the team.
+ * @param {number} goals - Number of goals.
+ * @param {number} teamId - Team ID.
+ * @param {Object} stats - Statistics object.
+ * @returns {HTMLDivElement} - HTML element representing the team container.
  */
-function createTeamContainer(teamName, goals, teamId,stats) {
+function createTeamContainer(teamName, goals, teamId, stats) {
     const teamContainer = document.createElement('div');
-    let goalsContainer = null,assistsContainer = null,yellowOrRedContainer =null
+    let goalsContainer = null, assistsContainer = null, yellowOrRedContainer = null
     teamContainer.classList.add('squad-info-row');
 
     const logoUrl = `https://tmssl.akamaized.net/images/wappen/head/${teamId}.png`;
 
     const displayedTeamName = teamName || 'N.D.';
-    if(Object.keys(stats).length!==0) {//se l'oggetto stats c'è
+    if (Object.keys(stats).length !== 0) {//se l'oggetto stats c'è
         if (stats.goals !== 0)
             goalsContainer = renderGenericStatsContainer(stats.goals, "images/playerStatsIcons/goal-icon.svg")
         if (stats.assists !== 0)
@@ -341,18 +377,25 @@ function createTeamContainer(teamName, goals, teamId,stats) {
     teamContainer.innerHTML = `
             <img class="squadLogo" loading="lazy" alt="" src="${logoUrl}">
             <h6 class="full-width-left">${displayedTeamName}</h6>
-            ${goalsContainer!==null? goalsContainer.outerHTML: ''}
-            ${assistsContainer!==null? assistsContainer.outerHTML: ''}
-            ${yellowOrRedContainer!==null? yellowOrRedContainer.outerHTML: ''}
+            ${goalsContainer !== null ? goalsContainer.outerHTML : ''}
+            ${assistsContainer !== null ? assistsContainer.outerHTML : ''}
+            ${yellowOrRedContainer !== null ? yellowOrRedContainer.outerHTML : ''}
             <p>${goals}</p>
         `;
     return teamContainer;
 }
 
-function renderGenericStatsContainer(statistic, imageSrc){
-    let container =document.createElement('div');
-    container.className='match-goal-icon-container';
-    container.innerHTML=
+
+/**
+ * Renders a generic statistics container.
+ * @param {number} statistic - Statistic value.
+ * @param {string} imageSrc - Source of the statistic icon.
+ * @returns {HTMLDivElement} - HTML element representing the statistics container.
+ */
+function renderGenericStatsContainer(statistic, imageSrc) {
+    let container = document.createElement('div');
+    container.className = 'match-goal-icon-container';
+    container.innerHTML =
         `<p>${statistic}</p>
         <img
             class="game-event-icon"

@@ -1,14 +1,14 @@
 //javascript dedicato alla gestione di un singolo match
-let matchInfo //oggetto che contiene le informazioni sul match.
-let matchButtons
-let homeManagerName, awayManagerName
-let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //ci sono dei giocatori senza informazioni, per questi giocatori mettiamo l'immagine di default.
-const TIME_MINUTES=45 //in un tempo di calcio ci sono 45 minuti.
-let currentHomeGoals=0, currentAwayGoals=0
-let homeGoalEvents,awayGoalEvents//array usati per renderizzare le colonne dei goal nel banner superiore
-const isDefender=['Centre-Back','Right-Back','Left-Back']
-const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield']
-const isGoalkeeper ='Goalkeeper'
+let matchInfo //=> Object containing information about the match.
+let matchButtons //=> Match buttons.
+let homeManagerName, awayManagerName //=> Home team manager's name - Away team manager's name.
+let playerDefaultImageUrl="https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //=> Default image URL for players without information.
+const TIME_MINUTES=45 //=> Number of minutes in a football match.
+let currentHomeGoals=0, currentAwayGoals=0 //=> Current number of goals scored by the home team. - Current number of goals scored by the away team.
+let homeGoalEvents,awayGoalEvents//=>array usati per renderizzare le colonne dei goal nel banner superiore
+const isDefender=['Centre-Back','Right-Back','Left-Back'] //=>Array of player positions indicating defender.
+const isMidfield=['Right Midfield','Left Midfield','Central Midfield', 'Defensive Midfield', 'Attacking Midfield'] //=> Array of player positions indicating midfielder.
+const isGoalkeeper ='Goalkeeper' //=>Player position indicating goalkeeper.
 document.addEventListener('DOMContentLoaded',()=>{
     matchInfo=JSON.parse(sessionStorage.getItem('gameInfo'))
     let matchIds={
@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     getMatchEvents(matchIds,matchInfo.aggregate)
     initLogin();
 })
+
+/**
+ * Renders information on the match banner.
+ */
 function renderBannerInfo(){
     //renderizza le informazioni del banner del match
     document.getElementById('homeClubName').innerText=matchInfo.homeClubName===null?'N.D':matchInfo.homeClubName
@@ -33,6 +37,12 @@ function renderBannerInfo(){
     //aggiungi la data
     document.getElementById('match-details-date').innerText=matchInfo.date.split('T')[0]
 }
+
+/**
+ * Retrieves match events from the server.
+ * @param {Object} matchIds - Object containing match IDs.
+ * @param {string} finalResult - Final result of the match.
+ */
 function getMatchEvents(matchIds,finalResult){
     axios.get("http://localhost:3000/gameevents/getMatchEvents",{params:{
             game_id:matchIds.game_id
@@ -42,6 +52,14 @@ function getMatchEvents(matchIds,finalResult){
         alert(err)
     })
 }
+
+/**
+ * Renders match events on the page.
+ * @param {Object[]} events - Array of match events.
+ * @param {number} homeClubId - ID of the home club.
+ * @param {number} awayClubId - ID of the away club.
+ * @param {string} finalResult - Final result of the match.
+ */
 function renderMatchEvents(events, homeClubId, awayClubId,finalResult){
     let eventsContainer = document.getElementById('match-details-events')
     let isFirstHalfBannerRendered=false

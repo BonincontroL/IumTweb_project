@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded',()=> {
     initLogin();
     getAllClubsByInitial();
@@ -42,9 +41,10 @@ function getAllClubsByInitial() {
         });
 }
 
+
 /**
- * visualizzazione di tutte le squadre nella pagina suddivise per la lettera iniziale
- * @param clubsGrouped  hash map che ha lista di club che iniziano con la chiave, come valore e un carattere come chiave.
+ * Renders all the clubs on the page grouped by initial character.
+ * @param {Object} clubsGrouped - A hash map where a list of clubs is mapped based on their initial character.
  */
 function renderClubsGroupedByInitial(clubsGrouped) {
     let mainContainer = document.getElementById('clubs-container');
