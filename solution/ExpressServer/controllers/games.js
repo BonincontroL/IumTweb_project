@@ -488,7 +488,7 @@ function getSeasonsByClubId(club_id) {
             }
         },
         {
-            $sort: { season: 1 }
+            $sort: { season: -1 }
         }
     ]);
 }

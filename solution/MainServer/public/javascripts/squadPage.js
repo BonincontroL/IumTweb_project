@@ -1,4 +1,6 @@
 let lateralSquadButtons, squadInfoBtn
+let isListenerLoaded=false
+let isSeasonsLoaded=false;
 const squadPageName= 'squad-page'
 let clubInfo
 let lastSeason= 2023;
@@ -46,8 +48,25 @@ async function init(){
     })
     document.getElementById('squad-matches-btn').addEventListener('click',async ()=>{
         try {
-            const matches = await getClubGamesInfo()
-            renderMatchesRound(matches.data)
+            if(!isSeasonsLoaded) {
+                let seasons = await getSeasonsGames();
+                seasons = seasons.data.map(item => item.season);
+                insertSeasons(seasons);
+                isSeasonsLoaded=true;
+            }
+            const matches = await getClubGamesInfo();
+            renderMatchesRound(matches.data);
+            if(!isListenerLoaded) {
+                document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
+                    lastSeason = this.value;
+                    const matches = await getClubGamesInfo();
+                    renderMatchesRound(matches.data)
+                })
+                isListenerLoaded=true
+            }
+
+
+            // renderMatchesRound(matches.data)
         }catch(err){
             alert("Errore nella richiesta delle partite del club",err);
         }
@@ -284,6 +303,21 @@ function getManagerName(){
         }
     })
 }
+
+/**
+ * inserisce le stagioni nel dropdown a tendina
+ */
+function insertSeasons(seasons){
+
+        let seasonsContainer= document.getElementById("selectPossibleSeason")
+        seasonsContainer.innerHTML=''
+        seasons.forEach(season=>{
+            let option= document.createElement('option')
+            option.value= option.text=season;
+            seasonsContainer.appendChild(option)
+        })
+}
+
 function getClubGamesInfo() {
     return axios.get(MAIN_SERVER + '/games/getLastGamesByClubIdandSeason', {
         params: {
@@ -293,6 +327,13 @@ function getClubGamesInfo() {
 
 
     });
+}
+function getSeasonsGames(){
+    return axios.get(MAIN_SERVER+'/games/getSeasonsByClubId',{
+        params:{
+            club_id:clubInfo.clubId
+        }
+    })
 }
 function renderCompetitionInfo() {
     //nome e logo del club nella barra laterale

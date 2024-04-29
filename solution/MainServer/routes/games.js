@@ -155,7 +155,20 @@ router.get('/getLastGamesByClubIdandSeason', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        //throw new Error(err)
+        handleAxiosError(err, res)
+    })
+})
+
+router.get('/getSeasonsByClubId', function (req, res) {
+    axios.get(EXPRESS_SERVER + "/games/getSeasonsByClubId", {
+        params: {
+            club_id: req.query.club_id
+        }
+    }).then(data => {
+        res.status(data.status).send(data.data);
+
+    }).catch(err => {
+
         handleAxiosError(err, res)
     })
 })
