@@ -434,22 +434,16 @@ function getGamesByGameId(gameId) {
  * @param club_id
  * @param season
  */
-function getLast5GamesByClubIdandSeason(club_id, season) {
+function getLastGamesByClubIdandSeason(club_id, season) {
     return Model.find({
         $or: [
             { home_club_id: club_id },
             { away_club_id: club_id }
         ],
         season: season
-    }, {
-        home_club_id: 1,
-        away_club_id: 1,
-        home_club_goals: 1,
-        away_club_goals: 1,
-        date: 1
     })
         .sort({ date: -1 })
-        .limit(5);
+
 }
 
 module.exports = {
@@ -467,5 +461,5 @@ module.exports = {
     getCompetitionIdsWithGroup,
     getCompetitionSeasonsSorted,
     getGamesByGameId,
-    getLast5GamesByClubIdandSeason
+    getLastGamesByClubIdandSeason
 };
