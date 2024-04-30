@@ -1,8 +1,6 @@
 const COUNTRY_NAME_INTERNATIONAL="Internazionale"//=>Name of the international country.
-let competitions ={}
-/**
- * Initializes the page on DOMContentLoaded event.
- */
+let competitions ={} //=>Hash map where a list of competitions is mapped based on their name.
+
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
     document.getElementById('search-competitions').addEventListener('input',(e)=>
@@ -22,6 +20,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     },300)
     initLogin();
 })
+
+/**
+ * Filters and renders competitions based on the searched text.
+ * @param searchedText
+ * @returns {Promise<void>}
+ */
 async function filterAndRenderCompetitionsBySearchedText(searchedText) {
     const filteredCompetitions = []
     for (const [country,comps] of Object.entries(competitions)) {
@@ -55,6 +59,12 @@ function getCompetitionsGroupedByCountry(){
             alert(JSON.stringify(err))
         })
 }
+
+/**
+ * Sorts competitions by name.
+ * @param competitions
+ * @returns {{}}
+ */
 function sortCompetitionByName(competitions){
     let sortedKeys = Object.keys(competitions).sort()
     return sortedKeys.reduce((sorted,country)=>{

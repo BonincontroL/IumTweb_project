@@ -205,7 +205,6 @@ function getAndRenderPlayers() {
  * @returns {Promise<unknown>} - A promise resolving to player number data.
  */
 function getPlayerNumber(idPlayer) {
-    //const playerNumberUrl = `http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
     const url=`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
     return axios.get(url)
 }

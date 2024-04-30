@@ -1,4 +1,8 @@
-///DI PROVA - TEST
+/**
+ * Handles Axios errors and sends appropriate responses.
+ * @param err
+ * @param res
+ */
 
 function handleAxiosError(err, res) {
     if (err.response) {

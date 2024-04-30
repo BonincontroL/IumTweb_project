@@ -1,20 +1,27 @@
-let lateralButtons
-const competitionPageName = 'competition-page'
-let competitionId, competitionName, competitionType
-let competitionSeasons=[] //array globale che rappresenta tutte le annate giocate.
-let currentRound=0
+let lateralButtons //=> Represents lateral buttons element.
+const competitionPageName = 'competition-page'  //=> Represents the name of the competition page.
+let competitionId, competitionName, competitionType   //=> Represents the ID of the competition. - Represents the name of the competition. - Represents the type of the competition.
+let competitionSeasons=[] //=> Represents an array of competition seasons.
+let currentRound=0  //=>Represents the current round of matches.
 let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
-let knockoutRounds =[]
-let currentMatchesSeason=0, currentKnockoutSeason=0
-let isTopPlayersLoaded=false
-let typology
-const competitionTypology={
+let knockoutRounds =[]  //=> Represents an array of knockout rounds.
+let currentMatchesSeason=0, currentKnockoutSeason=0 //=> Represents the current season for matches. - Represents the current season for knockout matches.
+let isTopPlayersLoaded=false  //=>Represents whether the top players have been loaded.
+let typology //=>Represents the typology of the competition.
+
+
+const competitionTypology={ //=> Represents competition typology constants.
     GROUP_CUP:'GROUP', //a competition that have a group phase and a cup phase
     DOMESTIC_LEAUGE:'DOMESTIC_LEAUGE',
     CUP:'CUP'
 }
 document.addEventListener('DOMContentLoaded',init)
 
+
+/**
+ * Initializes the competition page.
+ * Fetches competition data and initializes page elements.
+ */
 async function init() {
     const queryString = window.location.search;
     const urlParam = new URLSearchParams(queryString)
@@ -49,6 +56,10 @@ async function init() {
         alert(e)
     }
 }
+
+/**
+ * Pre-renders dropdown menus based on competition typology.
+ */
 function preRenderDropdowns(){
     if(typology===competitionTypology.GROUP_CUP) {
         renderSeasonDropdownMenu('knockoutSeasonSelector')
@@ -63,6 +74,10 @@ function preRenderDropdowns(){
         renderSeasonDropdownMenu('matchesSeasonSelector')
     }
 }
+
+/**
+ * Adapts page elements based on competition typology.
+ */
 function adaptPageToTypology(){
     switch (typology){
         case competitionTypology.CUP://se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
@@ -82,6 +97,11 @@ function adaptPageToTypology(){
             throw new Error("Tipologia della competizione sconosciuta:"+typology)
     }
 }
+
+/**
+ * Manages the change of matches season.
+ * @param {number} selectedSeason - The selected season.
+ */
 async function manageMatchesSeasonChange(selectedSeason){
     currentRound=0 //si riparte dal primo round ogni cambiamento di season
     let rounds = await fetchAllRoundNumbers(selectedSeason)
@@ -94,6 +114,11 @@ async function manageMatchesSeasonChange(selectedSeason){
     renderMatchesDropdownMenu()
     getAndRenderMatchesInRound(matchRounds[currentRound],selectedSeason)
 }
+
+/**
+ * Gets the wrapper for the table.
+ * Fetches and renders table data based on competition typology.
+ */
 async function getTableWrapper(){
     if (typology===competitionTypology.GROUP_CUP)
         await getGroupTables()
@@ -116,6 +141,10 @@ async function getTableWrapper(){
             })
     }
 }
+
+/**
+ * Adapts button listeners based on competition typology.
+ */
 function adaptButtonListenersToTypology(){
     if(typology===competitionTypology.CUP || typology===competitionTypology.GROUP_CUP) {
         document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
@@ -232,16 +261,33 @@ function manageTableVariants(buttons){
         })
     })
 }
+
+/**
+ * Hides all table bodies except the one to be shown.
+ * @param tBodyToShow
+ * @param tBodies
+ */
 function hideTbodiesExceptOne(tBodyToShow,tBodies){
     tBodies.forEach(tb=>{tb.style.display='none'})
     tBodyToShow.style.display='table-row-group'
 }
+
+/**
+ * Renders the group table with the provided group name and data.
+ * @param groupName
+ * @param groupTable
+ * @returns {HTMLDivElement}
+ */
 function renderGroupTable(groupName,groupTable){
     let finalContainer= document.createElement('div')
     let table = renderTableStructure(groupName,finalContainer)
     renderTableBody(table,groupName,groupTable,`${groupName}FullTable`) //di default, poi si potrà rendere dinamico questo valore
     return finalContainer
 }
+
+/**
+ * Creates a dropdown for selecting seasons and appends it to the table navigation bar.
+ */
 function createSeasonDropdown(){
     let container =document.getElementById('tableNavbar')
     let dropdown = document.createElement('div')
@@ -252,6 +298,11 @@ function createSeasonDropdown(){
         '        </select>'
     container.appendChild(dropdown)
 }
+
+
+/**
+ * Adds a listener to the season dropdown for updating the table content based on the selected season.
+ */
 function addSeasonDropdownTableListener(){
     document.getElementById('tableSeasonSelector').addEventListener('change',function (){
         getTable(competitionId,this.value,"full")
@@ -270,6 +321,14 @@ function addSeasonDropdownTableListener(){
             })
     })
 }
+
+/**
+ * Renders the table body with the provided data and appends it to the table.
+ * @param table
+ * @param groupName
+ * @param groupTable
+ * @param tbodyId
+ */
 function renderTableBody(table,groupName,groupTable,tbodyId){
     let groupTableTbody= document.getElementById(tbodyId)
 
@@ -345,6 +404,10 @@ function getCompetitionsWithGroup(){
     return axios.get(url)
 }
 
+
+/**
+ * Retrieves and renders top players based on market value and goals.
+ */
 function getTopPlayers() {
     const loadingSpinner= document.getElementById('loading-spinner');
     loadingSpinner.style.display = "block";
@@ -363,6 +426,12 @@ function getTopPlayers() {
     })
 }
 
+/**
+ * Renders top players by goal wrapper.
+ * @param playersInfo
+ * @param containerId
+ * @param type
+ */
 function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     let idList = playersInfo.map(item => item._id)
     axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
@@ -378,6 +447,13 @@ function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
         alert(err)
     })
 }
+
+/**
+ * Merges player information with their images.
+ * @param players
+ * @param images
+ * @returns {*}
+ */
 function mergePlayersAndImage(players,images){
     return players.map(player=>{
         const imageInfo= images.find(image=> image.playerId===player._id)
@@ -389,10 +465,20 @@ function mergePlayersAndImage(players,images){
         }
     })
 }
+
+/**
+ * Retrieves top players by market value.
+ * @returns {*}
+ */
 function getTopPlayersByMarketValue(){
     let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}`
     return axios.get(url)
 }
+
+/**
+ * Retrieves top players by goals.
+ * @returns {*}
+ */
 function getTopPlayersByGoals(){
     let url= `http://localhost:3000/appearances/getTopScorer`
     return axios.get(url,{
@@ -401,6 +487,13 @@ function getTopPlayersByGoals(){
         }
     })
 }
+
+/**
+ * Renders the top players in a container.
+ * @param players
+ * @param containerId
+ * @param type
+ */
 function renderTopPlayers(players,containerId,type){
     let playersContainer= document.getElementById(containerId)
     playersContainer.innerHTML=''
@@ -417,6 +510,14 @@ function renderTopPlayers(players,containerId,type){
         playersContainer.innerHTML='<h4>Nessun giocatore trovato...</h4>'
 }
 
+
+/**
+ *  Renders the card for the first player.
+ * @param player
+ * @param index
+ * @param type
+ * @returns {HTMLDivElement}
+ */
 function renderFirstPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
     playerCard.className='player-stats-container-first';
@@ -435,6 +536,14 @@ function renderFirstPlayerCard(player,index,type){
         </div>`
     return playerCard
 }
+
+/**
+ * Renders the card for a normal player.
+ * @param player
+ * @param index
+ * @param type
+ * @returns {HTMLDivElement}
+ */
 function renderNormalPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
     playerCard.setAttribute('data-playerid',player.playerId)
@@ -465,6 +574,14 @@ function manageTableBtns(buttons){
     })
 }
 
+/**
+ * Retrieves the table data for a given competition, season, type, and optionally a group name.
+ * @param compId
+ * @param season
+ * @param tableType
+ * @param groupName
+ * @returns {*}
+ */
 export function getTable(compId,season,tableType, groupName){
     return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
         params:{
@@ -476,6 +593,12 @@ export function getTable(compId,season,tableType, groupName){
     })
 }
 
+/**
+ * Renders a table row with the provided data.
+ * @param tableRowData
+ * @param index
+ * @returns {HTMLTableRowElement}
+ */
 export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
     tableRow.appendChild(renderTableTD(++index))
@@ -489,11 +612,24 @@ export function renderTableRow(tableRowData,index){
     tableRow.appendChild(renderTableTD(tableRowData.punti));
     return tableRow
 }
+
+/**
+ * Renders a single table cell with the provided inner data.
+ * @param tdInnerData
+ * @returns {HTMLTableCellElement}
+ */
 function renderTableTD(tdInnerData){
     let singleTd=document.createElement('td')
     singleTd.innerText=tdInnerData
     return singleTd
 }
+
+/**
+ * Renders a table cell with a logo and name.
+ * @param squadId
+ * @param squadName
+ * @returns {HTMLTableCellElement}
+ */
 function renderTableTDWithLogo(squadId,squadName){
     let singleTd=document.createElement('td')
     let container=document.createElement('div')
@@ -505,12 +641,20 @@ function renderTableTDWithLogo(squadId,squadName){
     singleTd.appendChild(container)
     return singleTd
 }
+
+/**
+ * Retrieves clubs based on competition typology and renders them accordingly.
+ */
 function getClubsWrapper(){
     if(typology===competitionTypology.GROUP_CUP || typology===competitionTypology.CUP)
         getClubsDividedByGroup()
     else
         getClubs()
 }
+
+/**
+ * Retrieves clubs divided by groups for the competition.
+ */
 function getClubsDividedByGroup(){
     let url="http://localhost:3000/games/getClubsDividedByGroups"
     axios.get(url,{
@@ -536,6 +680,11 @@ function getClubsDividedByGroup(){
     })
 }
 
+/**
+ * Unifies clubs from groups.
+ * @param groups
+ * @returns {any[]}
+ */
 function unifyClubs(groups){
     const uniqueClubs=new Map();
     groups.forEach(group=>{
@@ -550,6 +699,11 @@ function unifyClubs(groups){
     })
     return Array.from(uniqueClubs.values())
 }
+
+/**
+ * Renders clubs divided by groups.
+ * @param groups
+ */
 function renderClubsDividedByGroup(groups){
     let mainContainer= document.getElementById('competitionSquads')
     mainContainer.innerHTML=''
@@ -558,6 +712,12 @@ function renderClubsDividedByGroup(groups){
         mainContainer.appendChild(groupContainer)
     })
 }
+
+/**
+ * Renders a group container with its associated clubs.
+ * @param group
+ * @returns {HTMLDivElement}
+ */
 function renderGroup(group){
     let groupContainer =document.createElement('div')
     groupContainer.className='competitions-group'
@@ -579,6 +739,10 @@ function renderGroup(group){
     })
     return groupContainer
 }
+
+/**
+ * Retrieves clubs for the competition and renders them.
+ */
 function getClubs(){
     let url="http://localhost:3000/clubs/searchByCompetitionAndSeason"
     axios.get(url, {
@@ -596,6 +760,11 @@ function getClubs(){
         alert(err)
     })
 }
+
+/**
+ * Renders all clubs in the provided array.
+ * @param clubs
+ */
 function renderAllClubs(clubs){
     let clubContainer= document.getElementById('competitionSquads')
     clubContainer.innerHTML=''
@@ -606,6 +775,12 @@ function renderAllClubs(clubs){
         }
     })
 }
+
+/**
+ * Renders a div card for a club.
+ * @param club
+ * @returns {HTMLDivElement}
+ */
 function renderClubCard(club){
     let clubCard= document.createElement('div')
     clubCard.className='squad-card-mini'
@@ -682,6 +857,11 @@ async function fetchAllSeasons(){
         }
     })
 }
+
+/**
+ * Renders the season dropdown menu with the provided selector ID.
+ * @param selectorId
+ */
 function renderSeasonDropdownMenu(selectorId){
     let seasonsContainer= document.getElementById(selectorId)
     seasonsContainer.innerHTML=''
@@ -691,6 +871,10 @@ function renderSeasonDropdownMenu(selectorId){
         seasonsContainer.appendChild(option)
     })
 }
+
+/**
+ * Retrieves and renders knockout matches for the selected season.
+ */
 async function getKnockoutMatches(){
     if(competitionSeasons.length!==0) {
         competitionSeasons=await fetchAllSeasons()
@@ -706,6 +890,11 @@ async function getKnockoutMatches(){
     }
 }
 
+/**
+ * Retrieves and renders group matches for the selected season.
+ * @param season
+ * @returns {Promise<void>}
+ */
 async function getAndRenderGroupMatches(season) {
     try {
         let matches = await getAllMatchesInRound(matchRounds[currentRound],season)
@@ -716,6 +905,12 @@ async function getAndRenderGroupMatches(season) {
         alert(e)
     }
 }
+
+/**
+ * Retrieves and renders all matches in knockout rounds for the selected season.
+ * @param season
+ * @returns {Promise<void>}
+ */
 async function getAllMatchesInKnockoutRounds(season){
     let container = document.getElementById('knockoutBody')
     container.innerHTML=''
@@ -728,6 +923,13 @@ async function getAllMatchesInKnockoutRounds(season){
         }
     }
 }
+
+/**
+ * Renders knockout matches for a specific round.
+ * @param matches
+ * @param round
+ * @returns {HTMLDivElement}
+ */
 function renderKnockoutMatches(matches,round){
     let roundContainer = document.createElement('div')
     roundContainer.className='matches-knockout-group'
@@ -747,6 +949,11 @@ function renderKnockoutMatches(matches,round){
     return roundContainer
 }
 
+/**
+ * Renders a single knockout match card.
+ * @param match
+ * @returns {HTMLDivElement}
+ */
 function renderSingleKnockoutMatch(match){
     let matchCard = document.createElement('div')
     matchCard.className='game-information'
@@ -783,6 +990,12 @@ function getNextMatchday(season){
         getAndRenderMatchesInRound(matchRounds[currentRound],season)
     }
 }
+
+/**
+ * Retrieves and renders matches for the specified round and season.
+ * @param round
+ * @param season
+ */
 function getAndRenderMatchesInRound(round,season){
     getAllMatchesInRound(round,season)
         .then(res=>{

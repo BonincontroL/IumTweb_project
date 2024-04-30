@@ -1,5 +1,5 @@
 /**
- * Questo modulo si occupa di gestire le connessioni socket.io
+ * This module handles socket.io connections.
  * @param io
  */
 module.exports = (io) => {
