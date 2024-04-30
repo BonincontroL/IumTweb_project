@@ -43,12 +43,18 @@ function renderBannerInfo(){
  * @param {Object} matchIds - Object containing match IDs.
  * @param {string} finalResult - Final result of the match.
  */
-function getMatchEvents(matchIds,finalResult){
-    axios.get("http://localhost:3000/gameevents/getMatchEvents",{params:{
-            game_id:matchIds.game_id
-        }}).then(res=>{
-        renderMatchEvents(res.data,+matchIds.home_club_id, +matchIds.away_club_id,finalResult) //il + serve per convertire le stringhe in numeri
-    }).catch(err=>{
+function getMatchEvents(matchIds, finalResult) {
+    axios.get("http://localhost:3000/gameevents/getMatchEvents", {
+        params: {
+            game_id: matchIds.game_id
+        }
+    }).then(res => {
+        renderMatchEvents(res.data, +matchIds.home_club_id, +matchIds.away_club_id, finalResult) //il + serve per convertire le stringhe in numeri
+        if (matchInfo.aggregate !== '0:0')
+            renderGoalsRow()
+        else
+            document.getElementById('goalsRowContainer').style.display = 'none'
+    }).catch(err => {
         alert(err)
     })
 }
@@ -83,7 +89,7 @@ function renderMatchEvents(events, homeClubId, awayClubId,finalResult){
             } //se il prossimo evento si trova nel secondo tempo
         }
     })
-    renderGoalsRow()
+
 }
 
 /**
@@ -105,18 +111,18 @@ function renderGoalsRow(){
  * @param columnContainer the goal column container
  * @param goalEvents a "hash map" where each player is associated to the goals scored
  */
-function renderGoalsColumn(columnContainer,goalEvents){
-    goalEvents = goalEvents.reduce((acc,goal)=>{
-        if(!acc[goal.player]){
-            acc[goal.player]=[]
+function renderGoalsColumn(columnContainer, goalEvents) {
+    goalEvents = goalEvents.reduce((acc, goal) => {
+        if (!acc[goal.player]) {
+            acc[goal.player] = []
         }
         acc[goal.player].push(goal)
         return acc
-    },{})
-    Object.keys(goalEvents).forEach(player=>{
-        let playerGoalContainer= document.createElement('p')
-        let minutes = goalEvents[player].map(goal=>goal.minute+'°').join(', ')
-        playerGoalContainer.innerText=`${player} ${minutes}`
+    }, {})
+    Object.keys(goalEvents).forEach(player => {
+        let playerGoalContainer = document.createElement('p')
+        let minutes = goalEvents[player].map(goal => goal.minute + '°').join(', ')
+        playerGoalContainer.innerText = `${player} ${minutes}`
         columnContainer.appendChild(playerGoalContainer)
     })
 }

@@ -7,22 +7,23 @@ document.addEventListener('DOMContentLoaded',()=> {
     const debouncedSearch = _.debounce(function (searchText) {
         if (!searchText) {
             document.getElementById('popupNoContent').style.display = 'none'
-            return;
-        }
-        axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName", {
-            params: {
-                name: searchText
-            }
-
-        })
-            .then(res => {
-                if (res.data.length !== 0) {
-                    document.getElementById('popupNoContent').style.display='none'
-                    renderClubsGroupedByInitial(res.data)
-                }else{
-                    document.getElementById('popupNoContent').style.display='flex'
+            getAllClubsByInitial()
+        }else {
+            axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName", {
+                params: {
+                    name: searchText
                 }
+
             })
+                .then(res => {
+                    if (res.data.length !== 0) {
+                        document.getElementById('popupNoContent').style.display = 'none'
+                        renderClubsGroupedByInitial(res.data)
+                    } else {
+                        document.getElementById('popupNoContent').style.display = 'flex'
+                    }
+                })
+        }
     },300);
 })
 

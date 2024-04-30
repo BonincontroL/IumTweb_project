@@ -180,6 +180,7 @@ function handleSearch(event) {
     if (searchText.length !== 0) {
         findPlayersByLetter(searchText);
     }else{
+        fetchAndCategorizePlayers();
         document.getElementById('popupNoContent').style.display='none'
     }
 }
@@ -195,9 +196,6 @@ function fetchAndCategorizePlayers() {
             if(players.data.length!==0) {
                 const playersByRole = categorizePlayersByRole(players.data);
                 displayPlayersByRole(playersByRole);
-                document.getElementById('popupNoContent').style.display='none'
-            }else{
-                document.getElementById('popupNoContent').style.display='flex'
             }
         })
         .catch(error => {

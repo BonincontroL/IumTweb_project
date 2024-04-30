@@ -31,11 +31,7 @@ public class CompetitionsService {
         return  allComps.stream()
                 .collect(Collectors.groupingBy(competition-> competition.getCountryName()!=null ? competition.getCountryName(): "Internazionale"));
     }
-    public Map<String,List<Competitions>> getCompetitionsGroupedByCountryAndLikeName(String name){
-        List<Competitions> result= competitionsRepository.findByNameContainingIgnoreCase(name);
-        return  result.stream()
-                .collect(Collectors.groupingBy(competition-> competition.getCountryName()!=null ? competition.getCountryName(): "Internazionale"));
-    }
+
     public String getName(String competitionId){
         return competitionsRepository.getName(competitionId);
     }

@@ -416,6 +416,7 @@ header ul li ul li a{
     text-align: center;
 }
 
+
 .lateral-navbar-squad-logo{
     position: relative;
     object-fit: contain;
@@ -1117,7 +1118,7 @@ header ul li ul li a{
     flex-direction: column;
     box-sizing: border-box;
     padding: var(--padding-10px);
-    max-width: 40%;
+    max-width: 50%;
     gap: var(--gap-3xs);
 }
 .formation-header{
@@ -3300,6 +3301,11 @@ tbody > tr:hover{
         min-width: 100%;
     }
 }
+@media screen and (min-width: 801px){
+    .lateral-navbar-for-chat{
+        display: flex !important;
+    }
+}
 @media screen and (max-width: 800px) {
 
     .login-image{
@@ -3331,10 +3337,19 @@ tbody > tr:hover{
         min-height: auto;
         z-index: 98;
     }
+    .lateral-navbar-for-chat{
+        display: none;
+    }
+    #showLateralNavbarChat{
+        display: block !important;
+        font-size: 25px;
+    }
+
     .lateral-navbar-header{
         flex-direction: row;
         padding: var(--padding-5px);
     }
+
     .lateral-menu-button{
         padding: var(--padding-5px);
         flex-direction: column;
@@ -3371,7 +3386,9 @@ tbody > tr:hover{
     }
 }
 
-
+#showLateralNavbarChat{
+    display: none;
+}
 /*******************************************************/
 
 .competition-logos-container {

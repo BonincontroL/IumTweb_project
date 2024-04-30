@@ -1,6 +1,5 @@
 const COUNTRY_NAME_INTERNATIONAL="Internazionale"//=>Name of the international country.
-const FLAG_NOT_FETCHABLE =["Scotland","England"]//=>Array of countries for which flag fetching is not possible.
-
+let competitions ={}
 /**
  * Initializes the page on DOMContentLoaded event.
  */
@@ -13,27 +12,33 @@ document.addEventListener('DOMContentLoaded',()=>{
     /**
      * Debounced search function for competitions.
      */
-    const debouncedSearch = _.debounce(function (searchText){
-        if(!searchText){
-            document.getElementById('popupNoContent').style.display='none'
-            return;
+    const debouncedSearch = _.debounce(async function (searchText) {
+        if (searchText.length === 0) {
+            document.getElementById('popupNoContent').style.display = 'none'
+            await renderCompetitionsGroupedByCountry(competitions)
+        } else {
+            await filterAndRenderCompetitionsBySearchedText(searchText)
         }
-        axios.get("http://localhost:3000/competitions/getCompetitionsGroupedByCountryAndLikeName",{
-            params:{name:searchText}
-        }).then(async res => {
-            if (res.data.length !== 0) {
-                document.getElementById('popupNoContent').style.display='none'
-                await renderCompetitionsGroupedByCountry(res.data)
-            }else
-                document.getElementById('popupNoContent').style.display='flex'
-
-        }).catch(err=>{
-            alert(JSON.stringify(err))
-        })
-    },200)
+    },300)
     initLogin();
 })
-
+async function filterAndRenderCompetitionsBySearchedText(searchedText) {
+    const filteredCompetitions = []
+    for (const [country,comps] of Object.entries(competitions)) {
+        const filteredComps = comps.filter(comp =>
+            comp.name.toLowerCase().includes(searchedText.toLowerCase())
+        )
+        if(filteredComps.length>0)
+            filteredCompetitions[country]=filteredComps
+    }
+    if(Object.keys(filteredCompetitions).length!==0) //if filtered comps isn't an empty object...
+        await renderCompetitionsGroupedByCountry(filteredCompetitions)
+    else{
+        let popup = document.getElementById('popupNoContent')
+        popup.innerHTML= `<h6>Nessun risultato trovato per "${searchedText}</h6>"`
+        popup.style.display='flex'
+    }
+}
 /**
  * send an axios query to get all the competitions in PG database
  * grouped by country name
@@ -43,13 +48,20 @@ function getCompetitionsGroupedByCountry(){
     let url="http://localhost:3000/competitions/getCompetitionsGroupedByCountry"
     axios.get(url)
         .then(async res=>{
-            await renderCompetitionsGroupedByCountry(res.data)
+            competitions = sortCompetitionByName(res.data)
+            await renderCompetitionsGroupedByCountry(competitions)
         })
         .catch(err=>{
             alert(JSON.stringify(err))
         })
 }
-
+function sortCompetitionByName(competitions){
+    let sortedKeys = Object.keys(competitions).sort()
+    return sortedKeys.reduce((sorted,country)=>{
+        sorted[country]=competitions[country];
+        return sorted
+    },{})
+}
 /**
  * render all the obtained competitions in the page
  * @param competitions hash map where a list of competitions is mapped basing on his name
@@ -123,14 +135,14 @@ async function fetchFlag(countryName){
 
     if (countryName === COUNTRY_NAME_INTERNATIONAL)
         imgUrl = "images/worldImage.jpg" //immagine ad hoc nel caso degli internazionali
-    else if(!FLAG_NOT_FETCHABLE.includes(countryName)){
+    else{
         try {
             let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
             let res = await axios.get(queryUrl)
             imgUrl=res.data[0].flags.png
         }catch (err){
-            alert(err)
-            imgUrl=null
+            if (err.response.status !== 404)
+                alert(err)
         }
     }
     return imgUrl

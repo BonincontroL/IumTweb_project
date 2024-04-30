@@ -11,6 +11,9 @@ function onChat(){
     getAllCompetitions();
     setupSendMessage();
     setupSocketListeners();
+    document.getElementById('showLateralNavbarChat').addEventListener('click',()=>{
+        document.querySelector('.lateral-navbar-for-chat').style.display='flex'
+    })
 }
 
 
@@ -233,9 +236,10 @@ function manageLateralChatButtons(lateralbuttons){
                 containerToShow.className='chat-messages-container'
                 containerToShow.id=containerToShowId
                 mainContainer.appendChild(containerToShow)
-            }else {
-                containerToShow.style.display = 'flex'
             }
+            containerToShow.style.display = 'flex'
+            if(window.innerWidth<800)
+                document.querySelector('.lateral-navbar-for-chat').style.display='none'
         })
     })
 }
