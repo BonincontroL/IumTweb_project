@@ -149,6 +149,8 @@ function getTableAndLastMatches(){
     ]).then(res=>{
         renderMiniTable(res[0].data)
         renderLast5Games(res[1].data)
+        let lastGames = document.querySelectorAll('.last-match-container')
+        setMatchesCardEventListener(lastGames)
         isTableLoaded=true
     }).catch(err=>{
         alert(err)
@@ -297,7 +299,18 @@ function renderMiniGameCard(game){
     let gameOutcome, circleClass
     let homeClubGoals = game.aggregate.split(':')[0]
     let awayClubGoals=game.aggregate.split(':')[1]
-    miniGameCard.className='last-match-container'
+    miniGameCard.className='last-match-container';
+    miniGameCard.setAttribute('data-gameid',game.game_id);
+    miniGameCard.setAttribute('data-homeclubid',game.home_club_id);
+    miniGameCard.setAttribute('data-awayclubid',game.away_club_id);
+    if(game.home_club_name)
+        miniGameCard.setAttribute('data-homeclubname',game.home_club_name);
+    if(game.away_club_name)
+        miniGameCard.setAttribute('data-awayclubname',game.away_club_name);
+    miniGameCard.setAttribute('data-aggregate',game.aggregate);
+    miniGameCard.setAttribute('data-date',game.date);
+    miniGameCard.setAttribute('data-competitionid',game.competition_id);
+
     if(game.home_club_id===clubInfo.clubId){ //se sei la squadra di casa
         if(homeClubGoals>awayClubGoals)
             gameOutcome = "Vittoria"

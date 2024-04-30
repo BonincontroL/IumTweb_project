@@ -9,7 +9,7 @@ let currentMatchesSeason=0, currentKnockoutSeason=0
 let isTopPlayersLoaded=false
 let typology
 const competitionTypology={
-    GROUP:'GROUP',
+    GROUP_CUP:'GROUP', //a competition that have a group phase and a cup phase
     DOMESTIC_LEAUGE:'DOMESTIC_LEAUGE',
     CUP:'CUP'
 }
@@ -34,7 +34,7 @@ async function init() {
 
         let competitionsWithGroup = await getCompetitionsWithGroup()
         if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
-            typology=competitionTypology.GROUP
+            typology=competitionTypology.GROUP_CUP
         else if (competitionType === 'domestic_league')
             typology=competitionTypology.DOMESTIC_LEAUGE
         else
@@ -50,7 +50,7 @@ async function init() {
     }
 }
 function preRenderDropdowns(){
-    if(typology===competitionTypology.GROUP) {
+    if(typology===competitionTypology.GROUP_CUP) {
         renderSeasonDropdownMenu('knockoutSeasonSelector')
         renderSeasonDropdownMenu('groupTablesSelector')
         manageSeasonDropdownMenuChange('groupTablesSelector')
@@ -71,7 +71,7 @@ function adaptPageToTypology(){
             document.getElementById('competition-table-btn').remove()
             document.getElementById('competitionTable').remove()
             break
-        case competitionTypology.GROUP:
+        case competitionTypology.GROUP_CUP:
             document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
             break
         case competitionTypology.DOMESTIC_LEAUGE: //in una domestic_leauge non ho la fase finale (knockout)
@@ -85,7 +85,7 @@ function adaptPageToTypology(){
 async function manageMatchesSeasonChange(selectedSeason){
     currentRound=0 //si riparte dal primo round ogni cambiamento di season
     let rounds = await fetchAllRoundNumbers(selectedSeason)
-    if(typology===competitionTypology.GROUP) {
+    if(typology===competitionTypology.GROUP_CUP) {
         matchRounds = rounds.data.filter(round => round.startsWith('Group'))
         knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
     }else
@@ -95,7 +95,7 @@ async function manageMatchesSeasonChange(selectedSeason){
     getAndRenderMatchesInRound(matchRounds[currentRound],selectedSeason)
 }
 async function getTableWrapper(){
-    if (typology===competitionTypology.GROUP)
+    if (typology===competitionTypology.GROUP_CUP)
         await getGroupTables()
     else {
         getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
@@ -117,7 +117,7 @@ async function getTableWrapper(){
     }
 }
 function adaptButtonListenersToTypology(){
-    if(typology===competitionTypology.CUP || typology===competitionTypology.GROUP) {
+    if(typology===competitionTypology.CUP || typology===competitionTypology.GROUP_CUP) {
         document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
         document.getElementById('knockoutSeasonSelector').addEventListener('change', async function () {
             let rounds = await fetchAllRoundNumbers(this.value)
@@ -127,7 +127,7 @@ function adaptButtonListenersToTypology(){
             let knockoutCards = document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
             setMatchesCardEventListener(knockoutCards)
         })
-    }if(typology===competitionTypology.GROUP || typology === competitionTypology.DOMESTIC_LEAUGE){
+    }if(typology===competitionTypology.GROUP_CUP || typology === competitionTypology.DOMESTIC_LEAUGE){
         document.getElementById('competition-matches-btn').addEventListener('click', getGroupMatches)
         document.getElementById('matchesSeasonSelector').addEventListener('change', async function () {
             await manageMatchesSeasonChange(this.value)
@@ -215,8 +215,8 @@ function renderGroupTables(groupTables){
 function manageTableVariants(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
-            let group= (typology===competitionTypology.GROUP) ? button.getAttribute('data-group'):null
-            let actualYear= typology===competitionTypology.GROUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
+            let group= (typology===competitionTypology.GROUP_CUP) ? button.getAttribute('data-group'):null
+            let actualYear= typology===competitionTypology.GROUP_CUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
             getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
                 .then(res=>{
                     let groupTable = res.data
@@ -353,6 +353,8 @@ function getTopPlayers() {
         getTopPlayersByGoals(),
     ]).then(res => {
         renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', 'VALUE')
+        let playerCards =document.querySelectorAll('#playersTopMarketValueContainer > div')
+        setPlayersEventListener(playerCards)
         renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer','GOALS')
     }).catch(err => {
         alert(err)
@@ -360,6 +362,7 @@ function getTopPlayers() {
         loadingSpinner.style.display = "none";
     })
 }
+
 function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     let idList = playersInfo.map(item => item._id)
     axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
@@ -369,6 +372,8 @@ function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     }).then(imageRes => {
         let players = mergePlayersAndImage(playersInfo, imageRes.data.starting_lineup)
         renderTopPlayers(players, containerId, type)
+        let playerCards =document.querySelectorAll('#playersTopGoalsContainer > div')
+        setPlayersEventListener(playerCards)
     }).catch(err => {
         alert(err)
     })
@@ -415,6 +420,10 @@ function renderTopPlayers(players,containerId,type){
 function renderFirstPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
     playerCard.className='player-stats-container-first';
+    playerCard.setAttribute('data-playerid',player.playerId)
+    playerCard.setAttribute('data-name',player.name)
+    playerCard.setAttribute('data-imageurl',player.imageUrl)
+
     playerCard.innerHTML=
         `<h3>${index+1}° ${player.name}</h3>
         <div class="player-stats-first-img-container">
@@ -428,6 +437,10 @@ function renderFirstPlayerCard(player,index,type){
 }
 function renderNormalPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
+    playerCard.setAttribute('data-playerid',player.playerId)
+    playerCard.setAttribute('data-name',player.name)
+    playerCard.setAttribute('data-imageurl',player.imageUrl)
+
     playerCard.className='player-stats-container';
     playerCard.innerHTML=
         `<h3>${index+1}°</h3>
@@ -493,7 +506,7 @@ function renderTableTDWithLogo(squadId,squadName){
     return singleTd
 }
 function getClubsWrapper(){
-    if(typology===competitionTypology.GROUP || typology===competitionTypology.CUP)
+    if(typology===competitionTypology.GROUP_CUP || typology===competitionTypology.CUP)
         getClubsDividedByGroup()
     else
         getClubs()
@@ -651,7 +664,7 @@ async function getGroupMatches() {
         if(currentMatchesSeason!==selectedSeason) {
             matchRounds = await fetchAllRoundNumbers(selectedSeason)
             matchRounds = matchRounds.data
-            if(typology===competitionTypology.GROUP)
+            if(typology===competitionTypology.GROUP_CUP)
                 matchRounds=matchRounds.filter(round=>round.startsWith('Group'))
             renderMatchesDropdownMenu()
         }

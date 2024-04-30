@@ -1039,7 +1039,7 @@ header ul li ul li a{
 
 
 .last-match-container{
-    padding:    var(--padding-10px);
+    padding:var(--padding-10px);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
@@ -1053,6 +1053,11 @@ header ul li ul li a{
     border-radius: var(--br-12px);
     box-sizing: border-box;
     border: 2px solid var(--light-grey);
+    transition: all 0.3s ease-in-out;
+}
+.last-match-container:hover{
+    transform:scale(1.03);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 .match-result-vertical{
     text-align: right;
