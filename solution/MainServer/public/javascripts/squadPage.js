@@ -5,6 +5,7 @@ const squadPageName= 'squad-page' //=>Constant for the squad page name.
 let clubInfo //=>Object to store club information.
 let lastSeason= 2023; //=>Variable to store the last season.
 const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
+
 import {getTable,renderTableRow,renderMatchesRound} from './competitionPage.js'
 document.addEventListener('DOMContentLoaded',init) //=>Function to initialize the squad page.
 let isTableLoaded=false, isPlayersLoaded //=>Flag to check if the table is loaded - Flag to check if players are loaded.
@@ -23,7 +24,8 @@ async function init(){
         let managerName= await getManagerName()
         clubInfo.managerName = managerName.data[0].name;
         let club=await getClubInfo()
-        clubInfo.lastSeason=club.data.lastSeason
+        clubInfo.lastSeasonInLeauge = club.data.lastSeason
+        await getAndRenderLastSeasons()
         clubInfo.stadiumName=club.data.stadiumName
         clubInfo.stadiumSeats=club.data.stadiumSeats
         clubInfo.squadSize=club.data.squadSize
@@ -68,17 +70,21 @@ async function init(){
 }
 
 /**
+ * prefetch last club seasons and render the dropdown for last seasons
+ * @returns {Promise<void>}
+ */
+async function getAndRenderLastSeasons(){
+    let seasons = await getSeasonsGames();
+    seasons = seasons.data.map(item => item.season);
+    clubInfo.lastSeason=seasons[0]
+    insertSeasons(seasons);
+}
+/**
  * Wrapper function to fetch the last matches.
  */
 async function getLastMatchesWrapper(){
     try {
-        if(!isSeasonsLoaded) {
-            let seasons = await getSeasonsGames();
-            seasons = seasons.data.map(item => item.season);
-            insertSeasons(seasons);
-            isSeasonsLoaded=true;
-        }
-        const matches = await getClubGamesInfo();
+        const matches = await getClubGamesInfo(clubInfo.lastSeason);
         renderMatchesRound(matches.data);
         setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
         manageSeasonEventListener()
@@ -93,8 +99,7 @@ async function getLastMatchesWrapper(){
 function manageSeasonEventListener(){
     if(!isListenerLoaded) {
         document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
-            lastSeason = this.value;
-            const matches = await getClubGamesInfo();
+            const matches = await getClubGamesInfo(this.value);
             renderMatchesRound(matches.data)
             setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
         })
@@ -139,8 +144,8 @@ function renderGraph(){
  */
 function getTableAndLastMatches(){
     Promise.all([
-        getTable( clubInfo.competitionId, clubInfo.lastSeason,"full"),
-        getLast5Games()
+        getTable( clubInfo.competitionId, clubInfo.lastSeasonInLeauge,"full"),
+        getClubGamesInfo(clubInfo.lastSeasonInLeauge,5) //by default we want only last 5 games
     ]).then(res=>{
         renderMiniTable(res[0].data)
         renderLast5Games(res[1].data)
@@ -172,7 +177,7 @@ function renderMiniTable(completeCompetitionTable){
     let miniCompetitionTable=completeCompetitionTable.slice(startingIndex,lastIndex)
     //setta le informazioni del banner
     document.getElementById('squadCompetitionImageInTable').setAttribute('src',`${competitionLogoImgUrl}${clubInfo.competitionId.toLowerCase()}.png`)
-    document.getElementById('squadCompetitionNameInTable').innerText=clubInfo.competitionName
+    document.getElementById('squadCompetitionNameInTable').innerHTML=`<h5>${clubInfo.competitionName}</h5><h5>(${clubInfo.lastSeasonInLeauge})</h5>`
 
     miniCompetitionTable.forEach(tableRowData=>{
         let tableRow =renderTableRow(tableRowData,startingIndex)
@@ -193,7 +198,7 @@ function getClubPlayers(){
     return axios.get(url,{
         params:{
             club_id:clubInfo.clubId,
-            season:clubInfo.lastSeason
+            season:clubInfo.lastSeasonInLeauge
         }
     })
 }
@@ -267,16 +272,6 @@ function renderPlayerCard(player){
     return playerCard
 }
 
-/**
- * Fetches the last 5 games of the club.
- * @returns {Promise} - Promise object representing the last 5 games.
- */
-function getLast5Games(){
-    return axios.get(MAIN_SERVER+'/games/getLast5GamesByClubId',{
-        params:{
-            club_id:clubInfo.clubId
-        }})
-}
 
 /**
  * Renders the last 5 games of the club.
@@ -300,18 +295,20 @@ function renderLast5Games(games){
 function renderMiniGameCard(game){
     let miniGameCard= document.createElement('div')
     let gameOutcome, circleClass
+    let homeClubGoals = game.aggregate.split(':')[0]
+    let awayClubGoals=game.aggregate.split(':')[1]
     miniGameCard.className='last-match-container'
     if(game.home_club_id===clubInfo.clubId){ //se sei la squadra di casa
-        if(game.home_club_goals>game.away_club_goals)
+        if(homeClubGoals>awayClubGoals)
             gameOutcome = "Vittoria"
-        else if(game.home_club_goals < game.away_club_goals)
+        else if(homeClubGoals < awayClubGoals)
             gameOutcome = "Sconfitta"
         else
             gameOutcome="Pareggio"
     }else{  //se sei la squadra in trasferta...
-        if(game.away_club_goals>game.home_club_goals)
+        if(homeClubGoals<awayClubGoals)
             gameOutcome = "Vittoria"
-        else if(game.away_club_goals < game.home_club_goals)
+        else if(awayClubGoals < homeClubGoals)
             gameOutcome = "Sconfitta"
         else
             gameOutcome="Pareggio"
@@ -330,17 +327,18 @@ function renderMiniGameCard(game){
             miniGameCard.style.border="2px solid "+getComputedStyle(document.documentElement).getPropertyValue('--color-draw')
             break
     }
+    adaptMatchDate(game)
     miniGameCard.innerHTML=
         `<div class="match-result-vertical">
-            <h6>${game.date.split('T')[0]}</h6>
+            <h6>${game.date}</h6>
          </div>
          <div class="squad-info-row">
             <img src="${clubLogoImgURL}${game.home_club_id}.png" class="squadLogo" alt ="${game.home_club_name} logo">
-            <h6>${game.home_club_goals}</h6>
+            <h6>${homeClubGoals}</h6>
          </div>
          <div class="squad-info-row">
-            <img src="${clubLogoImgURL}${game.away_club_id}.png" class="squadLogo" alt ="${game.home_club_name} logo">
-            <h6>${game.away_club_goals}</h6>
+            <img src="${clubLogoImgURL}${game.away_club_id}.png" class="squadLogo" alt ="${game.away_club_name} logo">
+            <h6>${awayClubGoals}</h6>
          </div>
          <div class="${circleClass}">
             <h6><b>${gameOutcome}</b></h6>
@@ -380,14 +378,13 @@ function insertSeasons(seasons){
  * Fetches information about the club's games for the last season.
  * @returns {Promise} - Promise object representing the club's games information.
  */
-function getClubGamesInfo() {
+function getClubGamesInfo(season,limit) {
     return axios.get(MAIN_SERVER + '/games/getLastGamesByClubIdandSeason', {
         params: {
             club_id: clubInfo.clubId,
-            season: lastSeason
+            season: season,
+            limit:limit
         }
-
-
     });
 }
 

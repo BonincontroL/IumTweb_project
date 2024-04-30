@@ -37,16 +37,6 @@ function getLast5Games(competition_id) {
         });
 }
 
-function getLast5GamesByClubId(club_id){
-    return Model.find({
-        $or:[
-            {home_club_id:club_id},
-            {away_club_id:club_id}
-        ]
-    },{home_club_id:1, away_club_id:1, home_club_goals:1, away_club_goals:1, date:1})
-        .sort({date:-1})
-        .limit(5)
-}
 
 /**
  * Get the round numbers of a competition and season
@@ -433,9 +423,10 @@ function getGamesByGameId(gameId) {
  * Get the last  games of a club in a certain season
  * @param club_id
  * @param season
+ * @param limit
  */
-function getLastGamesByClubIdandSeason(club_id, season) {
-    return Model.find({
+function getLastGamesByClubIdandSeason(club_id, season,limit) {
+    const query = Model.find({
         $or: [
             {home_club_id: club_id},
             {away_club_id: club_id}
@@ -454,12 +445,53 @@ function getLastGamesByClubIdandSeason(club_id, season) {
         away_club_name: 1,
         competition_id: 1,
         aggregate: 1
-    })
+    }).sort({date: -1})
+    if(limit)
+        query.limit(limit)
 
-        .sort({date: -1})
-
+    return query
 }
-
+function getHeadToHeadResults(season,homeClubId,awayClubId){
+    return Model.aggregate([
+        {
+            $match:{
+                season:{$lt:season},
+                $or:[
+                    {home_club_id:homeClubId,away_club_id:awayClubId},
+                    {home_club_id: awayClubId, away_club_id: homeClubId}
+                ]
+            }
+        },
+        {
+            $group:{
+                _id:null,
+                homeWins:{
+                    $sum:{
+                        $cond:[{$and:[{$eq:["$home_club_id",homeClubId]},{$gt:["$home_club_goals","$away_club_goals"]}]},1,0]
+                    }
+                },
+                awayWins:{
+                    $sum:{
+                        $cond:[{$and:[{$eq:["$home_club_id",homeClubId]},{$gt:["$away_club_goals","$home_club_goals"]}]},1,0]
+                    }
+                },
+                draws:{
+                    $sum:{
+                        $cond:[{$eq:["$home_club_goals","$away_club_goals"]},1,0]
+                    }
+                }
+            }
+        },
+        {
+            $project:{
+                _id:0,
+                homeWins:1,
+                awayWins:1,
+                draws:1
+            }
+        }
+    ])
+}
 
 /**
  * ritornano tutte le stagioni in cui la squadra ha almeno giocato una partita
@@ -494,9 +526,8 @@ function getSeasonsByClubId(club_id) {
 }
 
 module.exports = {
-    getAllGames,
     getLast5Games,
-    getLast5GamesByClubId,
+    getAllGames,
     getRoundNumbers,
     getTableByCompSeasonAndType,
     getMatchesByCompAndSeasonAndRound,
@@ -509,5 +540,6 @@ module.exports = {
     getCompetitionSeasonsSorted,
     getGamesByGameId,
     getLastGamesByClubIdandSeason,
-    getSeasonsByClubId
+    getSeasonsByClubId,
+    getHeadToHeadResults
 };

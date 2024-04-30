@@ -96,17 +96,6 @@ router.get('/getLastManager',async (req,res)=>{
         res.status(500).json({error:error})
     }
 })
-router.get('/getLast5GamesByClubId', async (req, res, next) => {
-    const club_id = req.query.club_id;
-    GamesController.getLast5GamesByClubId(club_id)
-        .then(data => {
-            res.status(200).json(data);
-        })
-        .catch(error => {
-            console.error('Errore durante il recupero delle ultime 5 partite di un club:', error);
-            res.status(500).json({error: 'Errore durante il recupero delle ultime 5 partite di un club'});
-        })
-});
 
 /**
  * Restituisce i match per competitionId e season
@@ -189,14 +178,14 @@ router.get("/getGamesByGameId/:game_id", async (req, res) => {
 router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
     const club_id = req.query.club_id;
     const season = req.query.season;
+    const limit = req.query.limit
 
-    if (!club_id || !season) {
+    if (!club_id || !season) { //limit could be optional
         res.status(400).json({ error: 'Manca l\'ID del club o la stagione' });
         return;
     }
-
     try {
-        const data = await GamesController.getLastGamesByClubIdandSeason(club_id, season);
+        const data = await GamesController.getLastGamesByClubIdandSeason(club_id, season,limit);
         res.status(200).json(data);
     } catch (error) {
         console.error('Errore durante il recupero delle  partite di un club per una stagione specifica:', error);
@@ -217,6 +206,20 @@ router.get('/getSeasonsByClubId', async (req, res, next) => {
         .catch(error => {
             console.error('Errore durante il recupero delle stagioni del Club:', error);
             res.status(500).json({error: 'Errore durante il recupero delle stagioni'});
+        })
+});
+
+router.get('/getHeadToHeadResults', async (req, res) => {
+    const season =+req.query.season;
+    const homeClubId=+req.query.homeClubId;
+    const awayClubId=+req.query.awayClubId;
+    GamesController.getHeadToHeadResults(season,homeClubId,awayClubId)
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero degli head to head', error);
+            res.status(500).json({error: 'Errore durante il recupero degli head to head'});
         })
 });
 

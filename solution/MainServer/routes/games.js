@@ -79,21 +79,7 @@ router.get('/getLastManager', function (req, res) {
         handleAxiosError(err, res)
     })
 })
-/**
- * Get last 5 games by club id
- */
-router.get('/getLast5GamesByClubId', function (req, res) {
-    axios.get(EXPRESS_SERVER + "/games/getLast5GamesByClubId", {
-        params: {
-            club_id: req.query.club_id
-        }
-    }).then(data => {
-        res.status(data.status).send(data.data);
-    }).catch(err => {
-        //throw new Error(err)
-        handleAxiosError(err, res)
-    })
-})
+
 router.get('/getTableByCompSeasonAndType', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getTableByCompSeasonAndType", {
         params: {
@@ -150,7 +136,8 @@ router.get('/getLastGamesByClubIdandSeason', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getLastGamesByClubIdandSeason", {
         params: {
             club_id: req.query.club_id,
-            season: req.query.season
+            season: req.query.season,
+            limit:req.query.limit
         }
     }).then(data => {
         res.status(data.status).send(data.data);
