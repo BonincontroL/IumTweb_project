@@ -44,7 +44,7 @@ public class CompetitionsController {
             return ResponseEntity.ok().body(result);
         }
     }
-    
+
 
     /**
      * get a single competition by his id

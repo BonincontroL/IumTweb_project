@@ -191,13 +191,8 @@ function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
         throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\nMessaggio di errore: "+err+"\n")
     })
 }
-function getRefreeStadiumAndManagers(game_id){
-    return Model.findOne({game_id:game_id},'referee stadium home_club_manager_name away_club_manager_name')
-        .then(data=>{
-            return data;
-        }).catch(err=>{
-            throw new Error("Errore durante il recupero di una singola partita con game_id:"+game_id+"\n L'errore è il seguente: "+err+"\n")
-        })
+function get(game_id){
+    return Model.findOne({game_id:game_id},{_id:0})
 }
 
 /**
@@ -531,7 +526,7 @@ module.exports = {
     getRoundNumbers,
     getTableByCompSeasonAndType,
     getMatchesByCompAndSeasonAndRound,
-    getRefreeStadiumAndManagers,
+    get,
     getLastManager,
     getGamesByCompetitionIdAndSeason,
     getCompetitionsByClubAndSeason,

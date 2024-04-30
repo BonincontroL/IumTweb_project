@@ -750,18 +750,9 @@ function renderKnockoutMatches(matches,round){
 function renderSingleKnockoutMatch(match){
     let matchCard = document.createElement('div')
     matchCard.className='game-information'
-    matchCard.setAttribute('data-competitionid',match.competition_id)
     matchCard.setAttribute('data-gameId',match.game_id)
     matchCard.setAttribute('data-homeClubId',match.home_club_id)
     matchCard.setAttribute('data-awayClubId',match.away_club_id)
-    if(match.home_club_name!==undefined)
-        matchCard.setAttribute('data-homeClubName',match.home_club_name)
-    if(match.away_club_name!==undefined)
-        matchCard.setAttribute('data-awayClubName',match.away_club_name)
-    matchCard.setAttribute('data-aggregate',match.aggregate)
-    matchCard.setAttribute('data-date',match.date)
-    matchCard.setAttribute('data-round',match.round)
-    matchCard.setAttribute('data-season',match.season)
 
     matchCard.innerHTML=
         ` <div class="match-result-vertical">
@@ -870,7 +861,7 @@ export function renderMatchesRound(matches){
                                     <h6>${match.away_club_name === undefined? 'N.D' : match.away_club_name}</h6>
                                 </div>
                             </div>
-                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" data-homeClubName="${match.home_club_name !==undefined? match.home_club_name:''}" data-awayClubName="${match.away_club_name !==undefined? match.away_club_name:''}" data-aggregate="${match.aggregate}" data-date="${match.date}" data-competitionId="${match.competition_id}" class='btn-load-match-details'>
+                            <button data-gameId="${match.game_id}" data-homeClubId="${match.home_club_id}" data-awayClubId="${match.away_club_id}" class='btn-load-match-details'>
                                 <i class='bx bxs-right-arrow-circle'></i>
                             </button>`
         matchesContainer.appendChild(singleMatchElement)

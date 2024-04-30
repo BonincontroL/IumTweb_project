@@ -15,19 +15,20 @@ const { isDataEmpty } = require('./utils/utils');
  * Restituisce il numero del giocatore dato l'ID del giocatore
  */
 router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
-    try {
-        const { idPlayer } = req.params;
-        const playerNumber = await gamelineupsController.getPlayerNumberByIdPlayer(idPlayer);
-        if(!isDataEmpty(playerNumber)){
-            res.status(200).json({playerNumber});
-        }else{
-            res.status(404).json({error: 'Nessun player Number trovato'});
-        }
-        //res.status(200).json({ playerNumber });
-    } catch (error) {
-        console.error('Errore durante il recupero del numero del giocatore:', error);
-        res.status(500).json({ error: 'Errore durante il recupero del numero del giocatore' });
-    }
+    const {idPlayer} = req.params;
+    gamelineupsController.getPlayerNumberByIdPlayer(idPlayer)
+        .then(data => {
+            if (!isDataEmpty(data)) {
+                let playerNumber = data.number
+                res.status(200).json({playerNumber});
+            } else {
+                res.status(204).json({});
+            }
+        })
+        .catch(error => {
+            console.error('Errore durante il recupero del numero del giocatore:', error);
+            res.status(500).json({error: 'Errore durante il recupero del numero del giocatore'});
+        })
 });
 
 /**
@@ -37,21 +38,22 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
  * -home_club_id: identificativo della squadra in casa
  * -away_club_id: identificativo della squadra in trasferta
  */
-router.get('/getMatchPlayers', async(req,res)=>{
-    try{
-        const game_id= +req.query.game_id
-        const home_club_id = +req.query.home_club_id
-        const away_club_id = +req.query.away_club_id
-        const allPlayers = await gamelineupsController.getMatchPlayers(game_id,home_club_id,away_club_id)
-        //res.status(200).json(allPlayers)
-        if(!isDataEmpty(allPlayers)){
-            res.status(200).json(allPlayers);
-        }else{
-            res.status(404).json({error: 'Nessun match player trovato'});
-        }
-    }catch (error){
-        res.status(500).json({error:error})
-    }
+router.get('/getMatchPlayers', async (req, res) => {
+    const game_id = +req.query.game_id
+    const home_club_id = +req.query.home_club_id
+    const away_club_id = +req.query.away_club_id
+    gamelineupsController.getMatchPlayers(game_id, home_club_id, away_club_id)
+        .then(data => {
+            if (!isDataEmpty(data)) {
+                res.status(200).json(data);
+            } else {
+                res.status(204).json({});
+            }
+        })
+        .catch(error => {
+            console.error("Errore nel recupero delle lineup:" + error)
+            res.status(500).json({error: error})
+        })
 })
 
 

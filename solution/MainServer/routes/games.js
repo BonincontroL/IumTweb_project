@@ -52,8 +52,11 @@ router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
         handleAxiosError(err, res)
     })
 })
-router.get('/getRefreeAndStadium', function (req, res) {
-    axios.get(EXPRESS_SERVER + "/games/getRefreeAndStadium", {
+/**
+ * get all game infos , based on club_id
+ */
+router.get('/get', function (req, res) {
+    axios.get(EXPRESS_SERVER + "/games/get", {
         params: {
             game_id: req.query.game_id
         }

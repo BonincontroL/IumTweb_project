@@ -96,9 +96,7 @@ async function renderPlayers(players, competitionIdentifier) {
          */
         try {
             let playerNumber = await getPlayerNumber(player.playerId)
-            if (playerNumber.data !== null) {
-                playerCard.appendChild(renderPlayerNumber(playerNumber.data.playerNumber));
-            }
+            playerCard.appendChild(renderPlayerNumber(playerNumber.data.playerNumber));
         } catch (e) {
             alert(e)
             console.error('Errore durante il recupero del numero del giocatore:', error);
@@ -169,7 +167,7 @@ function renderPlayerNumber(playerNumber){
     const playerNumberContainer = document.createElement('div');
     playerNumberContainer.classList.add('player-number-container');
     const playerNumberElement = document.createElement('h5');
-    playerNumberElement.textContent = playerNumber !== -1 ? String(playerNumber) : 'N.D.';
+    playerNumberElement.textContent = playerNumber? String(playerNumber) : 'N.D.';
     playerNumberContainer.appendChild(playerNumberElement);
 
     return playerNumberContainer
@@ -314,13 +312,6 @@ function createMatchDiv(match) {
     matchDiv.setAttribute('data-gameId',match.game_id)
     matchDiv.setAttribute('data-homeclubid',match.homeTeam.id)
     matchDiv.setAttribute('data-awayclubid',match.awayTeam.id)
-    matchDiv.setAttribute('data-homeclubname',match.homeTeam.name)
-    matchDiv.setAttribute('data-awayclubname',match.awayTeam.name)
-    matchDiv.setAttribute('data-aggregate',`${match.homeTeam.score}:${match.awayTeam.score}`)
-    matchDiv.setAttribute('data-date',match.time)
-    matchDiv.setAttribute('data-competitionid',match.competition_id)
-    matchDiv.setAttribute('data-round',match.round)
-
     matchDiv.classList.add('game-information');
 
     const homeTeamLogo = `<img class="squad-icon" src="${match.homeTeam.logo}" alt="${match.homeTeam.name} logo" />`;

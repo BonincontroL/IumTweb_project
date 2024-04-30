@@ -31,7 +31,7 @@ router.get('/getMatchEvents', async (req, res) => {
             if(!isDataEmpty(data)){
                 res.status(200).json(data);
             }else{
-                res.status(404).json({error: 'Nessun match evento trovato'});
+                res.status(204).json({});
             }
         })
         .catch(err=>{

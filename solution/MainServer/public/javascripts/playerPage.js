@@ -294,15 +294,6 @@ function renderPlayerMatch(match) {
     gameInfoContainer.setAttribute('data-gameid', match.game_id)
     gameInfoContainer.setAttribute('data-homeclubid', match.home_club_id)
     gameInfoContainer.setAttribute('data-awayclubid', match.away_club_id)
-    if (match.home_club_name !== undefined)
-        gameInfoContainer.setAttribute('data-homeclubname', match.home_club_name)
-    if (match.away_club_name !== undefined)
-        gameInfoContainer.setAttribute('data-awayclubname', match.away_club_name)
-    gameInfoContainer.setAttribute('data-round', match.round)
-    gameInfoContainer.setAttribute('data-season', match.season)
-    gameInfoContainer.setAttribute('data-date', match.date)
-    gameInfoContainer.setAttribute('data-aggregate', match.aggregate)
-    gameInfoContainer.setAttribute('data-competitionid', match.competition_id)
 
     const roundAndDateContainer = document.createElement('div');
     roundAndDateContainer.classList.add('round-and-date-container');

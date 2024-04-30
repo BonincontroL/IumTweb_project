@@ -6,16 +6,7 @@ const Model = require('../models/gamelineups');
  * @returns {Promise} Promise object represents the player number
  */
 function getPlayerNumberByIdPlayer(playerId) {
-    return Model.findOne({ player_id: playerId })
-        .then(player => {
-            if (!player) {
-                return -1; // Player not found
-            }
-            return player.number;
-        })
-        .catch(error => {
-            console.error('Errore durante il recupero del numero del giocatore: ' + error.message);
-        });
+    return Model.findOne({ player_id: playerId },{_id:0,number:1})
 }
 
 /**
@@ -106,14 +97,7 @@ function getMatchPlayers(game_id,home_club_id, away_club_id){
                 ]
             }
         }
-    ]).then(data=>{
-        if(!data || data.length === 0)
-            throw new Error("Errore durante il recupero dei giocatori nella partita con id:"+game_id+"\n")
-        else
-            return data;
-    }).catch(err=>{
-        throw new Error("Errore durante il recupero dei giocatori nella partita con id:"+game_id+":"+err+"\n")
-    })
+    ])
 }
 
 module.exports = {

@@ -140,15 +140,9 @@ function setMatchesCardEventListener(matchCards){
     matchCards.forEach(match=>{
         match.addEventListener('click',()=>{
             let matchInfo ={
-                gameId:match.getAttribute('data-gameid'),
-                homeClubId:match.getAttribute('data-homeclubid'),
-                awayClubId:match.getAttribute('data-awayclubid'),
-                homeClubName:match.getAttribute('data-homeclubname'),
-                awayClubName:match.getAttribute('data-awayclubname'),
-                aggregate:match.getAttribute('data-aggregate'),
-                date:match.getAttribute('data-date'),
-                competitionId:match.getAttribute('data-competitionId'),
-                round:match.getAttribute('data-round')
+                game_id:match.getAttribute('data-gameid'),
+                home_club_id:match.getAttribute('data-homeclubid'),
+                away_club_id:match.getAttribute('data-awayclubid'),
             }
             sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
             window.location.href='../match_page.html'

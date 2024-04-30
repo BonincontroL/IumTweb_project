@@ -78,10 +78,10 @@ router.get('/getMatchesByCompAndSeasonAndRound', async(req,res)=>{
     }
 })
 
-router.get('/getRefreeAndStadium',async (req,res)=>{
+router.get('/get',async (req,res)=>{
     try{
         const game_id=+req.query.game_id
-        const result = await GamesController.getRefreeStadiumAndManagers(game_id)
+        const result = await GamesController.get(game_id)
         res.status(200).json(result)
     }catch (error){
         res.status(500).json({error:error})
