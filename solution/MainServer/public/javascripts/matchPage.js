@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         home_club_id: matchInfo.home_club_id,
         away_club_id: matchInfo.away_club_id
     }
+    manageEventDelegation()
     manageMatchButtons()
     await getMatchInformation()
     getMatchFormation(matchIds)
@@ -116,7 +117,6 @@ function renderBannerInfo() {
 /**
  * Retrieves match events from the server.
  * @param {Object} matchIds - Object containing match IDs.
- * @param {string} finalResult - Final result of the match.
  */
 function getMatchEvents(matchIds) {
     axios.get("http://localhost:3000/gameevents/getMatchEvents", {
@@ -462,8 +462,6 @@ function renderFormation(container, lineup, managerName, formation) {
         lineup.substitutes.forEach(player => {
             container.appendChild(renderPlayerCard(player))
         })
-        let playerCards = document.querySelectorAll('#' + container.id + ' > .player-card-for-competition')
-        setPlayersEventListener(playerCards)
     }).catch(err => {
         alert(err)
     })

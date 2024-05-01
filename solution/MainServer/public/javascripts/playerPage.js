@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     playerInfoBtn = document.getElementById('player-info-btn')
     lateralPlayerButtons = document.querySelectorAll('#playerLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralPlayerButtons, playerPageName)
+    manageEventDelegation()
     //inizialmente solo il bottone Informazioni è premuto
     playerInfoBtn.classList.add('active')
     hideAllMainContainers(playerPageName)
@@ -250,8 +251,6 @@ async function fetchPlayerLastMatches() {
             lastMatchesContainer.innerHTML = '<h1>Nessuna partita trovata...</h1>';
         } else {
             renderPlayerMatches(playerLastMatches)
-            let matchCards = document.querySelectorAll('.game-information-in-player')
-            setMatchesCardEventListener(matchCards)
         }
     } catch (error) {
         console.error('Errore durante il recupero delle partite:', error);
@@ -281,7 +280,6 @@ function renderPlayerMatches(matches) {
 function renderPlayerMatch(match) {
     let homeStats = {}, awayStats = {}
     const gameInfoContainer = document.createElement('div');
-    gameInfoContainer.classList.add('main-container');
     gameInfoContainer.classList.add('game-information');
     gameInfoContainer.classList.add('game-information-in-player');
     //set all the necessary attributes

@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded',()=> {
     initLogin();
+    manageEventDelegation()
     getAllClubsByInitial();
     document.getElementById('search-clubs').addEventListener('input', (e) =>
         debouncedSearch(e.target.value)
@@ -34,8 +35,6 @@ function getAllClubsByInitial() {
     axios.get("http://localhost:3000/clubs/getAllClubsByInitial")
         .then(response => {
             renderClubsGroupedByInitial(response.data);
-            let clubCards = document.querySelectorAll('#clubs-container .squad-card-mini')
-            setAllClubButtonsListener(clubCards)
         })
         .catch(error => {
             alert(error);
@@ -77,8 +76,7 @@ function renderClubsGroupedByInitial(clubsGrouped) {
         });
         clubsGroup.appendChild(clubsContainer);
         mainContainer.appendChild(clubsGroup);
-        let clubCards=document.querySelectorAll('.squad-card-mini')
-        setAllClubButtonsListener(clubCards)
+
     }
 }
 

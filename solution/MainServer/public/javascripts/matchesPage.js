@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     initLogin();
     manageFilterPopup();
+    manageEventDelegation()
     const competitionsEndpoint = 'http://localhost:3000/competitions/getAllCompetitions';
     axios.get(competitionsEndpoint)
         .then(response => {
@@ -264,8 +265,6 @@ function createCompetitionDiv(competitionId, matchesByRoundAndDate) {
         `;
         container.appendChild(roundDiv);
     });
-    let matchesCard=document.querySelectorAll('.game-information')
-    setMatchesCardEventListener(matchesCard)
 }
 
 /**

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         manageFilterPopup() //gestisce la comparsa e scomparsa del popup dei filtri
         manageDropdownFilters()
         manageApplyAndResetButtons()
+        manageEventDelegation()
         initLogin();
         fetchAndCategorizePlayers();
         const searchInput = document.getElementById('search-players');
@@ -273,7 +274,7 @@ function renderPlayers(players, container) {
         playerDiv.setAttribute('data-name',player.name)
         playerDiv.setAttribute('data-imageurl',player.imageUrl)
 
-        const playerContent = `
+        playerDiv.innerHTML = `
             <img src="${player.imageUrl}" alt="${player.name}" class="player-image">
             <div class="player-info">
                 <h3>${player.name}</h3>
@@ -281,17 +282,6 @@ function renderPlayers(players, container) {
                 <h4>${player.currentClubName}</h4>
             </div>
         `;
-
-        playerDiv.innerHTML = playerContent;
-        playerDiv.addEventListener('click',()=>{
-            let playerInfo ={
-                playerId:playerDiv.getAttribute('data-playerid'),
-                name:playerDiv.getAttribute('data-name'),
-                imageUrl:playerDiv.getAttribute('data-imageurl'),
-            }
-            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
-            window.location.href='../player_page.html'
-        })
         container.appendChild(playerDiv);
     });
 }

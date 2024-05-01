@@ -80,73 +80,43 @@ function hideAllMainContainers(pageName){
     mainContainers.forEach(container=>{container.style.display="none"})
 }
 
-
-/**
- * Sets event listener for competition cards to navigate to competition page.
- * @param {NodeList} competitionCards - List of competition cards.
- */
-function setCompetitionsCardEventListener(competitionCards){
-    competitionCards.forEach(card => {
-        card.addEventListener('click', () => {
-            let competition_id = card.getAttribute('data-competitionId')
-            let competition_name = card.getAttribute('data-competitionName')
-            let competition_type = card.getAttribute('data-competitionType')
-            window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}&competition_type=${competition_type}`
-        })
-    })
-}
-
-/**
- * Sets event listener for club buttons to navigate to club squad page.
- * @param {NodeList} clubCards - List of club cards.
- */
-function setAllClubButtonsListener(clubCards){
-    clubCards.forEach(card=>{
-        card.addEventListener('click', function (){
+function manageEventDelegation(){
+    document.addEventListener('click',function (event){
+        const targetClub = event.target.closest('tr') || event.target.closest('.squad-card-mini')
+        if(targetClub){
             let clubInfo={
-                clubId:card.getAttribute('data-clubid'),
-                name:card.getAttribute('data-name'),
+                clubId:targetClub.getAttribute('data-clubid'),
+                name:targetClub.getAttribute('data-name'),
             }
             window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}`
-        })
-    })
-}
-
-/**
- * function used to set the player card event listener, with this you can click on player
- * and go to his page
- * @param playerCards all the player cards in the current page
- */
-function setPlayersEventListener(playerCards){
-    playerCards.forEach(card=>{
-        card.addEventListener('click',()=>{
-            let playerInfo ={
-                playerId:card.getAttribute('data-playerid'),
-                name:card.getAttribute('data-name'),
-                imageUrl:card.getAttribute('data-imageurl'),
-            }
-            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
-            window.location.href='../player_page.html'
-        })
-    })
-}
-
-
-/**
- * Sets event listener for match cards to navigate to match page.
- * @param {NodeList} matchCards - List of match cards.
- */
-function setMatchesCardEventListener(matchCards){
-    matchCards.forEach(match=>{
-        match.addEventListener('click',()=>{
+        }
+        const targetMatch= event.target.closest('.btn-load-match-details') || event.target.closest('.game-information') || event.target.closest('.game-information-in-player') || event.target.closest('.last-match-container')
+        if(targetMatch){
             let matchInfo ={
-                game_id:match.getAttribute('data-gameid'),
-                home_club_id:match.getAttribute('data-homeclubid'),
-                away_club_id:match.getAttribute('data-awayclubid'),
+                game_id:targetMatch.getAttribute('data-gameid'),
+                home_club_id:targetMatch.getAttribute('data-homeclubid'),
+                away_club_id:targetMatch.getAttribute('data-awayclubid'),
             }
             sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
             window.location.href='../match_page.html'
-        })
+        }
+        const targetCompetition = event.target.closest('.competition-card-mini')||event.target.closest('.competition-card')
+        if(targetCompetition){
+            let competition_id = targetCompetition.getAttribute('data-competitionId')
+            let competition_name = targetCompetition.getAttribute('data-competitionName')
+            let competition_type = targetCompetition.getAttribute('data-competitionType')
+            window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}&competition_type=${competition_type}`
+        }
+        const targetPlayer = event.target.closest('.player-card')||event.target.closest('.player-card2') || event.target.closest('.player-card-for-competition') || event.target.closest('.player-card-for-homepage') || event.target.closest('.player-stats-container-first') || event.target.closest('.player-stats-container')
+        if(targetPlayer){
+            let playerInfo ={
+                playerId:targetPlayer.getAttribute('data-playerid'),
+                name:targetPlayer.getAttribute('data-name'),
+                imageUrl:targetPlayer.getAttribute('data-imageurl'),
+            }
+            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
+            window.location.href='../player_page.html'        }
+
     })
 }
 

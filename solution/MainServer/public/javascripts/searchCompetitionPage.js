@@ -3,6 +3,7 @@ let competitions ={} //=>Hash map where a list of competitions is mapped based o
 
 document.addEventListener('DOMContentLoaded',()=>{
     getCompetitionsGroupedByCountry()
+    manageEventDelegation()
     document.getElementById('search-competitions').addEventListener('input',(e)=>
         debouncedSearch(e.target.value)
     );
@@ -85,8 +86,6 @@ async function renderCompetitionsGroupedByCountry(competitions) {
         let competitionsGroup= renderCompetitionsGroup(competitions,imgUrl,countryName)
         mainContainer.appendChild(competitionsGroup)
     }
-    let competitionCards = document.querySelectorAll('.competition-card-mini')
-    setCompetitionsCardEventListener(competitionCards)
 }
 
 /**

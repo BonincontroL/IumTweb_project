@@ -42,6 +42,7 @@ async function init(){
     squadInfoBtn= document.getElementById('squad-info-btn')
     lateralSquadButtons=document.querySelectorAll('#squadLateralNavbar .lateral-menu-button')
     manageLateralButtons(lateralSquadButtons,squadPageName)
+    manageEventDelegation()
     //inizialmente solo il bottone Informazioni deve essere selezionato
     squadInfoBtn.classList.add('active')
     hideAllMainContainers(squadPageName)
@@ -57,8 +58,7 @@ async function init(){
         if(!isPlayersLoaded) {
             getClubPlayers()
                 .then(res => {
-                    let playerCardList = renderClubPlayers(res.data)
-                    setPlayersEventListener(playerCardList)
+                    renderClubPlayers(res.data)
                     isPlayersLoaded=true
                 })
                 .catch(err => {
@@ -86,7 +86,6 @@ async function getLastMatchesWrapper(){
     try {
         const matches = await getClubGamesInfo(clubInfo.lastSeason);
         renderMatchesRound(matches.data);
-        setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
         manageSeasonEventListener()
     }catch(err){
         alert("Errore nella richiesta delle partite del club"+err);
@@ -101,7 +100,6 @@ function manageSeasonEventListener(){
         document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
             const matches = await getClubGamesInfo(this.value);
             renderMatchesRound(matches.data)
-            setMatchesCardEventListener(document.querySelectorAll('.btn-load-match-details'))
         })
         isListenerLoaded=true
     }
@@ -173,8 +171,6 @@ function getTableAndLastMatches(){
     ]).then(res=>{
         renderMiniTable(res[0].data)
         renderLast5Games(res[1].data)
-        let lastGames = document.querySelectorAll('.last-match-container')
-        setMatchesCardEventListener(lastGames)
         isTableLoaded=true
     }).catch(err=>{
         alert(err)
@@ -243,11 +239,9 @@ function renderClubPlayers(players){
     defenderContainer.innerHTML=''
     midfieldContainer.innerHTML=''
     strikerContainer.innerHTML=''
-    const playerCardList =[]
 
     players.forEach(player=>{
         let playerCard= renderPlayerCard(player)
-        playerCardList.push(playerCard)
         switch (player.position){
             case 'Goalkeeper':
                 goalkeeperContainer.appendChild(playerCard)
@@ -263,7 +257,6 @@ function renderClubPlayers(players){
                 break
         }
     })
-    return playerCardList
 }
 
 /**

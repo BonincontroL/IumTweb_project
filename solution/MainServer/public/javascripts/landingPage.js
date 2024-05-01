@@ -31,8 +31,7 @@ function init() {
         window.location.href = "../matches_page.html"
     })
 
-    let competition_cards = document.querySelectorAll('.competition-card');
-    setCompetitionsCardEventListener(competition_cards);
+    manageEventDelegation()
     getAndRenderPlayers();
     getAndRenderLastMatches("IT1"); // Serie A matches by default
     getAndRenderLastMatches("NL1");
@@ -238,8 +237,6 @@ function getLastMatchesByCompetition(competitionId) {
 function getAndRenderLastMatches(competitionId) {
     getLastMatchesByCompetition(competitionId).then(matches => {
         renderMatches(matches, competitionId);
-        let matchCards = document.querySelectorAll('.multiple-matches-container >.game-information')
-        setMatchesCardEventListener(matchCards)
     }).catch(error => {
         console.error(`Errore durante il recupero dei match della ${competitionId}:`, error);
     });

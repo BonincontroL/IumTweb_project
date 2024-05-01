@@ -51,12 +51,12 @@ async function init() {
         adaptButtonListenersToTypology()
         lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
         manageLateralButtons(lateralButtons, competitionPageName)
+        manageEventDelegation()
         initLogin();
     } catch (e) {
         alert(e)
     }
 }
-
 /**
  * Pre-renders dropdown menus based on competition typology.
  */
@@ -153,8 +153,6 @@ function adaptButtonListenersToTypology(){
             knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
             currentKnockoutSeason = this.value
             await getAllMatchesInKnockoutRounds(this.value)
-            let knockoutCards = document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
-            setMatchesCardEventListener(knockoutCards)
         })
     }if(typology===competitionTypology.GROUP_CUP || typology === competitionTypology.DOMESTIC_LEAUGE){
         document.getElementById('competition-matches-btn').addEventListener('click', getGroupMatches)
@@ -416,8 +414,6 @@ function getTopPlayers() {
         getTopPlayersByGoals(),
     ]).then(res => {
         renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', 'VALUE')
-        let playerCards =document.querySelectorAll('#playersTopMarketValueContainer > div')
-        setPlayersEventListener(playerCards)
         renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer','GOALS')
     }).catch(err => {
         alert(err)
@@ -441,8 +437,6 @@ function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     }).then(imageRes => {
         let players = mergePlayersAndImage(playersInfo, imageRes.data.starting_lineup)
         renderTopPlayers(players, containerId, type)
-        let playerCards =document.querySelectorAll('#playersTopGoalsContainer > div')
-        setPlayersEventListener(playerCards)
     }).catch(err => {
         alert(err)
     })
@@ -601,8 +595,10 @@ export function getTable(compId,season,tableType, groupName){
  */
 export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
+    tableRow.setAttribute('data-clubid',tableRowData._id)
+    tableRow.setAttribute('data-name',tableRowData.club_name)
     tableRow.appendChild(renderTableTD(++index))
-    tableRow.appendChild(renderTableTDWithLogo(tableRowData._id, tableRowData.club_name))
+    tableRow.appendChild(renderTableTDWithLogo(tableRowData._id, tableRowData.club_name===null? 'N.D':tableRowData.club_name))
     let totalGames=tableRowData.vittorie+tableRowData.pareggi+tableRowData.sconfitte
     tableRow.appendChild(renderTableTD(totalGames))
     tableRow.appendChild(renderTableTD(tableRowData.vittorie))
@@ -669,13 +665,10 @@ function getClubsDividedByGroup(){
             if(typology===competitionTypology.CUP) {
                 clubs = unifyClubs(clubs)
                 renderAllClubs(clubs)
-                clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
             }else { //in questo caso devi mantenere solo i gruppi
                 clubs = clubs.filter(group=>group.group.startsWith('Group'))
                 renderClubsDividedByGroup(clubs)
-                clubCards= document.querySelectorAll('.competitions-group-container > .squad-card-mini')
             }
-            setAllClubButtonsListener(clubCards)
         }
     })
 }
@@ -753,8 +746,6 @@ function getClubs(){
     }).then(res=> {
         if(res.data.length!==0) {
             renderAllClubs(res.data)
-            let clubCards = document.querySelectorAll('#competitionSquads > .squad-card-mini')
-            setAllClubButtonsListener(clubCards)
         }
     }).catch(err=>{
         alert(err)
@@ -885,8 +876,6 @@ async function getKnockoutMatches(){
         let rounds = await fetchAllRoundNumbers(season)
         knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
         await getAllMatchesInKnockoutRounds(season)
-        let knockoutCards=document.querySelectorAll('#knockoutBody > div> div.matches-knockout-group-container > div')
-        setMatchesCardEventListener(knockoutCards)
     }
 }
 
@@ -899,8 +888,6 @@ async function getAndRenderGroupMatches(season) {
     try {
         let matches = await getAllMatchesInRound(matchRounds[currentRound],season)
         renderMatchesRound(matches.data)
-        let matchesCard =document.querySelectorAll('#competitionMatchesContainer > div> button')
-        setMatchesCardEventListener(matchesCard)
     } catch (e) {
         alert(e)
     }
@@ -1001,8 +988,6 @@ function getAndRenderMatchesInRound(round,season){
         .then(res=>{
             renderMatchesRound(res.data)
             document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
-            let matchesCard =document.querySelectorAll('#competitionMatchesContainer > div> button')
-            setMatchesCardEventListener(matchesCard)
         })
         .catch(err=>{
             alert(err)
