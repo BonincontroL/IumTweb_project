@@ -3479,6 +3479,166 @@
           }
         }
       }
+    },
+    "/appearances/getPlayerLast5Games/{playerId}": {
+      "get": {
+        "tags": ["Appearances"],
+        "summary": "Get player last 5 games",
+        "description": "Returns the last 5 games of a player based on the player's ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the player"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Return the last 5 games.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "player_club_id": {
+                        "type": "integer",
+                        "example": 24
+                      },
+                      "yellow_cards": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "red_cards": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "goals": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "assists": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "minutes_played": {
+                        "type": "integer",
+                        "example": 90
+                      },
+                      "season": {
+                        "type": "integer",
+                        "example": 2014
+                      },
+                      "round": {
+                        "type": "string",
+                        "example": "17. Matchday"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2014-12-20T00:00:00.000Z"
+                      },
+                      "game_id": {
+                        "type": "integer",
+                        "example": 2460771
+                      },
+                      "home_club_id": {
+                        "type": "integer",
+                        "example": 15
+                      },
+                      "away_club_id": {
+                        "type": "integer",
+                        "example": 24
+                      },
+                      "home_club_name": {
+                        "type": "string",
+                        "example": "Bayer 04 Leverkusen Fußball"
+                      },
+                      "away_club_name": {
+                        "type": "string",
+                        "example": "Eintracht Frankfurt Fußball AG"
+                      },
+                      "competition_id": {
+                        "type": "string",
+                        "example": "L1"
+                      },
+                      "aggregate": {
+                        "type": "string",
+                        "example": "1:1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+            "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
