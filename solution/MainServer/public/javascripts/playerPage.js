@@ -142,13 +142,7 @@ function renderPlayerInfo(playerInfo, playerNumber, flagUrl) {
     document.getElementById('playerRole').innerText = playerInfo.subPosition;
     document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL + playerInfo.currentClubId + ".png")
     document.getElementById('player_number').innerText = playerNumber === -1 ? "No data available" : playerNumber
-
-    if (playerNumber === -1) {
-        document.getElementById('player_number').innerText = "No data available"
-    } else {
-        document.getElementById('player_number').innerText = playerNumber;
-    }
-
+    document.getElementById('player_number').innerText = `${playerNumber? playerNumber:'No data available'}`
 }
 
 

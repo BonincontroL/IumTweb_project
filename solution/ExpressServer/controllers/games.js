@@ -394,31 +394,11 @@ function getCompetitionSeasonsSorted(competition_id){
 }
 
 /**
- * Get games by game ID
- * @param gameId
- * @returns {Promise<unknown>}
- */
-function getGamesByGameId(gameId) {
-    return new Promise((resolve, reject) => {
-        Model.findOne({ game_id: gameId })
-            .then(result => {
-                if (!result) {
-                    reject('Nessun match trovato per questo ID games.');
-                } else {
-                    resolve(result);
-                }
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
-}
-
-/**
- * Get the last  games of a club in a certain season
+ * Get the last games of a club in a certain season
+ * if limit isn't undefined, the result is limited
  * @param club_id
  * @param season
- * @param limit
+ * @param limit the number of results that we want
  */
 function getLastGamesByClubIdandSeason(club_id, season,limit) {
     const query = Model.find({
@@ -446,43 +426,88 @@ function getLastGamesByClubIdandSeason(club_id, season,limit) {
 
     return query
 }
-function getHeadToHeadResults(season,homeClubId,awayClubId){
+function getHeadToHeadResults(homeClubId,awayClubId){
     return Model.aggregate([
         {
-            $match:{
-                season:{$lt:season},
-                $or:[
-                    {home_club_id:homeClubId,away_club_id:awayClubId},
+            $match: {
+                $or: [
+                    {home_club_id: homeClubId, away_club_id: awayClubId},
                     {home_club_id: awayClubId, away_club_id: homeClubId}
                 ]
             }
         },
         {
-            $group:{
-                _id:null,
-                homeWins:{
-                    $sum:{
-                        $cond:[{$and:[{$eq:["$home_club_id",homeClubId]},{$gt:["$home_club_goals","$away_club_goals"]}]},1,0]
+            //adding result field to determine match outcome
+            $project: {
+                home_club_id: 1,
+                away_club_id: 1,
+                home_club_goals: 1,
+                away_club_goals: 1,
+                result: {
+                    $cond: {
+                        if: {$gt: ["$home_club_goals", "$away_club_goals"]},
+                        then: 'home_win',
+                        else: {
+                            $cond: {
+                                if: {$lt: ["$home_club_goals", "$away_club_goals"]},
+                                then: 'away_win',
+                                else: 'draw'
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        {
+            $group: {
+                _id: null, //we put id only because is necessary for group operator
+                homeWins: {
+                    $sum: {
+                        $cond: [
+                            {
+                                $or: [
+                                    {
+                                        $and: [
+                                            {$eq: ["$result", "home_win"]},
+                                            {$eq: ["$home_club_id", homeClubId]}
+                                        ]
+                                    },
+                                    {
+                                        $and: [
+                                            {$eq: ["$result", "away_win"]},
+                                            {$eq: ["$away_club_id", homeClubId]}
+                                        ]
+                                    }
+                                ]
+
+                            }, 1, 0]
                     }
                 },
-                awayWins:{
-                    $sum:{
-                        $cond:[{$and:[{$eq:["$home_club_id",homeClubId]},{$gt:["$away_club_goals","$home_club_goals"]}]},1,0]
+                awayWins: {
+                    $sum: {
+                        $cond: [
+                            {
+                                $or: [
+                                    {$and: [
+                                            {$eq: ["$result", "away_win"]},
+                                            {$eq: ["$away_club_id", awayClubId]}
+                                        ]
+                                    },
+                                    {$and: [
+                                            {$eq: ["$result", "home_win"]},
+                                            {$eq: ["$home_club_id", awayClubId]}
+                                        ]
+                                    }
+                                ]
+                            }, 1, 0]
                     }
                 },
                 draws:{
                     $sum:{
-                        $cond:[{$eq:["$home_club_goals","$away_club_goals"]},1,0]
+                        $cond:[{$eq:["$result","draw"]},1,0]
                     }
                 }
-            }
-        },
-        {
-            $project:{
-                _id:0,
-                homeWins:1,
-                awayWins:1,
-                draws:1
             }
         }
     ])
@@ -533,7 +558,6 @@ module.exports = {
     getClubsDividedByGroups,
     getCompetitionIdsWithGroup,
     getCompetitionSeasonsSorted,
-    getGamesByGameId,
     getLastGamesByClubIdandSeason,
     getSeasonsByClubId,
     getHeadToHeadResults

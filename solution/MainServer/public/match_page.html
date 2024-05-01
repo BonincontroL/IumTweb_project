@@ -11,6 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- for AXIOS-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- for Chart.js-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="javascripts/matchPage.js" type="module"></script>
     <script src="javascripts/index.js"></script>
     <script src="javascripts/login.js"></script>
@@ -143,6 +145,9 @@
                 <button id="getMatchFormation" class="button-game-navbar" data-showContainer="match-details-formation">
                     <h6>Formazioni</h6>
                 </button>
+                <button id="getHeadToHead" class="button-game-navbar" data-showContainer="match-details-head-to-head">
+                    <h6>Testa a Testa</h6>
+                </button>
             </div>
         </div>
         <div id="match-details-container">
@@ -180,7 +185,6 @@
 
             </div>
             <div id="match-details-formation">
-
                 <div class="formation-not-found" id="formationNotFoundContainer">
                     <h5>Formazione non disponibile per questa partita...</h5>
                     <img src="images/formationNotFoundError.webp" class="formationNotFoundImg" alt="Formation not found logo">
@@ -189,6 +193,35 @@
                 <div id="homeFormationContainer" class="formation-players-container">
                 </div>
                 <div id="awayFormationContainer" class="formation-players-container">
+                </div>
+            </div>
+            <div id="match-details-head-to-head">
+                <div class="head-to-head-graph-container">
+                    <div class="match-info">
+                        <h4>Vittorie casa</h4>
+                        <img id="homeLogo" class="squadLogoForGraph" alt="">
+                    </div>
+                    <canvas class="head-to-head-graph" id="homeWinsCanvas">
+                        <div class="centeredLabel">
+                            <h6 id="numWins"></h6>
+                        </div>
+                    </canvas>
+                </div>
+                <div class="head-to-head-graph-container">
+                    <div class="match-info">
+                        <h4>Pareggi</h4>
+                        <img class="squadLogoForGraph" alt="drawIcon" src="images/draw.svg">
+                    </div>
+                    <canvas  class="head-to-head-graph" id="drawCanvas">
+                    </canvas>
+                </div>
+                <div class="head-to-head-graph-container">
+                    <div class="match-info">
+                        <h4>Vittorie Trasferta </h4>
+                        <img id="awayLogo" class="squadLogoForGraph" alt="">
+                    </div>
+                    <canvas class="head-to-head-graph" id="awayWinsCanvas">
+                    </canvas>
                 </div>
             </div>
         </div>

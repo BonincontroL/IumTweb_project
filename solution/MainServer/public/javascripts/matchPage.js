@@ -9,6 +9,7 @@ let homeGoalEvents, awayGoalEvents//=>array usati per renderizzare le colonne de
 const isDefender = ['Centre-Back', 'Right-Back', 'Left-Back'] //=>Array of player positions indicating defender.
 const isMidfield = ['Right Midfield', 'Left Midfield', 'Central Midfield', 'Defensive Midfield', 'Attacking Midfield'] //=> Array of player positions indicating midfielder.
 const isGoalkeeper = 'Goalkeeper' //=>Player position indicating goalkeeper.
+let isHeadToHeadLoaded =false
 document.addEventListener('DOMContentLoaded', async () => {
     matchInfo = JSON.parse(sessionStorage.getItem('gameInfo'))
     let matchIds = {
@@ -20,9 +21,84 @@ document.addEventListener('DOMContentLoaded', async () => {
     await getMatchInformation()
     getMatchFormation(matchIds)
     getMatchEvents(matchIds)
+    document.getElementById('getHeadToHead').addEventListener('click',()=>{
+        if(!isHeadToHeadLoaded){
+            getHeadToHeadInfos()
+        }
+    })
     initLogin();
 })
+function getHeadToHeadInfos(){
+    let url="http://localhost:3001/games/getHeadToHead"
+    axios.get(url,{
+        params:{
+            homeClubId: matchInfo.home_club_id,
+            awayClubId: matchInfo.away_club_id,
+        }
+    }).then(res=>{
+        renderHeadToHeadInfos(res.data[0])
+        isHeadToHeadLoaded=true
+    }).catch(err=>{
+        alert(err)
+    })
+}
+function renderHeadToHeadInfos(infos){
+    const totalMatches =infos.homeWins+infos.awayWins+infos.draws
+    document.getElementById('homeLogo').setAttribute('src',`${clubLogoImgURL}${matchInfo.home_club_id}.png`)
+    document.getElementById('awayLogo').setAttribute('src',`${clubLogoImgURL}${matchInfo.away_club_id}.png`)
 
+    renderGraph('homeWinsCanvas',infos.homeWins,totalMatches,'Vittorie '+infos.homeWins)
+    renderGraph('drawCanvas',infos.draws,totalMatches,'Pareggi '+infos.draws)
+    renderGraph('awayWinsCanvas',infos.awayWins,totalMatches,'Vittorie '+infos.awayWins)
+}
+function renderGraph(graphId,info,totalMatch,labelText){
+    const graph=document.getElementById(graphId).getContext('2d')
+    const doughnutLabel=createChartLabel(labelText)
+    const squadChart= new Chart(graph,{
+        type:'doughnut',
+        data:{
+            datasets:[{
+                data:[info,totalMatch],
+                backgroundColor:[
+                    getComputedStyle(document.body).getPropertyValue('--primary-blue-900'),
+                    getComputedStyle(document.body).getPropertyValue('--white')
+                ]
+            }]
+        },
+        options:{
+            responsive:true,
+            borderRadius:12,
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            },
+            plugins: {
+                tooltip:{
+                    enabled:true,
+                    borderWidth:0
+                }
+            }
+        },
+        plugins:[
+            doughnutLabel
+        ]
+    })
+}
+function createChartLabel(labelText){
+    return {
+        id:'doughnutLabel',
+        beforeDatasetDraw(chart,args,pluginOptions){
+            const {ctx,data}=chart
+            ctx.save()
+            const xCoor=chart.getDatasetMeta(0).data[0].x
+            const yCoor=chart.getDatasetMeta(0).data[0].y
+            ctx.font= 'bold 18px sans-serif';
+            ctx.textAlign='center'
+            ctx.textBaseline ='middle'
+            ctx.fillText(labelText,xCoor,yCoor)
+        }
+    }
+}
 /**
  * Renders information on the match banner.
  */
@@ -358,7 +434,7 @@ function renderFormation(container, lineup, managerName, formation) {
 
         let startingLineupBanner = document.createElement('div')
         startingLineupBanner.className = 'formation-header'
-        startingLineupBanner.innerHTML = `<h6><b>Titolari</b></h6> <h6> Formazione: ${formation}</h6>`
+        startingLineupBanner.innerHTML = `<h6><b>Titolari</b></h6> <p>Formazione: ${formation}</p>`
         container.appendChild(startingLineupBanner)
 
         lineup.starting_lineup.forEach(player => {

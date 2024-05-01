@@ -69,9 +69,6 @@ function renderClubsGroupedByInitial(clubsGrouped) {
             clubCard.className = 'squad-card-mini';
             clubCard.setAttribute('data-clubid', club.clubId);
             clubCard.setAttribute('data-name', club.name);
-            clubCard.setAttribute('data-stadiumname', club.stadiumName);
-            clubCard.setAttribute('data-stadiumseats', club.stadiumSeats);
-            clubCard.setAttribute('data-competitionid', club.domesticCompetitionId);
             clubCard.innerHTML = `
                 <img class="competition-big-logo" src="https://tmssl.akamaized.net/images/wappen/head/${club.clubId}.png" alt="${club.name} logo">
                 <h3>${club.name}</h3>

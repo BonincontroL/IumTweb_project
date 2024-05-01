@@ -159,19 +159,6 @@ router.get('/getCompetitionSeasonsSorted', async(req,res)=>{
         })
 })
 
-router.get("/getGamesByGameId/:game_id", async (req, res) => {
-    const game_id = req.params.game_id;
-    GamesController.getGamesByGameId(game_id)
-        .then(data => {
-            res.status(200).json(data);
-        })
-        .catch(error => {
-            console.error('Errore durante il recupero delle partite per game_id:', error);
-            res.status(500).json({error: 'Errore durante il recupero delle partite per game_id'});
-        })
-
-})
-
 /**
  * Restituisce le ultime 5 partite di un club per una stagione specifica
  */
@@ -209,11 +196,10 @@ router.get('/getSeasonsByClubId', async (req, res, next) => {
         })
 });
 
-router.get('/getHeadToHeadResults', async (req, res) => {
-    const season =+req.query.season;
+router.get('/getHeadToHead', async (req, res) => {
     const homeClubId=+req.query.homeClubId;
     const awayClubId=+req.query.awayClubId;
-    GamesController.getHeadToHeadResults(season,homeClubId,awayClubId)
+    GamesController.getHeadToHeadResults(homeClubId,awayClubId)
         .then(data => {
             res.status(200).json(data);
         })

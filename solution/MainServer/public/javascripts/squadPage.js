@@ -106,13 +106,28 @@ function manageSeasonEventListener(){
         isListenerLoaded=true
     }
 }
-
+function createChartLabel(labelText){
+    return {
+        id:'doughnutLabel',
+        beforeDatasetDraw(chart,args,pluginOptions){
+            const {ctx,data}=chart
+            ctx.save()
+            const xCoor=chart.getDatasetMeta(0).data[0].x
+            const yCoor=chart.getDatasetMeta(0).data[0].y
+            ctx.font= 'bold 16px sans-serif';
+            ctx.textAlign='center'
+            ctx.textBaseline ='middle'
+            ctx.fillText(labelText,xCoor,yCoor)
+        }
+    }
+}
 /**
  * Renders the squad chart.
  */
 function renderGraph(){
     const nationalPlayers = 100-clubInfo.foreignersPercentage
     const graph=document.getElementById('squadChart').getContext('2d')
+    const doughnutLabel=createChartLabel(clubInfo.squadSize+' giocatori')
     const squadChart= new Chart(graph,{
         type:'doughnut',
         data:{
@@ -121,20 +136,29 @@ function renderGraph(){
                 data:[clubInfo.foreignersPercentage,nationalPlayers],
                 backgroundColor:[
                     getComputedStyle(document.body).getPropertyValue('--primary-blue-900'),
-                    getComputedStyle(document.body).getPropertyValue('--primary-blue-100')
+                    getComputedStyle(document.body).getPropertyValue('--primary-blue-50')
                 ]
             }]
         },
         options:{
             responsive:true,
-            borderWidth:10,
             borderRadius:2,
             hoverBorderWidth:0,
             animation: {
-                animateScale: true,
+                animationScale:true,
                 animateRotate: true
+            },
+            plugins:{
+                tooltip: {
+                    enabled:true,
+                    boxWidth: 20,
+                    boxHeight: 20,
+                }
             }
-        }
+        },
+        plugins: [
+            doughnutLabel
+        ]
     })
 }
 
@@ -303,13 +327,6 @@ function renderMiniGameCard(game){
     miniGameCard.setAttribute('data-gameid',game.game_id);
     miniGameCard.setAttribute('data-homeclubid',game.home_club_id);
     miniGameCard.setAttribute('data-awayclubid',game.away_club_id);
-    if(game.home_club_name)
-        miniGameCard.setAttribute('data-homeclubname',game.home_club_name);
-    if(game.away_club_name)
-        miniGameCard.setAttribute('data-awayclubname',game.away_club_name);
-    miniGameCard.setAttribute('data-aggregate',game.aggregate);
-    miniGameCard.setAttribute('data-date',game.date);
-    miniGameCard.setAttribute('data-competitionid',game.competition_id);
 
     if(game.home_club_id===clubInfo.clubId){ //se sei la squadra di casa
         if(homeClubGoals>awayClubGoals)
