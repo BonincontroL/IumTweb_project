@@ -41,9 +41,9 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
         });
 })
 
-router.get("/getPlayerLast5Games/:playerId", async (req, res) => {
+router.get("/getPlayerGames/:playerId", async (req, res) => {
     const playerId = req.params.playerId;
-    appearancesController.getPlayerLastGames(playerId)
+    appearancesController.getPlayerGames(playerId)
         .then(data => {
             if (!isDataEmpty(data)) {
                 res.status(200).json(data);

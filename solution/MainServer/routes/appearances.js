@@ -21,10 +21,10 @@ router.get("/getPlayerStatistics/:playerId", function (req, res) {
 
 
 /**
- *  Returns the last 5 games of a player.
+ *  Returns the games of a player.
  */
-router.get("/getPlayerLast5Games/:playerId", function (req, res) {
-    axios.get(EXPRESS_SERVER+'/appearances/getPlayerLast5Games/'+req.params.playerId)
+router.get("/getPlayerGames/:playerId", function (req, res) {
+    axios.get(EXPRESS_SERVER+'/appearances/getPlayerGames/'+req.params.playerId)
         .then(response => {
             res.status(response.status).send(response.data);
         })

@@ -68,7 +68,7 @@ function getPlayerStatistics(playerId) {
         });
 }
 
-function getPlayerLastGames(playerId) {
+function getPlayerGames(playerId) {
     const numericPlayerId = parseInt(playerId, 10);
     return Model.aggregate([
         {
@@ -120,5 +120,5 @@ function getPlayerLastGames(playerId) {
 module.exports={
     getTopScorer,
     getPlayerStatistics,
-    getPlayerLastGames
+    getPlayerGames
 }

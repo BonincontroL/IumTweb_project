@@ -2336,6 +2336,7 @@
         }
       }
     },
+
     "/player_valuations/getPlayerValuationPerYear/{idPlayer}": {
       "get": {
         "tags": [
@@ -3480,11 +3481,11 @@
         }
       }
     },
-    "/appearances/getPlayerLast5Games/{playerId}": {
+    "/appearances/getPlayerGames/{playerId}": {
       "get": {
         "tags": ["Appearances"],
-        "summary": "Get player last 5 games",
-        "description": "Returns the last 5 games of a player based on the player's ID.",
+        "summary": "Get player  games",
+        "description": "Returns all games of a player .",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -3508,7 +3509,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Return the last 5 games.",
+            "description": "Successful - Return the games of Player.",
             "content": {
               "application/json": {
                 "schema": {
