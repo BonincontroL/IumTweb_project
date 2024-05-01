@@ -3301,6 +3301,99 @@
         }
       }
     },
+    "/games/get": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get games by ID",
+        "description": "Returns information about a game based on game ID.",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "game_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the game"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns information about the game with the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Game"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+
+
     "/appearances/getPlayerStatistics/{playerId}": {
       "get": {
         "tags": ["Appearances"],
