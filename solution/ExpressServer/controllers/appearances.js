@@ -1,5 +1,11 @@
 const Model = require('../models/appearances')
 
+
+/**
+ * Retrieves the top scorers for a given competition.
+ * @param competitionId
+ * @returns {Aggregate<Array<any>>}
+ */
 function getTopScorer(competitionId){
     return Model.aggregate([
         {
@@ -23,7 +29,11 @@ function getTopScorer(competitionId){
     ])
 }
 
-
+/**
+ * Retrieves statistics for a specific player.
+ * @param playerId
+ * @returns {Promise<Array<any>>}
+ */
 function getPlayerStatistics(playerId) {
     const numericPlayerId = parseInt(playerId, 10);
 
@@ -68,6 +78,11 @@ function getPlayerStatistics(playerId) {
         });
 }
 
+/**
+ * Retrieves games played by a specific player.
+ * @param playerId
+ * @returns {Aggregate<Array<any>>}
+ */
 function getPlayerGames(playerId) {
     const numericPlayerId = parseInt(playerId, 10);
     return Model.aggregate([

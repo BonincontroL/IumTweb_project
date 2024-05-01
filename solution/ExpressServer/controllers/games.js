@@ -70,6 +70,14 @@ function getRoundNumbers(comp_id,season){
     ])
 }
 
+/**
+ * Retrieves the table standings by competition, season, type, and round.
+ * @param comp_id
+ * @param season
+ * @param type
+ * @param round
+ * @returns {Promise<Array<any>>}
+ */
 function getTableByCompSeasonAndType(comp_id,season,type,round){
     let initialMatchCondition ={}
     let matchConditions={
@@ -163,6 +171,14 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
     })
 }
 
+
+/**
+ * Retrieves matches by competition, season, and round.
+ * @param comp_id
+ * @param season
+ * @param round
+ * @returns {Promise<Array<any>>}
+ */
 function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
     return Model.aggregate([
         {
@@ -191,6 +207,12 @@ function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
         throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\nMessaggio di errore: "+err+"\n")
     })
 }
+
+/**
+ *  Retrieves a game by its ID.
+ * @param game_id
+ * @returns {Promise<Object>}
+ */
 function get(game_id){
     return Model.findOne({game_id:game_id},{_id:0})
 }
@@ -426,6 +448,13 @@ function getLastGamesByClubIdandSeason(club_id, season,limit) {
 
     return query
 }
+
+/**
+ * Retrieves head-to-head results between two clubs
+ * @param homeClubId
+ * @param awayClubId
+ * @returns {Aggregate<Array<any>>}
+ */
 function getHeadToHeadResults(homeClubId,awayClubId){
     return Model.aggregate([
         {

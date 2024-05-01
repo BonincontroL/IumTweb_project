@@ -1,10 +1,15 @@
 const bcrypt = require("bcrypt");
 const User = require('../models/users');
 
-/**
- * Creazione dell'utente e criptazione della password
- */
 
+/**
+ * Creates a new user and encrypts the password.
+ * @param {string} username - The username of the user.
+ * @param {string} email - The email of the user.
+ * @param {string} password - The password of the user.
+ * @returns {Promise<Object>} - A promise that resolves to the newly created user.
+ * @throws Will throw an error if there is an issue creating the user.
+ */
 async function createUser(username, email, password) {
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -17,9 +22,10 @@ async function createUser(username, email, password) {
 }
 
 /**
- * funzione per trovare un utente tramite username per verificare l'esistenza nel db
- * @param username username dell'utente da trovare
- * @returns user l utente se esiste se no null
+ * Finds a user by username to check existence in the database.
+ * @param {string} username - The username of the user to find.
+ * @returns {Promise<Object|null>} - A promise that resolves to the user if found, otherwise null.
+ * @throws Will throw an error if there is an issue finding the user.
  */
 async function findUserByUsername(username) {
     try {
@@ -31,9 +37,10 @@ async function findUserByUsername(username) {
 }
 
 /**
- * funzione per trovare un utente tramite email per verificare l'esistenza nel db
- * @param email email dell'utente da trovare
- * @returns user l'utente se esiste, null altrimenti
+ * Finds a user by email to check existence in the database.
+ * @param {string} email - The email of the user to find.
+ * @returns {Promise<Object|null>} - A promise that resolves to the user if found, otherwise null.
+ * @throws Will throw an error if there is an issue finding the user.
  */
 async function findUserByEmail(email) {
     try {
@@ -45,10 +52,10 @@ async function findUserByEmail(email) {
 }
 
 /**
- * Funzione per autentiare un utente
- * @param email passata dal MainServer per verificarne la presenza nel DB
- * @param password passata dal MainServer per verificarne la correttezza
- * @returns risposta del server per il login
+ * Authenticates a user.
+ * @param {string} email - The email of the user.
+ * @param {string} password - The password of the user.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the authentication result.
  */
 function authenticateUser(email, password) {
     return new Promise((resolve, reject) => {
