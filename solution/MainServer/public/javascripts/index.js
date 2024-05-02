@@ -80,6 +80,11 @@ function hideAllMainContainers(pageName){
     mainContainers.forEach(container=>{container.style.display="none"})
 }
 
+/**
+ * manage the event delegation, with this technique I can manage click on different
+ * cards (for example: player card, match, competition card...) and are having the same behavior
+ * function used in each page that display some of them cards
+ */
 function manageEventDelegation(){
     document.addEventListener('click',function (event){
         const targetClub = event.target.closest('tr') || event.target.closest('.squad-card-mini')

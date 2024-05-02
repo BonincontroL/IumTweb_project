@@ -182,7 +182,6 @@ function filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId) 
         const matchDayOfWeek = daysOfWeek[date.getDay()];
         const matchYear = date.getFullYear();
         const matchSeason = parseInt(match.season);
-
         return matchDayOfWeek === dayOfWeek && matchYear.toString() === year && matchSeason === season && match.competition_id === competitionId;
     });
 

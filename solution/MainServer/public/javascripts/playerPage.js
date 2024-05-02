@@ -16,9 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 flagSrc = await getCountryFlag(playerInfo.countryOfCitizenship)
                 flagSrc = flagSrc.data[0].flags.png
-            } catch (flagErr) {
-                if (flagErr.response.status !== 404)
-                    alert(flagErr)
+            }catch (e){
+                console.error(e)
             }
             let playerNumber = await getPlayerNumber()
             renderPlayerInfo(playerInfo, playerNumber.data.playerNumber, flagSrc)
@@ -63,8 +62,13 @@ document.addEventListener('DOMContentLoaded', async () => {
  * @returns {Promise} - A promise with the flag data.
  */
 function getCountryFlag(countryName) {
+    const loadingSpinner = document.getElementById('loading-spinner')
+    loadingSpinner.style.display='block'
     let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
     return axios.get(queryUrl)
+        .finally(()=>{
+            loadingSpinner.style.display='none'
+        })
 }
 
 /**

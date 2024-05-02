@@ -145,13 +145,16 @@ async function fetchFlag(countryName){
     if (countryName === COUNTRY_NAME_INTERNATIONAL)
         imgUrl = "images/worldImage.jpg" //immagine ad hoc nel caso degli internazionali
     else{
+        let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
+        const loadingSpinner= document.getElementById('loading-spinner')
         try {
-            let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
+            loadingSpinner.style.display='block'
             let res = await axios.get(queryUrl)
-            imgUrl=res.data[0].flags.png
-        }catch (err){
-            if (err.response.status !== 404)
-                alert(err)
+            imgUrl = res.data[0].flags.png
+        }catch (e){
+                console.error(e)
+        }finally {
+            loadingSpinner.style.display='none'
         }
     }
     return imgUrl
