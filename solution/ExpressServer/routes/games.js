@@ -1,18 +1,24 @@
+/**
+ * Express router to handle game routes.
+ * @module routes/games
+ * @requires express
+ * @requires ../controllers/games
+ * @requires ./utils/utils
+ */
+
 var express = require('express');
 var router = express.Router();
 
+//=> Enable Cross-Origin Resource Sharing (CORS) middleware to allow cross-origin requests
 const cors = require('cors');
 router.use(cors());
 
+const GamesController = require("../controllers/games")//=> Controller
+const { isDataEmpty } = require('./utils/utils');//=> Utility function
+
+
 /**
- * Importa il controller per i games
- */
-const GamesController = require("../controllers/games")
-const { isDataEmpty } = require('./utils/utils');
-/**
- * GET http://localhost:3001/games/getAllGames
- *
- * GET /getAllGames  - Restituisce tutti i games
+ * Returns all games
  */
 router.get('/getAllGames', async (req, res, next) => {
     try {
@@ -24,6 +30,9 @@ router.get('/getAllGames', async (req, res, next) => {
     }
 });
 
+/**
+ * Route to get last matches by competition ID.
+ */
 router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next) => {
     try{
         const {competition_id} = req.params;

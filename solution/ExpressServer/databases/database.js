@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
  * Utilizes the mongoose library to manage the connection.
  * @constant {string} mongoDB - The connection string for the MongoDB database.
  * @returns {Promise} - A promise representing the connection process.
+ * @requires mongoose
  */
 const mongoDB = 'mongodb://localhost:27017/MongoDB_project';
 mongoose.Promise = global.Promise;

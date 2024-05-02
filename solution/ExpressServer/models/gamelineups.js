@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose schema for game lineups.
+ * @module models/gameLineups
+ * @requires mongoose
+ */
+
 const gameLineupSchema = new mongoose.Schema({
     game_lineups_id: { type: String,required: true,unique: true },
     game_id: { type: Number, required: true },

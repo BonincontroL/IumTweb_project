@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose schema for game events.
+ * @module models/gameEvents
+ * @requires mongoose
+ */
+
 const gameEventsSchema = new mongoose.Schema({
     game_event_id: { type: String, required: true },
     date: { type: Date, required: true },

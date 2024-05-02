@@ -1,12 +1,23 @@
+/**
+ * Express router to handle user authentication and registration routes.
+ * @module routes/users
+ * @requires express
+ * @requires ../controllers/users
+ * @requires ./utils/utils
+ */
+
 var express = require('express');
 var router = express.Router();
+
+//=> Enable Cross-Origin Resource Sharing (CORS) middleware to allow cross-origin requests
 const cors = require('cors');
 router.use(cors());
-const { isDataEmpty } = require('./utils/utils');
-const userController = require("../controllers/users.js")
+
+const { isDataEmpty } = require('./utils/utils');//=> Utility function
+const userController = require("../controllers/users.js")//=> Controller
 
 /**
- * risponde al MainServer che gli manda i dati di  registrazione per  un nuovo utente se non esiste già.
+ * Route to register a new user.
  */
 router.post('/register', async (req, res) => {
     try {
@@ -33,7 +44,7 @@ router.post('/register', async (req, res) => {
 
 
 /**
- * Risponde al MainServer per autenticare un utente.
+ * Route to authenticate a user.
  */
 router.post('/login', async (req, res) => {
     try {

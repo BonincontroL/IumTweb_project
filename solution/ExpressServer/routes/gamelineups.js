@@ -1,18 +1,24 @@
+/**
+ * Express router to handle game lineup routes.
+ * @module routes/gamelineups
+ * @requires express
+ * @requires ../controllers/gamelineups
+ * @requires ./utils/utils
+ */
+
 var express = require('express');
 var router = express.Router();
 
+//=> Enable Cross-Origin Resource Sharing (CORS) middleware to allow cross-origin requests
 const cors = require('cors');
 router.use(cors());
 
-
-const gamelineupsController = require("../controllers/gamelineups")
-const { isDataEmpty } = require('./utils/utils');
+const gamelineupsController = require("../controllers/gamelineups")//=> Controller
+const { isDataEmpty } = require('./utils/utils');//=> Utility function
 
 
 /**
- * GET http://localhost:3001/gamelineups/getPlayerNumberByIdPlayer/:idPlayer
- *
- * Restituisce il numero del giocatore dato l'ID del giocatore
+ * Route to get the player number by player ID.
  */
 router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
     const {idPlayer} = req.params;
@@ -31,12 +37,9 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
         })
 });
 
+
 /**
- * route che restituisce tutti i giocatori di una partita
- * i parametri nella query sono
- * -game_id: identificativo della partita
- * -home_club_id: identificativo della squadra in casa
- * -away_club_id: identificativo della squadra in trasferta
+ * Route to get all players of a match.
  */
 router.get('/getMatchPlayers', async (req, res) => {
     const game_id = +req.query.game_id

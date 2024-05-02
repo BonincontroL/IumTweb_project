@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose schema for club games.
+ * @module models/clubGames
+ * @requires mongoose
+ */
+
 const clubGameSchema = new mongoose.Schema({
     game_id: { type: Number, required: true },
     club_id: { type: Number, required: true },

@@ -1,12 +1,25 @@
+/**
+ * Express router to handle player appearances routes.
+ * @module routes/appearances
+ * @requires express
+ * @requires ../controllers/appearances
+ * @requires ./utils/utils
+ */
+
 var express = require('express');
 var router = express.Router();
 
+//=> Enable Cross-Origin Resource Sharing (CORS) middleware to allow cross-origin requests
 const cors = require('cors');
 router.use(cors());
-const appearancesController = require("../controllers/appearances")
 
-const { isDataEmpty } = require('./utils/utils');
+const appearancesController = require("../controllers/appearances")  //=>Controller
+const { isDataEmpty } = require('./utils/utils'); //=> Utility function
 
+
+/**
+ * Route to get the top scorer for a given competition.
+ */
 router.get('/getTopScorer', async (req,res)=>{
     const competitionId=req.query.comp_id;
     appearancesController.getTopScorer(competitionId)
@@ -24,7 +37,9 @@ router.get('/getTopScorer', async (req,res)=>{
 })
 
 
-
+/**
+ * Route to get the statistics for a given player.
+ */
 router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
        const idPlayer = req.params.playerId;
        appearancesController.getPlayerStatistics(idPlayer)
@@ -41,6 +56,10 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
         });
 })
 
+
+/**
+ * Route to get the last games for a given player.
+ */
 router.get("/getPlayerGames/:playerId", async (req, res) => {
     const playerId = req.params.playerId;
     appearancesController.getPlayerGames(playerId)
@@ -52,8 +71,8 @@ router.get("/getPlayerGames/:playerId", async (req, res) => {
             }
         })
         .catch(err => {
-            console.error('Errore durante il recupero delle ultime 5 partite del giocatore', err);
-            res.status(500).json({error: 'Errore durante il recupero delle ultime 5 partite del giocatore'});
+            console.error('Errore durante il recupero delle ultime partite del giocatore', err);
+            res.status(500).json({error: 'Errore durante il recupero delle ultime partite del giocatore'});
         });
 })
 

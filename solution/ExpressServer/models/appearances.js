@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose schema for player appearances.
+ * @module models/appearances
+ * @requires mongoose
+ */
+
 const appearanceSchema = new mongoose.Schema({
     appearance_id: { type: String, required: true, unique: true },
     game_id: { type: Number, required: true },

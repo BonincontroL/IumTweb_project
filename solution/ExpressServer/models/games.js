@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose schema for games.
+ * @module models/games
+ * @requires mongoose
+ */
 
 const gamesSchema = new mongoose.Schema(
     {
