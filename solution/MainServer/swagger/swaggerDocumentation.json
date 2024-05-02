@@ -125,7 +125,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competition"
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Competition"
+                    }
+                  }
                 }
               }
             }
@@ -183,12 +189,12 @@
         }
       }
     },
-    "/competitions/getCompetitionsGroupedByCountryAndLikeName": {
+    "/competitions/get": {
       "get": {
         "tags": [
           "Competitions"
         ],
-        "summary": "Retrieve all competitions grouped by country and filtered by name",
+        "summary": "Retrieve all information about the competition specified by competition_id",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -201,9 +207,9 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "competition_id",
             "in": "query",
-            "description": "Name of the competition to filter by",
+            "description": "The unique identifier for the competition to retrieve",
             "required": true,
             "schema": {
               "type": "string"
@@ -212,7 +218,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of all competitions grouped by country and filtered by name.",
+            "description": "Successful - A single competition object",
             "content": {
               "application/json": {
                 "schema": {
@@ -303,11 +309,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Detailed information about the competition.",
+            "description": "Successful -  Retrive the name of the competition",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Competition"
+                  "type": "string"
                 }
               }
             }
@@ -474,7 +480,7 @@
         "tags": [
           "Clubs"
         ],
-        "summary": "Retrieve last season's for a specified club",
+        "summary": "Retrieve last season for a specified club",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -502,7 +508,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Club"
+                  "type": "integer"
                 }
               }
             }
@@ -582,7 +588,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Club"
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Club"
+                    }
+                  }
                 }
               }
             }
@@ -730,7 +742,89 @@
         }
       }
     },
-    "/clubs/getClubsGroupedByInitialAndLikeName/{name}": {
+    "/clubs/getAllClubs": {
+      "get": {
+        "tags": ["Clubs"],
+        "summary": "Get all clubs",
+        "description": "Get all clubs that are stored in the Clubs table of the database",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:8081",
+            "description": "SpringServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns information about all the clubs in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Club"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clubs/getClubsGroupedByInitialAndLikeName/": {
       "get": {
         "tags": ["Clubs"],
         "summary": "Get clubs grouped by initial and name",
@@ -747,7 +841,7 @@
         ],
         "parameters": [
           {
-            "in": "path",
+            "in": "query",
             "name": "name",
             "required": true,
             "schema": {
@@ -2336,7 +2430,6 @@
         }
       }
     },
-
     "/player_valuations/getPlayerValuationPerYear/{idPlayer}": {
       "get": {
         "tags": [
@@ -2479,7 +2572,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Game"
+                    "$ref": "#/components/schemas/GameDTO"
                   }
                 }
               }
@@ -2542,7 +2635,7 @@
       "get": {
         "tags": ["Games"],
         "summary": "Get round numbers by competition ID and season",
-        "description": "Retrieves the round numbers based on the provided competition ID and season.",
+        "description": "Retrieves all the possible round in a competition in a certain season, based on the provided competition ID and season.",
         "parameters": [
           {
             "name": "comp_id",
@@ -2557,7 +2650,7 @@
             "name": "season",
             "in": "query",
             "required": true,
-            "description": "The season year.",
+            "description": "The season for which we want to know all the rounds.",
             "schema": {
               "type": "integer"
             }
@@ -2581,7 +2674,12 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Game"
+                    "type": "object",
+                    "properties": {
+                      "round": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }
@@ -2692,98 +2790,8 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Game"
+                    "$ref": "#/components/schemas/GameDTO"
                   }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - An error occurred on the server while processing the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "504": {
-            "description": "Gateway Timeout",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/games/getRefreeAndStadium": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Get referee and stadium by game ID",
-        "description": "Retrieves the referee and stadium information based on the provided game ID.",
-        "parameters": [
-          {
-            "name": "game_id",
-            "in": "query",
-            "required": true,
-            "description": "The unique identifier of the game.",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:3000",
-            "description": "MainServer"
-          },
-          {
-            "url": "http://localhost:3001",
-            "description": "ExpressServer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful - Returns the referee and stadium information.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Game"
                 }
               }
             }
@@ -2873,7 +2881,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Game"
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -2931,17 +2944,35 @@
         }
       }
     },
-    "/games/getLast5GamesByClubId": {
+    "/games/getLastGamesByClubIdandSeason": {
       "get": {
         "tags": ["Games"],
-        "summary": "Get last 5 games by club ID",
-        "description": "Retrieves the last 5 games based on the provided club ID.",
+        "summary": "Get last games by club ID",
+        "description": "Retrieves the last games, basing on date, based on the provided club ID and the provided Season. The result could be limited using a parameter called limit",
         "parameters": [
           {
             "name": "club_id",
             "in": "query",
             "required": true,
             "description": "The unique identifier of the club.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "description": "The season we want to consider in our search",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "If this parameter is defined, the result will be limited, otherwise the query return all the values",
             "schema": {
               "type": "integer"
             }
@@ -2959,14 +2990,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns the last 5 games.",
+            "description": "Successful - Returns the last games of a club.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Game"
-                  }
+                  "$ref": "#/components/schemas/GameDTO"
                 }
               }
             }
@@ -3067,7 +3095,27 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Club"
+                    "type": "object",
+                    "properties": {
+                      "group": {
+                        "type": "string",
+                        "example": "Group A"
+                      },
+                      "clubs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "clubId": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -3130,7 +3178,7 @@
       "get": {
         "tags": ["Games"],
         "summary": "Get competition seasons sorted",
-        "description": "Retrieves competition seasons sorted based on the provided competition ID.",
+        "description": "Retrieves competition seasons sorted in descending order based on the provided competition ID.",
         "parameters": [
           {
             "name": "competition_id",
@@ -3160,7 +3208,12 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Competition"
+                    "type": "object",
+                    "properties": {
+                      "season": {
+                        "type": "integer"
+                      }
+                    }
                   }
                 }
               }
@@ -3223,7 +3276,7 @@
       "get": {
         "tags": ["Games"],
         "summary": "Get competition IDs with group",
-        "description": "Returns a list of competition IDs for competitions that have divisions in groups (e.g., Group A, Group B, etc.).",
+        "description": "Returns a list of competition IDs that are all the competitions that have divisions in groups (e.g., Group A, Group B, etc.).",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -3242,7 +3295,12 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Competition"
+                    "type": "object",
+                    "properties": {
+                      "competition_id": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }
@@ -3392,8 +3450,116 @@
       }
 
     },
-
-
+    "/games/getHeadToHead": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get head to head statistics",
+        "description": "retrives the number of win of the home club, the number of draws and the number of win of the away club ",
+        "parameters": [
+          {
+            "name": "home_club_id",
+            "in": "query",
+            "required": true,
+            "description": "The identifier of the club that played at home in the match whose statistics we are interested in",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "away_club_id",
+            "in": "query",
+            "required": true,
+            "description": "The identifier of the club that played away in the match whose statistics we are interested in",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns a list of object formed by three fields: homeWins, Draws, awayWins.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "homeWins": {
+                      "type": "integer"
+                    },
+                    "draws": {
+                      "type": "integer"
+                    },
+                    "awayWins": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/appearances/getPlayerStatistics/{playerId}": {
       "get": {
         "tags": ["Appearances"],
@@ -4091,6 +4257,42 @@
           "minutes_played": {
             "type": "integer",
             "description": "Total minutes played by the player in the game."
+          }
+        }
+      },
+      "GameDTO": {
+        "type": "object",
+        "properties": {
+          "season": {
+            "type": "integer"
+          },
+          "round": {
+            "type": "integer"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "game_id": {
+            "type": "integer"
+          },
+          "home_club_id": {
+            "type": "integer"
+          },
+          "away_club_id": {
+            "type": "integer"
+          },
+          "home_club_name": {
+            "type": "string"
+          },
+          "away_club_name": {
+            "type": "string"
+          },
+          "competition_id": {
+            "type": "string"
+          },
+          "aggregate": {
+            "type": "string"
           }
         }
       },
