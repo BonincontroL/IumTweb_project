@@ -169,7 +169,8 @@ router.get('/getCompetitionSeasonsSorted', async(req,res)=>{
 })
 
 /**
- * Restituisce le ultime 5 partite di un club per una stagione specifica
+ * Retrive last matches played by club in a certain season
+ * result could be limited
  */
 router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
     const club_id = req.query.club_id;
@@ -191,7 +192,7 @@ router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
 
 
 /**
- * restituisce tutte le stagioni in cui il club ha giocato almeno una partita.
+ * retrive all the season when club played at least one game.
  */
 router.get('/getSeasonsByClubId', async (req, res, next) => {
     const club_id =+req.query.club_id;
@@ -204,11 +205,14 @@ router.get('/getSeasonsByClubId', async (req, res, next) => {
             res.status(500).json({error: 'Errore durante il recupero delle stagioni'});
         })
 });
-
+/**
+ * given home club id and away club id, retrives the number of win of the home club,
+ * the number of draws and the number of win of the away club
+ */
 router.get('/getHeadToHead', async (req, res) => {
     const homeClubId=+req.query.homeClubId;
     const awayClubId=+req.query.awayClubId;
-    GamesController.getHeadToHeadResults(homeClubId,awayClubId)
+    GamesController.getHeadToHead(homeClubId,awayClubId)
         .then(data => {
             res.status(200).json(data);
         })

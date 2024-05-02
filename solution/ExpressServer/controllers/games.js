@@ -72,10 +72,12 @@ function getRoundNumbers(comp_id,season){
 
 /**
  * Retrieves the table standings by competition, season, type, and round.
- * @param comp_id
- * @param season
- * @param type
- * @param round
+ * The round parameter is only used when the competition have groups, to retrive
+ * the group table, if the competition hasn't groups, round is undefined
+ * @param comp_id the competition id
+ * @param season the season we want to filter
+ * @param type the type of table, could be full, home, away and change what matches we take to calculate the table
+ * @param round the round we want table for, is undefined if the competition hasn't groups.
  * @returns {Promise<Array<any>>}
  */
 function getTableByCompSeasonAndType(comp_id,season,type,round){
@@ -209,7 +211,7 @@ function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
 }
 
 /**
- *  Retrieves a game by its ID.
+ * Retrieves all the game information by its ID.
  * @param game_id
  * @returns {Promise<Object>}
  */
@@ -270,10 +272,9 @@ function getLastManager(club_id){
  */
 function getGamesByCompetitionIdAndSeason(competitionId,season) {
     return new Promise((resolve, reject) => {
-
         Model.find({
-            competition_id: competitionId,
-            season: season
+            competition_id:competitionId,
+            season:season
         })
             .sort({ date: -1 })
             .then(results => {
@@ -450,12 +451,13 @@ function getLastGamesByClubIdandSeason(club_id, season,limit) {
 }
 
 /**
- * Retrieves head-to-head results between two clubs
- * @param homeClubId
- * @param awayClubId
+ * Given home club id and away club id, retrives the number of win of the home club,
+ * the number of draws and the number of win of the away club
+ * @param homeClubId the identifier of the club that played at home in the match whose statistics we are interested in
+ * @param awayClubId the identifier of the club that played away in the match whose statistics we are interested in
  * @returns {Aggregate<Array<any>>}
  */
-function getHeadToHeadResults(homeClubId,awayClubId){
+function getHeadToHead(homeClubId, awayClubId){
     return Model.aggregate([
         {
             $match: {
@@ -543,8 +545,8 @@ function getHeadToHeadResults(homeClubId,awayClubId){
 }
 
 /**
- * ritornano tutte le stagioni in cui la squadra ha almeno giocato una partita
- * @param club_id
+ * retrive all the seasons in which the club played at least one match
+ * @param club_id the identifier of the club whose seasons we want
  * @returns {Aggregate<Array<any>>}
  */
 function getSeasonsByClubId(club_id) {
@@ -589,5 +591,5 @@ module.exports = {
     getCompetitionSeasonsSorted,
     getLastGamesByClubIdandSeason,
     getSeasonsByClubId,
-    getHeadToHeadResults
+    getHeadToHead
 };

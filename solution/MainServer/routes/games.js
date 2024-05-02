@@ -78,7 +78,6 @@ router.get('/getLastManager', function (req, res) {
     }).then(data => {
         res.status(data.status).send(data.data);
     }).catch(err => {
-        //throw new Error(err)
         handleAxiosError(err, res)
     })
 })
