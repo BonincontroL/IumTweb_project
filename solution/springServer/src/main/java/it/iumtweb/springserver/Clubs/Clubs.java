@@ -1,6 +1,10 @@
 package it.iumtweb.springserver.Clubs;
 
 import jakarta.persistence.*;
+
+/**
+ * This class represents the Clubs entity.
+ */
 @Entity
 @Table(name = "clubs")
 public class Clubs {

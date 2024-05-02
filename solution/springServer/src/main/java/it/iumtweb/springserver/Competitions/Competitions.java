@@ -4,7 +4,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 
-
+/**
+ * This class represents the Competitions entity.
+ */
 @Entity
 @Table(name = "competitions")
 public class Competitions {

@@ -3,6 +3,10 @@ package it.iumtweb.springserver.Players;
 import jakarta.persistence.*;
 import java.util.Date;
 
+/**
+ * This class represents the Player entity
+ */
+
 @Entity
 @Table(name = "players")
 public class Players {

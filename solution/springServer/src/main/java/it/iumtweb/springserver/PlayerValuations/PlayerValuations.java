@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
 
+
+/**
+ * This class represents the PlayerValuations entity
+ */
+
 @Entity
 @Table(name = "player_valuations")
 public class PlayerValuations {
