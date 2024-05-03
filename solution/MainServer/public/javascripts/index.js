@@ -87,7 +87,7 @@ function hideAllMainContainers(pageName){
  */
 function manageEventDelegation(){
     document.addEventListener('click',function (event){
-        const targetClub = event.target.closest('tr') || event.target.closest('.squad-card-mini')
+        const targetClub = event.target.closest('.squad-tr') || event.target.closest('.squad-card-mini')
         if(targetClub){
             let clubInfo={
                 clubId:targetClub.getAttribute('data-clubid'),

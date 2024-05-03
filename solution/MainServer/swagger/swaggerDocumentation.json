@@ -371,7 +371,7 @@
         }
       }
     },
-    "/clubs/searchByCompetitionAndSeason": {
+    "/clubs/getByCompetitionAndSeason": {
       "get": {
         "tags": [
           "Clubs"
@@ -742,88 +742,6 @@
         }
       }
     },
-    "/clubs/getAllClubs": {
-      "get": {
-        "tags": ["Clubs"],
-        "summary": "Get all clubs",
-        "description": "Get all clubs that are stored in the Clubs table of the database",
-        "servers": [
-          {
-            "url": "http://localhost:3000",
-            "description": "MainServer"
-          },
-          {
-            "url": "http://localhost:8081",
-            "description": "SpringServer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful - Returns information about all the clubs in the database",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Club"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - An error occurred on the server while processing the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "504": {
-            "description": "Gateway Timeout",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/clubs/getClubsGroupedByInitialAndLikeName/": {
       "get": {
         "tags": ["Clubs"],
@@ -926,7 +844,7 @@
           "Game Events"
         ],
         "summary": "Retrieve match events by game ID",
-        "description": "Retrieves a list of events for a specified game, providing details about each event that occurred during the match.",
+        "description": "Retrieves a list of events for a specified game, providing details like who did the goal assist, who is the subbed player...",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -950,12 +868,43 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of match events.",
+            "description": "Return a list of match events, with info about minute,type, player, assist (who did assist, could be undefined), substitute (who subbed, could be undefined)",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/GameEvent"
+                    "type": "object",
+                    "properties": {
+                      "club_id": {
+                        "type": "integer",
+                        "example": 506
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "Cards"
+                      },
+                      "minute": {
+                        "type": "integer",
+                        "example": 87
+                      },
+                      "desc": {
+                        "type": "string",
+                        "example": "1. Yellow card  , Mass confrontation"
+                      },
+                      "player": {
+                        "type": "string",
+                        "example": "Cristiano ronaldo"
+                      },
+                      "assist": {
+                        "type": "string",
+                        "example": "Cristiano ronaldo"
+                      },
+                      "substitute": {
+                        "type": "string",
+                        "example": "Cristiano ronaldo"
+                      }
+                    }
                   }
                 }
               }
@@ -1136,7 +1085,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of all players.",
+            "description": "Successful - A list of all players in the database.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1237,7 +1186,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of all players.",
+            "description": "Successful - A list of all players that played in a certain club in a certain season",
             "content": {
               "application/json": {
                 "schema": {
@@ -1329,7 +1278,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of players.",
+            "description": "Successful - A list of players that are playing in the competition specified by competition_id.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1391,13 +1340,13 @@
         }
       }
     },
-    "/players/getPlayersByCompetitionAndLastSeason/{competition_id}/{last_season}": {
+    "/players/getPlayersByCompetitionAndLastSeasonSortedByValue/{competition_id}/{last_season}": {
       "get": {
         "tags": [
           "Players"
         ],
-        "summary": "Get player by competition ID and last season",
-        "description": "Retrieves players based on a competition ID and the last season.",
+        "summary": "Get player by competition ID and last season, sorted by value",
+        "description": "Retrieves players based on a competition ID and the last season, sorted by market value in a descending manner.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -1410,7 +1359,7 @@
         ],
         "parameters": [
           {
-            "name": "competition_id",
+            "name": "competitionId",
             "in": "path",
             "required": true,
             "description": "The competition's unique identifier",
@@ -1419,7 +1368,7 @@
             }
           },
           {
-            "name": "last_season",
+            "name": "lastSeason",
             "in": "path",
             "required": true,
             "description": "The last season of interest",
@@ -1430,7 +1379,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of players.",
+            "description": "Successful - A list of players that played in a certain competition and in a certain season, sorted by value",
             "content": {
               "application/json": {
                 "schema": {
@@ -1498,7 +1447,7 @@
           "Players"
         ],
         "summary": "Get information about domestic competition",
-        "description": "Retrives all the current domestic competition basic info(id and name) that are in the Players table, sorted alphabetically by name.",
+        "description": "Returns all the current domestic competition basic info(id and name) that are in the Players table, sorted alphabetically by competition name.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -1511,7 +1460,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of small competition object with two fields: id and name."
+            "description": "Successful - A list of small competition object with two fields: id and name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example":"IT1"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "serie-a"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "204": {
             "description": "No Content",
@@ -1585,7 +1554,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - A list of string that are all the nationalities (Without null)."
+            "description": "Successful - A list of strings that are all the nationalities (Without null).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "204": {
             "description": "No Content",
@@ -1646,7 +1622,7 @@
           "Players"
         ],
         "summary": "Get top 150 players by market value",
-        "description": "Retrieves a list of the top 150 players sorted by their market value.",
+        "description": "Retrieves a list of the top 150 players sorted by their market value in a descending manner.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -1817,7 +1793,7 @@
       "get": {
         "tags": ["Players"],
         "summary": "Get players' image URLs by player ID",
-        "description": "Returns image URLs of players based on player IDs.",
+        "description": "Returns image URLs associated with player IDs.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -1833,30 +1809,43 @@
             "in": "query",
             "name": "starting",
             "schema": {
-              "type": "integer"
+              "type": "array",
+              "items":{
+                "type": "integer"
+              }
             },
-            "description": "Starting index for pagination"
+            "description": "A list of integers, contains all the player IDs of the players who start a match"
           },
           {
             "in": "query",
             "name": "substitutes",
             "schema": {
-              "type": "integer"
+              "type": "array",
+              "items":{
+                "type": "integer"
+              }
             },
-            "description": "Number of substitutes to return"
+            "description": "A list of integers, contains all the player IDs of the players who are on the bench"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns image URLs of players.",
+            "description": "Successful - Returns image URLs of players associated with player_id",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string",
-                    "format": "url",
-                    "description": "URL of the player's image"
+                    "type": "object",
+                    "properties": {
+                      "playerId": {
+                        "type": "integer"
+                      },
+                      "imageUrl": {
+                        "format": "url",
+                        "description": "URL of the player's image"
+                      }
+                    }
                   }
                 }
               }
@@ -2234,7 +2223,7 @@
         ],
         "parameters": [
           {
-            "name": "idPlayer",
+            "name": "player_id",
             "in": "path",
             "required": true,
             "description": "The unique identifier of the player.",
@@ -2251,10 +2240,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "playerId": {
-                      "type": "integer",
-                      "description": "Player's ID."
-                    },
                     "playerNumber": {
                       "type": "integer",
                       "description": "Number assigned to the player for the game."
@@ -2365,13 +2350,84 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns a list of players for both teams.",
+            "description": "Successful - Returns a list of players for both teams, divided in starting_lineup and substitutes",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Player"
+                    "type": "object",
+                    "properties": {
+                      "home_lineup": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "game_id": {
+                              "type": "integer"
+                            },
+                            "club_id": {
+                              "type": "integer"
+                            },
+                            "lineup":{
+                              "type": "object",
+                              "properties": {
+                                "starting_lineup": {
+                                  "type": "object",
+                                  "properties": {
+                                    "player_id": {
+                                      "type": "integer",
+                                      "example": 8192
+                                    },
+                                    "player_name": {
+                                      "type": "string",
+                                      "example": "Cristiano Ronaldo"
+                                    },
+                                    "position": {
+                                      "type": "string",
+                                      "example": "Left-Forward"
+                                    },
+                                    "team_captain": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "number": {
+                                      "type": "integer",
+                                      "example": 7
+                                    }
+                                  }
+                                },
+                                "substitutes": {
+                                  "type": "object",
+                                  "properties": {
+                                    "player_id": {
+                                      "type": "integer",
+                                      "example": 8192
+                                    },
+                                    "player_name": {
+                                      "type": "string",
+                                      "example": "Cristiano Ronaldo"
+                                    },
+                                    "position": {
+                                      "type": "string",
+                                      "example": "Left-Forward"
+                                    },
+                                    "team_captain": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "number": {
+                                      "type": "integer",
+                                      "example": 7
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -2436,7 +2492,7 @@
           "Player Valuations"
         ],
         "summary": "Get  player valuation per year",
-        "description": "Retrieves the valuation of a player for each year in which the player has been valued, based on the player's ID.",
+        "description": "Retrieves the average valuation for a player (in EUR) for each year in which it was evaluated, based on the player's ID.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -2466,18 +2522,20 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "year": {
+                    "type": "array",
+                    "oneOf": [
+                      {
                         "type": "integer",
-                        "description": "Year of the valuation."
+                        "description": "The year of the rating"
                       },
-                      "averageMarketValue": {
-                        "type": "number",
-                        "format": "double",
-                        "description": "Average market value of the player in EUR for the year."
+                      {
+                        "type": "integer",
+                        "description":"The average market value in the year"
                       }
-                    }
+                    ],
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "An array where the first item is the year and the second item is the average rating"
                   }
                 }
               }
@@ -3359,6 +3417,97 @@
         }
       }
     },
+    "/games/getSubPositionsGroupedByPosition": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get sub positions grouped by position",
+        "description": "Returns all the possible subPosition that are in Players table (for example: Left Winger) grouped by general position (for example: Striker)",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns a hash map where each key is related to a certain position, and the value is a list of all sub position related to position.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "type": "string",
+                    "example": "Striker",
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "Left Winger"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/games/get": {
       "get": {
         "tags": ["Games"],
@@ -3797,12 +3946,11 @@
         }
       }
     },
-
     "/appearances/getPlayerStatistics/{playerId}": {
       "get": {
         "tags": ["Appearances"],
         "summary": "Get player statistics",
-        "description": "Returns statistics of a player including yellow cards, red cards, goals, and total assists.",
+        "description": "Returns statistics of a player including yellow cards, red cards, goals, total assists, total minutes played, appearances...",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -3826,11 +3974,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns statistics of the specified player.",
+            "description": "Successful - Return an object that contain statistics of the specified player.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Appearance"
+                  "type": "object",
+                  "properties": {
+                    "player_id": {
+                      "type": "integer"
+                    },
+                    "player_name": {
+                      "type": "string"
+                    },
+                    "total_goals": {
+                      "type": "integer"
+                    },
+                    "total_assists": {
+                      "type": "integer"
+                    },
+                    "total_yellow_cards": {
+                      "type": "integer"
+                    },
+                    "total_red_cards": {
+                      "type": "integer"
+                    },
+                    "appearances": {
+                      "type": "integer"
+                    },
+                    "total_minutes_played": {
+                      "type": "integer"
+                    }
+                  }
                 }
               }
             }
@@ -3892,7 +4066,7 @@
       "get": {
         "tags": ["Appearances"],
         "summary": "Get top scorer",
-        "description": "Returns the top scorer of a competition based on competition ID.",
+        "description": "Return the all-time ranking of the players who scored the most goals in the competition. The classification is limited to 10 result",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -3916,11 +4090,22 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns the top scorer of the specified competition.",
+            "description": "Successful - Return a list of object with player name, player id and total goals.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Appearance"
+                  "type": "array",
+                  "properties": {
+                    "_id": {
+                      "type": "integer"
+                    },
+                    "player_name": {
+                      "type": "string"
+                    },
+                    "total_goals": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -3982,7 +4167,7 @@
       "get": {
         "tags": ["Appearances"],
         "summary": "Get player  games",
-        "description": "Returns all games of a player .",
+        "description": "Returns all games of a player sorted by the most recent, with detailed statistics of what player has done in the match (goals, assists...)",
         "servers": [
           {
             "url": "http://localhost:3000",

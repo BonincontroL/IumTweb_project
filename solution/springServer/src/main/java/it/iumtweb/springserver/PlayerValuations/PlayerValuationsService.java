@@ -13,20 +13,6 @@ public class PlayerValuationsService {
     }
 
     /**
-     * Retrieves all player valuations.
-     * @return A list of all player valuations.
-     */
-    public List<PlayerValuations> getAllPlayerValuations() {
-        return playerValuationsRepository.findAll();
-    }
-
-
-  /*  public List<Object[]> getAverageMarketValuePerSeason(Long playerId) {
-        return playerValuationsRepository.findAverageMarketValuePerYear(playerId);
-    }*/
-
-
-    /**
      * Retrieves the average market value per year for a player.
      * @param playerId The ID of the player.
      * @return A list of arrays containing the average market value per year.

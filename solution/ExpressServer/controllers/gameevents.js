@@ -4,62 +4,6 @@ const GameLineups = require("../models/gamelineups")
 const Appearences= require("../models/appearances")
 
 /**
- * return the top scorers in a competition in a season
- * @param comp_id
- * @param season
- * @returns {Aggregate<Array<any>>}
- */
-function getTopScorer(comp_id, season){
-    return Model.aggregate([
-        {
-            $lookup:{
-                from:Games.collection.name,
-                let:{game_id:"$game_id"},
-                pipeline:[
-                    {$match: {$expr:{$and:[
-                                    {$eq:['$game_id','$$game_id']},
-                                    {$eq:['$competition_id',comp_id]},
-                                    {$eq:['$season',season]}
-                ]}}}],
-                as:"gameDetails"
-            }
-        },
-        {
-            $match:{'gameDetails.0':{$exists:true},type:'Goals'}
-        },
-        {
-            $lookup:{
-                from:GameLineups.collection.name,
-                let:{player_id:'$player_id',game_id:'$game_id'},
-                pipeline:[
-                    {$match:{$expr:{$and:[{$eq:['$player_id','$$player_id']},{$eq:['$game_id','$$game_id']}]}}},
-                    {$project:{player_name:1}}
-                ],
-                as:'playerDetails'
-            }
-        },
-        {
-            $unwind:"$playerDetails"
-        },
-        {
-            $group:{
-                _id:"$player_id",
-                goalsScored:{$sum:1},
-                player_name:{$first:"$playerDetails.player_name"}
-            }
-        },
-        {
-            $sort:{
-                goalsScored:-1
-            }
-        },
-        {
-            $limit:5 //per ora prendo solo i primi 10
-        }
-    ])
-}
-
-/**
  * return all the game events in a single match,sorted by minutes.
  * @param gameId
  */
@@ -112,6 +56,5 @@ function getMatchEvents(gameId){
         ])
 }
 module.exports={
-    getTopScorer,
     getMatchEvents
 }

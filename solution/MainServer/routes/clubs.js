@@ -6,8 +6,8 @@ const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 
 const {handleAxiosError} = require('./utils/utils');
 
-router.get('/searchByCompetitionAndSeason', function (req, res) {
-    axios.get(SPRING_SERVER + "/clubs/searchByCompetitionAndSeason", {
+router.get('/getByCompetitionAndSeason', function (req, res) {
+    axios.get(SPRING_SERVER + "/clubs/getByCompetitionAndSeason", {
         params: {
             competition_id: req.query.competition_id,
             season: req.query.season

@@ -19,21 +19,6 @@ public class PlayerValuationsController {
         this.playerValuationsService = playerValuationsService;
     }
 
-    /**
-     * Get all player valuations
-     * @return List of all player valuations
-     */
-    @GetMapping("/getAllPlayerValutations")
-    public ResponseEntity<List<PlayerValuations>> getAllPlayerValuations() {
-        List<PlayerValuations> allPlayerValuations = playerValuationsService.getAllPlayerValuations();
-        if (allPlayerValuations.isEmpty()) {
-            System.out.println("No PlayerValutations found");
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok().body(allPlayerValuations);
-        }
-    }
-
     @GetMapping("/getMarketValuePerYear/{playerId}")
     public ResponseEntity<?> getAverageMarketValuePerYear(@PathVariable Long playerId) {
         try {
@@ -45,7 +30,6 @@ public class PlayerValuationsController {
                 return ResponseEntity.ok().body(averageMarketValues);
             }
         } catch (Exception e) {
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
         }
     }

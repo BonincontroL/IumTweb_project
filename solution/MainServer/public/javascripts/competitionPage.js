@@ -595,6 +595,7 @@ export function getTable(compId,season,tableType, groupName){
  */
 export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
+    tableRow.className='squad-tr'
     tableRow.setAttribute('data-clubid',tableRowData._id)
     tableRow.setAttribute('data-name',tableRowData.club_name)
     tableRow.appendChild(renderTableTD(++index))
@@ -737,7 +738,7 @@ function renderGroup(group){
  * Retrieves clubs for the competition and renders them.
  */
 function getClubs(){
-    let url="http://localhost:3000/clubs/searchByCompetitionAndSeason"
+    let url="http://localhost:3000/clubs/getByCompetitionAndSeason"
     axios.get(url, {
         params:{
             competition_id: competitionId,

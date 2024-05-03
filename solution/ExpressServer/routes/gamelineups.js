@@ -20,9 +20,9 @@ const { isDataEmpty } = require('./utils/utils');//=> Utility function
 /**
  * Route to get the player number by player ID.
  */
-router.get('/getPlayerNumberByIdPlayer/:idPlayer', async (req, res, next) => {
-    const {idPlayer} = req.params;
-    gamelineupsController.getPlayerNumberByIdPlayer(idPlayer)
+router.get('/getPlayerNumberByIdPlayer/:player_id', async (req, res, next) => {
+    const {player_id} = req.params;
+    gamelineupsController.getPlayerNumberByIdPlayer(player_id)
         .then(data => {
             if (!isDataEmpty(data)) {
                 let playerNumber = data.number

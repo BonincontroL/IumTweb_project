@@ -49,7 +49,7 @@ public class PlayersController {
 
     /**
      * endpoint to get all players who are playing in a certain competition
-     * @param competitionId
+     * @param competitionId the unique identifier for the competition
      * @return a list with all players playing in the competition
      */
     @GetMapping("/getPlayersByCompetition/{competitionId}")
@@ -80,11 +80,10 @@ public class PlayersController {
             return ResponseEntity.ok().body(result);
     }
     /**
-     * endpoint to get all players who are playing in a certain competition and in a certain season
-     * ordered by market value
+     * endpoint to get 5 random players who participated in a specific competition during a certain season
      * @param competitionId: the competition which we want to filter
      * @param lastSeason: the season we want to filter
-     * @return a list of most valuable players in a certain competitition and season.
+     * @return a list of 5 random players
      */
     @GetMapping("/get5RandomPlayersByCompIdAndLastSeason/{competitionId}/{lastSeason}")
     public ResponseEntity<List<Players>> get5RandomPlayersByCompIdAndLastSeason(@PathVariable String competitionId, @PathVariable Integer lastSeason) {
@@ -96,6 +95,13 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
+
+    /**
+     * get
+     * @param competitionId
+     * @param lastSeason
+     * @return
+     */
     @GetMapping("/getPlayersByCompetitionAndLastSeasonSortedByValue/{competitionId}/{lastSeason}")
     public ResponseEntity<List<Players>> getPlayersByCompetitionAndLastSeasonSortedByValue(@PathVariable String competitionId,@PathVariable Integer lastSeason ){
         List<Players> players = playersService.getPlayersByCompetitionAndLastSeasonSortedByValue(competitionId,lastSeason);

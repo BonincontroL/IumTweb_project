@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('player-valuation-btn').addEventListener('click', () => {
         if (!isValutationLoaded) {
-            getPlayerValutation();
+            getPlayerValuation();
             isValutationLoaded = true;
         }
     });
@@ -172,17 +172,16 @@ function getPlayerNumber() {
 /**
  * Retrieves player valuation data.
  */
-function getPlayerValutation() {
+function getPlayerValuation() {
     axios.get(`http://localhost:3000/player_valuations/getPlayerValuationPerYear/${playerId}`)
         .then(response => {
-            if (response.status === 200) {
+            if (response.status === 200)
                 renderPlayerValuations(response.data)
-            } else {
+            else
                 renderPlayerValuations([])
-            }
         })
         .catch(error => {
-            console.error(`Error not found statistics for player ${playerId}:`, error);
+            alert(`Error in finding valuations for player with player_id: ${playerId} \n`+error)
         })
 }
 

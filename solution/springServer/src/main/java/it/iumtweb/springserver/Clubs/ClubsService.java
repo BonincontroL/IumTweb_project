@@ -17,16 +17,6 @@ public class ClubsService {
         this.clubsRepository = clubsRepository;
     }
 
-
-    /**
-     * Retrieves all clubs from the database.
-     * @return A list of all clubs.
-     */
-    public List<Clubs> getAllClubs() {
-        return clubsRepository.findAll();
-    }
-
-
     /**
      * Finds clubs by competition and season.
      * @param competitionId The ID of the competition.

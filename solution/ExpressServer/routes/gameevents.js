@@ -16,28 +16,6 @@ router.use(cors());
 const gameeventsController = require("../controllers/gameevents") //=> Controller
 const { isDataEmpty } = require('./utils/utils'); //=> Utility function
 
-
-/**
- * Route to get the top scorer for a given competition and season.
- */
-router.get('/getTopScorer', async (req, res, next) => {
-    const comp_id=req.query.comp_id;
-    const season = +req.query.season;
-    gameeventsController.getTopScorer(comp_id,season)
-        .then(data=>{
-            if(!isDataEmpty(data)){
-                res.status(200).json(data);
-            }else{
-                res.status(404).json({error: 'Nessun top scorer trovato'});
-            }
-        })
-        .catch(err=>{
-            console.error('Errore durante il recupero dei caponannonieri:', err);
-            res.status(500).json({ error: 'Errore durante il recupero dei capocannonieri' });
-        });
-});
-
-
 /**
  * Route to get all events for a given match.
  */
