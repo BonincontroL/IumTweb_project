@@ -16,20 +16,6 @@ router.use(cors());
 const GamesController = require("../controllers/games")//=> Controller
 const { isDataEmpty } = require('./utils/utils');//=> Utility function
 
-
-/**
- * Returns all games
- */
-router.get('/getAllGames', async (req, res, next) => {
-    try {
-        const AllGames = await GamesController.getAllGames();
-        res.status(200).json(AllGames);
-    } catch (error) {
-        console.error('Errore durante il recupero dei Games:', error);
-        res.status(500).json({ error: 'Errore durante il recupero dei Games' });
-    }
-});
-
 /**
  * Route to get last matches by competition ID.
  */

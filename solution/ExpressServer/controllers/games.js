@@ -1,21 +1,5 @@
 const Model = require('../models/games');
 
-/**
- * Get all games
- * @returns {Promise} Promise object represents the list of games
- */
-function getAllGames() {
-    return Model.find({})
-        .then(results => {
-            if (!results || results.length === 0) {
-                throw new Error('Nessun match trovato.');
-            }
-            return results;
-        })
-        .catch(error => {
-            throw new Error('Errore durante il recupero dei giochi: ' + error.message);
-        });
-}
 
 /**
  * Get last 5 games by competition ID
@@ -133,24 +117,24 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
             $group:{
                 _id:"$events.club_id",
                 club_name:{$first:"$club_name"},
-                vittorie:{
+                wins:{
                     $sum:{
                         $cond:[{$gt:["$events.own_goals", "$events.opponent_goals"]},1,0]
                     }
                 },
-                pareggi:{
+                draws:{
                     $sum:{
                         $cond:[{$eq:["$events.own_goals", "$events.opponent_goals"]},1,0]
                     }
                 },
-                sconfitte:{
+                loses:{
                     $sum:{
                         $cond:[{$lt:["$events.own_goals", "$events.opponent_goals"]},1,0]
                     }
                 },
-                gol_fatti:{$sum:"$events.own_goals"},
-                gol_subiti:{$sum:"$events.opponent_goals"},
-                punti:{
+                goals_scored:{$sum:"$events.own_goals"},
+                goals_taken:{$sum:"$events.opponent_goals"},
+                points:{
                     $sum:{
                         $cond:[
                             {$gt:["$events.own_goals","$events.opponent_goals"]},3,
@@ -161,7 +145,7 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
             }
         },
         {
-            $sort:{punti:-1, gol_fatti:-1}
+            $sort:{points:-1, goals_scored:-1}
         }
     ]).then(data=>{
         if(!data || data.length===0)
@@ -578,7 +562,6 @@ function getSeasonsByClubId(club_id) {
 
 module.exports = {
     getLast5Games,
-    getAllGames,
     getRoundNumbers,
     getTableByCompSeasonAndType,
     getMatchesByCompAndSeasonAndRound,

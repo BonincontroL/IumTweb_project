@@ -44,8 +44,6 @@ public class CompetitionsController {
             return ResponseEntity.ok().body(result);
         }
     }
-
-
     /**
      * get a single competition by his id
      * @param competitionId:the competition_id we want to find in DB

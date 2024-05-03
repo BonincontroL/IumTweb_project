@@ -582,7 +582,7 @@ export function getTable(compId,season,tableType, groupName){
             comp_id:compId,
             season:season,
             type:tableType,
-            round:groupName
+            group:groupName
         }
     })
 }
@@ -599,13 +599,13 @@ export function renderTableRow(tableRowData,index){
     tableRow.setAttribute('data-name',tableRowData.club_name)
     tableRow.appendChild(renderTableTD(++index))
     tableRow.appendChild(renderTableTDWithLogo(tableRowData._id, tableRowData.club_name===null? 'N.D':tableRowData.club_name))
-    let totalGames=tableRowData.vittorie+tableRowData.pareggi+tableRowData.sconfitte
+    let totalGames=tableRowData.wins+tableRowData.draws+tableRowData.loses
     tableRow.appendChild(renderTableTD(totalGames))
-    tableRow.appendChild(renderTableTD(tableRowData.vittorie))
-    tableRow.appendChild(renderTableTD(tableRowData.pareggi))
-    tableRow.appendChild(renderTableTD(tableRowData.sconfitte))
-    tableRow.appendChild(renderTableTD(`${tableRowData.gol_fatti}:${tableRowData.gol_subiti}`))
-    tableRow.appendChild(renderTableTD(tableRowData.punti));
+    tableRow.appendChild(renderTableTD(tableRowData.wins))
+    tableRow.appendChild(renderTableTD(tableRowData.draws))
+    tableRow.appendChild(renderTableTD(tableRowData.loses))
+    tableRow.appendChild(renderTableTD(`${tableRowData.goals_scored}:${tableRowData.goals_taken}`))
+    tableRow.appendChild(renderTableTD(tableRowData.points));
     return tableRow
 }
 

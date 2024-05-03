@@ -88,7 +88,7 @@ router.get('/getTableByCompSeasonAndType', function (req, res) {
             comp_id: req.query.comp_id,
             season: req.query.season,
             type: req.query.type,
-            round: req.query.round
+            round: req.query.group
         }
     }).then(data => {
         res.status(data.status).send(data.data);
@@ -158,6 +158,19 @@ router.get('/getSeasonsByClubId', function (req, res) {
 
     }).catch(err => {
 
+        handleAxiosError(err, res)
+    })
+})
+
+router.get('/getHeadToHead', function (req, res) {
+    axios.get(EXPRESS_SERVER + "/games/getHeadToHead", {
+        params: {
+            homeClubId: req.query.homeClubId,
+            awayClubId: req.query.awayClubId
+        }
+    }).then(data => {
+        res.status(data.status).send(data.data);
+    }).catch(err => {
         handleAxiosError(err, res)
     })
 })

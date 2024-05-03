@@ -9,7 +9,7 @@ let homeGoalEvents, awayGoalEvents//=>array usati per renderizzare le colonne de
 const isDefender = ['Centre-Back', 'Right-Back', 'Left-Back'] //=>Array of player positions indicating defender.
 const isMidfield = ['Right Midfield', 'Left Midfield', 'Central Midfield', 'Defensive Midfield', 'Attacking Midfield'] //=> Array of player positions indicating midfielder.
 const isGoalkeeper = 'Goalkeeper' //=>Player position indicating goalkeeper.
-let isHeadToHeadLoaded =false
+let isHeadToHeadLoaded =false, isFormationsLoaded=false
 document.addEventListener('DOMContentLoaded', async () => {
     matchInfo = JSON.parse(sessionStorage.getItem('gameInfo'))
     let matchIds = {
@@ -20,17 +20,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     manageEventDelegation()
     manageMatchButtons()
     await getMatchInformation()
-    getMatchFormation(matchIds)
     getMatchEvents(matchIds)
+    document.getElementById('getMatchFormation').addEventListener('click',()=>{
+        if(!isFormationsLoaded)
+            getMatchFormation(matchIds)
+    })
     document.getElementById('getHeadToHead').addEventListener('click',()=>{
-        if(!isHeadToHeadLoaded){
+        if(!isHeadToHeadLoaded)
             getHeadToHeadInfos()
-        }
     })
     initLogin();
 })
 function getHeadToHeadInfos(){
-    let url="http://localhost:3001/games/getHeadToHead"
+    let url="http://localhost:3000/games/getHeadToHead"
     axios.get(url,{
         params:{
             homeClubId: matchInfo.home_club_id,
@@ -369,20 +371,19 @@ function hideMatchContainersExceptOne(containerToShow) {
  */
 function getMatchFormation(matchIds) {
     let url = "http://localhost:3000/gamelineups/getMatchPlayers";
-    try {
-        axios.get(url, {params: matchIds})
-            .then(res => {
-                if (res.data[0].home_lineup.length === 0 && res.data[0].away_lineup.length === 0)
-                    document.getElementById('formationNotFoundContainer').style.display = 'flex'
-                else {
-                    let homeLineup = res.data[0].home_lineup[0].lineup
-                    let awayLineup = res.data[0].away_lineup[0].lineup
-                    renderMatchFormation(homeLineup, awayLineup)
-                }
-            })
-    } catch (error) {
-        alert(error)
-    }
+    axios.get(url, {params: matchIds})
+        .then(res => {
+            if (res.data[0].home_lineup.length === 0 && res.data[0].away_lineup.length === 0)
+                document.getElementById('formationNotFoundContainer').style.display = 'flex'
+            else {
+                let homeLineup = res.data[0].home_lineup[0].lineup
+                let awayLineup = res.data[0].away_lineup[0].lineup
+                renderMatchFormation(homeLineup, awayLineup)
+            }
+            isFormationsLoaded = true
+        }).catch(err => {
+        alert(err);
+    })
 }
 
 /**

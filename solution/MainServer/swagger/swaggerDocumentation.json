@@ -3056,7 +3056,7 @@
       "get": {
         "tags": ["Games"],
         "summary": "Get clubs divided by groups",
-        "description": "Retrieves clubs divided by groups based on the provided competition ID and season.",
+        "description": "Retrieves clubs divided by groups based on the provided competition ID and season. This method should be used only for a competition that have groups",
         "parameters": [
           {
             "name": "competition_id",
@@ -3450,6 +3450,243 @@
       }
 
     },
+    "/games/getSeasonsByClubId": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get seasons by club id",
+        "description": "Returns information about all the season numbers when the club (specified by club_id) played at least one game .",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "club_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The identifier of the club"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - It returns a list of objects that have a field called season, a number that corresponds to the starting year of the season",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "properties": {
+                    "season": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/games/getTableByCompSeasonAndType": {
+      "get": {
+        "tags": ["Games"],
+        "summary": "Get table by competition,season,type and round",
+        "description": "Returns information about a competition table in a certain season, that is a classification where squads are ordered based on the games played. Could be used to get classification for a Group, if competition is grouped",
+        "servers": [
+          {
+            "url": "http://localhost:3000",
+            "description": "MainServer"
+          },
+          {
+            "url": "http://localhost:3001",
+            "description": "ExpressServer"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "comp_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The unique competition identifier"
+          },
+          {
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The season we want competition for"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The competition typology, could be full, home, away"
+          },
+          {
+            "in": "query",
+            "name": "group",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "If the competition is grouped, it's the group whose table we want"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful - Returns information about the game with the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "properties": {
+                    "club_name": {
+                      "type": "string"
+                    },
+                    "wins":{
+                      "type": "integer"
+                    },
+                    "draws": {
+                      "type": "integer"
+                    },
+                    "loses": {
+                      "type": "integer"
+                    },
+                    "goals_scored": {
+                      "type": "integer"
+                    },
+                    "goals_taken": {
+                      "type": "integer"
+                    },
+                    "points": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
     "/games/getHeadToHead": {
       "get": {
         "tags": ["Games"],
@@ -3487,7 +3724,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful - Returns a list of object formed by three fields: homeWins, Draws, awayWins.",
+            "description": "Successful - Returns a list of object which have three fields: homeWins, Draws, awayWins.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3560,6 +3797,7 @@
         }
       }
     },
+
     "/appearances/getPlayerStatistics/{playerId}": {
       "get": {
         "tags": ["Appearances"],
@@ -3581,7 +3819,7 @@
             "name": "playerId",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             },
             "description": "ID of the player"
           }
