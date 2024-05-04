@@ -3507,7 +3507,6 @@
         }
       }
     },
-
     "/games/get": {
       "get": {
         "tags": ["Games"],
