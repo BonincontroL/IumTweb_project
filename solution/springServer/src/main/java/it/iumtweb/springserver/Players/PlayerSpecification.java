@@ -5,6 +5,10 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for constructing Specifications to filter player entities based on various criteria.
+ */
+
 public class PlayerSpecification {
     public static Specification<Players> hasCurrentClubDomesticCompetitionId(String currentClubDomesticCompetitionId){
         return ((root, query, criteriaBuilder) -> currentClubDomesticCompetitionId==null? null:criteriaBuilder.equal(root.get("currentClubDomesticCompetitionId"),currentClubDomesticCompetitionId));

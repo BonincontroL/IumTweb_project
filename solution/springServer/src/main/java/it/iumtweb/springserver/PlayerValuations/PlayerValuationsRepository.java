@@ -9,9 +9,10 @@ import java.util.List;
 public interface PlayerValuationsRepository extends JpaRepository<PlayerValuations, Long> {
 
     /**
-     * si calcolano tutti gli anni e la media delle valutazione per ogni anno
-     * @param playerId del player di cui si vuole le medie
-     * @return una lista di array di oggetti
+     * Retrieves the average market value per year for a specific player.
+     * @param playerId The ID of the player
+     * @return A list of arrays containing the valuation year and the corresponding average market value,
+     *         ordered by the valuation year.
      */
     @Query(value = "SELECT EXTRACT(YEAR FROM pv.datetime) AS valuationYear, AVG(pv.market_value_in_eur) AS averageMarketValue " +
             "FROM player_valuations pv " +
