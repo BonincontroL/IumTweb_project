@@ -1,5 +1,9 @@
 const Model = require('../models/games');
-
+const tableTypes={
+    FULL:"FULL",
+    HOME:"HOME",
+    AWAY:"AWAY"
+}
 
 /**
  * Get last 5 games by competition ID
@@ -73,11 +77,11 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
     if(round)
         matchConditions.round = round
 
-    if(type==='home')
+    if(type===tableTypes.HOME)
         initialMatchCondition={
             $expr:{$eq:["$home_club_id","$events.club_id"]}
         };
-    else if(type==='away')
+    else if(type===tableTypes.AWAY)
         initialMatchCondition={
             $expr:{$eq:["$away_club_id","$events.club_id"]}
         };

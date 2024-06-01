@@ -7,13 +7,13 @@
  * URL for competition logo images.
  * @type {string}
  */
-let competitionLogoImgUrl = "https://tmssl.akamaized.net/images/logo/header/"
+const COMPETITION_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/logo/header/"
 
 /**
  * URL for club logo images.
  * @type {string}
  */
-let clubLogoImgURL = "https://tmssl.akamaized.net/images/wappen/head/"
+const CLUB_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/wappen/head/"
 
 /**
  * Event listener for DOMContentLoaded event.

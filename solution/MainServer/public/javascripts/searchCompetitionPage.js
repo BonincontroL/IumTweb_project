@@ -128,7 +128,7 @@ function renderCompetitionCard(competition){
     competitionCard.setAttribute('data-competitionName', competition.name)
     competitionCard.setAttribute('data-competitionType', competition.type)
     competitionCard.innerHTML = `
-                    <img class="competition-big-logo" src="${competitionLogoImgUrl}${competition.competitionId.toLowerCase()}.png">
+                    <img class="competition-big-logo" src="${COMPETITION_LOGO_IMAGE_URL}${competition.competitionId.toLowerCase()}.png">
                     <h3>${competition.name}</h3>
             `
     return competitionCard

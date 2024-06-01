@@ -1,15 +1,24 @@
 //javascript dedicato alla gestione di un singolo match
 let matchInfo //=> Object containing information about the match.
 let matchButtons //=> Match buttons.
-let homeManagerName, awayManagerName //=> Home team manager's name - Away team manager's name.
 let playerDefaultImageUrl = "https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //=> Default image URL for players without information.
-const TIME_MINUTES = 45 //=> Number of minutes in a football match.
 let currentHomeGoals = 0, currentAwayGoals = 0 //=> Current number of goals scored by the home team. - Current number of goals scored by the away team.
 let homeGoalEvents, awayGoalEvents//=>array usati per renderizzare le colonne dei goal nel banner superiore
-const isDefender = ['Centre-Back', 'Right-Back', 'Left-Back'] //=>Array of player positions indicating defender.
-const isMidfield = ['Right Midfield', 'Left Midfield', 'Central Midfield', 'Defensive Midfield', 'Attacking Midfield'] //=> Array of player positions indicating midfielder.
-const isGoalkeeper = 'Goalkeeper' //=>Player position indicating goalkeeper.
 let isHeadToHeadLoaded =false, isFormationsLoaded=false
+const TIME_MINUTES = 45 //=> Number of minutes in a football match.
+const CAPITAIN_SYMBOL='(C)'
+const MAIN_POSITIONS={
+    GOALKEEPER:"Goalkeeper",
+    DEFENDER:"Defender",
+    ATTACK:"Attack",
+    MIDFIELD: "Midfield"
+}
+const NO_GOALS_AGGREGATE='0:0'
+const EVENT_TYPES={
+    SUBSTITUTION:"Substitutions",
+    GOALS:"Goals",
+    CARDS:"Cards",
+}
 document.addEventListener('DOMContentLoaded', async () => {
     matchInfo = JSON.parse(sessionStorage.getItem('gameInfo'))
     let matchIds = {
@@ -21,9 +30,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     manageMatchButtons()
     await getMatchInformation()
     getMatchEvents(matchIds)
-    document.getElementById('getMatchFormation').addEventListener('click',()=>{
-        if(!isFormationsLoaded)
-            getMatchFormation(matchIds)
+    document.getElementById('getMatchFormation').addEventListener('click',async () => {
+        if (!isFormationsLoaded)
+            await getMatchFormation(matchIds)
     })
     document.getElementById('getHeadToHead').addEventListener('click',()=>{
         if(!isHeadToHeadLoaded)
@@ -47,8 +56,8 @@ function getHeadToHeadInfos(){
 }
 function renderHeadToHeadInfos(infos){
     const totalMatches =infos.homeWins+infos.awayWins+infos.draws
-    document.getElementById('homeLogo').setAttribute('src',`${clubLogoImgURL}${matchInfo.home_club_id}.png`)
-    document.getElementById('awayLogo').setAttribute('src',`${clubLogoImgURL}${matchInfo.away_club_id}.png`)
+    document.getElementById('homeLogo').setAttribute('src',`${CLUB_LOGO_IMAGE_URL}${matchInfo.home_club_id}.png`)
+    document.getElementById('awayLogo').setAttribute('src',`${CLUB_LOGO_IMAGE_URL}${matchInfo.away_club_id}.png`)
 
     renderGraph('homeWinsCanvas',infos.homeWins,totalMatches,'Vittorie '+infos.homeWins)
     renderGraph('drawCanvas',infos.draws,totalMatches,'Pareggi '+infos.draws)
@@ -109,8 +118,8 @@ function renderBannerInfo() {
     //renderizza le informazioni del banner del match
     document.getElementById('homeClubName').innerText = matchInfo.home_club_name === null ? 'N.D' : matchInfo.home_club_name
     document.getElementById('awayClubName').innerText = matchInfo.away_club_name === null ? 'N.D' : matchInfo.away_club_name
-    document.getElementById('homeClubLogo').setAttribute('src', clubLogoImgURL + matchInfo.home_club_id + ".png")
-    document.getElementById('awayClubLogo').setAttribute('src', clubLogoImgURL + matchInfo.away_club_id + ".png")
+    document.getElementById('homeClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.home_club_id + ".png")
+    document.getElementById('awayClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.away_club_id + ".png")
     document.getElementById('aggregate').innerText = matchInfo.aggregate
     //aggiungi la data
     document.getElementById('match-details-date').innerText = matchInfo.date.split('T')[0]
@@ -127,7 +136,7 @@ function getMatchEvents(matchIds) {
         }
     }).then(res => {
         renderMatchEvents(res.data, +matchIds.home_club_id, +matchIds.away_club_id, matchInfo.aggregate) //il + serve per convertire le stringhe in numeri
-        if (matchInfo.aggregate!== '0:0')
+        if (matchInfo.aggregate!== NO_GOALS_AGGREGATE)
             renderGoalsRow()
         else
             document.getElementById('goalsRowContainer').style.display = 'none'
@@ -235,7 +244,7 @@ function renderEvent(event, homeClubId, awayClubId) {
     minutesContainer.innerText = event.minute + '°'
     let containers = [eventLogo, minutesContainer]
     switch (event.type) {
-        case 'Substitutions': {
+        case EVENT_TYPES.SUBSTITUTION: {
             eventLogo.setAttribute('src', 'images/gameeventsLogos/substitution-icon.svg');
             let playerInContainer = document.createElement('h6')
             playerInContainer.innerHTML = `Entra: <b>${event.substitute}</b>`//bisogna trovare il modo per ottenere il nome del giocatore
@@ -244,7 +253,7 @@ function renderEvent(event, homeClubId, awayClubId) {
             containers.push(playerInContainer, playerOutContainer)
             break
         }
-        case 'Goals':
+        case EVENT_TYPES.GOALS:
             let assistPhrase = 'Assist:'
             if (event.description.search('Penalty') !== -1) {
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/penaltyScored-icon.svg');
@@ -273,7 +282,7 @@ function renderEvent(event, homeClubId, awayClubId) {
                 containers.push(assistmanContainer)
             }
             break;
-        case 'Cards':
+        case EVENT_TYPES.CARDS:
             if ((event.description.search('Red') !== -1) || (event.description.search('Second') !== -1)) //modo per capire se un cartellino è rosso, potrebbe essere migliorato.
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/red-icon.svg')
             else if (event.description.search('Yellow') !== -1) //potrebbe essere migliorato,
@@ -315,7 +324,7 @@ function renderMatchInformation(competition) {
     document.getElementById('match-details-refree').innerText = matchInfo.referee
     document.getElementById('match-details-stadium').innerText = matchInfo.stadium
     document.getElementById('match-details-competition').innerText = competition
-    document.getElementById('match-details-competitionImg').setAttribute('src', `${competitionLogoImgUrl}${matchInfo.competition_id.toLowerCase()}.png`)
+    document.getElementById('match-details-competitionImg').setAttribute('src', `${COMPETITION_LOGO_IMAGE_URL}${matchInfo.competition_id.toLowerCase()}.png`)
 }
 
 function getCompetitionName() {
@@ -369,36 +378,38 @@ function hideMatchContainersExceptOne(containerToShow) {
  * and substitutes (which are player that start the game in the bench)
  * @param matchIds query parameter, is an object formed by game_id, home_club_id and away_club_id
  */
-function getMatchFormation(matchIds) {
-    let url = "http://localhost:3000/gamelineups/getMatchPlayers";
-    axios.get(url, {params: matchIds})
-        .then(res => {
-            if (res.data[0].home_lineup.length === 0 && res.data[0].away_lineup.length === 0)
-                document.getElementById('formationNotFoundContainer').style.display = 'flex'
-            else {
-                let homeLineup = res.data[0].home_lineup[0].lineup
-                let awayLineup = res.data[0].away_lineup[0].lineup
-                renderMatchFormation(homeLineup, awayLineup)
-            }
-            isFormationsLoaded = true
-        }).catch(err => {
+async function getMatchFormation(matchIds) {
+    try {
+        let res = await getMatchPlayers(matchIds)
+        if (res.data[0].home_lineup.length === 0 && res.data[0].away_lineup.length === 0)
+            document.getElementById('formationNotFoundContainer').style.display = 'flex'
+        else {
+            let homeLineup = res.data[0].home_lineup[0].lineup
+            let awayLineup = res.data[0].away_lineup[0].lineup
+            await renderMatchFormation(homeLineup, awayLineup)
+        }
+        isFormationsLoaded = true
+    } catch (err) {
         alert(err);
-    })
+    }
 }
-
+function getMatchPlayers(matchIds){
+    let url = "http://localhost:3000/gamelineups/getMatchPlayers";
+    return axios.get(url, {params: matchIds})
+}
 /**
  * this function render the home lineup and away lineup of a specific game,
  * @param homeLineup an object array of all the home team players that have played the game
  * @param awayLineup an object array of all the away team players that have played the game
  */
-function renderMatchFormation(homeLineup, awayLineup) {
+async function renderMatchFormation(homeLineup, awayLineup) {
     let homeLineupContainer = document.getElementById('homeFormationContainer')
     homeLineupContainer.innerHTML = ''
     let awayLineupContainer = document.getElementById('awayFormationContainer')
     awayLineupContainer.innerHTML = ''
 
-    renderFormation(homeLineupContainer, homeLineup,matchInfo.home_club_manager_name, matchInfo.home_club_formation);
-    renderFormation(awayLineupContainer, awayLineup, matchInfo.away_club_manager_name,matchInfo.away_club_formation)
+    await renderFormation(homeLineupContainer, homeLineup,matchInfo.home_club_manager_name, matchInfo.home_club_formation);
+    await renderFormation(awayLineupContainer, awayLineup, matchInfo.away_club_manager_name,matchInfo.away_club_formation)
 }
 
 /**
@@ -409,22 +420,22 @@ function renderMatchFormation(homeLineup, awayLineup) {
  * @param managerName the name of the manager
  * @param formation the formation type
  */
-function renderFormation(container, lineup, managerName, formation) {
+async function renderFormation(container, lineup, managerName, formation) {
     let startingIds = lineup.starting_lineup.map(player => player.player_id)
     let substituteIds = lineup.substitutes.map(player => player.player_id)
     let goalkeeper = [], defenders = [], midfields = [], strikers = []
-    axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
-        params: {
-            starting: startingIds.join(","),
-            substitutes: substituteIds.join(",")
-        }
-    }).then(res => {
+
+    try {
+        let positionsMap = await getPositionsGrouped()
+        positionsMap=positionsMap.data
+        let urls= await getPlayersImgUrlByIds(startingIds, substituteIds)
+
         lineup.starting_lineup.forEach(player => {
-            const match = res.data.starting_lineup.find(url => url.playerId === player.player_id)
+            const match = urls.data.starting_lineup.find(url => url.playerId === player.player_id)
             player.imageUrl = match ? match.imageUrl : playerDefaultImageUrl
         })
         lineup.substitutes.forEach(player => {
-            const match = res.data.substitutes.find(url => url.playerId === player.player_id)
+            const match = urls.data.substitutes.find(url => url.playerId === player.player_id)
             player.imageUrl = match ? match.imageUrl : playerDefaultImageUrl
         })
         let managerBanner = document.createElement('div')
@@ -440,18 +451,17 @@ function renderFormation(container, lineup, managerName, formation) {
 
         lineup.starting_lineup.forEach(player => {
             let playerCard = renderPlayerCard(player)
-            if (player.position === isGoalkeeper)
-                goalkeeper = playerCard
-            else if (isDefender.includes(player.position))
+            if (player.position === MAIN_POSITIONS.GOALKEEPER)
+                goalkeeper.push(playerCard)
+            else if (positionsMap[MAIN_POSITIONS.DEFENDER].includes(player.position))
                 defenders.push(playerCard)
-            else if (isMidfield.includes(player.position))
+            else if (positionsMap[MAIN_POSITIONS.MIDFIELD].includes(player.position))
                 midfields.push(playerCard)
             else
                 strikers.push(playerCard)
         })
-        if (goalkeeper !== 'undefined')
-            container.appendChild(renderFormationRoleBanner('Portiere'))
-        container.appendChild(goalkeeper)
+
+        appendBannerAndEachPlayer(container,goalkeeper,'Portiere')
         appendBannerAndEachPlayer(container, defenders, 'Difensori')
         appendBannerAndEachPlayer(container, midfields, 'Centrocampisti')
         appendBannerAndEachPlayer(container, strikers, 'Attaccanti')
@@ -463,11 +473,21 @@ function renderFormation(container, lineup, managerName, formation) {
         lineup.substitutes.forEach(player => {
             container.appendChild(renderPlayerCard(player))
         })
-    }).catch(err => {
-        alert(err)
+    }catch(e){
+        alert(e)
+    }
+}
+function getPositionsGrouped(){
+    return axios.get("http://localhost:3000/players/getSubPositionsGroupedByPosition")
+}
+function getPlayersImgUrlByIds(startingIds,substituteIds){
+    return axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
+        params: {
+            starting: startingIds.join(","),
+            substitutes: substituteIds.join(",")
+        }
     })
 }
-
 function appendBannerAndEachPlayer(container, playerList, bannerName) {
     container.appendChild(renderFormationRoleBanner(bannerName))
     playerList.forEach(player => {
@@ -519,7 +539,7 @@ function renderManagerCard(managerName) {
  */
 function renderPlayerCard(player) {
     let cardDiv = document.createElement('div')
-    let teamCaptain = player.team_captain === 1 ? '(C)' : ''
+    let teamCaptain = player.team_captain === 1 ? CAPITAIN_SYMBOL : ''
     cardDiv.className = 'player-card-for-competition'
     cardDiv.setAttribute('data-playerid', player.player_id)
     cardDiv.setAttribute('data-name', player.player_name)

@@ -145,7 +145,7 @@ function renderPlayerInfo(playerInfo, playerNumber, flagUrl) {
     document.getElementById('age_player').innerText = age;
     document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
     document.getElementById('playerRole').innerText = playerInfo.subPosition;
-    document.getElementById('squadLogo_player').setAttribute('src', clubLogoImgURL + playerInfo.currentClubId + ".png")
+    document.getElementById('squadLogo_player').setAttribute('src', CLUB_LOGO_IMAGE_URL + playerInfo.currentClubId + ".png")
     document.getElementById('player_number').innerText = playerNumber === -1 ? "No data available" : playerNumber
     document.getElementById('player_number').innerText = `${playerNumber? playerNumber:'No data available'}`
 }

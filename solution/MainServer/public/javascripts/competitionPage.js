@@ -1,22 +1,30 @@
 let lateralButtons //=> Represents lateral buttons element.
-const competitionPageName = 'competition-page'  //=> Represents the name of the competition page.
 let competitionId, competitionName, competitionType   //=> Represents the ID of the competition. - Represents the name of the competition. - Represents the type of the competition.
 let competitionSeasons=[] //=> Represents an array of competition seasons.
 let currentRound=0  //=>Represents the current round of matches.
-let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_leauge o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
+let matchRounds=[] //array in cui sono contenuti tutte le giornate di una competizione che ha type === domestic_league o tutti i gruppi di una competizione che ha type diverso da domestic_leauge
 let knockoutRounds =[]  //=> Represents an array of knockout rounds.
 let currentMatchesSeason=0, currentKnockoutSeason=0 //=> Represents the current season for matches. - Represents the current season for knockout matches.
 let isTopPlayersLoaded=false  //=>Represents whether the top players have been loaded.
 let typology //=>Represents the typology of the competition.
 
-
-const competitionTypology={ //=> Represents competition typology constants.
+const COMPETITION_PAGE_NAME = 'competition-page'  //=> Represents the name of the competition page.
+const GROUP_KEYWORD ="Group" //represents the value with which we distinguish the games played in groups
+const COMPETITION_TYPOLOGIES={ //=> Represents competition typology constants.
     GROUP_CUP:'GROUP', //a competition that have a group phase and a cup phase
     DOMESTIC_LEAUGE:'DOMESTIC_LEAUGE',
-    CUP:'CUP'
+    CUP:'CUP' //a competition that only have knockout phase
+}
+const TABLE_TYPES={
+    FULL:"FULL",
+    HOME:"HOME",
+    AWAY:"AWAY"
+}
+const PLAYER_CLASSIFIC_TYPOLOGIES={
+    VALUE:'VALUE',
+    GOALS:'GOALS'
 }
 document.addEventListener('DOMContentLoaded',init)
-
 
 /**
  * Initializes the competition page.
@@ -31,7 +39,7 @@ async function init() {
     //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
     let competitionInfoBtn = document.getElementById('competition-info-btn')
     competitionInfoBtn.classList.add('active')
-    hideAllMainContainers(competitionPageName)
+    hideAllMainContainers(COMPETITION_PAGE_NAME)
     document.getElementById('competitionInformation').style.display = "flex"
     try {
         competitionSeasons= await getCompetitionSeasons() //ottieni gli anni in cui la competizione corrente è stata giocata
@@ -41,16 +49,16 @@ async function init() {
 
         let competitionsWithGroup = await getCompetitionsWithGroup()
         if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
-            typology=competitionTypology.GROUP_CUP
+            typology=COMPETITION_TYPOLOGIES.GROUP_CUP
         else if (competitionType === 'domestic_league')
-            typology=competitionTypology.DOMESTIC_LEAUGE
+            typology=COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE
         else
-            typology=competitionTypology.CUP
+            typology=COMPETITION_TYPOLOGIES.CUP
         preRenderDropdowns()
         adaptPageToTypology()
         adaptButtonListenersToTypology()
         lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
-        manageLateralButtons(lateralButtons, competitionPageName)
+        manageLateralButtons(lateralButtons, COMPETITION_PAGE_NAME)
         manageEventDelegation()
         initLogin();
     } catch (e) {
@@ -61,12 +69,12 @@ async function init() {
  * Pre-renders dropdown menus based on competition typology.
  */
 function preRenderDropdowns(){
-    if(typology===competitionTypology.GROUP_CUP) {
+    if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
         renderSeasonDropdownMenu('knockoutSeasonSelector')
         renderSeasonDropdownMenu('groupTablesSelector')
         manageSeasonDropdownMenuChange('groupTablesSelector')
         renderSeasonDropdownMenu('matchesSeasonSelector')
-    }else if(typology===competitionTypology.CUP)
+    }else if(typology===COMPETITION_TYPOLOGIES.CUP)
         renderSeasonDropdownMenu('knockoutSeasonSelector')
     else{
         renderSeasonDropdownMenu('groupTablesSelector')
@@ -80,16 +88,16 @@ function preRenderDropdowns(){
  */
 function adaptPageToTypology(){
     switch (typology){
-        case competitionTypology.CUP://se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
+        case COMPETITION_TYPOLOGIES.CUP://se siamo in una coppa senza gironi, rimuoviamo i bottoni e i container delle schermate di partite e classifica
             document.getElementById('competition-matches-btn').remove()
             document.getElementById('competitionMatches').remove()
             document.getElementById('competition-table-btn').remove()
             document.getElementById('competitionTable').remove()
             break
-        case competitionTypology.GROUP_CUP:
+        case COMPETITION_TYPOLOGIES.GROUP_CUP:
             document.getElementById('competition-squad-btn').querySelector('h6').innerText = 'Gruppi' //se la mia lega ha i gruppi, modifichiamo la scritta del bottone laterale.
             break
-        case competitionTypology.DOMESTIC_LEAUGE: //in una domestic_leauge non ho la fase finale (knockout)
+        case COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE: //in una domestic_league non ho la fase finale (knockout)
             document.getElementById('competition-knockout-btn').remove()
             document.getElementById('competitionKnockout').remove()
             break
@@ -105,9 +113,9 @@ function adaptPageToTypology(){
 async function manageMatchesSeasonChange(selectedSeason){
     currentRound=0 //si riparte dal primo round ogni cambiamento di season
     let rounds = await fetchAllRoundNumbers(selectedSeason)
-    if(typology===competitionTypology.GROUP_CUP) {
-        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
-        knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+    if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
+        matchRounds = rounds.data.filter(round => round.startsWith(GROUP_KEYWORD))
+        knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
     }else
         matchRounds=rounds.data
 
@@ -120,25 +128,24 @@ async function manageMatchesSeasonChange(selectedSeason){
  * Fetches and renders table data based on competition typology.
  */
 async function getTableWrapper(){
-    if (typology===competitionTypology.GROUP_CUP)
-        await getGroupTables()
-    else {
-        getTable(competitionId, competitionSeasons[0], "full")//di default vogliamo la classifica completa
-            .then(res => {
-                let tableContainer = document.getElementById('competitionTable')
-                tableContainer.innerHTML = ''
-                tableContainer.appendChild(renderGroupTable(competitionName, res.data))
-                createSeasonDropdown()
-                renderSeasonDropdownMenu('tableSeasonSelector')
-                addSeasonDropdownTableListener()
-                //parte dedicata alla gestione dei bottoni della classifica
-                let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
-                manageTableBtns(tableBtns)
-                manageTableVariants(tableBtns)
-            })
-            .catch(err => {
-                alert(err)
-            })
+    try {
+        if (typology === COMPETITION_TYPOLOGIES.GROUP_CUP)
+            await getGroupTables()
+        else {
+            let res = await getTable(competitionId, competitionSeasons[0], TABLE_TYPES.FULL)//di default vogliamo la classifica completa
+            let tableContainer = document.getElementById('competitionTable')
+            tableContainer.innerHTML = ''
+            tableContainer.appendChild(renderGroupTable(competitionName, res.data))
+            createSeasonDropdown()
+            renderSeasonDropdownMenu('tableSeasonSelector')
+            addSeasonDropdownTableListener()
+            //parte dedicata alla gestione dei bottoni della classifica
+            let tableBtns = document.querySelectorAll('.date-days-picker-wrapper > .date-days-button')
+            manageTableBtns(tableBtns)
+            manageTableVariants(tableBtns)
+        }
+    }catch (e){
+        alert(e)
     }
 }
 
@@ -146,15 +153,18 @@ async function getTableWrapper(){
  * Adapts button listeners based on competition typology.
  */
 function adaptButtonListenersToTypology(){
-    if(typology===competitionTypology.CUP || typology===competitionTypology.GROUP_CUP) {
+    if(typology===COMPETITION_TYPOLOGIES.CUP || typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
         document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
         document.getElementById('knockoutSeasonSelector').addEventListener('change', async function () {
             let rounds = await fetchAllRoundNumbers(this.value)
-            knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
+            knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
             currentKnockoutSeason = this.value
-            await getAllMatchesInKnockoutRounds(this.value)
+            if(knockoutRounds.length===0)
+                document.getElementById('noKnockoutError').style.display='flex'
+            else
+                await getAllMatchesInKnockoutRounds(this.value)
         })
-    }if(typology===competitionTypology.GROUP_CUP || typology === competitionTypology.DOMESTIC_LEAUGE){
+    }if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP || typology === COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE){
         document.getElementById('competition-matches-btn').addEventListener('click', getGroupMatches)
         document.getElementById('matchesSeasonSelector').addEventListener('change', async function () {
             await manageMatchesSeasonChange(this.value)
@@ -194,23 +204,28 @@ async function getGroupTables(){
 
     if(matchRounds.length===0){//se non abbiamo ancora caricato matchRounds...
         let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
-        matchRounds=rounds.data.filter(round=>round.startsWith('Group'))
-        knockoutRounds=rounds.data.filter(round=>!round.startsWith('Group'))
+        matchRounds=rounds.data.filter(round=>round.startsWith(GROUP_KEYWORD))
+        knockoutRounds=rounds.data.filter(round=>!round.startsWith(GROUP_KEYWORD))
     }
-
     for (const group of matchRounds) {
-        let table =await getTable(competitionId,competitionSeasons[0], 'full', group)
+        let table =await getTable(competitionId,competitionSeasons[0], TABLE_TYPES.FULL, group)
         groupTables[group] = table.data
     }
     renderGroupTables(groupTables)
 }
+
+/**
+ * Function that "wrap" the selector with "selectorId" event listener,
+ * which allows to reload the table when you choose a different season
+ * @param selectorId the unique id of season selector.
+ */
 function manageSeasonDropdownMenuChange(selectorId){
     document.getElementById(selectorId).addEventListener('change',async function () {
         let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
         let groupTables={}
-        matchRounds = rounds.data.filter(round => round.startsWith('Group'))
+        matchRounds = rounds.data.filter(round => round.startsWith(GROUP_KEYWORD))
         for (const group of matchRounds) {
-            let table =await getTable(competitionId,this.value, 'full', group)
+            let table =await getTable(competitionId,this.value, TABLE_TYPES.FULL, group)
             groupTables[group] = table.data
         }
         renderGroupTables(groupTables)
@@ -242,8 +257,8 @@ function renderGroupTables(groupTables){
 function manageTableVariants(buttons){
     buttons.forEach(button=>{
         button.addEventListener('click',()=>{
-            let group= (typology===competitionTypology.GROUP_CUP) ? button.getAttribute('data-group'):null
-            let actualYear= typology===competitionTypology.GROUP_CUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
+            let group= (typology===COMPETITION_TYPOLOGIES.GROUP_CUP) ? button.getAttribute('data-group'):null
+            let actualYear= typology===COMPETITION_TYPOLOGIES.GROUP_CUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
             getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
                 .then(res=>{
                     let groupTable = res.data
@@ -303,7 +318,7 @@ function createSeasonDropdown(){
  */
 function addSeasonDropdownTableListener(){
     document.getElementById('tableSeasonSelector').addEventListener('change',function (){
-        getTable(competitionId,this.value,"full")
+        getTable(competitionId,this.value,TABLE_TYPES.FULL)
             .then(res=>{
                 let groupTable = res.data
                 let table=document.getElementById(competitionName)
@@ -352,13 +367,13 @@ function renderTableStructure(groupName,finalContainer){
     tableContiner.innerHTML=
         `<div class="table-navbar" id="tableNavbar">
             <div class="date-days-picker-wrapper">
-                            <button data-type="full" data-group="${groupName}" data-tbodyid="${groupName}FullTable" class="date-days-button date-days-button-active">
+                            <button data-type= ${TABLE_TYPES.FULL} data-group="${groupName}" data-tbodyid="${groupName}FullTable" class="date-days-button date-days-button-active">
                                 <h6>Tutti</h6>
                             </button>
-                            <button data-type="home" data-group="${groupName}" data-tbodyid="${groupName}HomeTable" class="date-days-button">
+                            <button data-type=${TABLE_TYPES.HOME} data-group="${groupName}" data-tbodyid="${groupName}HomeTable" class="date-days-button">
                                 <h6>Casa</h6>
                             </button>
-                            <button data-type="away" data-group="${groupName}" data-tbodyid="${groupName}AwayTable" class="date-days-button">
+                            <button data-type=${TABLE_TYPES.AWAY} data-group="${groupName}" data-tbodyid="${groupName}AwayTable" class="date-days-button">
                                 <h6>Trasferta</h6>
                             </button>
                         </div>
@@ -406,6 +421,7 @@ function getCompetitionsWithGroup(){
 /**
  * Retrieves and renders top players based on market value and goals.
  */
+
 function getTopPlayers() {
     const loadingSpinner= document.getElementById('loading-spinner');
     loadingSpinner.style.display = "block";
@@ -413,8 +429,8 @@ function getTopPlayers() {
         getTopPlayersByMarketValue(),
         getTopPlayersByGoals(),
     ]).then(res => {
-        renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', 'VALUE')
-        renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer','GOALS')
+        renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', PLAYER_CLASSIFIC_TYPOLOGIES.VALUE)
+        renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer',PLAYER_CLASSIFIC_TYPOLOGIES.GOALS)
     }).catch(err => {
         alert(err)
     }).finally(()=>{
@@ -484,9 +500,10 @@ function getTopPlayersByGoals(){
 
 /**
  * Renders the top players in a container.
- * @param players
- * @param containerId
- * @param type
+ * there are two different rankings for players, specified by the type parameter
+ * @param players array of all players who are part of the ranking
+ * @param containerId unique identifier of the ranking container
+ * @param type the type of ranking, can be VALUE or GOALS
  */
 function renderTopPlayers(players,containerId,type){
     let playersContainer= document.getElementById(containerId)
@@ -506,11 +523,11 @@ function renderTopPlayers(players,containerId,type){
 
 
 /**
- *  Renders the card for the first player.
- * @param player
- * @param index
- * @param type
- * @returns {HTMLDivElement}
+ * Renders the card for the first player in a ranking.
+ * @param player an object that contains all the player's information
+ * @param index the player's ranking position
+ * @param type the type of ranking, can be VALUE or GOALS
+ * @returns {HTMLDivElement} the player card
  */
 function renderFirstPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
@@ -524,19 +541,19 @@ function renderFirstPlayerCard(player,index,type){
         <div class="player-stats-first-img-container">
             <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-first-img">
             <div class="player-stats-goals-container">
-                <h6>${type==='VALUE'?player.marketValueInEur: player.total_goals}</h6>
-                <h6>${type==='VALUE'? 'EUR': 'Goals'}</h6>
+                <h6>${type===PLAYER_CLASSIFIC_TYPOLOGIES.VALUE?player.marketValueInEur: player.total_goals}</h6>
+                <h6>${type===PLAYER_CLASSIFIC_TYPOLOGIES.VALUE? 'EUR': 'Goals'}</h6>
             </div> 
         </div>`
     return playerCard
 }
 
 /**
- * Renders the card for a normal player.
- * @param player
- * @param index
- * @param type
- * @returns {HTMLDivElement}
+ * Renders the card for all players except the first in the ranking
+ * @param player an object that contains all the player's information
+ * @param index the player's ranking position
+ * @param type the type of ranking, can be VALUE or GOALS
+ * @returns {HTMLDivElement} the player card
  */
 function renderNormalPlayerCard(player,index,type){
     let playerCard= document.createElement('div');
@@ -549,7 +566,7 @@ function renderNormalPlayerCard(player,index,type){
         `<h3>${index+1}°</h3>
          <img src="${player.imageUrl}" alt="${player.name} image" class="player-stats-img">
          <h6 class="player-name-in-card">${player.name}</h6>
-         <h6>${type==='VALUE'?player.marketValueInEur: player.total_goals}</h6>
+         <h6>${type=== PLAYER_CLASSIFIC_TYPOLOGIES.VALUE ?player.marketValueInEur: player.total_goals}</h6>
         `
     return playerCard
 }
@@ -570,10 +587,10 @@ function manageTableBtns(buttons){
 
 /**
  * Retrieves the table data for a given competition, season, type, and optionally a group name.
- * @param compId
- * @param season
- * @param tableType
- * @param groupName
+ * @param compId the identifier of the competition whose table we want
+ * @param season the season we are interested in
+ * @param tableType the type of table, is a value between full, home and away
+ * @param groupName the group whose ranking we want, in case the competition is with groups
  * @returns {*}
  */
 export function getTable(compId,season,tableType, groupName){
@@ -589,13 +606,13 @@ export function getTable(compId,season,tableType, groupName){
 
 /**
  * Renders a table row with the provided data.
- * @param tableRowData
- * @param index
- * @returns {HTMLTableRowElement}
+ * @param tableRowData an object representing all the data to put in the row
+ * @param index the position in the table
+ * @returns {HTMLTableRowElement} the tr element created
  */
 export function renderTableRow(tableRowData,index){
     let tableRow=document.createElement('tr')
-    tableRow.className='squad-tr'
+    tableRow.className=tableRowData.club_name!==null? 'squad-tr':'squad-tr-not-valid' //we want it to be possible to select the club, otherwise not
     tableRow.setAttribute('data-clubid',tableRowData._id)
     tableRow.setAttribute('data-name',tableRowData.club_name)
     tableRow.appendChild(renderTableTD(++index))
@@ -612,8 +629,8 @@ export function renderTableRow(tableRowData,index){
 
 /**
  * Renders a single table cell with the provided inner data.
- * @param tdInnerData
- * @returns {HTMLTableCellElement}
+ * @param tdInnerData a single information to put in the td
+ * @returns {HTMLTableCellElement} the td just created.
  */
 function renderTableTD(tdInnerData){
     let singleTd=document.createElement('td')
@@ -623,8 +640,8 @@ function renderTableTD(tdInnerData){
 
 /**
  * Renders a table cell with a logo and name.
- * @param squadId
- * @param squadName
+ * @param squadId the unique squad identifier
+ * @param squadName the squad name
  * @returns {HTMLTableCellElement}
  */
 function renderTableTDWithLogo(squadId,squadName){
@@ -632,7 +649,7 @@ function renderTableTDWithLogo(squadId,squadName){
     let container=document.createElement('div')
     container.className='career-squad'
     container.innerHTML=
-        `<img src="${clubLogoImgURL}${squadId}.png" alt="${squadName} logo" class="squadLogo">
+        `<img src="${CLUB_LOGO_IMAGE_URL}${squadId}.png" alt="${squadName} logo" class="squadLogo">
          <p>${squadName}</p>          
         `
     singleTd.appendChild(container)
@@ -643,7 +660,7 @@ function renderTableTDWithLogo(squadId,squadName){
  * Retrieves clubs based on competition typology and renders them accordingly.
  */
 function getClubsWrapper(){
-    if(typology===competitionTypology.GROUP_CUP || typology===competitionTypology.CUP)
+    if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP || typology===COMPETITION_TYPOLOGIES.CUP)
         getClubsDividedByGroup()
     else
         getClubs()
@@ -663,11 +680,11 @@ function getClubsDividedByGroup(){
         if(res.data!==0) {
             let clubs=res.data
             let clubCards
-            if(typology===competitionTypology.CUP) {
+            if(typology===COMPETITION_TYPOLOGIES.CUP) {
                 clubs = unifyClubs(clubs)
                 renderAllClubs(clubs)
             }else { //in questo caso devi mantenere solo i gruppi
-                clubs = clubs.filter(group=>group.group.startsWith('Group'))
+                clubs = clubs.filter(group=>group.group.startsWith(GROUP_KEYWORD))
                 renderClubsDividedByGroup(clubs)
             }
         }
@@ -779,7 +796,7 @@ function renderClubCard(club){
     clubCard.setAttribute('data-clubId', club.clubId)
     clubCard.setAttribute('data-name', club.name)
     clubCard.innerHTML=
-        `<img src="${clubLogoImgURL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
+        `<img src="${CLUB_LOGO_IMAGE_URL}${club.clubId}.png" alt ="${club.name} logo" class="competition-big-logo"
           </img>
           <h5>${club.name}</h5>
         `
@@ -788,11 +805,12 @@ function renderClubCard(club){
 /**
  * do the axios query to get all competition infos
  */
-function getCompetitionInformation(){
-    let url="http://localhost:3000/getCompetitionInformation"
-    return axios.get(url,{params:
-            {"competition_id":competitionId}
-        })
+function getCompetitionInformation() {
+    let url = "http://localhost:3000/getCompetitionInformation"
+    return axios.get(url, {
+        params:
+            {"competition_id": competitionId}
+    })
 }
 /**
  * render the competition information in the correct HTML places
@@ -802,7 +820,7 @@ function renderCompetitionInformation(competitionInfo){
     competitionName=competitionInfo.name
     competitionType=competitionInfo.type
     document.getElementById('competitionName').innerText=competitionInfo.name;
-    document.getElementById('competitionImage').setAttribute('src',competitionLogoImgUrl+competitionInfo.competitionId.toLowerCase()+".png")
+    document.getElementById('competitionImage').setAttribute('src',COMPETITION_LOGO_IMAGE_URL+competitionInfo.competitionId.toLowerCase()+".png")
     document.getElementById('competitionNation').innerText=competitionInfo.countryName === null ? "Internazionale":competitionInfo.countryName;
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
@@ -831,8 +849,8 @@ async function getGroupMatches() {
         if(currentMatchesSeason!==selectedSeason) {
             matchRounds = await fetchAllRoundNumbers(selectedSeason)
             matchRounds = matchRounds.data
-            if(typology===competitionTypology.GROUP_CUP)
-                matchRounds=matchRounds.filter(round=>round.startsWith('Group'))
+            if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP)
+                matchRounds=matchRounds.filter(round=>round.startsWith(GROUP_KEYWORD))
             renderMatchesDropdownMenu()
         }
         await getAndRenderGroupMatches(selectedSeason)
@@ -875,8 +893,11 @@ async function getKnockoutMatches(){
     let season= document.getElementById('knockoutSeasonSelector').value
     if(currentKnockoutSeason!==season) {
         let rounds = await fetchAllRoundNumbers(season)
-        knockoutRounds = rounds.data.filter(round => !round.startsWith('Group'))
-        await getAllMatchesInKnockoutRounds(season)
+        knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
+        if(knockoutRounds.length===0) //se non ci sono dati allora la fase ad eliminazione diretta non è ancora cominciata, mostriamo un messaggio di errore
+            document.getElementById('noKnockoutError').style.display='flex'
+        else
+            await getAllMatchesInKnockoutRounds(season)
     }
 }
 
@@ -948,18 +969,17 @@ function renderSingleKnockoutMatch(match){
     matchCard.setAttribute('data-gameId',match.game_id)
     matchCard.setAttribute('data-homeClubId',match.home_club_id)
     matchCard.setAttribute('data-awayClubId',match.away_club_id)
-
     matchCard.innerHTML=
         ` <div class="match-result-vertical">
                             <div class="squad-icon-container">
-                                <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.home_club_id}.png" alt="${match.home_club_name}" />
+                                <img class="squad-icon" src="${CLUB_LOGO_IMAGE_URL}/${match.home_club_id}.png" alt="${match.home_club_name}" />
                                 <p>${match.home_club_name !== undefined ? match.home_club_name : 'N.D.'}</p>
                                 <div class="home-result">
                                     <p>${match.home_club_goals !== undefined ? match.home_club_goals : 'N.D.'}</p>
                                 </div>
                             </div>
                             <div class="squad-icon-container">
-                                <img class="squad-icon" src="https://tmssl.akamaized.net/images/wappen/head/${match.away_club_id}.png" alt="${match.away_club_name}" />
+                                <img class="squad-icon" src="${CLUB_LOGO_IMAGE_URL}/${match.away_club_id}.png" alt="${match.away_club_name}" />
                                 <p> ${match.away_club_name !== undefined ? match.away_club_name : 'N.D.'}</p>
                                 <div class="away-result">
                                     <p>${match.away_club_goals !== undefined ? match.away_club_goals : 'N.D.'}</p>
@@ -1046,7 +1066,7 @@ export function renderMatchesRound(matches){
                                         class="squadLogo"
                                         loading="lazy"
                                         alt="${match.home_club_name === undefined? 'N.D' : match.home_club_name} logo"
-                                        src="${clubLogoImgURL.concat(match.home_club_id)}.png"
+                                        src="${CLUB_LOGO_IMAGE_URL.concat(match.home_club_id)}.png"
                                 />
 
                                 <h6>${match.aggregate}</h6>
@@ -1054,7 +1074,7 @@ export function renderMatchesRound(matches){
                                         class="squadLogo"
                                         loading="lazy"
                                         alt="${match.away_club_name === undefined? 'N.D' : match.away_club_name}"
-                                        src="${clubLogoImgURL.concat(match.away_club_id)}.png"
+                                        src="${CLUB_LOGO_IMAGE_URL.concat(match.away_club_id)}.png"
                                 />
                                 <div class="squad-name-wrapper-away">
                                     <h6>${match.away_club_name === undefined? 'N.D' : match.away_club_name}</h6>

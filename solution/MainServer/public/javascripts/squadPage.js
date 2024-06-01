@@ -198,7 +198,7 @@ function renderMiniTable(completeCompetitionTable){
     const lastIndex=Math.min(completeCompetitionTable.length, index+2)
     let miniCompetitionTable=completeCompetitionTable.slice(startingIndex,lastIndex)
     //setta le informazioni del banner
-    document.getElementById('squadCompetitionImageInTable').setAttribute('src',`${competitionLogoImgUrl}${clubInfo.competitionId.toLowerCase()}.png`)
+    document.getElementById('squadCompetitionImageInTable').setAttribute('src',`${COMPETITION_LOGO_IMAGE_URL}${clubInfo.competitionId.toLowerCase()}.png`)
     document.getElementById('squadCompetitionNameInTable').innerHTML=`<h5>${clubInfo.competitionName}</h5><h5>(${clubInfo.lastSeasonInLeauge})</h5>`
 
     miniCompetitionTable.forEach(tableRowData=>{
@@ -356,11 +356,11 @@ function renderMiniGameCard(game){
             <h6>${game.date}</h6>
          </div>
          <div class="squad-info-row">
-            <img src="${clubLogoImgURL}${game.home_club_id}.png" class="squadLogo" alt ="${game.home_club_name} logo">
+            <img src="${CLUB_LOGO_IMAGE_URL}${game.home_club_id}.png" class="squadLogo" alt ="${game.home_club_name} logo">
             <h6>${homeClubGoals}</h6>
          </div>
          <div class="squad-info-row">
-            <img src="${clubLogoImgURL}${game.away_club_id}.png" class="squadLogo" alt ="${game.away_club_name} logo">
+            <img src="${CLUB_LOGO_IMAGE_URL}${game.away_club_id}.png" class="squadLogo" alt ="${game.away_club_name} logo">
             <h6>${awayClubGoals}</h6>
          </div>
          <div class="${circleClass}">
@@ -429,9 +429,9 @@ function getSeasonsGames(){
 function renderCompetitionInfo() {
     //nome e logo del club nella barra laterale
     document.getElementById('clubName').innerText = clubInfo.name
-    document.getElementById('clubImage').setAttribute('src', `${clubLogoImgURL}${clubInfo.clubId}.png`)
+    document.getElementById('clubImage').setAttribute('src', `${CLUB_LOGO_IMAGE_URL}${clubInfo.clubId}.png`)
     //nome della competizione + logo
-    document.getElementById('squadCompetitionImage').setAttribute('src', `${competitionLogoImgUrl}${clubInfo.competitionId.toLowerCase()}.png`)
+    document.getElementById('squadCompetitionImage').setAttribute('src', `${COMPETITION_LOGO_IMAGE_URL}${clubInfo.competitionId.toLowerCase()}.png`)
     document.getElementById('squadCompetitionName').innerText= clubInfo.competitionName
     //info sullo stadio+numero massimo di spettatori
     document.getElementById('squadStadiumName').innerText=clubInfo.stadiumName

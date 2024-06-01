@@ -241,7 +241,9 @@ header ul li ul li a{
     font-weight: bold;
     border: 2px solid var(--primary-blue-600);
 }
-
+#noKnockoutError{
+    display: none;
+}
 .login-form-container{
     height: 85vh;
     display: flex;
@@ -875,8 +877,9 @@ header ul li ul li a{
     box-sizing: border-box;
     width: 100%;
     gap: var(--gap-xl);
-    overflow-y:auto;
+    overflow-x:auto;
 }
+
 #GeneralPlayers{
     display: flex;
     flex-direction: column;
