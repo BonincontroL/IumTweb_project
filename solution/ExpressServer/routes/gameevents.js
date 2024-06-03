@@ -21,6 +21,8 @@ const { isDataEmpty } = require('./utils/utils'); //=> Utility function
  */
 router.get('/getMatchEvents', async (req, res) => {
     const gameId=+req.query.game_id;
+    if(!gameId)
+        return res.status(400).json({error: 'Errore, manca ID della partita (game_id)'})
     gameeventsController.getMatchEvents(gameId)
         .then(data=>{
             if(!isDataEmpty(data)){

@@ -22,6 +22,8 @@ const { isDataEmpty } = require('./utils/utils'); //=> Utility function
  */
 router.get('/getTopScorer', async (req,res)=>{
     const competitionId=req.query.comp_id;
+    if(!competitionId)
+        return res.status(400).json({error:'Errore, manca ID della competizione (comp_id)'})
     appearancesController.getTopScorer(competitionId)
         .then(data=>{
             if(!isDataEmpty(data)){
@@ -40,19 +42,21 @@ router.get('/getTopScorer', async (req,res)=>{
 /**
  * Route to get the statistics for a given player.
  */
-router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
-       const idPlayer = req.params.playerId;
-       appearancesController.getPlayerStatistics(idPlayer)
-        .then(data=>{
-           if(!isDataEmpty(data)){
-               res.status(200).json(data);
-           }else{
-               res.status(204).json({error: 'Nessuna statistica trovata'});
-           }
+router.get('/getPlayerStatistics/:playerId', async (req, res) => {
+    const idPlayer = req.params.playerId;
+    if (!idPlayer)
+        return res.status(400).json({error: 'Errore, manca ID del giocatore (playerID)'})
+    appearancesController.getPlayerStatistics(idPlayer)
+        .then(data => {
+            if (!isDataEmpty(data)) {
+                res.status(200).json(data);
+            } else {
+                res.status(204).json({error: 'Nessuna statistica trovata'});
+            }
         })
-        .catch(err=>{
+        .catch(err => {
             console.error('Errore durante il recupero delle statistiche del giocatore', err);
-            res.status(500).json({ error: 'Errore durante il recupero delle statistiche del giocatore' });
+            res.status(500).json({error: 'Errore durante il recupero delle statistiche del giocatore'});
         });
 })
 
@@ -62,6 +66,8 @@ router.get('/getPlayerStatistics/:playerId', async (req, res)=>{
  */
 router.get("/getPlayerGames/:playerId", async (req, res) => {
     const playerId = req.params.playerId;
+    if(!playerId)
+        return res.status(400).json({error: 'Errore, manca ID del giocatore (playerID)'})
     appearancesController.getPlayerGames(playerId)
         .then(data => {
             if (!isDataEmpty(data)) {

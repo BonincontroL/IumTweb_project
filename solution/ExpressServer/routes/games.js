@@ -14,7 +14,6 @@ const cors = require('cors');
 router.use(cors());
 
 const GamesController = require("../controllers/games")//=> Controller
-const { isDataEmpty } = require('./utils/utils');//=> Utility function
 
 /**
  * Route to get last matches by competition ID.
@@ -22,6 +21,8 @@ const { isDataEmpty } = require('./utils/utils');//=> Utility function
 router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next) => {
     try{
         const {competition_id} = req.params;
+        if(!competition_id)
+            return res.status(400).json({error:'Errore, manca ID della competizione (comp_id)'})
         const lastMatches = await GamesController.getLast5Games(competition_id);
         res.status(200).json(lastMatches);
     } catch (error) {
@@ -34,17 +35,20 @@ router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next
  * serve per prendere i numeri delle giornate di un campionato in una certa stagione.
  */
 router.get('/getRoundNumbers',async (req,res)=>{
-    try{
-        const comp_id = req.query.comp_id;
-        const season = +req.query.season;
-        const lastRounds = await GamesController.getRoundNumbers(comp_id,season)
-        let groupRounds=lastRounds[0].groupRounds.map(item=>item.round);
-        let otherRounds=lastRounds[0].otherRounds.map(item=>item.round)
-        res.status(200).json({groupRounds:groupRounds,otherRounds:otherRounds})
-    }catch (error){
-        console.error('Errore durante il recupero delle giornate della competizione '+req.query.comp_id+' durante la stagione '+req.query.season)
-        res.status(500).json({error:error})
-    }
+    const comp_id = req.query.comp_id;
+    const season = +req.query.season;
+    if(!comp_id || !season)
+        return res.status(400).json({error:'Errore, manca ID della competizione (comp_id) o stagione (season)'})
+    GamesController.getRoundNumbers(comp_id, season)
+        .then(lastRounds => {
+            let groupRounds = lastRounds[0].groupRounds.map(item => item.round);
+            let otherRounds = lastRounds[0].otherRounds.map(item => item.round)
+            res.status(200).json({groupRounds: groupRounds, otherRounds: otherRounds})
+        })
+        .catch(err => {
+            console.error('Errore durante il recupero delle giornate della competizione ' + req.query.comp_id + ' durante la stagione ' + req.query.season)
+            res.status(500).json({error: err})
+        })
 })
 
 router.get('/getTableByCompSeasonAndType', (req,res)=>{
@@ -52,6 +56,8 @@ router.get('/getTableByCompSeasonAndType', (req,res)=>{
     const season = +req.query.season
     const type = req.query.type
     const round = req.query.round
+    if(!comp_id || !season || !type) //round could be optional
+        return res.status(400).json({error:'Errore, manca ID della competizione (comp_id) o stagione (season) o tipologia classifica (type)'})
     GamesController.getTableByCompSeasonAndType(comp_id, season, type, round)
         .then(finalTable => {
             res.status(200).json(finalTable)
@@ -65,6 +71,8 @@ router.get('/getMatchesByCompAndSeasonAndRound',  (req, res) => {
     const comp_id = req.query.comp_id
     const season = +req.query.season;
     const round = req.query.currentRound;
+    if(!comp_id || !season) // round could be optional
+        return res.status(400).json({error:'Errore, manca ID della competizione (comp_id) o stagione (season)'})
     GamesController.getMatchesByCompAndSeasonAndRound(comp_id, season, round)
         .then(data => {
             res.status(200).json(data)
@@ -77,10 +85,11 @@ router.get('/getMatchesByCompAndSeasonAndRound',  (req, res) => {
 
 router.get('/get', (req,res)=>{
     const game_id = +req.query.game_id
+    if(!game_id)
+        return res.status(400).json({error:'Errore, manca ID della partita (game_id)'})
     GamesController.get(game_id)
         .then(result => {
             res.status(200).json(result)
-
         })
         .catch(err => {
             res.status(500).json({error: err})
@@ -89,6 +98,8 @@ router.get('/get', (req,res)=>{
 })
 router.get('/getLastManager', (req, res) => {
     const club_id = +req.query.club_id;
+    if(!club_id)
+        return res.status(400).json({error:'Errore, manca ID del club (club_id)'})
     GamesController.getLastManager(club_id)
         .then(managerName => {
             res.status(200).json(managerName)
@@ -104,18 +115,23 @@ router.get('/getLastManager', (req, res) => {
 router.get('/getCompetitionsByClubAndSeason',  (req, res) => {
     const club_id = +req.query.club_id
     const season = +req.query.season
+    if(!club_id || !season)
+        return res.status(400).json({error:'Errore, manca ID del club (club_id) o stagione (season)'})
     GamesController.getCompetitionsByClubAndSeason(club_id, season)
         .then(data => {
             data=data.map(result=>result._id)
             res.status(200).json(data);
-        }).catch(err => {
-        console.error('Errore durante il recupero delle competizioni giocate da un club in una season ', err);
-        res.status(500).json({error: 'Errore durante il recupero delle competizioni giocate da un club in una season '})
-    })
+        })
+        .catch(err => {
+            console.error('Errore durante il recupero delle competizioni giocate da un club in una season ', err);
+            res.status(500).json({error: 'Errore durante il recupero delle competizioni giocate da un club in una season '})
+        })
 })
 router.get('/getClubsDividedByGroups',(req,res)=>{
     const competition_id = req.query.competition_id
     const season= +req.query.season
+    if(!competition_id || !season)
+        return res.status(400).json({error:'Errore, manca ID della competizione(competition_id) o stagione (season)'})
     GamesController.getClubsDividedByGroups(competition_id,season)
         .then(data=>{
             res.status(200).json(data)
@@ -137,6 +153,8 @@ router.get('/getCompetitionIdsWithGroup', (req,res)=>{
         })
 })
 router.get('/getCompetitionSeasonsSorted', (req,res)=>{
+    if(!req.query.competition_id)
+        return res.status(400).json({error:'Errore, manca ID della competizione (competition_id'})
     GamesController.getCompetitionSeasonsSorted(req.query.competition_id)
         .then(data=>{
             res.status(200).json(data.map(item=>item.season))
@@ -157,7 +175,7 @@ router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
     const limit = req.query.limit
 
     if (!club_id || !season)  //limit could be optional
-        return res.status(400).json({ error: 'Manca l\'ID del club o la stagione' });
+        return res.status(400).json({ error: 'Manca l\'ID del club(club_id) o la stagione (season)' });
     try {
         const data = await GamesController.getLastGamesByClubIdandSeason(club_id, season,limit);
         res.status(200).json(data);
@@ -173,6 +191,8 @@ router.get('/getLastGamesByClubIdandSeason', async (req, res, next) => {
  */
 router.get('/getSeasonsByClubId',  (req, res, next) => {
     const club_id =+req.query.club_id;
+    if(!club_id)
+        return res.status(400).json({ error: 'Manca l\'ID del club (club_id)' });
     GamesController.getSeasonsByClubId(club_id)
         .then(data => {
             res.status(200).json(data);
@@ -189,6 +209,8 @@ router.get('/getSeasonsByClubId',  (req, res, next) => {
 router.get('/getHeadToHead',  (req, res) => {
     const homeClubId=+req.query.homeClubId;
     const awayClubId=+req.query.awayClubId;
+    if(!homeClubId || !awayClubId)
+        return res.status(400).json({ error: 'Manca l\'ID del club in casa (homeClubId) o l\'ID del club in trasferta (awayClubId)' });
     GamesController.getHeadToHead(homeClubId,awayClubId)
         .then(data => {
             res.status(200).json(data);

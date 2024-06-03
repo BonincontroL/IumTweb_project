@@ -22,6 +22,8 @@ const { isDataEmpty } = require('./utils/utils');//=> Utility function
  */
 router.get('/getPlayerNumberByIdPlayer/:player_id', async (req, res, next) => {
     const {player_id} = req.params;
+    if(!player_id)
+        return res.status(400).json({error:'Errore, manca ID del giocatore (player_id)'})
     gamelineupsController.getPlayerNumberByIdPlayer(player_id)
         .then(data => {
             if (!isDataEmpty(data)) {
@@ -45,6 +47,8 @@ router.get('/getMatchPlayers', async (req, res) => {
     const game_id = +req.query.game_id
     const home_club_id = +req.query.home_club_id
     const away_club_id = +req.query.away_club_id
+    if(!game_id || !home_club_id || !away_club_id)
+        return res.status(400).json({error:'Errore, manca l\'ID della partita (game_id) oppure l\'ID della squadra in casa (home_club_id) oppure l\ID della squadra in trasferta (away_club_id)'})
     gamelineupsController.getMatchPlayers(game_id, home_club_id, away_club_id)
         .then(data => {
             if (!isDataEmpty(data)) {
