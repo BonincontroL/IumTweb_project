@@ -1,14 +1,13 @@
-let lateralSquadButtons, squadInfoBtn //=> Global variables for lateral squad buttons and squad information button.
+let squadInfoBtn //=> Global variables for squad information button.
 let isListenerLoaded=false //=>Flag to check if event listeners are loaded.
-let isSeasonsLoaded=false; //=>Flag to check if seasons are loaded.
 const squadPageName= 'squad-page' //=>Constant for the squad page name.
 let clubInfo //=>Object to store club information.
-let lastSeason= 2023; //=>Variable to store the last season.
 const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
+let isTableLoaded=false, isPlayersLoaded //=>Flag to check if the table is loaded - Flag to check if players are loaded.
 
 import {getTable,renderTableRow,renderMatchesRound} from './competitionPage.js'
+
 document.addEventListener('DOMContentLoaded',init) //=>Function to initialize the squad page.
-let isTableLoaded=false, isPlayersLoaded //=>Flag to check if the table is loaded - Flag to check if players are loaded.
 
 /**
  * Initializes the squad page.
@@ -38,10 +37,9 @@ async function init(){
     }catch(err){
         alert(err)
     }
-
     squadInfoBtn= document.getElementById('squad-info-btn')
-    lateralSquadButtons=document.querySelectorAll('#squadLateralNavbar .lateral-menu-button')
-    manageLateralButtons(lateralSquadButtons,squadPageName)
+    let lateralButtonsContainer=document.querySelector('#squadLateralNavbar')
+    manageLateralButtons(lateralButtonsContainer,squadPageName)
     manageEventDelegation()
     //inizialmente solo il bottone Informazioni deve essere selezionato
     squadInfoBtn.classList.add('active')
@@ -280,7 +278,7 @@ function renderPlayerCard(player){
                    </div>
                    <div class="player-card-generic-info">
                         <p><b>Valore Mercato</b></p>
-                        <p>${player.marketValueInEur} Eur</p>
+                        <p>${player.marketValueInEur !==null? player.marketValueInEur +' Eur':'N.D'}</p>
                    </div>
             </div>
            <img src="${player.imageUrl}" alt="${player.name} image" class="imgplayer-name-child">

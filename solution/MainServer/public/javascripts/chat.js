@@ -8,6 +8,7 @@ let currentRoom ="";
  */
 function onChat(){
     myName = sessionStorage.getItem('username');
+    initLogin();
     getAllCompetitions();
     setupSendMessage();
     setupSocketListeners();

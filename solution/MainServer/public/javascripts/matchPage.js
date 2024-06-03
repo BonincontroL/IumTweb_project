@@ -116,8 +116,8 @@ function createChartLabel(labelText){
  */
 function renderBannerInfo() {
     //renderizza le informazioni del banner del match
-    document.getElementById('homeClubName').innerText = matchInfo.home_club_name === null ? 'N.D' : matchInfo.home_club_name
-    document.getElementById('awayClubName').innerText = matchInfo.away_club_name === null ? 'N.D' : matchInfo.away_club_name
+    document.getElementById('homeClubName').innerText = !matchInfo.home_club_name  ? 'N.D' : matchInfo.home_club_name
+    document.getElementById('awayClubName').innerText = !matchInfo.away_club_name  ? 'N.D' : matchInfo.away_club_name
     document.getElementById('homeClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.home_club_id + ".png")
     document.getElementById('awayClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.away_club_id + ".png")
     document.getElementById('aggregate').innerText = matchInfo.aggregate
@@ -320,10 +320,13 @@ async function getMatchInformation() {
     }
 }
 
-function renderMatchInformation(competition) {
+function renderMatchInformation(competitionName) {
     document.getElementById('match-details-refree').innerText = matchInfo.referee
     document.getElementById('match-details-stadium').innerText = matchInfo.stadium
-    document.getElementById('match-details-competition').innerText = competition
+    document.getElementById('match-details-competition').innerText=competitionName
+    let competitionCard =document.getElementById('competitionCard')
+    competitionCard.setAttribute('data-competitionId', matchInfo.competition_id)
+    competitionCard.setAttribute('data-competitionName', competitionName)
     document.getElementById('match-details-competitionImg').setAttribute('src', `${COMPETITION_LOGO_IMAGE_URL}${matchInfo.competition_id.toLowerCase()}.png`)
 }
 

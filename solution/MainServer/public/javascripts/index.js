@@ -29,32 +29,33 @@ document.addEventListener('DOMContentLoaded',()=>{
 })
 
 /**
- * Manages lateral buttons behavior.
- * @param {NodeList} lateralButtons - List of lateral buttons.
+ * Manages lateral buttons behavior and the switch between different page sections.
+ * @param lateralButtonsContainer the HTML element that contains all the lateral buttons
  * @param {string} pageName - Name of the page.
  */
-function manageLateralButtons(lateralButtons,pageName){
-    lateralButtons.forEach(btn=>{
-        btn.addEventListener('click',function (){
-            lateralButtons.forEach(button=>{
-                button.classList.remove('active')
-                let btnLogo=button.querySelector('img')
-                let btnLogoNewSrc =btnLogo.src.replace("Active","")
-                btnLogo.setAttribute('src',btnLogoNewSrc)
-            })
-            //parte dedicata alla gestione delle icone dei bottoni laterali
-            this.classList.add('active')
-            let btnLogo = this.querySelector('img')
-            let btnLogoSrc= btnLogo.getAttribute('src').split('.')[0]
-            btnLogoSrc+='Active.svg'
-            btnLogo.setAttribute('src',btnLogoSrc)
-            //parte dedicata alla gestione dei container
-            hideAllMainContainers(pageName)
-            let containerToShow = btn.getAttribute('data-showContainer');
-            document.getElementById(containerToShow).style.display="flex"
-
+function manageLateralButtons(lateralButtonsContainer,pageName){
+        lateralButtonsContainer.addEventListener('click',function (event){
+            const btn= event.target.closest('.lateral-menu-button')
+            if(btn){
+                const lateralButtons = lateralButtonsContainer.querySelectorAll('.lateral-menu-button')
+                lateralButtons.forEach(button=>{
+                    button.classList.remove('active')
+                    let btnLogo=button.querySelector('img')
+                    let btnLogoNewSrc =btnLogo.src.replace("Active","")
+                    btnLogo.setAttribute('src',btnLogoNewSrc)
+                })
+                //parte dedicata alla gestione delle icone dei bottoni laterali
+                btn.classList.add('active')
+                let btnLogo = btn.querySelector('img')
+                let btnLogoSrc= btnLogo.getAttribute('src').split('.')[0]
+                btnLogoSrc+='Active.svg'
+                btnLogo.setAttribute('src',btnLogoSrc)
+                //parte dedicata alla gestione dei container
+                hideAllMainContainers(pageName)
+                let containerToShow = btn.getAttribute('data-showContainer');
+                document.getElementById(containerToShow).style.display="flex"
+            }
         })
-    })
 }
 
 /**
@@ -87,6 +88,7 @@ function hideAllMainContainers(pageName){
  */
 function manageEventDelegation(){
     document.addEventListener('click',function (event){
+        //section dedicated to manage card clicks
         const targetClub = event.target.closest('.squad-tr') || event.target.closest('.squad-card-mini')
         if(targetClub){
             let clubInfo={
@@ -105,7 +107,7 @@ function manageEventDelegation(){
             sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
             window.location.href='../match_page.html'
         }
-        const targetCompetition = event.target.closest('.competition-card-mini')||event.target.closest('.competition-card')
+        const targetCompetition = event.target.closest('.competition-card-mini')||event.target.closest('.competition-card')||event.target.closest('.match-info-clickable')
         if(targetCompetition){
             let competition_id = targetCompetition.getAttribute('data-competitionId')
             let competition_name = targetCompetition.getAttribute('data-competitionName')

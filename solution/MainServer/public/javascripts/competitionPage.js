@@ -1,4 +1,3 @@
-let lateralButtons //=> Represents lateral buttons element.
 let competitionId, competitionName, competitionType   //=> Represents the ID of the competition. - Represents the name of the competition. - Represents the type of the competition.
 let competitionSeasons=[] //=> Represents an array of competition seasons.
 let currentRound=0  //=>Represents the current round of matches.
@@ -15,6 +14,7 @@ const COMPETITION_TYPOLOGIES={ //=> Represents competition typology constants.
     DOMESTIC_LEAUGE:'DOMESTIC_LEAUGE',
     CUP:'CUP' //a competition that only have knockout phase
 }
+const DOMESTIC_LEAUGE ='domestic_league'
 const TABLE_TYPES={
     FULL:"FULL",
     HOME:"HOME",
@@ -35,7 +35,6 @@ async function init() {
     const urlParam = new URLSearchParams(queryString)
     competitionId = urlParam.get('competition_id')
     competitionName = urlParam.get('competition_name')
-    competitionType = urlParam.get('competition_type')
     //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
     let competitionInfoBtn = document.getElementById('competition-info-btn')
     competitionInfoBtn.classList.add('active')
@@ -45,19 +44,19 @@ async function init() {
         competitionSeasons= await getCompetitionSeasons() //ottieni gli anni in cui la competizione corrente è stata giocata
         competitionSeasons=competitionSeasons.data
         let competitionInformation = await getCompetitionInformation()  //ottieni informazioni di base sulla competizione
+        competitionType=competitionInformation.data.type;
         renderCompetitionInformation(competitionInformation.data)
-
         let competitionsWithGroup = await getCompetitionsWithGroup()
         if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
             typology=COMPETITION_TYPOLOGIES.GROUP_CUP
-        else if (competitionType === 'domestic_league')
+        else if (competitionType === DOMESTIC_LEAUGE)
             typology=COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE
         else
             typology=COMPETITION_TYPOLOGIES.CUP
         preRenderDropdowns()
         adaptPageToTypology()
         adaptButtonListenersToTypology()
-        lateralButtons = document.querySelectorAll('#competitionLateralNavbar .lateral-menu-button')
+        let lateralButtons = document.querySelector('#competitionLateralNavbar')
         manageLateralButtons(lateralButtons, COMPETITION_PAGE_NAME)
         manageEventDelegation()
         initLogin();
@@ -804,7 +803,7 @@ function renderClubCard(club){
  * do the axios query to get all competition infos
  */
 function getCompetitionInformation() {
-    let url = "http://localhost:3000/getCompetitionInformation"
+    let url = "http://localhost:3000/competitions/getCompetitionInformation"
     return axios.get(url, {
         params:
             {"competition_id": competitionId}

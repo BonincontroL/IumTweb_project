@@ -1,4 +1,4 @@
-let lateralPlayerButtons, playerInfoBtn  //=>Buttons for lateral navigation and player information button.
+let playerInfoBtn  //=>Player information button.
 const playerPageName = 'player-page' //=>Name of the player page.
 let playerId; //=>Player ID.
 let isStatsLoaded = false; //=>Flag to indicate if player statistics are loaded.
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderPlayerImg(playerInfo)
 
     playerInfoBtn = document.getElementById('player-info-btn')
-    lateralPlayerButtons = document.querySelectorAll('#playerLateralNavbar .lateral-menu-button')
-    manageLateralButtons(lateralPlayerButtons, playerPageName)
+    let lateralPlayerButtonContainer = document.querySelector('#playerLateralNavbar')
+    manageLateralButtons(lateralPlayerButtonContainer, playerPageName)
     manageEventDelegation()
     //inizialmente solo il bottone Informazioni è premuto
     playerInfoBtn.classList.add('active')
