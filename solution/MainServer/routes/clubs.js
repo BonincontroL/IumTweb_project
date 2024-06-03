@@ -11,6 +11,9 @@ const {handleAxiosError} = require('./utils/utils');
  * @param season
  */
 router.get('/getByCompetitionAndSeason', function (req, res) {
+    if (!req.query.competition_id || !req.query.season) {
+        return res.status(400).json({error: 400, message: 'Competition ID and season are required'});
+    }
     axios.get(SPRING_SERVER + "/clubs/getByCompetitionAndSeason", {
         params: {
             competition_id: req.query.competition_id,
@@ -29,6 +32,9 @@ router.get('/getByCompetitionAndSeason', function (req, res) {
  * @returns map the last season for the specified club
  */
 router.get('/getLastSeason', function (req, res) {
+    if (!req.query.club_id) {
+        return res.status(400).json({error: 400, message: 'Club ID is required'});
+    }
     axios.get(SPRING_SERVER + "/clubs/getLastSeason", {
         params: {
             club_id: +req.query.club_id,
@@ -63,6 +69,9 @@ router.get('/getAllClubsByInitial', function (req, res) {
  * @returns  Map of clubs grouped by their initial character in a list.
  */
 router.get('/getClubsGroupedByInitialAndLikeName', function (req, res) {
+    if (!req.query.name) {
+        return res.status(400).json({error: 400, message: 'Name is required'});
+    }
     // Utilizzo del parametro "name" direttamente dall'URL
     axios.get(SPRING_SERVER+`/clubs/getClubsGroupedByInitialAndLikeName`, {
         params: {
@@ -81,6 +90,10 @@ router.get('/getClubsGroupedByInitialAndLikeName', function (req, res) {
  * @returns club with the specified id
  */
 router.get('/get', function (req, res) {
+    if (!req.query.club_id) {
+        return res.status(400).json({error: 400, message: 'Club ID is required'});
+    }
+
     // Utilizzo del parametro "name" direttamente dall'URL
     axios.get(SPRING_SERVER+`/clubs/get`,{
         params:{

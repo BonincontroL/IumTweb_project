@@ -12,6 +12,9 @@ const { handleAxiosError } = require('./utils/utils');
  * @return {object } player valuation an array of objects with the following structure: [[year: string, market_value media: number]]
  */
 router.get('/getPlayerValuationPerYear/:idPlayer', function (req,res){
+    if (!req.params.idPlayer) {
+        return res.status(400).json({ error: 400, message: 'Player ID is required' });
+    }
     axios.get(SPRING_SERVER+"/player_valuations/getMarketValuePerYear/"+req.params.idPlayer)
         .then(data=>{
             res.status(data.status).send(data.data);

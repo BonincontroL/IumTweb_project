@@ -11,6 +11,9 @@ const {handleAxiosError} = require('./utils/utils');
  * @returns list of players that play in a certain competition
  */
 router.get('/getPlayersByCompetition/:competition_id', function (req,res){
+    if (!req.params.competition_id) {
+        return res.status(400).json({ error: 400, message: 'Competition ID is required' });
+    }
     axios.get(SPRING_SERVER+`/players/getPlayersByCompetition/${req.params.competition_id}`)
         .then(data=>{
             res.status(data.status).send(data.data);
@@ -26,6 +29,9 @@ router.get('/getPlayersByCompetition/:competition_id', function (req,res){
  * @return list of 5 random players that play in a certain competition in a certain season
  */
 router.get('/get5RandomPlayersByCompIdAndLastSeason/:competition_id/:last_season', function (req,res){
+    if (!req.params.competition_id || !req.params.last_season) {
+        return res.status(400).json({ error: 400, message: 'Competition ID and Last Season are required' });
+    }
     axios.get(`${SPRING_SERVER}/players/get5RandomPlayersByCompIdAndLastSeason/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
             res.status(data.status).send(data.data);
@@ -40,6 +46,9 @@ router.get('/get5RandomPlayersByCompIdAndLastSeason/:competition_id/:last_season
  * @return  list sorted by value players in a certain competition and year
  */
 router.get('/getPlayersByCompetitionAndLastSeasonSortedByValue/:competition_id/:last_season', function (req,res){
+    if (!req.params.competition_id || !req.params.last_season) {
+        return res.status(400).json({ error: 400, message: 'Competition ID and Last Season are required' });
+    }
     axios.get(`${SPRING_SERVER}/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${req.params.competition_id}/${req.params.last_season}`)
         .then(data=>{
             res.status(data.status).send(data.data);
@@ -53,6 +62,9 @@ router.get('/getPlayersByCompetitionAndLastSeasonSortedByValue/:competition_id/:
  * @return map with  url of the player img
  */
 router.get("/getPlayersImgUrlById", function (req,res){
+    if (!req.query.starting || !req.query.substitutes) {
+        return res.status(400).json({ error: 400, message: 'Starting and Substitutes are required' });
+    }
     axios.get(SPRING_SERVER+"/players/getPlayersImgUrlById",{
         params:{
             starting:req.query.starting,
@@ -71,6 +83,9 @@ router.get("/getPlayersImgUrlById", function (req,res){
  * @return list of players that play in a certain club in a certain season
  */
 router.get("/searchByClubIdAndSeason", function (req,res){
+    if (!req.query.club_id || !req.query.season) {
+        return res.status(400).json({ error: 400, message: 'Club ID and Season are required' });
+    }
     axios.get(SPRING_SERVER+"/players/searchByClubIdAndSeason",{
         params:{
             club_id:req.query.club_id,
@@ -115,6 +130,9 @@ router.get("/getTop150PlayersByMarketValue", function (req,res){
  * @return  list of players that have the name or the string in their name
  */
 router.get("/findPlayersByLetterInName", function (req,res){
+    if (!req.query.letter) {
+        return res.status(400).json({ error: 400, message: 'Letter is required' });
+    }
     axios.get(SPRING_SERVER+"/players/findPlayersByLetterInName",{
         params:{
             letter:req.query.letter
@@ -132,6 +150,9 @@ router.get("/findPlayersByLetterInName", function (req,res){
  * @return player by id
  */
 router.get("/getPlayerById/:playerId", function (req,res){
+    if (!req.params.playerId) {
+        return res.status(400).json({ error: 400, message: 'Player ID is required' });
+    }
     axios.get(SPRING_SERVER+`/players/getPlayerById/${req.params.playerId}`)
         .then(data=>{
             res.status(data.status).send(data.data);
@@ -185,6 +206,9 @@ router.get("/getSubPositionsGroupedByPosition", function (req,res){
  * @return list of players that play in a certain competition and have Nationality and Role
  */
 router.get("/getByCompIdNationalityAndRole", function (req,res){
+    if (!req.query.competitionId || !req.query.nation || !req.query.specificRole) {
+        return res.status(400).json({ error: 400, message: 'Competition ID, Nation, and Specific Role are required' });
+    }
     axios.get(SPRING_SERVER+`/players/getByCompIdNationalityAndRole`,{
         params:{
             competitionId:req.query.competitionId,

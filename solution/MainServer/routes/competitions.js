@@ -38,6 +38,9 @@ router.get('/getCompetitionsGroupedByCountry', function (req, res) {
  * @returns  name of the competition
  */
 router.get('/getName', function (req, res) {
+    if (!req.query.competition_id) {
+        return res.status(400).json({ error: 400, message: 'Competition ID is required' });
+    }
     axios.get(SPRING_SERVER + "/competitions/getName",
         {
             params: {

@@ -11,6 +11,9 @@ const {handleAxiosError} = require('./utils/utils');
  * @return {object } player number an object with the following structure: {number: number}
  */
 router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
+    if (!req.params.idPlayer) {
+        return res.status(400).json({ error: 400, message: 'Player ID is required' });
+    }
     axios.get(EXPRESS_SERVER+"/gamelineups/getPlayerNumberByIdPlayer/"+req.params.idPlayer)
         .then(data=>{
             res.status(data.status).send(data.data);
@@ -26,6 +29,9 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
  * @returns a list of players participating in a specific match
  */
 router.get('/getMatchPlayers', function (req,res){
+    if (!req.query.game_id || !req.query.home_club_id || !req.query.away_club_id) {
+        return res.status(400).json({ error: 400, message: 'Game ID, Home Club ID, and Away Club ID are required' });
+    }
     axios.get(EXPRESS_SERVER+"/gamelineups/getMatchPlayers/", {params: {
             game_id: req.query.game_id,
             home_club_id: req.query.home_club_id,

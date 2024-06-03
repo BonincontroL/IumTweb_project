@@ -16,7 +16,10 @@ router.get('/', function(req, res, next) {
  * @returns competition information
  */
 router.get('/getCompetitionInformation', function (req,res){
-  axios.get(SPRING_SERVER+"/competitions/get",{params:{
+    if (!req.query.competition_id) {
+        return res.status(400).json({ error: 400, message: 'Competition ID is required' });
+    }
+    axios.get(SPRING_SERVER+"/competitions/get",{params:{
         competition_id:req.query.competition_id
         }
     })

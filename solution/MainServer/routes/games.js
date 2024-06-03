@@ -12,6 +12,9 @@ const {handleAxiosError} = require('./utils/utils');
  * @return object represents the list of games
  */
 router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
+    if (!req.params.competitionId) {
+        return res.status(400).json({ error: 400, message: 'Competition ID is required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getLastMatchesByCompetition/" + req.params.competitionId)
         .then(data => {
             res.status(data.status).send(data.data);
@@ -28,6 +31,9 @@ router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
  */
 
 router.get('/getRoundNumbers', function (req, res) {
+    if (!req.query.comp_id || !req.query.season) {
+        return res.status(400).json({ error: 400, message: 'Competition ID and season are required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getRoundNumbers", {
         params: {
             comp_id: req.query.comp_id,
@@ -48,6 +54,9 @@ router.get('/getRoundNumbers', function (req, res) {
  * @return object represents  all the games in a certain round of a competition in a certain season
  */
 router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
+    if (!req.query.comp_id || !req.query.season ) {
+        return res.status(400).json({ error: 400, message: 'Competition ID, season are required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getMatchesByCompAndSeasonAndRound", {
         params: {
             comp_id: req.query.comp_id,
@@ -66,6 +75,9 @@ router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
  * @return object represents  all the games of a club
  */
 router.get('/get', function (req, res) {
+    if (!req.query.game_id) {
+        return res.status(400).json({ error: 400, message: 'Game ID is required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/get", {
         params: {
             game_id: req.query.game_id
@@ -83,6 +95,9 @@ router.get('/get', function (req, res) {
  * @return object represents  the last manager of a club
  */
 router.get('/getLastManager', function (req, res) {
+    if (!req.query.club_id) {
+        return res.status(400).json({ error: 400, message: 'Club ID is required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getLastManager", {
         params: {
             club_id: req.query.club_id
@@ -103,6 +118,9 @@ router.get('/getLastManager', function (req, res) {
  * @return object whit information  about a competition table in a certain season that is a classification where squads are ordered based on the games played.
  */
 router.get('/getTableByCompSeasonAndType', function (req, res) {
+    if (!req.query.comp_id || !req.query.season || !req.query.type || !req.query.group) {
+        return res.status(400).json({ error: 400, message: 'Competition ID, season, type, and group are required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getTableByCompSeasonAndType", {
         params: {
             comp_id: req.query.comp_id,
@@ -137,6 +155,9 @@ router.get('/getCompetitionIdsWithGroup', function (req, res) {
  * @return object with clubs divided by groups based on the provided competition ID and season.
  */
 router.get('/getClubsDividedByGroups', function (req, res) {
+    if (!req.query.competition_id || !req.query.season) {
+        return res.status(400).json({ error: 400, message: 'Competition ID and season are required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getClubsDividedByGroups", {
         params: {
             competition_id: req.query.competition_id,
@@ -154,6 +175,9 @@ router.get('/getClubsDividedByGroups', function (req, res) {
  * @return object with competition seasons sorted in descending order based on the provided competition ID
  */
 router.get('/getCompetitionSeasonsSorted', function (req, res) {
+    if (!req.query.competition_id) {
+        return res.status(400).json({ error: 400, message: 'Competition ID is required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getCompetitionSeasonsSorted", {
         params: {
             competition_id: req.query.competition_id,
@@ -173,6 +197,9 @@ router.get('/getCompetitionSeasonsSorted', function (req, res) {
  * @return object with the last games of a club in a certain season
  */
 router.get('/getLastGamesByClubIdandSeason', function (req, res) {
+    if (!req.query.club_id || !req.query.season) {
+        return res.status(400).json({ error: 400, message: 'Club ID, season' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getLastGamesByClubIdandSeason", {
         params: {
             club_id: req.query.club_id,
@@ -191,6 +218,9 @@ router.get('/getLastGamesByClubIdandSeason', function (req, res) {
  * @returns object with all the season numbers when the club played at least one game
  */
 router.get('/getSeasonsByClubId', function (req, res) {
+    if (!req.query.club_id) {
+        return res.status(400).json({ error: 400, message: 'Club ID is required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getSeasonsByClubId", {
         params: {
             club_id: req.query.club_id
@@ -211,6 +241,9 @@ router.get('/getSeasonsByClubId', function (req, res) {
  * @returns object with the number of win of the home club, the number of draws and the number of win of the away club
  */
 router.get('/getHeadToHead', function (req, res) {
+    if (!req.query.homeClubId || !req.query.awayClubId) {
+        return res.status(400).json({ error: 400, message: 'Home Club ID and Away Club ID are required' });
+    }
     axios.get(EXPRESS_SERVER + "/games/getHeadToHead", {
         params: {
             homeClubId: req.query.homeClubId,
