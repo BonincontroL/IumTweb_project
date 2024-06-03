@@ -7,6 +7,8 @@ const {handleAxiosError} = require('./utils/utils');
 
 /**
  * Get player number by player id
+ * @param {string} idPlayer
+ * @return {object } player number an object with the following structure: {number: number}
  */
 router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
     axios.get(EXPRESS_SERVER+"/gamelineups/getPlayerNumberByIdPlayer/"+req.params.idPlayer)
@@ -16,7 +18,13 @@ router.get('/getPlayerNumberByIdPlayer/:idPlayer', function (req,res){
         handleAxiosError(err, res)
     })
 })
-
+/**
+ * Retrieve players participating in a match
+ * @param game_id the id of the game
+ * @param home_club_id the id of the home club
+ * @param away_club_id the id of the away club
+ * @returns a list of players participating in a specific match
+ */
 router.get('/getMatchPlayers', function (req,res){
     axios.get(EXPRESS_SERVER+"/gamelineups/getMatchPlayers/", {params: {
             game_id: req.query.game_id,

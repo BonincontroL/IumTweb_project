@@ -7,7 +7,8 @@ const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 const {handleAxiosError} = require('./utils/utils');
 
 /**
- * Ritorna tutte le competizioni presenti nel database.
+ * Get all competitions
+ * @returns list of all competitions
  */
 router.get('/getAllCompetitions', function (req, res) {
     axios.get(SPRING_SERVER + "/competitions/getAllCompetitions")
@@ -18,7 +19,10 @@ router.get('/getAllCompetitions', function (req, res) {
     });
 })
 
-
+/**
+ * Retrieve all competitions grouped by country
+ * @returns Map of competitions grouped by country in a list.
+ */
 router.get('/getCompetitionsGroupedByCountry', function (req, res) {
     axios.get(SPRING_SERVER + "/competitions/getCompetitionsGroupedByCountry")
         .then(data => {
@@ -28,7 +32,11 @@ router.get('/getCompetitionsGroupedByCountry', function (req, res) {
     })
 })
 
-
+/**
+ * Retrieve competition name by competition ID
+ * @param competition_id the id of the competition
+ * @returns  name of the competition
+ */
 router.get('/getName', function (req, res) {
     axios.get(SPRING_SERVER + "/competitions/getName",
         {

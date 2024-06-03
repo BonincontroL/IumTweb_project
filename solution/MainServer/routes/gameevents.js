@@ -7,7 +7,11 @@ const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 module.exports=router
 
 const {handleAxiosError} = require('./utils/utils');
-
+/**
+ * Retrieve match events by game ID
+ * @param game_id the id of the game
+ * @returns list of match events of a game
+ */
 router.get('/getMatchEvents', function (req,res){
     axios.get(EXPRESS_SERVER+"/gameevents/getMatchEvents",
         {params:{

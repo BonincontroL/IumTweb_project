@@ -6,12 +6,10 @@ const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 
 const {handleAxiosError} = require('./utils/utils');
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
 /**
  * receives data from the client and sends it to the server to complete the registration
+ *
  */
 router.post('/register', function (req, res) {
     axios.post(EXPRESS_SERVER + '/users/register', req.body)

@@ -8,6 +8,8 @@ const { EXPRESS_SERVER, SPRING_SERVER } = require('./utils/constants');
 const {handleAxiosError} = require('./utils/utils');
 /**
  * Get last matches (games) by competition id
+ * @param competitionId the id of the competition
+ * @return object represents the list of games
  */
 router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getLastMatchesByCompetition/" + req.params.competitionId)
@@ -20,6 +22,9 @@ router.get('/getLastMatchesByCompetition/:competitionId', function (req, res) {
 
 /**
  * get round numbers by competition id and season
+ * @param comp_id the id of the competition
+ * @param season the season of the competition
+ * @return object represents  all the possible round in a competition in a certain season
  */
 
 router.get('/getRoundNumbers', function (req, res) {
@@ -37,7 +42,10 @@ router.get('/getRoundNumbers', function (req, res) {
 
 /**
  * get matches(games) by competition id, season and round
-
+ * @param comp_id the id of the competition
+ * @param season the season of the competition
+ * @param currentRound the round of the competition
+ * @return object represents  all the games in a certain round of a competition in a certain season
  */
 router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getMatchesByCompAndSeasonAndRound", {
@@ -54,6 +62,8 @@ router.get('/getMatchesByCompAndSeasonAndRound', function (req, res) {
 })
 /**
  * get all game infos , based on club_id
+ * @param club_id the id of the club
+ * @return object represents  all the games of a club
  */
 router.get('/get', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/get", {
@@ -69,6 +79,8 @@ router.get('/get', function (req, res) {
 
 /**
  * Get last manager by club id
+ * @param club_id the id of the club
+ * @return object represents  the last manager of a club
  */
 router.get('/getLastManager', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getLastManager", {
@@ -82,6 +94,14 @@ router.get('/getLastManager', function (req, res) {
     })
 })
 
+/**
+ * "Get table by competition,season,type and round
+ * @param comp_id the id of the competition
+ * @param season the season of the competition
+ * @param type the type of the competition
+ * @param round the round of the competition
+ * @return object whit information  about a competition table in a certain season that is a classification where squads are ordered based on the games played.
+ */
 router.get('/getTableByCompSeasonAndType', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getTableByCompSeasonAndType", {
         params: {
@@ -110,6 +130,12 @@ router.get('/getCompetitionIdsWithGroup', function (req, res) {
     })
 })
 
+/**
+ * get clubs divided by groups
+ * @param competition_id the id of the competition
+ * @param season the season of the competition
+ * @return object with clubs divided by groups based on the provided competition ID and season.
+ */
 router.get('/getClubsDividedByGroups', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getClubsDividedByGroups", {
         params: {
@@ -122,6 +148,11 @@ router.get('/getClubsDividedByGroups', function (req, res) {
         handleAxiosError(err, res)
     })
 })
+/**
+ * Get competition seasons sorted
+ * @param competition_id the id of the competition
+ * @return object with competition seasons sorted in descending order based on the provided competition ID
+ */
 router.get('/getCompetitionSeasonsSorted', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getCompetitionSeasonsSorted", {
         params: {
@@ -134,6 +165,13 @@ router.get('/getCompetitionSeasonsSorted', function (req, res) {
     })
 })
 
+/**
+ * Get last games by club id and season
+ * @param club_id the id of the club
+ * @param season the season of the competition
+ * @param limit the number of games to be returned
+ * @return object with the last games of a club in a certain season
+ */
 router.get('/getLastGamesByClubIdandSeason', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getLastGamesByClubIdandSeason", {
         params: {
@@ -147,7 +185,11 @@ router.get('/getLastGamesByClubIdandSeason', function (req, res) {
         handleAxiosError(err, res)
     })
 })
-
+/**
+ * information about all the season numbers when the club (specified by club_id) played at least one game
+ * @param club_id the id of the club
+ * @returns object with all the season numbers when the club played at least one game
+ */
 router.get('/getSeasonsByClubId', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getSeasonsByClubId", {
         params: {
@@ -162,6 +204,12 @@ router.get('/getSeasonsByClubId', function (req, res) {
     })
 })
 
+/**
+ * Get head to head statistics
+ * @param homeClubId the id of the home club
+ * @param awayClubId the id of the away club
+ * @returns object with the number of win of the home club, the number of draws and the number of win of the away club
+ */
 router.get('/getHeadToHead', function (req, res) {
     axios.get(EXPRESS_SERVER + "/games/getHeadToHead", {
         params: {
