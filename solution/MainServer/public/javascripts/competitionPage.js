@@ -114,10 +114,10 @@ async function manageMatchesSeasonChange(selectedSeason){
     currentRound=0 //si riparte dal primo round ogni cambiamento di season
     let rounds = await fetchAllRoundNumbers(selectedSeason)
     if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
-        matchRounds = rounds.data.filter(round => round.startsWith(GROUP_KEYWORD))
-        knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
+        matchRounds = rounds.data.groupRounds
+        knockoutRounds = rounds.data.otherRounds
     }else
-        matchRounds=rounds.data
+        matchRounds=rounds.data.otherRounds
 
     renderMatchesDropdownMenu()
     getAndRenderMatchesInRound(matchRounds[currentRound],selectedSeason)
@@ -157,10 +157,10 @@ function adaptButtonListenersToTypology(){
         document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
         document.getElementById('knockoutSeasonSelector').addEventListener('change', async function () {
             let rounds = await fetchAllRoundNumbers(this.value)
-            knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
+            knockoutRounds = rounds.data.otherRounds
             currentKnockoutSeason = this.value
-            if(knockoutRounds.length===0)
-                document.getElementById('noKnockoutError').style.display='flex'
+            if (knockoutRounds.length === 0)
+                document.getElementById('noKnockoutError').style.display = 'flex'
             else
                 await getAllMatchesInKnockoutRounds(this.value)
         })
@@ -201,11 +201,9 @@ function adaptButtonListenersToTypology(){
  */
 async function getGroupTables(){
     let groupTables={}
-
     if(matchRounds.length===0){//se non abbiamo ancora caricato matchRounds...
         let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
-        matchRounds=rounds.data.filter(round=>round.startsWith(GROUP_KEYWORD))
-        knockoutRounds=rounds.data.filter(round=>!round.startsWith(GROUP_KEYWORD))
+        matchRounds=rounds.data.groupRounds
     }
     for (const group of matchRounds) {
         let table =await getTable(competitionId,competitionSeasons[0], TABLE_TYPES.FULL, group)
@@ -221,9 +219,9 @@ async function getGroupTables(){
  */
 function manageSeasonDropdownMenuChange(selectorId){
     document.getElementById(selectorId).addEventListener('change',async function () {
-        let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
+        let rounds = await fetchAllRoundNumbers(this.value)
         let groupTables={}
-        matchRounds = rounds.data.filter(round => round.startsWith(GROUP_KEYWORD))
+        matchRounds = rounds.data.groupRounds
         for (const group of matchRounds) {
             let table =await getTable(competitionId,this.value, TABLE_TYPES.FULL, group)
             groupTables[group] = table.data
@@ -848,9 +846,10 @@ async function getGroupMatches() {
         let selectedSeason =document.getElementById('matchesSeasonSelector').value
         if(currentMatchesSeason!==selectedSeason) {
             matchRounds = await fetchAllRoundNumbers(selectedSeason)
-            matchRounds = matchRounds.data
             if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP)
-                matchRounds=matchRounds.filter(round=>round.startsWith(GROUP_KEYWORD))
+                matchRounds=matchRounds.data.groupRounds
+            else
+                matchRounds=matchRounds.data.otherRounds
             renderMatchesDropdownMenu()
         }
         await getAndRenderGroupMatches(selectedSeason)
@@ -893,7 +892,7 @@ async function getKnockoutMatches(){
     let season= document.getElementById('knockoutSeasonSelector').value
     if(currentKnockoutSeason!==season) {
         let rounds = await fetchAllRoundNumbers(season)
-        knockoutRounds = rounds.data.filter(round => !round.startsWith(GROUP_KEYWORD))
+        knockoutRounds = rounds.data.otherRounds
         if(knockoutRounds.length===0) //se non ci sono dati allora la fase ad eliminazione diretta non è ancora cominciata, mostriamo un messaggio di errore
             document.getElementById('noKnockoutError').style.display='flex'
         else

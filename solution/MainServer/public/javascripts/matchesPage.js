@@ -145,25 +145,27 @@ function createDayButtons() {
 function fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek) {
     const year = document.getElementById('year-select').value;
     const season = parseInt(document.getElementById('season-select').value);
-    const matchesEndpoint = `http://localhost:3001/games/getMatchesByCompetitionAndSeason/${competitionId}/${season}`;
-    axios.get(matchesEndpoint)
-        .then(response => {
-            const matches = response.data;
-            if (!matches || matches.length === 0) {
-                console.error(`Error fetching matches: No matches found for season ${season} and competition ${competitionId}.`);
-                const errorMessage = `Nessun match trovato per questa stagione e/o competizione.`;
-                alert(errorMessage);
-            }
-            const matchesByRoundAndDate = filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId);
-            createCompetitionDiv(competitionId, matchesByRoundAndDate);
-        })
-        .catch(error => {
-            const errorMessage = `Error fetching matches: No matches found for season ${season} and competition ${competitionId} ==> ` + error.message;
+    const matchesEndpoint = `http://localhost:3000/games/getMatchesByCompAndSeasonAndRound`;
+    axios.get(matchesEndpoint, {
+        params: {
+            comp_id: competitionId,
+            season: season
+        }
+    }).then(response => {
+        const matches = response.data;
+        if (!matches || matches.length === 0) {
+            console.error(`Error fetching matches: No matches found for season ${season} and competition ${competitionId}.`);
+            const errorMessage = `Nessun match trovato per questa stagione e/o competizione.`;
             alert(errorMessage);
-            console.error(`Error fetching matches: No matches found for season ${season} and competition ${competitionId} ==> ` + error.message);
-        });
+        }
+        const matchesByRoundAndDate = filterAndGroupMatches(matches, dayOfWeek, year, season, competitionId);
+        createCompetitionDiv(competitionId, matchesByRoundAndDate);
+    }).catch(error => {
+        const errorMessage = `Error fetching matches: No matches found for season ${season} and competition ${competitionId} ==> ` + error.message;
+        alert(errorMessage);
+        console.error(`Error fetching matches: No matches found for season ${season} and competition ${competitionId} ==> ` + error.message);
+    });
 }
-
 
 /**
  * Filters and groups matches by round and date (year), season, and competition.

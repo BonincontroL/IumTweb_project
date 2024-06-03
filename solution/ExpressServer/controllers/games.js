@@ -37,7 +37,7 @@ function getRoundNumbers(comp_id,season){
         {
             $match: {
                 competition_id: comp_id,
-                season: season //il + serve per trasformare il valore season in un numero
+                season: season
             }
         },
         {
@@ -50,9 +50,31 @@ function getRoundNumbers(comp_id,season){
             $sort:{firstDate:1}
         },
         {
-            $project: {
-                round: "$_id",
-                _id: 0
+            $facet: {
+                groupRounds:[
+                    {
+                        $match:{
+                            _id:{$regex:/^Group/}
+                        }
+                    },
+                    {
+                        $project:{
+                            round:"$_id",
+                            _id:0
+                        }
+                    }
+                ],
+                otherRounds:[
+                    {
+                        $match:{_id:{$not:{$regex:/^Group/}}}
+                    },
+                    {
+                        $project:{
+                            round:"$_id",
+                            _id:0
+                        }
+                    }
+                ]
             }
         }
     ])
@@ -145,20 +167,14 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
                             {$cond:[{$eq:["$events.own_goals","$events.opponent_goals"] },1,0]}
                         ]
                     }
-                }
+                },
+                goalDifference: { $sum:{$subtract: ["$events.own_goals", "$events.opponent_goals"]}}
             }
         },
         {
-            $sort:{points:-1, goals_scored:-1}
+            $sort:{points:-1, goalDifference:-1}
         }
-    ]).then(data=>{
-        if(!data || data.length===0)
-            throw new Error("Errore durante il recupero della classifica\n")
-        else
-            return data
-    }).catch(err=>{
-        throw new Error("Errore durante il recupero della classifica:"+err.message+"\n")
-    })
+    ])
 }
 
 
@@ -170,13 +186,17 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
  * @returns {Promise<Array<any>>}
  */
 function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
+    const matchCriteria = {
+        competition_id: comp_id,
+        season: season
+    };
+
+    if (round !== undefined) {
+        matchCriteria.round = round;
+    }
     return Model.aggregate([
         {
-            $match:{
-                competition_id:comp_id,
-                season:season,
-                round:round
-            }
+            $match:matchCriteria
         },
         {
             $sort:{
@@ -188,14 +208,7 @@ function getMatchesByCompAndSeasonAndRound(comp_id,season,round){
                 _id:0, //tolgo l'id dal risultato
             }
         }
-    ]).then(data=>{
-        if(!data || data.length===0)
-            throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\n")
-        else
-            return data
-    }).catch(err=>{
-        throw new Error("Errore durante il recupero delle partite della giornata :"+round+" della competizione:"+comp_id+"della stagione: "+season+"\nMessaggio di errore: "+err+"\n")
-    })
+    ])
 }
 
 /**
@@ -242,14 +255,7 @@ function getLastManager(club_id){
                 }
             }
         }
-    ]).then(data=>{
-        if(!data || data.length===0)
-            throw new Error("Errore durante il recupero dell'ultimo allenatore")
-        else
-            return data
-    }).catch(err=>{
-        throw new Error("Errore durante il recupero dell'ultimo allenatore\nCodice errore:"+err+"\n")
-    })
+    ])
 }
 
 /**
@@ -528,6 +534,11 @@ function getHeadToHead(homeClubId, awayClubId){
                     }
                 }
             }
+        },
+        { //remove the id to the result
+            $project:{
+                _id:0
+            }
         }
     ])
 }
@@ -571,7 +582,6 @@ module.exports = {
     getMatchesByCompAndSeasonAndRound,
     get,
     getLastManager,
-    getGamesByCompetitionIdAndSeason,
     getCompetitionsByClubAndSeason,
     getClubsDividedByGroups,
     getCompetitionIdsWithGroup,
