@@ -118,8 +118,8 @@ router.get('/getLastManager', function (req, res) {
  * @return object whit information  about a competition table in a certain season that is a classification where squads are ordered based on the games played.
  */
 router.get('/getTableByCompSeasonAndType', function (req, res) {
-    if (!req.query.comp_id || !req.query.season || !req.query.type || !req.query.group) {
-        return res.status(400).json({ error: 400, message: 'Competition ID, season, type, and group are required' });
+    if (!req.query.comp_id || !req.query.season || !req.query.type) {
+        return res.status(400).json({ error: 400, message: 'Competition ID, season, type are required' });
     }
     axios.get(EXPRESS_SERVER + "/games/getTableByCompSeasonAndType", {
         params: {
