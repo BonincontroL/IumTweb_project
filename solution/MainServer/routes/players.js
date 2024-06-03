@@ -62,9 +62,9 @@ router.get('/getPlayersByCompetitionAndLastSeasonSortedByValue/:competition_id/:
  * @return map with  url of the player img
  */
 router.get("/getPlayersImgUrlById", function (req,res){
-    if (!req.query.starting || !req.query.substitutes) {
+    /*if (!req.query.starting || !req.query.substitutes) {
         return res.status(400).json({ error: 400, message: 'Starting and Substitutes are required' });
-    }
+    }*/
     axios.get(SPRING_SERVER+"/players/getPlayersImgUrlById",{
         params:{
             starting:req.query.starting,
@@ -206,9 +206,9 @@ router.get("/getSubPositionsGroupedByPosition", function (req,res){
  * @return list of players that play in a certain competition and have Nationality and Role
  */
 router.get("/getByCompIdNationalityAndRole", function (req,res){
-    if (!req.query.competitionId || !req.query.nation || !req.query.specificRole) {
+    /*if (!req.query.competitionId || !req.query.nation || !req.query.specificRole) {
         return res.status(400).json({ error: 400, message: 'Competition ID, Nation, and Specific Role are required' });
-    }
+    }*/
     axios.get(SPRING_SERVER+`/players/getByCompIdNationalityAndRole`,{
         params:{
             competitionId:req.query.competitionId,
