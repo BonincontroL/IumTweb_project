@@ -1,4 +1,3 @@
-const COUNTRY_NAME_INTERNATIONAL="Internazionale"//=>Name of the international country.
 let competitions ={} //=>Hash map where a list of competitions is mapped based on their name.
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -82,8 +81,7 @@ async function renderCompetitionsGroupedByCountry(competitions) {
     mainContainer.innerHTML = '';
     //itera per ogni Nazione
     for (const countryName of Object.keys(competitions)) {
-        let imgUrl=await fetchFlag(countryName)
-        let competitionsGroup= renderCompetitionsGroup(competitions,imgUrl,countryName)
+        let competitionsGroup= renderCompetitionsGroup(competitions,countryName)
         mainContainer.appendChild(competitionsGroup)
     }
 }
@@ -91,18 +89,14 @@ async function renderCompetitionsGroupedByCountry(competitions) {
 /**
  * Renders competitions grouped by country.
  * @param {Object} competitions - A hash map where a list of competitions is mapped based on their name.
- * @param {string} imgUrl - The URL of the country's flag image.
  * @param {string} countryName - The name of the country.
  * @returns {HTMLDivElement} - The HTML element containing the competitions grouped by country.
  */
-function renderCompetitionsGroup(competitions,imgUrl,countryName){
+function renderCompetitionsGroup(competitions,countryName){
     const competitionsGroup = document.createElement('div')
     competitionsGroup.className = 'competitions-group'
 
-    competitionsGroup.innerHTML = `<div class="competitions-group-header">
-                                <div class="header-flag-container">
-                                    <img class="nationFlag" src=${imgUrl} alt="${countryName} flag">
-                                </div>    
+    competitionsGroup.innerHTML = `<div class="competitions-group-header">  
                                 <h2>${countryName}</h2>
                             </div>`;
 
@@ -132,30 +126,4 @@ function renderCompetitionCard(competition){
                     <h3>${competition.name}</h3>
             `
     return competitionCard
-}
-
-/**
- * Fetches the flag image URL for a given country.
- * @param {string} countryName - The name of the country.
- * @returns {Promise<string|null>} - The URL of the flag image or null if not found.
- */
-async function fetchFlag(countryName){
-    let imgUrl ="images/defaultFlag.svg"
-
-    if (countryName === COUNTRY_NAME_INTERNATIONAL)
-        imgUrl = "images/worldImage.jpg" //immagine ad hoc nel caso degli internazionali
-    else{
-        let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
-        const loadingSpinner= document.getElementById('loading-spinner')
-        try {
-            loadingSpinner.style.display='block'
-            let res = await axios.get(queryUrl)
-            imgUrl = res.data[0].flags.png
-        }catch (e){
-                console.error(e)
-        }finally {
-            loadingSpinner.style.display='none'
-        }
-    }
-    return imgUrl
 }

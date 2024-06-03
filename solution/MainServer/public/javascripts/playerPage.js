@@ -7,21 +7,11 @@ let isLastMatchesLoaded = false; //=>Flag to indicate if player's last matches a
 document.addEventListener('DOMContentLoaded', async () => {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
-
     try {
-        let flagSrc = "images/defaultFlag.svg"
         let playerInfo = await getPlayerInfo()
         playerInfo = playerInfo.data
-        if (playerInfo !== "") {
-            try {
-                flagSrc = await getCountryFlag(playerInfo.countryOfCitizenship)
-                flagSrc = flagSrc.data[0].flags.png
-            }catch (e){
-                console.error(e)
-            }
-            let playerNumber = await getPlayerNumber()
-            renderPlayerInfo(playerInfo, playerNumber.data.playerNumber, flagSrc)
-        }
+        let playerNumber = await getPlayerNumber()
+        renderPlayerInfo(playerInfo, playerNumber.data.playerNumber)
     } catch (e) {
         alert(e)
     }
@@ -134,11 +124,10 @@ function renderPlayerStatistics(playerStatistics) {
  * @param {number} playerNumber - Player's shirt number.
  * @param {string} flagUrl - URL of the player's nationality flag.
  */
-function renderPlayerInfo(playerInfo, playerNumber, flagUrl) {
+function renderPlayerInfo(playerInfo, playerNumber) {
     let today = new Date();
     let birthdayDate = new Date(playerInfo.dateOfBirth);
     let age = today.getFullYear() - birthdayDate.getFullYear();
-    document.getElementById('nationalityFlag').setAttribute('src', flagUrl)
     document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
     document.getElementById('player_height').innerText = playerInfo.heightInCm;
     document.getElementById('squad_player').innerText = playerInfo.currentClubName;
