@@ -121,6 +121,7 @@ router.get('/getTableByCompSeasonAndType', function (req, res) {
     if (!req.query.comp_id || !req.query.season || !req.query.type) {
         return res.status(400).json({ error: 400, message: 'Competition ID, season, type are required' });
     }
+
     axios.get(EXPRESS_SERVER + "/games/getTableByCompSeasonAndType", {
         params: {
             comp_id: req.query.comp_id,
