@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 /**
- * Riceve i dati dal client e li manda al express server per completare la registrazione
+ * receives data from the client and sends it to the server to complete the registration
  */
 router.post('/register', function (req, res) {
     axios.post(EXPRESS_SERVER + '/users/register', req.body)
@@ -25,8 +25,7 @@ router.post('/register', function (req, res) {
 
 
 /**
- * Riceve i dati dal client e li manda al express server per il login
-
+ * receives data from the client and sends it to the ExpressServer to complete the log-in
  */
 router.post('/login', function (req, res) {
     axios.post(EXPRESS_SERVER + '/users/login', req.body)

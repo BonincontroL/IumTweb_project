@@ -26,7 +26,11 @@ function setupSocketListeners() {
     });
 
     socket.on('join conversation', (name, room) => {
-        console.log(`${name} ha joinato in ${room}`);
+        //implementi futuri per gestire l'entrata di un utente nella chat
+    });
+
+    socket.on('leave conversation', (name, room) => {
+        //implementi futuri per gestire l'uscita di un utente dalla chat
     });
 }
 
@@ -113,9 +117,7 @@ function renderCompetitionOnChat(competitions) {
  */
 function joinCompetitionRoom(competition) {
     myName=sessionStorage.getItem("username");
-    if(currentRoom) {
-        socket.emit('leave conversation', myName, currentRoom);
-    }
+
     document.getElementById('chat-footer').style.display = 'flex';
 
     currentRoom = competition.competitionId;
