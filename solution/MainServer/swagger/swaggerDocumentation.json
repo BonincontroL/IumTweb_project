@@ -2693,7 +2693,7 @@
       "get": {
         "tags": ["Games"],
         "summary": "Get round numbers by competition ID and season",
-        "description": "Retrieves all the possible round in a competition in a certain season, based on the provided competition ID and season.",
+        "description": "Retrieves all the possible round in a competition in a certain season, based on the provided competition ID and season and divided in two categories, groupRounds and otherRounds.",
         "parameters": [
           {
             "name": "comp_id",
@@ -2730,12 +2730,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "round": {
-                        "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "groupRounds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": [
+                          "Group A",
+                          "Group B"
+                        ]
+                      }
+                    },
+                    "otherRounds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": [
+                          "Semi final",
+                          "Final"
+                        ]
                       }
                     }
                   }

@@ -30,7 +30,6 @@ function init() {
     document.getElementById('goToMatchesPage').addEventListener('click', () => {
         window.location.href = "../matches_page.html"
     })
-
     manageEventDelegation()
     getAndRenderPlayers();
     getAndRenderLastMatches("IT1"); // Serie A matches by default
@@ -189,9 +188,6 @@ function getAndRenderPlayers() {
         await renderPlayers(res[2], 'La-Liga')
         await renderPlayers(res[3], 'Bundesliga')
         await renderPlayers(res[4], 'Ligue-1')
-
-        let playerCards = document.querySelectorAll('.players-container-in-homepage > .player-card-for-homepage')
-        setPlayersEventListener(playerCards) //imposto i listener per far si che quando l'utente clicca si vada sulla pagina del giocatore
     }).catch(error => {
         console.error('Errore durante il recupero dei giocatori della Premier League:', error);
     });

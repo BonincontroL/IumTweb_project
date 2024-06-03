@@ -717,7 +717,7 @@ header ul li ul li a{
 }
 
 .filter-container{
-    position: absolute;
+    position: fixed;
     top: 18vh;
     left: 10px;
     text-align: left;
@@ -1602,6 +1602,9 @@ tbody > tr:hover{
     justify-content: flex-start;
     padding: var(--padding-10px);
     box-sizing: border-box;
+}
+.user-popup-item > i{
+    font-size: var(--h6-size);
 }
 .user-popup-item:hover{
     background-color: var(--primary-blue-900-active);

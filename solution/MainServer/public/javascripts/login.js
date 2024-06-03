@@ -213,7 +213,5 @@ function initLogin(){
             window.location.href = "login_singup.html"
         }); //test poi da sistemare con l'html
     }
-
-
 }
 
