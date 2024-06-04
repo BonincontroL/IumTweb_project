@@ -47,12 +47,7 @@ async function init() {
         competitionType=competitionInformation.data.type;
         renderCompetitionInformation(competitionInformation.data)
         let competitionsWithGroup = await getCompetitionsWithGroup()
-        if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
-            typology=COMPETITION_TYPOLOGIES.GROUP_CUP
-        else if (competitionType === DOMESTIC_LEAUGE)
-            typology=COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE
-        else
-            typology=COMPETITION_TYPOLOGIES.CUP
+        assignTypology(competitionsWithGroup)
         preRenderDropdowns()
         adaptPageToTypology()
         adaptButtonListenersToTypology()
@@ -63,6 +58,20 @@ async function init() {
     } catch (e) {
         alert(e)
     }
+}
+
+/**
+ * assign a value to the global variable typology
+ *
+ * @param competitionsWithGroup the competitions in our db that have group phase
+ */
+function assignTypology(competitionsWithGroup){
+    if (competitionsWithGroup.data.find(comp => comp.competition_id === competitionId))
+        typology=COMPETITION_TYPOLOGIES.GROUP_CUP
+    else if (competitionType === DOMESTIC_LEAUGE)
+        typology=COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE
+    else
+        typology=COMPETITION_TYPOLOGIES.CUP
 }
 /**
  * Pre-renders dropdown menus based on competition typology.
@@ -178,6 +187,14 @@ function adaptButtonListenersToTypology(){
         })
         document.getElementById('competitionSelectMatchday').addEventListener('change', function () {
             currentRound = matchRounds.indexOf(this.value)
+            if(currentRound===0)
+                document.getElementById('loadPrevMatchday').className='btn-disabled'
+            else if(currentRound===matchRounds.length-1)
+                document.getElementById('loadNextMatchday').className='btn-disabled'
+            else{
+                document.getElementById('loadPrevMatchday').className='btn-choose-matchdays'
+                document.getElementById('loadNextMatchday').className='btn-choose-matchdays'
+            }
             let currentSeason= document.getElementById('matchesSeasonSelector').value
             getAndRenderMatchesInRound(matchRounds[currentRound],currentSeason)
         })
@@ -253,7 +270,7 @@ function renderGroupTables(groupTables){
  */
 function manageTableVariants(buttons){
     buttons.forEach(button=>{
-        button.addEventListener('click',()=>{
+        button.addEventListener('click', ()=>{
             let group= (typology===COMPETITION_TYPOLOGIES.GROUP_CUP) ? button.getAttribute('data-group'):null
             let actualYear= typology===COMPETITION_TYPOLOGIES.GROUP_CUP? document.getElementById('groupTablesSelector').value:document.getElementById('tableSeasonSelector').value
             getTable(competitionId,actualYear,button.getAttribute('data-type'), group)
@@ -341,7 +358,6 @@ function addSeasonDropdownTableListener(){
  */
 function renderTableBody(table,groupName,groupTable,tbodyId){
     let groupTableTbody= document.getElementById(tbodyId)
-
     if(groupTableTbody===null) {
         groupTableTbody = document.createElement('tbody')
         groupTableTbody.id=tbodyId
@@ -414,14 +430,12 @@ function getCompetitionsWithGroup(){
     return axios.get(url)
 }
 
-
 /**
  * Retrieves and renders top players based on market value and goals.
  */
-
 function getTopPlayers() {
     const loadingSpinner= document.getElementById('loading-spinner');
-    loadingSpinner.style.display = "block";
+    loadingSpinner.style.display = "block"; //add loading spinner
     Promise.all([
         getTopPlayersByMarketValue(),
         getTopPlayersByGoals(),
@@ -430,16 +444,18 @@ function getTopPlayers() {
         renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer',PLAYER_CLASSIFIC_TYPOLOGIES.GOALS)
     }).catch(err => {
         alert(err)
-    }).finally(()=>{
+    }).finally(()=>{ //removing loading spinner...
         loadingSpinner.style.display = "none";
     })
 }
 
 /**
- * Renders top players by goal wrapper.
- * @param playersInfo
- * @param containerId
- * @param type
+ * Renders top players by goal
+ * Start to load all the player images from Spring server and then
+ * call the renderTopPlayers function
+ * @param playersInfo an array of players that contains all the information
+ * @param containerId the unique id of HTML top player leaderboard container
+ * @param type the leaderbord type, could be GOAL or VALUE.
  */
 function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     let idList = playersInfo.map(item => item._id)
@@ -456,9 +472,10 @@ function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
 }
 
 /**
- * Merges player information with their images.
- * @param players
- * @param images
+ * Merges player information with their images based on the
+ * player unique identifier.
+ * @param players an array of players who all have the unique id
+ * @param images an array of object composed by image url and player id
  * @returns {*}
  */
 function mergePlayersAndImage(players,images){
@@ -478,7 +495,7 @@ function mergePlayersAndImage(players,images){
  * @returns {*}
  */
 function getTopPlayersByMarketValue(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}`
+    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}` //default is last season
     return axios.get(url)
 }
 
@@ -664,7 +681,7 @@ function getClubsWrapper(){
 }
 
 /**
- * Retrieves clubs divided by groups for the competition.
+ * Retrieves and render clubs divided by groups for the competition.
  */
 function getClubsDividedByGroup(){
     let url="http://localhost:3000/games/getClubsDividedByGroups"
@@ -676,7 +693,6 @@ function getClubsDividedByGroup(){
     }).then(res=>{
         if(res.data!==0) {
             let clubs=res.data
-            let clubCards
             if(typology===COMPETITION_TYPOLOGIES.CUP) {
                 clubs = unifyClubs(clubs)
                 renderAllClubs(clubs)
@@ -689,9 +705,10 @@ function getClubsDividedByGroup(){
 }
 
 /**
- * Unifies clubs from groups.
- * @param groups
- * @returns {any[]}
+ * Function that take a list of groups with duplicates and
+ * return a list without duplicates
+ * @param groups a list of groups with duplicates
+ * @returns {any[]} a list of groups without duplicates.
  */
 function unifyClubs(groups){
     const uniqueClubs=new Map();
@@ -710,7 +727,7 @@ function unifyClubs(groups){
 
 /**
  * Renders clubs divided by groups.
- * @param groups
+ * @param groups a list of groups, each group have clubs
  */
 function renderClubsDividedByGroup(groups){
     let mainContainer= document.getElementById('competitionSquads')
@@ -749,14 +766,15 @@ function renderGroup(group){
 }
 
 /**
- * Retrieves clubs for the competition and renders them.
+ * Retrieves clubs for the current competition in the
+ * last season of competition and renders them.
  */
 function getClubs(){
     let url="http://localhost:3000/clubs/getByCompetitionAndSeason"
     axios.get(url, {
         params:{
             competition_id: competitionId,
-            season:competitionSeasons[0]
+            season:competitionSeasons[0] //take the last season by default
         }
     }).then(res=> {
         if(res.data.length!==0) {
@@ -768,8 +786,8 @@ function getClubs(){
 }
 
 /**
- * Renders all clubs in the provided array.
- * @param clubs
+ * Renders all clubs that aren't undefined in the provided array.
+ * @param clubs a list of clubs
  */
 function renderAllClubs(clubs){
     let clubContainer= document.getElementById('competitionSquads')
@@ -783,9 +801,9 @@ function renderAllClubs(clubs){
 }
 
 /**
- * Renders a div card for a club.
- * @param club
- * @returns {HTMLDivElement}
+ * Renders an HTML div card for a club that contains club name and image.
+ * @param club a single club object with information related to club
+ * @returns {HTMLDivElement} the club card
  */
 function renderClubCard(club){
     let clubCard= document.createElement('div')
@@ -800,7 +818,7 @@ function renderClubCard(club){
     return clubCard
 }
 /**
- * do the axios query to get all competition infos
+ * do the axios query to get all the current competition infos
  */
 function getCompetitionInformation() {
     let url = "http://localhost:3000/competitions/getCompetitionInformation"
@@ -822,6 +840,12 @@ function renderCompetitionInformation(competitionInfo){
     document.getElementById('competitionConfederation').innerText=competitionInfo.confederation
     document.getElementById('competitionType').innerText=competitionInfo.type
 }
+
+/**
+ * get all the round numbers of the current competition in a certain season
+ * @param season the season we are interested
+ * @returns {*} an axios promise.
+ */
 function fetchAllRoundNumbers(season){
     let roundNumbersUrl=`http://localhost:3000/games/getRoundNumbers`
     return axios.get(roundNumbersUrl,{
@@ -857,6 +881,10 @@ async function getGroupMatches() {
     }
 }
 
+/**
+ * get all the seasons we have in our DB in which the competition was played
+ * @returns {Promise<*>} an axios promise.
+ */
 async function fetchAllSeasons(){
     let seasonsUrl='http://localhost:3000/games/getCompetitionSeasonsSorted'
     return axios.get(seasonsUrl,{
@@ -868,7 +896,7 @@ async function fetchAllSeasons(){
 
 /**
  * Renders the season dropdown menu with the provided selector ID.
- * @param selectorId
+ * @param selectorId the unique identifier of the dropdown menu element
  */
 function renderSeasonDropdownMenu(selectorId){
     let seasonsContainer= document.getElementById(selectorId)
@@ -882,6 +910,7 @@ function renderSeasonDropdownMenu(selectorId){
 
 /**
  * Retrieves and renders knockout matches for the selected season.
+ * It is only called if the competition is a GROUP CUP or a CUP
  */
 async function getKnockoutMatches(){
     if(competitionSeasons.length!==0) {
@@ -901,8 +930,7 @@ async function getKnockoutMatches(){
 
 /**
  * Retrieves and renders group matches for the selected season.
- * @param season
- * @returns {Promise<void>}
+ * @param season the season we are interested
  */
 async function getAndRenderGroupMatches(season) {
     try {
@@ -915,7 +943,7 @@ async function getAndRenderGroupMatches(season) {
 
 /**
  * Retrieves and renders all matches in knockout rounds for the selected season.
- * @param season
+ * @param season the season we are interested
  * @returns {Promise<void>}
  */
 async function getAllMatchesInKnockoutRounds(season){
@@ -933,9 +961,9 @@ async function getAllMatchesInKnockoutRounds(season){
 
 /**
  * Renders knockout matches for a specific round.
- * @param matches
- * @param round
- * @returns {HTMLDivElement}
+ * @param matches a list of matches in a round
+ * @param round the current round
+ * @returns {HTMLDivElement} the HTML matches container for the current round
  */
 function renderKnockoutMatches(matches,round){
     let roundContainer = document.createElement('div')
@@ -958,8 +986,8 @@ function renderKnockoutMatches(matches,round){
 
 /**
  * Renders a single knockout match card.
- * @param match
- * @returns {HTMLDivElement}
+ * @param match an object that contains information about a single match
+ * @returns {HTMLDivElement} the HTML div match card.
  */
 function renderSingleKnockoutMatch(match){
     let matchCard = document.createElement('div')
@@ -988,19 +1016,25 @@ function renderSingleKnockoutMatch(match){
 }
 /**
  * function that get the next round if it's possibile
- * if there aren't any rounds, it's not possible to load the next
+ * if there aren't any rounds, it's not possible to load the next and
+ * the next button is disabled
+ * Also enable the prev button if the round is > 0
  */
 function getNextMatchday(season){
-    if(currentRound!== matchRounds.length - 1){
+    if(currentRound!== matchRounds.length - 1) {
         currentRound++
-        getAndRenderMatchesInRound(matchRounds[currentRound],season)
+        getAndRenderMatchesInRound(matchRounds[currentRound], season)
+        if (currentRound === matchRounds.length - 1)
+            document.getElementById('loadNextMatchday').className = 'btn-disabled';
+        if(currentRound>0)
+            document.getElementById('loadPrevMatchday').className='btn-choose-matchdays'
     }
 }
 
 /**
  * Retrieves and renders matches for the specified round and season.
- * @param round
- * @param season
+ * @param round the round we are interested
+ * @param season the season we are interested
  */
 function getAndRenderMatchesInRound(round,season){
     getAllMatchesInRound(round,season)
@@ -1013,19 +1047,28 @@ function getAndRenderMatchesInRound(round,season){
         })
 }
 /**
- * function that get the precedent round if it's possibile
- * if there aren't any rounds, it's not possible to load the next
+ * Get the previous round if it's possibile
+ * if there aren't any rounds, it's not possible to load the next and
+ * the prev button is disabled
+ * if current round is not the last, the next button is enabled!
+ * @param season the season we are interested in
  */
 function getPrevMatchday(season){
     if(currentRound!==0){
         currentRound--
+        if(currentRound!==matchRounds.length-1)
+            document.getElementById('loadNextMatchday').className='btn-choose-matchdays'
+        if(currentRound===0)
+            document.getElementById('loadPrevMatchday').className='btn-disabled'
         getAndRenderMatchesInRound(matchRounds[currentRound],season)
     }
 }
 
 /**
- * function that get all the matches in a round, that is
+ * Get all the matches given a round and a season, that is
  * specified by matchRounds array in currentRound position
+ * @param round the round we are interested in
+ * @param season the season we are interested in
  */
 function getAllMatchesInRound(round,season){
     let url='http://localhost:3000/games/getMatchesByCompAndSeasonAndRound'

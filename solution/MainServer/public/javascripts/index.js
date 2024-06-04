@@ -3,6 +3,8 @@
  * Common functions for managing UI elements and interactions.
  */
 
+const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
+
 /**
  * URL for competition logo images.
  * @type {string}
@@ -16,7 +18,8 @@ const COMPETITION_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/logo/head
 const CLUB_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/wappen/head/"
 
 /**
- * Event listener for DOMContentLoaded event.
+ * Event listener for DOMContentLoaded event of all pages.
+ * Used to command opening/closing of the burger menu
  */
 document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('openBurgerMenu').addEventListener('click',()=>{
@@ -89,44 +92,53 @@ function hideAllMainContainers(pageName){
 function manageEventDelegation(){
     document.addEventListener('click',function (event){
         //section dedicated to manage card clicks
-        const targetClub = event.target.closest('.squad-tr') || event.target.closest('.squad-card-mini')
-        if(targetClub){
-            let clubInfo={
-                clubId:targetClub.getAttribute('data-clubid'),
-                name:targetClub.getAttribute('data-name'),
-            }
-            window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}`
-        }
-        const targetMatch= event.target.closest('.btn-load-match-details') || event.target.closest('.game-information') || event.target.closest('.game-information-in-player') || event.target.closest('.last-match-container')
-        if(targetMatch){
-            let matchInfo ={
-                game_id:targetMatch.getAttribute('data-gameid'),
-                home_club_id:targetMatch.getAttribute('data-homeclubid'),
-                away_club_id:targetMatch.getAttribute('data-awayclubid'),
-            }
-            sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
-            window.location.href='../match_page.html'
-        }
-        const targetCompetition = event.target.closest('.competition-card-mini')||event.target.closest('.competition-card')||event.target.closest('.match-info-clickable')
-        if(targetCompetition){
-            let competition_id = targetCompetition.getAttribute('data-competitionId')
-            let competition_name = targetCompetition.getAttribute('data-competitionName')
-            let competition_type = targetCompetition.getAttribute('data-competitionType')
-            window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}&competition_type=${competition_type}`
-        }
-        const targetPlayer = event.target.closest('.player-card')||event.target.closest('.player-card2') || event.target.closest('.player-card-for-competition') || event.target.closest('.player-card-for-homepage') || event.target.closest('.player-stats-container-first') || event.target.closest('.player-stats-container')
-        if(targetPlayer){
-            let playerInfo ={
-                playerId:targetPlayer.getAttribute('data-playerid'),
-                name:targetPlayer.getAttribute('data-name'),
-                imageUrl:targetPlayer.getAttribute('data-imageurl'),
-            }
-            sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
-            window.location.href='../player_page.html'        }
+        const targetClub = event.target.closest('.squad-tr') || event.target.closest('.squad-card-mini') || event.target.closest('.match-details-squad-and-logo-home') || event.target.closest('.match-details-squad-and-logo-away')
+        if(targetClub)
+            goToClubPage(targetClub)
 
+        const targetMatch= event.target.closest('.btn-load-match-details') || event.target.closest('.game-information') || event.target.closest('.game-information-in-player') || event.target.closest('.last-match-container')
+        if(targetMatch)
+            goToMatchPage(targetMatch)
+
+        const targetCompetition = event.target.closest('.competition-card-mini')||event.target.closest('.competition-card')||event.target.closest('.match-info-clickable')
+        if(targetCompetition)
+            goToCompetitionPage(targetCompetition)
+
+        const targetPlayer = event.target.closest('.player-card')||event.target.closest('.player-card2') || event.target.closest('.player-card-for-competition') || event.target.closest('.player-card-for-homepage') || event.target.closest('.player-stats-container-first') || event.target.closest('.player-stats-container')
+        if(targetPlayer)
+            goToPlayerPage(targetPlayer)
     })
 }
-
+function goToClubPage(clubCard){
+    let clubInfo={
+        clubId:clubCard.getAttribute('data-clubid'),
+        name:clubCard.getAttribute('data-name'),
+    }
+    window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}`
+}
+function goToMatchPage(matchCard){
+    let matchInfo ={
+        game_id:matchCard.getAttribute('data-gameid'),
+        home_club_id:matchCard.getAttribute('data-homeclubid'),
+        away_club_id:matchCard.getAttribute('data-awayclubid'),
+    }
+    sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
+    window.location.href='../match_page.html'
+}
+function goToCompetitionPage(competitionCard){
+    let competition_id = competitionCard.getAttribute('data-competitionId')
+    let competition_name = competitionCard.getAttribute('data-competitionName')
+    window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}`
+}
+function goToPlayerPage(playerCard){
+    let playerInfo ={
+        playerId:playerCard.getAttribute('data-playerid'),
+        name:playerCard.getAttribute('data-name'),
+        imageUrl:playerCard.getAttribute('data-imageurl'),
+    }
+    sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
+    window.location.href='../player_page.html'
+}
 function adaptMatchDate(match){
     match.date = new Date(match.date).toLocaleString([], {
         day: '2-digit',

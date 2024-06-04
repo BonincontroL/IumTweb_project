@@ -47,15 +47,15 @@ function getRoundNumbers(comp_id,season){
             }
         },
         {
-            $sort:{firstDate:1}
-        },
-        {
             $facet: {
                 groupRounds:[
                     {
                         $match:{
                             _id:{$regex:/^Group/}
                         }
+                    },
+                    {
+                        $sort:{_id:1}
                     },
                     {
                         $project:{
@@ -67,6 +67,9 @@ function getRoundNumbers(comp_id,season){
                 otherRounds:[
                     {
                         $match:{_id:{$not:{$regex:/^Group/}}}
+                    },
+                    {
+                        $sort:{firstDate:1}
                     },
                     {
                         $project:{

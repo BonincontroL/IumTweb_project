@@ -1203,6 +1203,22 @@ header ul li ul li a{
 .match-info-clickable{
     cursor: pointer;
 }
+.btn-choose-matchdays{
+    background-color: transparent;
+    border: 0;
+}
+.btn-choose-matchdays> i,
+.btn-disabled> i{
+    font-size: var(--h2-size);
+    cursor: pointer;
+}
+.btn-disabled{
+    background-color: transparent;
+    border: 0;
+}
+.btn-disabled >i{
+    color:var(--light-grey)
+}
 .match-info-clickable:hover{
     background-color: var(--primary-blue-50); /* Light blue background */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
@@ -1273,7 +1289,7 @@ header ul li ul li a{
     align-self: stretch;
     gap: var(--gap-xl);
     justify-content: center;
-    padding:  var(--padding-20px) var(--padding-10px) 0 var(--padding-20px);
+    padding:  var(--padding-10px);
 }
 .squadLogo-big{
     position: relative;
@@ -2246,10 +2262,7 @@ tbody > tr:hover{
     flex-direction: row;
     gap: var(--gap-4xs);
 }
-.left-right-arrows-wrapper i{
-    font-size: var(--h2-size);
-    cursor: pointer;
-}
+
 .btn-load-match-details{
     background-color: transparent;
     display: flex;
@@ -2268,7 +2281,9 @@ tbody > tr:hover{
 }
 
 .match-details-squad-and-logo-home,
-.match-details-squad-and-logo-away{
+.match-details-squad-and-logo-home-noclick,
+.match-details-squad-and-logo-away,
+.match-details-squad-and-logo-away-noclick{
     display: flex;
     width: 50%;
     align-self: unset;
@@ -2276,16 +2291,28 @@ tbody > tr:hover{
     flex-direction: row;
     gap: var(--gap-3xs);
     align-items: center;
-    padding: var(--padding-10px) ;
+    padding: var(--padding-10px);
     box-sizing: border-box;
     max-width: 100%;
+    border-radius: var(--br-12px);
+    transition: 0.2s ease-in-out;
 }
-.match-details-squad-and-logo-home{
+
+.match-details-squad-and-logo-home:hover,
+.match-details-squad-and-logo-away:hover{
+    background-color: var(--primary-blue-900);
+    color:var(--white);
+    cursor: pointer;
+    box-shadow:0 5px 10px rgba(0, 0, 0, 0.4);
+}
+.match-details-squad-and-logo-home,
+.match-details-squad-and-logo-home-noclick{
     text-align: right;
     justify-content: flex-end;
 
 }
-.match-details-squad-and-logo-away{
+.match-details-squad-and-logo-away,
+.match-details-squad-and-logo-away-noclick{
     text-align: left;
     justify-content: flex-start;
 }
@@ -2313,7 +2340,7 @@ tbody > tr:hover{
     justify-content: center;
     box-sizing: border-box;
 }
-.left-right-arrows-wrapper i:hover{
+.btn-choose-matchdays > i:hover{
     font-size: var(--h1-size);
     transition: 0.2s ease-out;
     cursor: pointer;

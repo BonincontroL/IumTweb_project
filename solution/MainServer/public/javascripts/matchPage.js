@@ -1,19 +1,20 @@
 //javascript dedicato alla gestione di un singolo match
 let matchInfo //=> Object containing information about the match.
 let matchButtons //=> Match buttons.
-let playerDefaultImageUrl = "https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //=> Default image URL for players without information.
 let currentHomeGoals = 0, currentAwayGoals = 0 //=> Current number of goals scored by the home team. - Current number of goals scored by the away team.
 let homeGoalEvents, awayGoalEvents//=>array usati per renderizzare le colonne dei goal nel banner superiore
 let isHeadToHeadLoaded =false, isFormationsLoaded=false
 const TIME_MINUTES = 45 //=> Number of minutes in a football match.
-const CAPITAIN_SYMBOL='(C)'
-const MAIN_POSITIONS={
+const CAPITAIN_SYMBOL='(C)' //=> A string symbol to indicate the capitain
+const MAIN_POSITIONS={ //=> Main player positions
     GOALKEEPER:"Goalkeeper",
     DEFENDER:"Defender",
     ATTACK:"Attack",
     MIDFIELD: "Midfield"
 }
-const NO_GOALS_AGGREGATE='0:0'
+
+const NO_GOALS_AGGREGATE='0:0' //=> A string that indicates a match aggregate without goals
+const PLAYER_DEFAULT_IMG_URL = "https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1" //=> Default image URL for players without information.
 const EVENT_TYPES={
     SUBSTITUTION:"Substitutions",
     GOALS:"Goals",
@@ -40,6 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     initLogin();
 })
+
+/**
+ * Get and render the "head to head" information
+ * about home club and away club
+ */
 function getHeadToHeadInfos(){
     let url="http://localhost:3000/games/getHeadToHead"
     axios.get(url,{
@@ -49,11 +55,18 @@ function getHeadToHeadInfos(){
         }
     }).then(res=>{
         renderHeadToHeadInfos(res.data[0])
-        isHeadToHeadLoaded=true
+        isHeadToHeadLoaded=true //we correctly load head to head
     }).catch(err=>{
         alert(err)
     })
 }
+
+/**
+ * Render the "head to head" information,
+ * in particular it renders the three different Canvas for home wins,
+ * draws and away wins
+ * @param infos
+ */
 function renderHeadToHeadInfos(infos){
     const totalMatches =infos.homeWins+infos.awayWins+infos.draws
     document.getElementById('homeLogo').setAttribute('src',`${CLUB_LOGO_IMAGE_URL}${matchInfo.home_club_id}.png`)
@@ -63,6 +76,14 @@ function renderHeadToHeadInfos(infos){
     renderGraph('drawCanvas',infos.draws,totalMatches,'Pareggi '+infos.draws)
     renderGraph('awayWinsCanvas',infos.awayWins,totalMatches,'Vittorie '+infos.awayWins)
 }
+
+/**
+ * render a single doughnut graph
+ * @param graphId the unique identifier of the graph in the DOM
+ * @param info
+ * @param totalMatch the number of matches played between current home club and away club
+ * @param labelText the label to put in the center.
+ */
 function renderGraph(graphId,info,totalMatch,labelText){
     const graph=document.getElementById(graphId).getContext('2d')
     const doughnutLabel=createChartLabel(labelText)
@@ -96,6 +117,12 @@ function renderGraph(graphId,info,totalMatch,labelText){
         ]
     })
 }
+
+/**
+ * render the doughnut chart label
+ * @param labelText the text to put in the lable
+ * @returns {{beforeDatasetDraw(*, *, *): void, id: string}}
+ */
 function createChartLabel(labelText){
     return {
         id:'doughnutLabel',
@@ -112,22 +139,38 @@ function createChartLabel(labelText){
     }
 }
 /**
- * Renders information on the match banner.
+ * Renders basic information about the match banner.
+ * This function isn't responsible for rendering the goals banner!
  */
 function renderBannerInfo() {
+    let homeClubCard = document.getElementById('homeClubCard')
+    let awayClubCard = document.getElementById('awayClubCard')
+
     //renderizza le informazioni del banner del match
-    document.getElementById('homeClubName').innerText = !matchInfo.home_club_name  ? 'N.D' : matchInfo.home_club_name
-    document.getElementById('awayClubName').innerText = !matchInfo.away_club_name  ? 'N.D' : matchInfo.away_club_name
+    document.getElementById('homeClubName').innerText = !matchInfo.home_club_name ? 'N.D' : matchInfo.home_club_name
+    document.getElementById('awayClubName').innerText = !matchInfo.away_club_name ? 'N.D' : matchInfo.away_club_name
     document.getElementById('homeClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.home_club_id + ".png")
     document.getElementById('awayClubLogo').setAttribute('src', CLUB_LOGO_IMAGE_URL + matchInfo.away_club_id + ".png")
     document.getElementById('aggregate').innerText = matchInfo.aggregate
     //aggiungi la data
     document.getElementById('match-details-date').innerText = matchInfo.date.split('T')[0]
-}
 
+    //aggiungiamo le info alla homeClubCard e awayClubCard
+    if (matchInfo.home_club_name){ //se la squadra ha il nome
+        homeClubCard.setAttribute('data-clubid', matchInfo.home_club_id);
+        homeClubCard.setAttribute('data-name',matchInfo.home_club_name);
+    }else //altrimenti non è cliccabile
+        homeClubCard.className='match-details-squad-and-logo-home-noclick'
+
+    if (matchInfo.away_club_name){ //se la squadra ha il nome
+        awayClubCard.setAttribute('data-clubid', matchInfo.away_club_id);
+        awayClubCard.setAttribute('data-name',matchInfo.away_club_name);
+    }else //altrimenti non è cliccabile
+        homeClubCard.className='match-details-squad-and-logo-away-noclick'
+}
 /**
- * Retrieves match events from the server.
- * @param {Object} matchIds - Object containing match IDs.
+ * Retrieves current match events from the DB and then render them.
+ * @param {Object} matchIds - Object containing match IDs, we have home club id, away club id and game id.
  */
 function getMatchEvents(matchIds) {
     axios.get("http://localhost:3000/gameevents/getMatchEvents", {
@@ -146,7 +189,8 @@ function getMatchEvents(matchIds) {
 }
 
 /**
- * Renders match events on the page.
+ * Renders match events on the page and the two banners
+ * to the end of the first half and the end of the match.
  * @param {Object[]} events - Array of match events.
  * @param {number} homeClubId - ID of the home club.
  * @param {number} awayClubId - ID of the away club.
@@ -232,17 +276,15 @@ function renderResultBanner(result, phrase) {
  * function that render a single game event in the correct position,
  * there are three types of game events: Goals, Cards and Substitution
  * @param event the object which represent an event
- * @param homeClubId
- * @param awayClubId
- * @returns {HTMLDivElement}
+ * @returns {HTMLDivElement} the HTML div of the event
  */
-function renderEvent(event, homeClubId, awayClubId) {
+function renderEvent(event) {
     let eventDiv = document.createElement('div')
     let eventLogo = document.createElement('img')
     eventLogo.className = 'game-event-icon'
     let minutesContainer = document.createElement('p')
     minutesContainer.innerText = event.minute + '°'
-    let containers = [eventLogo, minutesContainer]
+    let containers = [eventLogo, minutesContainer] //this array contain all the HTML element of a single event
     switch (event.type) {
         case EVENT_TYPES.SUBSTITUTION: {
             eventLogo.setAttribute('src', 'images/gameeventsLogos/substitution-icon.svg');
@@ -254,33 +296,7 @@ function renderEvent(event, homeClubId, awayClubId) {
             break
         }
         case EVENT_TYPES.GOALS:
-            let assistPhrase = 'Assist:'
-            if (event.description.search('Penalty') !== -1) {
-                eventLogo.setAttribute('src', 'images/gameeventsLogos/penaltyScored-icon.svg');
-                assistPhrase = 'Rigore procurato da:'
-            } else if (event.description.search('Own-goal') !== -1)
-                eventLogo.setAttribute('src', 'images/gameeventsLogos/owngoal-icon.svg');
-            else {
-                eventLogo.setAttribute('src', 'images/gameeventsLogos/goal-icon.svg');
-            }
-            let partialResultContainer = document.createElement('h6')
-            partialResultContainer.innerHTML = `${currentHomeGoals}-${currentAwayGoals}`
-            containers.push(partialResultContainer)
-            if (event.club_id === homeClubId) {
-                currentHomeGoals--
-                homeGoalEvents.push(event)
-            } else {
-                currentAwayGoals--
-                awayGoalEvents.push(event)
-            }
-            let scorerContainer = document.createElement('h6')
-            scorerContainer.innerHTML = `<b>${event.player}</b>`
-            containers.push(scorerContainer)
-            if (event.assist) {
-                let assistmanContainer = document.createElement('h6')
-                assistmanContainer.innerHTML = `${assistPhrase}<b>${event.assist}</b>`
-                containers.push(assistmanContainer)
-            }
+            renderGoalEvent(event, eventLogo,containers)
             break;
         case EVENT_TYPES.CARDS:
             if ((event.description.search('Red') !== -1) || (event.description.search('Second') !== -1)) //modo per capire se un cartellino è rosso, potrebbe essere migliorato.
@@ -292,21 +308,47 @@ function renderEvent(event, homeClubId, awayClubId) {
             containers.push(playercardContainer)
             break;
     }
-    if (event.club_id === homeClubId)
+    if (event.club_id === matchInfo.home_club_id)
         eventDiv.className = 'home-game-event';
-    else if (event.club_id === awayClubId) {
+    else if (event.club_id === matchInfo.away_club_id) {
         eventDiv.className = 'away-game-event'
-        containers.reverse()
+        containers.reverse() //in this way we have the mirror effect for club that play away
     }
     containers.forEach(container => {
         eventDiv.appendChild(container)
     })
     return eventDiv;
 }
+function renderGoalEvent(event, eventLogo,containers){
+    let assistPhrase = 'Assist:'
+    eventLogo.setAttribute('src', 'images/gameeventsLogos/goal-icon.svg'); //default goal icon
+    if (event.description.search('Penalty') !== -1) {
+        eventLogo.setAttribute('src', 'images/gameeventsLogos/penaltyScored-icon.svg'); //penalty icon
+        assistPhrase = 'Rigore procurato da:'
+    } else if (event.description.search('Own-goal') !== -1)
+        eventLogo.setAttribute('src', 'images/gameeventsLogos/owngoal-icon.svg'); //own goal icon
 
+    let partialResultContainer = document.createElement('h6')
+    partialResultContainer.innerHTML = `${currentHomeGoals}-${currentAwayGoals}`
+    containers.push(partialResultContainer)
+    if (event.club_id === matchInfo.home_club_id) {
+        currentHomeGoals--
+        homeGoalEvents.push(event)
+    } else {
+        currentAwayGoals--
+        awayGoalEvents.push(event)
+    }
+    let scorerContainer = document.createElement('h6')
+    scorerContainer.innerHTML = `<b>${event.player}</b>`
+    containers.push(scorerContainer)
+    if (event.assist) {
+        let assistmanContainer = document.createElement('h6')
+        assistmanContainer.innerHTML = `${assistPhrase}<b>${event.assist}</b>`
+        containers.push(assistmanContainer)
+    }
+}
 /**
  * get some match information like refree,stadium, home club manager and away club manager
- * @param gameId the identifier of the game
  */
 async function getMatchInformation() {
     try {
@@ -320,6 +362,11 @@ async function getMatchInformation() {
     }
 }
 
+/**
+ * render the basic match information like refree, stadium, competition
+ * It also creates the competition card that can be clicked to go back to the competition page
+ * @param competitionName the name of the competition
+ */
 function renderMatchInformation(competitionName) {
     document.getElementById('match-details-refree').innerText = matchInfo.referee
     document.getElementById('match-details-stadium').innerText = matchInfo.stadium
@@ -330,6 +377,10 @@ function renderMatchInformation(competitionName) {
     document.getElementById('match-details-competitionImg').setAttribute('src', `${COMPETITION_LOGO_IMAGE_URL}${matchInfo.competition_id.toLowerCase()}.png`)
 }
 
+/**
+ * Get the competition name given the competition identifier from the DB
+ * @returns {*} an axios promise
+ */
 function getCompetitionName() {
     let url = "http://localhost:3000/competitions/getName";
     return axios.get(url, {
@@ -339,6 +390,10 @@ function getCompetitionName() {
     })
 }
 
+/**
+ * get all the basic game information like home club name, away club name, aggregate...
+ * @returns {*} an axios promise
+ */
 function getGameInfos() {
     let url = "http://localhost:3000/games/get";
     return axios.get(url, {
@@ -368,6 +423,10 @@ function manageMatchButtons() {
     })
 }
 
+/**
+ * Hide all the main containers except the container specified as the parameter
+ * @param containerToShow the HTML container we want to display
+ */
 function hideMatchContainersExceptOne(containerToShow) {
     let matchContainers = document.querySelectorAll('#match-details-container > div')
     matchContainers.forEach(container => {
@@ -377,7 +436,7 @@ function hideMatchContainersExceptOne(containerToShow) {
 }
 
 /**
- * get the home and away clubs formation, which includes the starting players
+ * Get the home and away clubs formation, which includes the starting players
  * and substitutes (which are player that start the game in the bench)
  * @param matchIds query parameter, is an object formed by game_id, home_club_id and away_club_id
  */
@@ -396,6 +455,13 @@ async function getMatchFormation(matchIds) {
         alert(err);
     }
 }
+
+/**
+ * get the current match players for home and away club
+ * divided in starting players and substitutes.
+ * @param matchIds an object that contains match identifiers like home club id, away club id and game id
+ * @returns {*} an axios promise
+ */
 function getMatchPlayers(matchIds){
     let url = "http://localhost:3000/gamelineups/getMatchPlayers";
     return axios.get(url, {params: matchIds})
@@ -435,11 +501,11 @@ async function renderFormation(container, lineup, managerName, formation) {
 
         lineup.starting_lineup.forEach(player => {
             const match = urls.data.starting_lineup.find(url => url.playerId === player.player_id)
-            player.imageUrl = match ? match.imageUrl : playerDefaultImageUrl
+            player.imageUrl = match ? match.imageUrl : PLAYER_DEFAULT_IMG_URL
         })
         lineup.substitutes.forEach(player => {
             const match = urls.data.substitutes.find(url => url.playerId === player.player_id)
-            player.imageUrl = match ? match.imageUrl : playerDefaultImageUrl
+            player.imageUrl = match ? match.imageUrl : PLAYER_DEFAULT_IMG_URL
         })
         let managerBanner = document.createElement('div')
         managerBanner.className = 'formation-header'
@@ -480,9 +546,22 @@ async function renderFormation(container, lineup, managerName, formation) {
         alert(e)
     }
 }
+
+/**
+ * Get all the player positions in the DB grouped by main position (Goalkeeper, Defender..).
+ * @returns {*} an axios promise
+ */
 function getPositionsGrouped(){
     return axios.get("http://localhost:3000/players/getSubPositionsGroupedByPosition")
 }
+
+/**
+ * Get all the image urls of players that start the game
+ * and players that are in the bench
+ * @param startingIds a list of player id that start the match
+ * @param substituteIds a list of player id that are in the bench
+ * @returns {*} an axios promise
+ */
 function getPlayersImgUrlByIds(startingIds,substituteIds){
     return axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
         params: {
@@ -491,6 +570,13 @@ function getPlayersImgUrlByIds(startingIds,substituteIds){
         }
     })
 }
+
+/**
+ * render the formation role banner and append all the players in the container
+ * @param container the HTML container of a single main role (Defender, Midfield..)
+ * @param playerList a list of HTML player cards
+ * @param bannerName the name of the banner that represent a main role
+ */
 function appendBannerAndEachPlayer(container, playerList, bannerName) {
     container.appendChild(renderFormationRoleBanner(bannerName))
     playerList.forEach(player => {
@@ -500,8 +586,8 @@ function appendBannerAndEachPlayer(container, playerList, bannerName) {
 
 /**
  * render the role banner in home or away formation
- * @param role the role name (Goalkeeper, Defender,Midfield,Attack)
- * @returns {HTMLDivElement}
+ * @param role the main role name (Goalkeeper, Defender,Midfield,Attack)
+ * @returns {HTMLDivElement} the formation role banner just created
  */
 function renderFormationRoleBanner(role) {
     let formationBanner = document.createElement('div')
@@ -542,12 +628,11 @@ function renderManagerCard(managerName) {
  */
 function renderPlayerCard(player) {
     let cardDiv = document.createElement('div')
-    let teamCaptain = player.team_captain === 1 ? CAPITAIN_SYMBOL : ''
+    let teamCaptain = player.team_captain === 1 ? CAPITAIN_SYMBOL : '' //if is team capitain, we put the capitain symbol.
     cardDiv.className = 'player-card-for-competition'
     cardDiv.setAttribute('data-playerid', player.player_id)
     cardDiv.setAttribute('data-name', player.player_name)
     cardDiv.setAttribute('data-imageurl', player.imageUrl)
-    cardDiv.setAttribute('data-countryofbirth', player.countryOfBirth)
 
     cardDiv.innerHTML = `
            <img 

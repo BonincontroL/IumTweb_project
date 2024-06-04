@@ -264,9 +264,7 @@ function displayPlayersByRole(playersByRole) {
  * @param {HTMLElement} container - The container to render players.
  */
 function renderPlayers(players, container) {
-
     container.innerHTML = '';
-
     players.forEach(player => {
         const playerDiv = document.createElement('div');
         playerDiv.className = 'player-card2';

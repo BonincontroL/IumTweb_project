@@ -4,6 +4,7 @@ let playerId; //=>Player ID.
 let isStatsLoaded = false; //=>Flag to indicate if player statistics are loaded.
 let isValutationLoaded = false; //=> Flag to indicate if player valuation is loaded.
 let isLastMatchesLoaded = false; //=>Flag to indicate if player's last matches are loaded.
+const ND_VALUE="N.D"
 document.addEventListener('DOMContentLoaded', async () => {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
@@ -99,12 +100,12 @@ function getPlayerStatistics() {
  */
 function renderPlayerStatistics(playerStatistics) {
     if (playerStatistics.length === 0) {
-        document.getElementById('playerNumYellowCards').innerText = "No data available"
-        document.getElementById('playerNumRedCards').innerText = "No data available"
-        document.getElementById('playerNumGoals').innerText = "No data available"
-        document.getElementById('playerNumAssists').innerText = "No data available"
-        document.getElementById('playerNumMinutes').innerText = "No data available"
-        document.getElementById('appearances').innerText = "No data available"
+        document.getElementById('playerNumYellowCards').innerText = ND_VALUE
+        document.getElementById('playerNumRedCards').innerText = ND_VALUE
+        document.getElementById('playerNumGoals').innerText = ND_VALUE
+        document.getElementById('playerNumAssists').innerText = ND_VALUE
+        document.getElementById('playerNumMinutes').innerText = ND_VALUE
+        document.getElementById('appearances').innerText = ND_VALUE
     } else {
         document.getElementById('playerNumYellowCards').innerText = playerStatistics[0].total_yellow_cards
         document.getElementById('playerNumRedCards').innerText = playerStatistics[0].total_red_cards
@@ -112,8 +113,6 @@ function renderPlayerStatistics(playerStatistics) {
         document.getElementById('playerNumAssists').innerText = playerStatistics[0].total_assists
         document.getElementById('playerNumMinutes').innerText = playerStatistics[0].total_minutes_played
         document.getElementById('appearances').innerText = playerStatistics[0].appearances
-
-
     }
 
 }
@@ -122,23 +121,24 @@ function renderPlayerStatistics(playerStatistics) {
  * Renders player information on the page.
  * @param {Object} playerInfo - All player information.
  * @param {number} playerNumber - Player's shirt number.
- * @param {string} flagUrl - URL of the player's nationality flag.
  */
 function renderPlayerInfo(playerInfo, playerNumber) {
-    let today = new Date();
-    let birthdayDate = new Date(playerInfo.dateOfBirth);
-    let age = today.getFullYear() - birthdayDate.getFullYear();
-    document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship;
-    document.getElementById('player_height').innerText = playerInfo.heightInCm;
-    document.getElementById('squad_player').innerText = playerInfo.currentClubName;
-    document.getElementById('age_player').innerText = age;
-    document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur === null ? "No data avaiable" : `${playerInfo.marketValueInEur} Eur`
-    document.getElementById('playerRole').innerText = playerInfo.subPosition;
+    let age
+    if(playerInfo.dateOfBirth) { //if dateOfBirth is given...
+        let today = new Date();
+        let birthdayDate = new Date(playerInfo.dateOfBirth);
+        age = today.getFullYear() - birthdayDate.getFullYear();
+    }
+    document.getElementById('nationality').innerText = playerInfo.countryOfCitizenship? playerInfo.countryOfCitizenship : ND_VALUE;
+    document.getElementById('player_height').innerText = playerInfo.heightInCm ? playerInfo.heightInCm : ND_VALUE;
+    document.getElementById('squad_player').innerText = playerInfo.currentClubName ? playerInfo.currentClubName : ND_VALUE;
+    document.getElementById('age_player').innerText = age ? age: ND_VALUE; //if age is specified we put it into the container otherwise N.D.
+    document.getElementById('player_market_value').innerText = playerInfo.marketValueInEur?   `${playerInfo.marketValueInEur} Eur`: ND_VALUE
+    document.getElementById('playerRole').innerText = playerInfo.subPosition ? playerInfo.subPosition : ND_VALUE;
     document.getElementById('squadLogo_player').setAttribute('src', CLUB_LOGO_IMAGE_URL + playerInfo.currentClubId + ".png")
-    document.getElementById('player_number').innerText = playerNumber === -1 ? "No data available" : playerNumber
-    document.getElementById('player_number').innerText = `${playerNumber? playerNumber:'No data available'}`
+    document.getElementById('player_number').innerText = playerNumber === -1 ? ND_VALUE: playerNumber
+    document.getElementById('player_number').innerText = `${playerNumber? playerNumber:ND_VALUE}`
 }
-
 
 /**
  * Retrieves player information.
@@ -148,7 +148,6 @@ function getPlayerInfo() {
     return axios.get(`http://localhost:3000/players/getPlayerById/${playerId}`)
 }
 
-
 /**
  * Retrieves player's shirt number.
  * @returns {Promise} - A promise with the player's shirt number.
@@ -156,7 +155,6 @@ function getPlayerInfo() {
 function getPlayerNumber() {
     return axios.get(`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${playerId}`)
 }
-
 
 /**
  * Retrieves player valuation data.
@@ -182,7 +180,7 @@ function renderPlayerValuations(playerValuations) {
     let titleElement = document.getElementById('title_valuation');
     if (playerValuations.length === 0) {
         document.getElementById('tableValutation').remove()
-        titleElement.innerText = "No data avaiable";
+        titleElement.innerText = "Nessuna valutazione disponibile...";
     } else {
         let minYear = Infinity;
         let maxYear = -Infinity;
@@ -219,11 +217,10 @@ function renderPlayerValuations(playerValuations) {
             tableBody.appendChild(row);
         });
 
-        if (minYear < Infinity && maxYear > -Infinity) {
+        if (minYear < Infinity && maxYear > -Infinity)
             titleElement.innerText = `Valutazione (Da ${minYear} a ${maxYear})`;
-        } else {
+        else
             titleElement.innerText = "Valutazione";
-        }
     }
 }
 

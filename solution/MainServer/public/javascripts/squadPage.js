@@ -1,8 +1,7 @@
 let squadInfoBtn //=> Global variables for squad information button.
 let isListenerLoaded=false //=>Flag to check if event listeners are loaded.
-const squadPageName= 'squad-page' //=>Constant for the squad page name.
+const SQUAD_PAGE_NAME= 'squad-page' //=>Constant for the squad page name.
 let clubInfo //=>Object to store club information.
-const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
 let isTableLoaded=false, isPlayersLoaded //=>Flag to check if the table is loaded - Flag to check if players are loaded.
 
 import {getTable,renderTableRow,renderMatchesRound} from './competitionPage.js'
@@ -39,11 +38,11 @@ async function init(){
     }
     squadInfoBtn= document.getElementById('squad-info-btn')
     let lateralButtonsContainer=document.querySelector('#squadLateralNavbar')
-    manageLateralButtons(lateralButtonsContainer,squadPageName)
+    manageLateralButtons(lateralButtonsContainer,SQUAD_PAGE_NAME)
     manageEventDelegation()
     //inizialmente solo il bottone Informazioni deve essere selezionato
     squadInfoBtn.classList.add('active')
-    hideAllMainContainers(squadPageName)
+    hideAllMainContainers(SQUAD_PAGE_NAME)
     document.getElementById('squadInformation').style.display="flex"
 
     document.getElementById('squad-table-btn').addEventListener('click',()=>{
