@@ -44,7 +44,7 @@ function manageDropdownFilters(){
  * @returns {*}
  */
 function getDropdownValues(route){
-    let url= "http://localhost:3000/players"+route
+    let url= MAIN_SERVER+"/players"+route
     return axios.get(url)
 }
 
@@ -83,7 +83,7 @@ function resetDropdownMenus(){
  * Executes a filtered search based on applied filters.
  */
 function doFilteredSearch(){
-    axios.get("http://localhost:3000/players/getByCompIdNationalityAndRole",{
+    axios.get(MAIN_SERVER+"/players/getByCompIdNationalityAndRole",{
         params: {
             competitionId:filteredCompetition,
             nation:filteredNation,
@@ -214,7 +214,7 @@ function fetchPlayers() {
     const loadingSpinner = document.getElementById('loading-spinner');
     loadingSpinner.style.display = 'block';
 
-    return axios.get('http://localhost:3000/players/getTop150PlayersByMarketValue')
+    return axios.get(MAIN_SERVER+'/players/getTop150PlayersByMarketValue')
 }
 
 /**
@@ -289,7 +289,7 @@ function renderPlayers(players, container) {
  * @param {string} letter - The letter to search for.
  */
 function findPlayersByLetter(letter) {
-    axios.get(`http://localhost:3000/players/findPlayersByLetterInName`, { params: { letter } })
+    axios.get(`${MAIN_SERVER}/players/findPlayersByLetterInName`, { params: { letter } })
         .then(response => {
             const players = response.data;
             if(players.length!==0) {

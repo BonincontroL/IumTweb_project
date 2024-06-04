@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded',()=> {
             document.getElementById('popupNoContent').style.display = 'none'
             getAllClubsByInitial()
         }else {
-            axios.get("http://localhost:3000/clubs/getClubsGroupedByInitialAndLikeName", {
+            axios.get(MAIN_SERVER+"/clubs/getClubsGroupedByInitialAndLikeName", {
                 params: {
                     name: searchText
                 }
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded',()=> {
  * Get al server per tutti i club suddivisi in base al carattere iniziale
  */
 function getAllClubsByInitial() {
-    axios.get("http://localhost:3000/clubs/getAllClubsByInitial")
+    axios.get(MAIN_SERVER+"/clubs/getAllClubsByInitial")
         .then(response => {
             renderClubsGroupedByInitial(response.data);
         })

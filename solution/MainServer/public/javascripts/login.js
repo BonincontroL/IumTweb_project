@@ -133,7 +133,7 @@ function validateEmail(email) {
  * @param {Object} requestBody - Data structure with registration information.
  */
 function sendDataReg(requestBody) {
-    axios.post('http://localhost:3000/users/register', requestBody)
+    axios.post(MAIN_SERVER+'/users/register', requestBody)
         .then(response => {
             if (response.status === 201) {
                 alert('Registrazione completata con successo');
@@ -154,7 +154,7 @@ function sendDataReg(requestBody) {
  * @param {Object} requestBody - Data structure with login information.
  */
 function sendDataLog(requestBody){
-    axios.post('http://localhost:3000/users/login', requestBody)
+    axios.post(MAIN_SERVER+'/users/login', requestBody)
         .then(response => {
             if (response.status === 200) {
                 alert('Login completato con successo');

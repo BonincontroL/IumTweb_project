@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initLogin();
     manageFilterPopup();
     manageEventDelegation()
-    const competitionsEndpoint = 'http://localhost:3000/competitions/getAllCompetitions';
+    const competitionsEndpoint = MAIN_SERVER+'/competitions/getAllCompetitions';
     axios.get(competitionsEndpoint)
         .then(response => {
             const competitions = response.data;
@@ -145,7 +145,7 @@ function createDayButtons() {
 function fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek) {
     const year = document.getElementById('year-select').value;
     const season = parseInt(document.getElementById('season-select').value);
-    const matchesEndpoint = `http://localhost:3000/games/getMatchesByCompAndSeasonAndRound`;
+    const matchesEndpoint = MAIN_SERVER+`/games/getMatchesByCompAndSeasonAndRound`;
     axios.get(matchesEndpoint, {
         params: {
             comp_id: competitionId,

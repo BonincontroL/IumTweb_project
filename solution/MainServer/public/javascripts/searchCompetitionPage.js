@@ -49,7 +49,7 @@ async function filterAndRenderCompetitionsBySearchedText(searchedText) {
  */
 
 function getCompetitionsGroupedByCountry(){
-    let url="http://localhost:3000/competitions/getCompetitionsGroupedByCountry"
+    let url=MAIN_SERVER+"/competitions/getCompetitionsGroupedByCountry"
     axios.get(url)
         .then(async res=>{
             competitions = sortCompetitionByName(res.data)

@@ -77,7 +77,7 @@ function renderPlayerImg(player) {
 function getPlayerStatistics() {
     const loadingSpinner = document.getElementById('loading-spinner');
     loadingSpinner.style.display = "block";
-    axios.get(`http://localhost:3000/appearances/getPlayerStatistics/${playerId}`)
+    axios.get(`${MAIN_SERVER}/appearances/getPlayerStatistics/${playerId}`)
         .then(response => {
             if (response.status === 200) {
                 renderPlayerStatistics(response.data)
@@ -145,7 +145,7 @@ function renderPlayerInfo(playerInfo, playerNumber) {
  * @returns {Promise} - A promise with the player information.
  */
 function getPlayerInfo() {
-    return axios.get(`http://localhost:3000/players/getPlayerById/${playerId}`)
+    return axios.get(`${MAIN_SERVER}/players/getPlayerById/${playerId}`)
 }
 
 /**
@@ -153,14 +153,13 @@ function getPlayerInfo() {
  * @returns {Promise} - A promise with the player's shirt number.
  */
 function getPlayerNumber() {
-    return axios.get(`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${playerId}`)
+    return axios.get(`${MAIN_SERVER}/gamelineups/getPlayerNumberByIdPlayer/${playerId}`)
 }
-
 /**
  * Retrieves player valuation data.
  */
 function getPlayerValuation() {
-    axios.get(`http://localhost:3000/player_valuations/getPlayerValuationPerYear/${playerId}`)
+    axios.get(`${MAIN_SERVER}/player_valuations/getPlayerValuationPerYear/${playerId}`)
         .then(response => {
             if (response.status === 200)
                 renderPlayerValuations(response.data)
@@ -234,7 +233,7 @@ async function fetchPlayerLastMatches() {
     lastMatchesContainer.innerHTML = '';
     try {
         loadingSpinner.style.display = 'block';
-        let playerLastMatches = await axios.get(`http://localhost:3000/appearances/getPlayerGames/${playerId}`);
+        let playerLastMatches = await axios.get(`${MAIN_SERVER}/appearances/getPlayerGames/${playerId}`);
         playerLastMatches = playerLastMatches.data;
         if (playerLastMatches.length === 0) {
             lastMatchesContainer.innerHTML = '<h1>Nessuna partita trovata...</h1>';

@@ -2454,6 +2454,8 @@ tbody > tr:hover{
     gap:var(--gap-8xs)
 }
 .popup-no-content-found{
+    position: fixed;
+    top:18vh;
     width: fit-content;
     display: none;
     align-items: center;
@@ -2462,6 +2464,7 @@ tbody > tr:hover{
     background-color: var(--white);
     border: 1px solid var(--color-lose);
     border-radius: var(--br-12px);
+    z-index: 999;
 }
 .formation-not-found{
     width: 100%;

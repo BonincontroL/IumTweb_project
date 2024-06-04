@@ -174,7 +174,7 @@ function getTableAndLastMatches(){
     })
 }
 function getCompetitionName(){
-    let url="http://localhost:3000/competitions/getName"
+    let url=MAIN_SERVER+"/competitions/getName"
     return axios.get(url,{
         params:{
             competition_id:clubInfo.competitionId
@@ -182,7 +182,7 @@ function getCompetitionName(){
     })
 }
 function getClubInfo(){
-    let url="http://localhost:3000/clubs/get"
+    let url=MAIN_SERVER+"/clubs/get"
     return axios.get(url,{params:{
         club_id:clubInfo.clubId
     }
@@ -213,7 +213,7 @@ function renderMiniTable(completeCompetitionTable){
  * @returns {*} the axios promise to manage
  */
 function getClubPlayers(){
-    let url ="http://localhost:3000/players/searchByClubIdAndSeason"
+    let url =MAIN_SERVER+"/players/searchByClubIdAndSeason"
     return axios.get(url,{
         params:{
             club_id:clubInfo.clubId,

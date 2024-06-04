@@ -10,6 +10,23 @@ const LAST_SEASON=2023
  * Initializes the homepage.
  */
 function init() {
+    initSwiper()
+    document.getElementById('goToAllCompetitions').addEventListener('click', () => {
+        window.location.href = "../searchCompetition_page.html"
+    })
+    document.getElementById('goToMatchesPage').addEventListener('click', () => {
+        window.location.href = "../matches_page.html"
+    })
+    manageEventDelegation()
+    getAndRenderPlayers();
+    getAndRenderLastMatches("IT1"); // Serie A matches by default
+    getAndRenderLastMatches("EL");
+    addCompetitionLogosListeners();
+    initLogin();
+
+}
+
+function initSwiper(){
     let swiper = new Swiper(".competition-swiper", {
         slidesPerView: 1,
         direction: "horizontal",
@@ -24,29 +41,14 @@ function init() {
             prevEl: ".swiper-button-prev"
         }
     })
-    document.getElementById('goToAllCompetitions').addEventListener('click', () => {
-        window.location.href = "../searchCompetition_page.html"
-    })
-    document.getElementById('goToMatchesPage').addEventListener('click', () => {
-        window.location.href = "../matches_page.html"
-    })
-    manageEventDelegation()
-    getAndRenderPlayers();
-    getAndRenderLastMatches("IT1"); // Serie A matches by default
-    getAndRenderLastMatches("NL1");
-    addCompetitionLogosListeners();
-    initLogin();
-
 }
-
-
 /**
  * Function to get players for a specific competition.
  * @param {string} competitionId - The competition identifier.
  * @returns {Promise<Array>} A promise resolving to an array of players.
  */
 function getPlayersByCompetition(competitionId) {
-    const url = `http://localhost:3000/players/get5RandomPlayersByCompIdAndLastSeason/${competitionId}/${LAST_SEASON}`;
+    const url = MAIN_SERVER+`/players/get5RandomPlayersByCompIdAndLastSeason/${competitionId}/${LAST_SEASON}`;
     return axios.get(url)
         .then(playersResponse => {
             const players = playersResponse.data;
@@ -200,7 +202,7 @@ function getAndRenderPlayers() {
  * @returns {Promise<unknown>} - A promise resolving to player number data.
  */
 function getPlayerNumber(idPlayer) {
-    const url=`http://localhost:3000/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
+    const url=MAIN_SERVER+`/gamelineups/getPlayerNumberByIdPlayer/${idPlayer}`;
     return axios.get(url)
 }
 
@@ -211,7 +213,7 @@ function getPlayerNumber(idPlayer) {
  * @returns {Promise<Array>} Un promise che, se risolto, restituisce un array dei match.
  */
 function getLastMatchesByCompetition(competitionId) {
-    const url=`http://localhost:3000/games/getLastMatchesByCompetition/${competitionId}`;
+    const url=MAIN_SERVER+`/games/getLastMatchesByCompetition/${competitionId}`;
     return axios.get(url)
         .then(matchesResponse => {
             const matches = matchesResponse.data;

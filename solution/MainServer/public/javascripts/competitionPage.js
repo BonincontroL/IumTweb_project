@@ -175,6 +175,8 @@ function adaptButtonListenersToTypology(){
     }if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP || typology === COMPETITION_TYPOLOGIES.DOMESTIC_LEAUGE){
         document.getElementById('competition-matches-btn').addEventListener('click', getGroupMatches)
         document.getElementById('matchesSeasonSelector').addEventListener('change', async function () {
+            document.getElementById('loadPrevMatchday').className='btn-disabled' //to reset next and prev buttons.
+            document.getElementById('loadNextMatchday').className='btn-choose-matchdays'
             await manageMatchesSeasonChange(this.value)
         })
         document.getElementById('loadPrevMatchday').addEventListener('click', ()=>{
@@ -414,7 +416,7 @@ function renderTableStructure(groupName,finalContainer){
  * fetch all the current competition seasons
  */
 function getCompetitionSeasons(){
-    let url="http://localhost:3000/games/getCompetitionSeasonsSorted"
+    let url=MAIN_SERVER+"/games/getCompetitionSeasonsSorted"
     return axios.get(url,{
         params:{
             competition_id:competitionId
@@ -426,7 +428,7 @@ function getCompetitionSeasons(){
  * if my current competition is in this list we set a boolean value to true
  */
 function getCompetitionsWithGroup(){
-    let url ="http://localhost:3000/games/getCompetitionIdsWithGroup"
+    let url =MAIN_SERVER+"/games/getCompetitionIdsWithGroup"
     return axios.get(url)
 }
 
@@ -459,7 +461,7 @@ function getTopPlayers() {
  */
 function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
     let idList = playersInfo.map(item => item._id)
-    axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
+    axios.get(MAIN_SERVER+"/players/getPlayersImgUrlById", {
         params: {
             starting: idList.join(","),
         }
@@ -495,7 +497,7 @@ function mergePlayersAndImage(players,images){
  * @returns {*}
  */
 function getTopPlayersByMarketValue(){
-    let url= `http://localhost:3000/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}` //default is last season
+    let url= `${MAIN_SERVER}/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}` //default is last season
     return axios.get(url)
 }
 
@@ -504,7 +506,7 @@ function getTopPlayersByMarketValue(){
  * @returns {*}
  */
 function getTopPlayersByGoals(){
-    let url= `http://localhost:3000/appearances/getTopScorer`
+    let url= MAIN_SERVER+`/appearances/getTopScorer`
     return axios.get(url,{
         params:{
             comp_id:competitionId
@@ -608,7 +610,7 @@ function manageTableBtns(buttons){
  * @returns {*}
  */
 export function getTable(compId,season,tableType, groupName){
-    return axios.get("http://localhost:3000/games/getTableByCompSeasonAndType",{
+    return axios.get(MAIN_SERVER+"/games/getTableByCompSeasonAndType",{
         params:{
             comp_id:compId,
             season:season,
@@ -684,7 +686,7 @@ function getClubsWrapper(){
  * Retrieves and render clubs divided by groups for the competition.
  */
 function getClubsDividedByGroup(){
-    let url="http://localhost:3000/games/getClubsDividedByGroups"
+    let url=MAIN_SERVER+"/games/getClubsDividedByGroups"
     axios.get(url,{
         params:{
             competition_id:competitionId,
@@ -770,7 +772,7 @@ function renderGroup(group){
  * last season of competition and renders them.
  */
 function getClubs(){
-    let url="http://localhost:3000/clubs/getByCompetitionAndSeason"
+    let url=MAIN_SERVER+"/clubs/getByCompetitionAndSeason"
     axios.get(url, {
         params:{
             competition_id: competitionId,
@@ -821,7 +823,7 @@ function renderClubCard(club){
  * do the axios query to get all the current competition infos
  */
 function getCompetitionInformation() {
-    let url = "http://localhost:3000/competitions/getCompetitionInformation"
+    let url = MAIN_SERVER+"/competitions/getCompetitionInformation"
     return axios.get(url, {
         params:
             {"competition_id": competitionId}
@@ -847,7 +849,7 @@ function renderCompetitionInformation(competitionInfo){
  * @returns {*} an axios promise.
  */
 function fetchAllRoundNumbers(season){
-    let roundNumbersUrl=`http://localhost:3000/games/getRoundNumbers`
+    let roundNumbersUrl=MAIN_SERVER+`/games/getRoundNumbers`
     return axios.get(roundNumbersUrl,{
         params:
             {
@@ -886,7 +888,7 @@ async function getGroupMatches() {
  * @returns {Promise<*>} an axios promise.
  */
 async function fetchAllSeasons(){
-    let seasonsUrl='http://localhost:3000/games/getCompetitionSeasonsSorted'
+    let seasonsUrl=MAIN_SERVER+'/games/getCompetitionSeasonsSorted'
     return axios.get(seasonsUrl,{
         params:{
             competition_id:competitionId
@@ -1071,7 +1073,7 @@ function getPrevMatchday(season){
  * @param season the season we are interested in
  */
 function getAllMatchesInRound(round,season){
-    let url='http://localhost:3000/games/getMatchesByCompAndSeasonAndRound'
+    let url=MAIN_SERVER+'/games/getMatchesByCompAndSeasonAndRound'
     return axios.get(url, {
         params:{
             comp_id:competitionId,

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  * about home club and away club
  */
 function getHeadToHeadInfos(){
-    let url="http://localhost:3000/games/getHeadToHead"
+    let url=MAIN_SERVER+"/games/getHeadToHead"
     axios.get(url,{
         params:{
             homeClubId: matchInfo.home_club_id,
@@ -173,7 +173,7 @@ function renderBannerInfo() {
  * @param {Object} matchIds - Object containing match IDs, we have home club id, away club id and game id.
  */
 function getMatchEvents(matchIds) {
-    axios.get("http://localhost:3000/gameevents/getMatchEvents", {
+    axios.get(MAIN_SERVER+"/gameevents/getMatchEvents", {
         params: {
             game_id: matchIds.game_id
         }
@@ -382,7 +382,7 @@ function renderMatchInformation(competitionName) {
  * @returns {*} an axios promise
  */
 function getCompetitionName() {
-    let url = "http://localhost:3000/competitions/getName";
+    let url = MAIN_SERVER+"/competitions/getName";
     return axios.get(url, {
         params: {
             competition_id: matchInfo.competition_id
@@ -395,7 +395,7 @@ function getCompetitionName() {
  * @returns {*} an axios promise
  */
 function getGameInfos() {
-    let url = "http://localhost:3000/games/get";
+    let url = MAIN_SERVER+"/games/get";
     return axios.get(url, {
         params: {
             game_id: matchInfo.game_id
@@ -463,7 +463,7 @@ async function getMatchFormation(matchIds) {
  * @returns {*} an axios promise
  */
 function getMatchPlayers(matchIds){
-    let url = "http://localhost:3000/gamelineups/getMatchPlayers";
+    let url = MAIN_SERVER+"/gamelineups/getMatchPlayers";
     return axios.get(url, {params: matchIds})
 }
 /**
@@ -552,7 +552,7 @@ async function renderFormation(container, lineup, managerName, formation) {
  * @returns {*} an axios promise
  */
 function getPositionsGrouped(){
-    return axios.get("http://localhost:3000/players/getSubPositionsGroupedByPosition")
+    return axios.get(MAIN_SERVER+"/players/getSubPositionsGroupedByPosition")
 }
 
 /**
@@ -563,7 +563,7 @@ function getPositionsGrouped(){
  * @returns {*} an axios promise
  */
 function getPlayersImgUrlByIds(startingIds,substituteIds){
-    return axios.get("http://localhost:3000/players/getPlayersImgUrlById", {
+    return axios.get(MAIN_SERVER+"/players/getPlayersImgUrlById", {
         params: {
             starting: startingIds.join(","),
             substitutes: substituteIds.join(",")
