@@ -39,7 +39,6 @@ function attachSelectEventHandlers() {
 function handleSelectChange() {
     const competitionId = document.getElementById('competition-select').value;
     const dayOfWeek = document.querySelector('.date-days-button-active')?.textContent;
-
     fetchMatchesByCompetitionAndDay(competitionId, dayOfWeek);
 }
 
@@ -65,6 +64,7 @@ function populateSelectWithYears(selectId, startYear, endYear, defaultValue) {
  * Populates the year select.
  */
 function yearSelect() {
+
     populateSelectWithYears('year-select', 2010, 2023, '2023');
 }
 

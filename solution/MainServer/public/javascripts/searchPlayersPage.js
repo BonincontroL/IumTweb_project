@@ -34,7 +34,7 @@ function manageDropdownFilters(){
         renderNationalitiesDropdown(res[1].data)
         renderPositionsDropdown(res[2].data)
     }).catch(err=>{
-        alert(err)
+        console.error("There was an error trying to get dropdown values",err)
     })
 }
 
@@ -64,7 +64,10 @@ function manageApplyAndResetButtons(){
         }
     })
     resetFilterBtn.addEventListener('click',()=>{
-        filteredRole=filteredNation=filteredCompetition=null;
+        if(filteredCompetition!== null || filteredRole!==null || filteredNation!==null) { //if at least one parameter was specified...
+            fetchAndCategorizePlayers() //ricarichiamo la pagina di base.
+        }
+        filteredRole = filteredNation = filteredCompetition = null;
         resetDropdownMenus() //resettiamo tutti i dropdown
     })
 }
@@ -97,7 +100,7 @@ function doFilteredSearch(){
         }else
             alert("Nessun giocatore trovato con i seguenti filtri, riprova!")
     }).catch(err=>{
-        alert(err)
+        console.error("There was an error trying to do filtered search",err)
     })
 }
 

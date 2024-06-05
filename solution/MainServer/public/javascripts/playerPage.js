@@ -1,4 +1,3 @@
-let playerInfoBtn  //=>Player information button.
 const PLAYER_PAGE_NAME = 'player-page' //=>Name of the player page.
 let playerId; //=>Player ID.
 let isStatsLoaded = false; //=>Flag to indicate if player statistics are loaded.
@@ -16,14 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert(e)
     }
     renderPlayerImg(playerInfo)
-
-    playerInfoBtn = document.getElementById('player-info-btn')
-    let lateralPlayerButtonContainer = document.querySelector('#playerLateralNavbar')
+    const lateralPlayerButtonContainer = document.querySelector('#playerLateralNavbar')
     manageLateralButtons(lateralPlayerButtonContainer, PLAYER_PAGE_NAME)
     manageEventDelegation()
-    //inizialmente solo il bottone Informazioni è premuto
-    playerInfoBtn.classList.add('active')
-    hideAllMainContainers(PLAYER_PAGE_NAME)
+
     document.getElementById('playerInformation').style.display = "flex"
     document.getElementById('player-statistic-btn').addEventListener('click', () => {
         if (!isStatsLoaded) {

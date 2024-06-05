@@ -19,20 +19,23 @@ const GamesController = require("../controllers/games")//=> Controller
  * Route to get last matches by competition ID.
  */
 router.get('/getLastMatchesByCompetition/:competition_id', async (req, res, next) => {
-    try{
-        const {competition_id} = req.params;
-        if(!competition_id)
-            return res.status(400).json({error:'Errore, manca ID della competizione (comp_id)'})
-        const lastMatches = await GamesController.getLast5Games(competition_id);
-        res.status(200).json(lastMatches);
-    } catch (error) {
-        console.error('Errore durante il recupero delle ultime partite:', error);
-        res.status(500).json({ error: 'Errore durante il recupero delle ultime partite' });
-    }
-});
+    const {competition_id} = req.params;
+    if (!competition_id)
+        return res.status(400).json({error: 'Errore, manca ID della competizione (comp_id)'})
+    GamesController.getLast5Games(competition_id)
+        .then(lastMatches => {
+            res.status(200).json(lastMatches);
+        }).catch(error => {
+            console.error('Errore durante il recupero delle ultime partite:', error);
+            res.status(500).json({error: 'Errore durante il recupero delle ultime partite'});
+        })
+})
 
 /**
- * serve per prendere i numeri delle giornate di un campionato in una certa stagione.
+ * This route takes round numbers of a certain competition specified by comp_id query parameter and
+ * of a certain season specified by season query parameter
+ * round numbers are divided into two groups, "groupRounds" are all round numbers that starts with Group
+ * and "otherRounds"
  */
 router.get('/getRoundNumbers',async (req,res)=>{
     const comp_id = req.query.comp_id;

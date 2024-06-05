@@ -35,11 +35,7 @@ async function init() {
     const urlParam = new URLSearchParams(queryString)
     competitionId = urlParam.get('competition_id')
     competitionName = urlParam.get('competition_name')
-    //inizialmente solo il primo bottone ("Informazioni") deve essere attivo.
-    let competitionInfoBtn = document.getElementById('competition-info-btn')
-    competitionInfoBtn.classList.add('active')
-    hideAllMainContainers(COMPETITION_PAGE_NAME)
-    document.getElementById('competitionInformation').style.display = "flex"
+
     try {
         competitionSeasons= await getCompetitionSeasons() //ottieni gli anni in cui la competizione corrente è stata giocata
         competitionSeasons=competitionSeasons.data
@@ -56,7 +52,7 @@ async function init() {
         manageEventDelegation()
         initLogin();
     } catch (e) {
-        alert(e)
+        console.error("There was an error in the init function",e)
     }
 }
 
@@ -120,7 +116,7 @@ function adaptPageToTypology(){
  */
 async function manageMatchesSeasonChange(selectedSeason){
     currentRound=0 //si riparte dal primo round ogni cambiamento di season
-    let rounds = await fetchAllRoundNumbers(selectedSeason)
+    const rounds = await fetchAllRoundNumbers(selectedSeason)
     if(typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
         matchRounds = rounds.data.groupRounds
         knockoutRounds = rounds.data.otherRounds
@@ -153,7 +149,7 @@ async function getTableWrapper(){
             manageTableVariants(tableBtns)
         }
     }catch (e){
-        alert(e)
+        console.error("There was an error trying to take competition tables",e)
     }
 }
 
@@ -164,8 +160,8 @@ function adaptButtonListenersToTypology(){
     if(typology===COMPETITION_TYPOLOGIES.CUP || typology===COMPETITION_TYPOLOGIES.GROUP_CUP) {
         document.getElementById('competition-knockout-btn').addEventListener('click', getKnockoutMatches)
         document.getElementById('knockoutSeasonSelector').addEventListener('change', async function () {
-            let rounds = await fetchAllRoundNumbers(this.value)
-            knockoutRounds = rounds.data.otherRounds
+            const rounds = await fetchAllRoundNumbers(this.value)
+            knockoutRounds = rounds.data.otherRounds //otherRounds are knockoutRounds
             currentKnockoutSeason = this.value
             if (knockoutRounds.length === 0)
                 document.getElementById('noKnockoutError').style.display = 'flex'
@@ -180,24 +176,27 @@ function adaptButtonListenersToTypology(){
             await manageMatchesSeasonChange(this.value)
         })
         document.getElementById('loadPrevMatchday').addEventListener('click', ()=>{
-            let currentSeason= document.getElementById('matchesSeasonSelector').value
+            const currentSeason= document.getElementById('matchesSeasonSelector').value
             getPrevMatchday(currentSeason)
         })
         document.getElementById('loadNextMatchday').addEventListener('click', ()=>{
-            let currentSeason= document.getElementById('matchesSeasonSelector').value
+            const currentSeason= document.getElementById('matchesSeasonSelector').value
             getNextMatchday(currentSeason)
         })
         document.getElementById('competitionSelectMatchday').addEventListener('change', function () {
+            const prevButton = document.getElementById('loadPrevMatchday')
+            const nextButton = document.getElementById('loadNextMatchday')
+            const currentSeason= document.getElementById('matchesSeasonSelector').value
             currentRound = matchRounds.indexOf(this.value)
+            //parte dedicata alla gestione delle classi dei bottoni avanti e indietro per i round
             if(currentRound===0)
-                document.getElementById('loadPrevMatchday').className='btn-disabled'
+                prevButton.className='btn-disabled'
             else if(currentRound===matchRounds.length-1)
-                document.getElementById('loadNextMatchday').className='btn-disabled'
+                nextButton.className='btn-disabled'
             else{
-                document.getElementById('loadPrevMatchday').className='btn-choose-matchdays'
-                document.getElementById('loadNextMatchday').className='btn-choose-matchdays'
+                prevButton.className='btn-choose-matchdays'
+                nextButton.className='btn-choose-matchdays'
             }
-            let currentSeason= document.getElementById('matchesSeasonSelector').value
             getAndRenderMatchesInRound(matchRounds[currentRound],currentSeason)
         })
         document.getElementById('competition-table-btn').addEventListener('click', async function(){
@@ -220,11 +219,11 @@ function adaptButtonListenersToTypology(){
 async function getGroupTables(){
     let groupTables={}
     if(matchRounds.length===0){//se non abbiamo ancora caricato matchRounds...
-        let rounds = await fetchAllRoundNumbers(competitionSeasons[0])
+        const rounds = await fetchAllRoundNumbers(competitionSeasons[0])
         matchRounds=rounds.data.groupRounds
     }
     for (const group of matchRounds) {
-        let table =await getTable(competitionId,competitionSeasons[0], TABLE_TYPES.FULL, group)
+        const table =await getTable(competitionId,competitionSeasons[0], TABLE_TYPES.FULL, group)
         groupTables[group] = table.data
     }
     renderGroupTables(groupTables)
@@ -285,7 +284,7 @@ function manageTableVariants(buttons){
                     let tbodyToShow= document.getElementById(tbodyId)
                     hideTbodiesExceptOne(tbodyToShow,table.querySelectorAll('tbody'))
                 }).catch(err=>{
-                    alert(err)
+                    console.error("There was an error trying to take competition table",err)
             })
         })
     })
@@ -346,7 +345,7 @@ function addSeasonDropdownTableListener(){
                 hideTbodiesExceptOne(tbodyToShow,table.querySelectorAll('tbody'))
             })
             .catch(err=>{
-                alert(err)
+                console.error("There was an error trying to take the competition table",err)
             })
     })
 }
@@ -416,7 +415,7 @@ function renderTableStructure(groupName,finalContainer){
  * fetch all the current competition seasons
  */
 function getCompetitionSeasons(){
-    let url=MAIN_SERVER+"/games/getCompetitionSeasonsSorted"
+    const url=MAIN_SERVER+"/games/getCompetitionSeasonsSorted"
     return axios.get(url,{
         params:{
             competition_id:competitionId
@@ -428,7 +427,7 @@ function getCompetitionSeasons(){
  * if my current competition is in this list we set a boolean value to true
  */
 function getCompetitionsWithGroup(){
-    let url =MAIN_SERVER+"/games/getCompetitionIdsWithGroup"
+    const url =MAIN_SERVER+"/games/getCompetitionIdsWithGroup"
     return axios.get(url)
 }
 
@@ -445,7 +444,7 @@ function getTopPlayers() {
         renderTopPlayers(res[0].data, 'playersTopMarketValueContainer', PLAYER_CLASSIFIC_TYPOLOGIES.VALUE)
         renderTopPlayersByGoalWrapper(res[1].data,'playersTopGoalsContainer',PLAYER_CLASSIFIC_TYPOLOGIES.GOALS)
     }).catch(err => {
-        alert(err)
+        console.error("There was an error trying to take top players",err)
     }).finally(()=>{ //removing loading spinner...
         loadingSpinner.style.display = "none";
     })
@@ -460,16 +459,16 @@ function getTopPlayers() {
  * @param type the leaderbord type, could be GOAL or VALUE.
  */
 function renderTopPlayersByGoalWrapper(playersInfo,containerId,type){
-    let idList = playersInfo.map(item => item._id)
+    const idList = playersInfo.map(item => item._id)
     axios.get(MAIN_SERVER+"/players/getPlayersImgUrlById", {
         params: {
             starting: idList.join(","),
         }
     }).then(imageRes => {
-        let players = mergePlayersAndImage(playersInfo, imageRes.data.starting_lineup)
+        const players = mergePlayersAndImage(playersInfo, imageRes.data.starting_lineup)
         renderTopPlayers(players, containerId, type)
     }).catch(err => {
-        alert(err)
+        console.error("There was an error trying to take player image urls",err)
     })
 }
 
@@ -497,7 +496,7 @@ function mergePlayersAndImage(players,images){
  * @returns {*}
  */
 function getTopPlayersByMarketValue(){
-    let url= `${MAIN_SERVER}/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}` //default is last season
+    const url= `${MAIN_SERVER}/players/getPlayersByCompetitionAndLastSeasonSortedByValue/${competitionId}/${competitionSeasons[0]}` //default is last season
     return axios.get(url)
 }
 
@@ -506,7 +505,7 @@ function getTopPlayersByMarketValue(){
  * @returns {*}
  */
 function getTopPlayersByGoals(){
-    let url= MAIN_SERVER+`/appearances/getTopScorer`
+    const url= MAIN_SERVER+`/appearances/getTopScorer`
     return axios.get(url,{
         params:{
             comp_id:competitionId
@@ -522,7 +521,7 @@ function getTopPlayersByGoals(){
  * @param type the type of ranking, can be VALUE or GOALS
  */
 function renderTopPlayers(players,containerId,type){
-    let playersContainer= document.getElementById(containerId)
+    const playersContainer= document.getElementById(containerId)
     playersContainer.innerHTML=''
     if(players.length!==0)
         players.forEach((player,index)=>{
@@ -686,7 +685,7 @@ function getClubsWrapper(){
  * Retrieves and render clubs divided by groups for the competition.
  */
 function getClubsDividedByGroup(){
-    let url=MAIN_SERVER+"/games/getClubsDividedByGroups"
+    const url=MAIN_SERVER+"/games/getClubsDividedByGroups"
     axios.get(url,{
         params:{
             competition_id:competitionId,
@@ -772,7 +771,7 @@ function renderGroup(group){
  * last season of competition and renders them.
  */
 function getClubs(){
-    let url=MAIN_SERVER+"/clubs/getByCompetitionAndSeason"
+    const url=MAIN_SERVER+"/clubs/getByCompetitionAndSeason"
     axios.get(url, {
         params:{
             competition_id: competitionId,
@@ -783,7 +782,7 @@ function getClubs(){
             renderAllClubs(res.data)
         }
     }).catch(err=>{
-        alert(err)
+        console.error("There was an error trying to take competitions clubs",err)
     })
 }
 
@@ -823,7 +822,7 @@ function renderClubCard(club){
  * do the axios query to get all the current competition infos
  */
 function getCompetitionInformation() {
-    let url = MAIN_SERVER+"/competitions/getCompetitionInformation"
+    const url = MAIN_SERVER+"/competitions/getCompetitionInformation"
     return axios.get(url, {
         params:
             {"competition_id": competitionId}
@@ -879,7 +878,7 @@ async function getGroupMatches() {
         }
         await getAndRenderGroupMatches(selectedSeason)
     }catch (e){
-        alert(e)
+        console.error("There was an error trying to take group matches",e)
     }
 }
 
@@ -939,7 +938,7 @@ async function getAndRenderGroupMatches(season) {
         let matches = await getAllMatchesInRound(matchRounds[currentRound],season)
         renderMatchesRound(matches.data)
     } catch (e) {
-        alert(e)
+        console.error("There was an error trying to get matches in a round",e)
     }
 }
 
@@ -956,7 +955,7 @@ async function getAllMatchesInKnockoutRounds(season){
             let matches = await getAllMatchesInRound(round,season)
             container.appendChild(renderKnockoutMatches(matches.data,round))
         }catch (err){
-            alert(err)
+            console.error("There was an error trying to get all the matches in a round",err)
         }
     }
 }
@@ -1045,7 +1044,7 @@ function getAndRenderMatchesInRound(round,season){
             document.getElementById('competitionSelectMatchday').value=matchRounds[currentRound]
         })
         .catch(err=>{
-            alert(err)
+            console.error("There was an error trying to get matches in a round", err)
         })
 }
 /**
@@ -1073,7 +1072,7 @@ function getPrevMatchday(season){
  * @param season the season we are interested in
  */
 function getAllMatchesInRound(round,season){
-    let url=MAIN_SERVER+'/games/getMatchesByCompAndSeasonAndRound'
+    const url=MAIN_SERVER+'/games/getMatchesByCompAndSeasonAndRound'
     return axios.get(url, {
         params:{
             comp_id:competitionId,

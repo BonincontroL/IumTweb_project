@@ -1346,7 +1346,7 @@
           "Players"
         ],
         "summary": "Get player by competition ID and last season, sorted by value",
-        "description": "Retrieves players based on a competition ID and the last season, sorted by market value in a descending manner.",
+        "description": "Retrieves players based on a competition ID and the last season, sorted by market value in a descending manner (players with null market value are placed in the last positions.",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -1703,7 +1703,7 @@
           "Players"
         ],
         "summary": "Find players by letter in name",
-        "description": "Retrieves a list of players whose names contain a specified letter.",
+        "description": "Retrieves a list of players whose full name contain a specified letter, sorted by market value (player with null market value are placed in the last positions).",
         "servers": [
           {
             "url": "http://localhost:3000",
@@ -2100,7 +2100,7 @@
       "get": {
         "tags": ["Players"],
         "summary": "Get players by competition ID, nationality, and role",
-        "description": "Returns players who participated in a specific competition, with a specific nationality and role.",
+        "description": "Returns players who participated in a specific competition, with a specific nationality and role sorted by market value (player with null market value are placed in the last positions.",
         "servers": [
           {
             "url": "http://localhost:3000",

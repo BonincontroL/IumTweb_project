@@ -59,12 +59,12 @@ public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpec
 
     /**
      * Finds players whose first name or last name match the given search term,
-     * or whose name (if first name is null) matches the search term.
+     * or whose name (if first name is null) matches the search term, sorted by market value (player with null market value are last).
      * @param searchTerm The search term to match against player names
      * @return           A page of players matching the search term
      */
     @Query(value="SELECT * FROM Players where " +
-            "lower(name) like concat('%',lower(:searchTerm),'%') LIMIT :maxPlayers", nativeQuery = true)
+            "lower(name) like concat('%',lower(:searchTerm),'%') ORDER BY CASE WHEN market_value_in_eur IS NULL THEN 1 ELSE 0 END, market_value_in_eur DESC LIMIT :maxPlayers ", nativeQuery = true)
     List<Players> findByNameOrSurname(String searchTerm, Integer maxPlayers);
 
 

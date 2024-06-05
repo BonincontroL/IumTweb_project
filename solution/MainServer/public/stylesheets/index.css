@@ -457,6 +457,7 @@ header ul li ul li a{
     border-right: 6px solid var(--black);
 }
 #competitionInformation{
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -631,6 +632,7 @@ header ul li ul li a{
     padding: 6px 0 0;
 }
 #squadInformation{
+    display: flex;
     overflow-x:auto;
     flex-direction: row;
     align-items: flex-start;
@@ -854,6 +856,7 @@ header ul li ul li a{
 }
 #competitionTable,
 #competitionMatches{
+    display: none;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -868,6 +871,9 @@ header ul li ul li a{
     width: 100%;
     gap: var(--gap-xl);
     overflow-y:auto;
+}
+#competitionKnockout{
+    display: none;
 }
 
 .knockout-body{
@@ -933,6 +939,7 @@ header ul li ul li a{
 }
 #competitionSquads,
 #competitionStats{
+    display: none;
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
@@ -1140,6 +1147,7 @@ header ul li ul li a{
 }
 #match-details-formation{
     display: none; /*inizialmente non deve essere mostrato*/
+    padding: var(--padding-20px);
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
@@ -1154,7 +1162,7 @@ header ul li ul li a{
     flex-direction: column;
     box-sizing: border-box;
     padding: var(--padding-10px);
-    max-width: 50%;
+    min-width: 30%;
     gap: var(--gap-3xs);
 }
 .formation-header{
@@ -2375,6 +2383,9 @@ tbody > tr:hover{
     padding: var(--padding-10px) var(--padding-20px) ;
     box-sizing: border-box;
 }
+.button-game-navbar:hover > h6{
+    font-weight: bold;
+}
 .button-game-navbar-active{
     border-bottom: 4px solid var(--primary-blue-900);
     border-radius: 3px;
@@ -2467,7 +2478,10 @@ tbody > tr:hover{
     z-index: 999;
 }
 .formation-not-found{
-    width: 100%;
+    padding: var(--padding-20px);
+    background-color: var(--primary-blue-50);
+    border-radius: var(--br-12px);
+    width: 50%;
     height: 100%;
     display: none;
     justify-content: center;

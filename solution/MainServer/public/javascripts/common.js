@@ -1,6 +1,5 @@
-//questo JS è per le funzioni comuni
 /**
- * Common functions for managing UI elements and interactions.
+ * Common const values and functions for managing UI elements and interactions.
  */
 
 /**
@@ -118,6 +117,12 @@ function manageEventDelegation(){
             goToPlayerPage(targetPlayer)
     })
 }
+
+/**
+ * change the href to squad_page.html passing club parameters
+ * like club id and club name
+ * @param clubCard the HTML card that have important attributes like clubId and clubName
+ */
 function goToClubPage(clubCard){
     let clubInfo={
         clubId:clubCard.getAttribute('data-clubid'),
@@ -125,6 +130,12 @@ function goToClubPage(clubCard){
     }
     window.location.href=`../squad_page.html?club_id=${clubInfo.clubId}&name=${clubInfo.name}`
 }
+
+/**
+ * change the href to match_page.html storing match parameters
+ * like gameid, homeclubid and awayclubid in 'gameInfo', a sessionStorage item.
+ * @param matchCard the HTML match card that have important attributes like gameid and homeclubid and awayclubid
+ */
 function goToMatchPage(matchCard){
     let matchInfo ={
         game_id:matchCard.getAttribute('data-gameid'),
@@ -134,11 +145,22 @@ function goToMatchPage(matchCard){
     sessionStorage.setItem('gameInfo',JSON.stringify(matchInfo))
     window.location.href='../match_page.html'
 }
+
+/**
+ * change the href to competition_page.html passing competition parameters
+ * like competitionId and competitionName
+ * @param competitionCard the HTML card that have important attributes like competitionId and competitionName
+ */
 function goToCompetitionPage(competitionCard){
     let competition_id = competitionCard.getAttribute('data-competitionId')
     let competition_name = competitionCard.getAttribute('data-competitionName')
     window.location.href = `../competition_page.html?competition_id=${competition_id}&competition_name=${competition_name}`
 }
+/**
+ * change the href to player_page.html storing player parameters
+ * like playerId and playerName and playerImageUrl in 'playerInfo', a sessionStorage item.
+ * @param playerCard the HTML card that have important attributes like playerId, playerName and playerImageUrl
+ */
 function goToPlayerPage(playerCard){
     let playerInfo ={
         playerId:playerCard.getAttribute('data-playerid'),
@@ -148,6 +170,11 @@ function goToPlayerPage(playerCard){
     sessionStorage.setItem('playerInfo',JSON.stringify(playerInfo))
     window.location.href='../player_page.html'
 }
+
+/**
+ * adapt the match date from the original size to a nicer size
+ * @param match the match object with the date information
+ */
 function adaptMatchDate(match){
     match.date = new Date(match.date).toLocaleString([], {
         day: '2-digit',

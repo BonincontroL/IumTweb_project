@@ -14,15 +14,6 @@ function getLast5Games(competition_id) {
     return Model.find({competition_id:competition_id})
         .sort({ date: -1 })
         .limit(5)
-        .then(results => {
-            if (!results || results.length === 0) {
-                throw new Error('Nessun match trovato.');
-            }
-            return results;
-        })
-        .catch(error => {
-            throw new Error('Errore durante il recupero dei giochi: ' + error.message);
-        });
 }
 
 
@@ -94,7 +85,7 @@ function getRoundNumbers(comp_id,season){
  * @returns {Promise<Array<any>>}
  */
 function getTableByCompSeasonAndType(comp_id,season,type,round){
-    let initialMatchCondition ={}
+    let tableTypologyCondition ={}
     let matchConditions={
         competition_id: comp_id,
         season: season
@@ -103,11 +94,11 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
         matchConditions.round = round
 
     if(type===tableTypes.HOME)
-        initialMatchCondition={
+        tableTypologyCondition={
             $expr:{$eq:["$home_club_id","$events.club_id"]}
         };
     else if(type===tableTypes.AWAY)
-        initialMatchCondition={
+        tableTypologyCondition={
             $expr:{$eq:["$away_club_id","$events.club_id"]}
         };
     return Model.aggregate([
@@ -125,17 +116,12 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
         {
             $unwind:"$events"
         },
-        {
-            $addFields:{
-                "is_home":{$eq:["$home_club_id","$events.club_id"]}
-            }
-        },
-        ...Object.keys(initialMatchCondition).length > 0?[{$match:initialMatchCondition}]: [],
+        ...Object.keys(tableTypologyCondition).length > 0?[{$match:tableTypologyCondition}]: [], //add tableTypologyCondition if there are some conditions, otherwise the pipeline is unmuted.
         {
             $addFields:{
                 "club_name":{
                     $cond:{
-                        if:{$eq:["$is_home",true]},
+                        if:{$eq:["$events.hosting","Home"]},
                         then:"$home_club_name",
                         else:"$away_club_name"
                     }
@@ -179,8 +165,6 @@ function getTableByCompSeasonAndType(comp_id,season,type,round){
         }
     ])
 }
-
-
 /**
  * Retrieves matches by competition, season, and round.
  * @param comp_id

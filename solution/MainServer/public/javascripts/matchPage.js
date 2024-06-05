@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  * about home club and away club
  */
 function getHeadToHeadInfos(){
-    let url=MAIN_SERVER+"/games/getHeadToHead"
+    const url=MAIN_SERVER+"/games/getHeadToHead"
     axios.get(url,{
         params:{
             homeClubId: matchInfo.home_club_id,
@@ -57,7 +57,7 @@ function getHeadToHeadInfos(){
         renderHeadToHeadInfos(res.data[0])
         isHeadToHeadLoaded=true //we correctly load head to head
     }).catch(err=>{
-        alert(err)
+        console.error("there was an error trying to get head to head",err)
     })
 }
 
@@ -179,12 +179,12 @@ function getMatchEvents(matchIds) {
         }
     }).then(res => {
         renderMatchEvents(res.data, +matchIds.home_club_id, +matchIds.away_club_id, matchInfo.aggregate) //il + serve per convertire le stringhe in numeri
-        if (matchInfo.aggregate!== NO_GOALS_AGGREGATE)
+        if (matchInfo.aggregate!== NO_GOALS_AGGREGATE) //if there are some goals...
             renderGoalsRow()
-        else
+        else//if there aren't goals.
             document.getElementById('goalsRowContainer').style.display = 'none'
     }).catch(err => {
-        alert(err)
+        console.error("There was an error trying to get match events",err)
     })
 }
 
@@ -359,7 +359,7 @@ async function getMatchInformation() {
         renderBannerInfo()
         renderMatchInformation(compName.data)
     } catch (err) {
-        alert(err)
+        console.error("There was an error trying to get all the match informations",err)
     }
 }
 
@@ -453,7 +453,7 @@ async function getMatchFormation(matchIds) {
         }
         isFormationsLoaded = true
     } catch (err) {
-        alert(err);
+        console.error("There was an error trying to get formations",err);
     }
 }
 
@@ -544,7 +544,7 @@ async function renderFormation(container, lineup, managerName, formation) {
             container.appendChild(renderPlayerCard(player))
         })
     }catch(e){
-        alert(e)
+        console.error("There was an error in the formation rendering",e)
     }
 }
 

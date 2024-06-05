@@ -37,7 +37,7 @@ function getAllClubsByInitial() {
             renderClubsGroupedByInitial(response.data);
         })
         .catch(error => {
-            alert(error);
+            console.error("There was an error trying to get all clubs by initial letter",error);
         });
 }
 

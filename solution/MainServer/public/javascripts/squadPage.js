@@ -1,4 +1,3 @@
-let squadInfoBtn //=> Global variables for squad information button.
 let isListenerLoaded=false //=>Flag to check if event listeners are loaded.
 const SQUAD_PAGE_NAME= 'squad-page' //=>Constant for the squad page name.
 let clubInfo //=>Object to store club information.
@@ -19,36 +18,27 @@ async function init(){
         name :urlParam.get('name'),
     }
     try{
-        let managerName= await getManagerName()
-        clubInfo.managerName = managerName.data[0].name;
-        let club=await getClubInfo()
-        clubInfo.lastSeasonInLeauge = club.data.lastSeason
-        await getAndRenderLastSeasons()
-        clubInfo.stadiumName=club.data.stadiumName
-        clubInfo.stadiumSeats=club.data.stadiumSeats
-        clubInfo.squadSize=club.data.squadSize
-        clubInfo.foreignersPercentage=club.data.foreignersPercentage
+        const managerName= await getManagerName()
+        const club=await getClubInfo()
         clubInfo.competitionId=club.data.domesticCompetitionId
-        let competitionName=await getCompetitionName()
+        const competitionName=await getCompetitionName()
+        club.data.managerName = managerName.data[0].name
+        clubInfo.lastSeasonInLeauge = club.data.lastSeason //lastSeasonInLeauge is the last season the club played in his league
         clubInfo.competitionName = competitionName.data
-        renderCompetitionInfo()
-        renderGraph()
+        club.data.competitionName=competitionName.data
+        renderCompetitionInfo(club.data)
+        renderGraph(club.data.squadSize,club.data.foreignersPercentage)
+        await getAndRenderLastSeasons() //pre rendering last club seasons.
     }catch(err){
-        alert(err)
+        console.error("There was an error in the init phase",err)
     }
-    squadInfoBtn= document.getElementById('squad-info-btn')
     let lateralButtonsContainer=document.querySelector('#squadLateralNavbar')
     manageLateralButtons(lateralButtonsContainer,SQUAD_PAGE_NAME)
     manageEventDelegation()
-    //inizialmente solo il bottone Informazioni deve essere selezionato
-    squadInfoBtn.classList.add('active')
-    hideAllMainContainers(SQUAD_PAGE_NAME)
-    document.getElementById('squadInformation').style.display="flex"
 
     document.getElementById('squad-table-btn').addEventListener('click',()=>{
-        if(!isTableLoaded){
+        if(!isTableLoaded)
             getTableAndLastMatches()
-        }
     })
     document.getElementById('squad-matches-btn').addEventListener('click',getLastMatchesWrapper);
     document.getElementById('squad-players-btn').addEventListener('click',()=>{
@@ -59,7 +49,7 @@ async function init(){
                     isPlayersLoaded=true
                 })
                 .catch(err => {
-                    alert(err)
+                    console.error("There was an error trying to get club players",err)
                 })
         }
     })
@@ -81,11 +71,11 @@ async function getAndRenderLastSeasons(){
  */
 async function getLastMatchesWrapper(){
     try {
-        const matches = await getClubGamesInfo(clubInfo.lastSeason);
+        const matches = await getClubGamesBySeason(clubInfo.lastSeason);
         renderMatchesRound(matches.data);
         manageSeasonEventListener()
     }catch(err){
-        alert("Errore nella richiesta delle partite del club"+err);
+        console.error("There was an error trying to get last matches",err);
     }
 }
 
@@ -95,7 +85,7 @@ async function getLastMatchesWrapper(){
 function manageSeasonEventListener(){
     if(!isListenerLoaded) {
         document.getElementById("selectPossibleSeason").addEventListener("change", async function () {
-            const matches = await getClubGamesInfo(this.value);
+            const matches = await getClubGamesBySeason(this.value);
             renderMatchesRound(matches.data)
         })
         isListenerLoaded=true
@@ -119,16 +109,16 @@ function createChartLabel(labelText){
 /**
  * Renders the squad chart.
  */
-function renderGraph(){
-    const nationalPlayers = 100-clubInfo.foreignersPercentage
+function renderGraph(squadSize,foreignersPercentage ){
+    const nationalPlayers = 100-foreignersPercentage
     const graph=document.getElementById('squadChart').getContext('2d')
-    const doughnutLabel=createChartLabel(clubInfo.squadSize+' giocatori')
+    const doughnutLabel=createChartLabel(squadSize+' giocatori')
     const squadChart= new Chart(graph,{
         type:'doughnut',
         data:{
             labels:['Giocatori Stranieri', 'Giocatori della nazionale'],
             datasets:[{
-                data:[clubInfo.foreignersPercentage,nationalPlayers],
+                data:[foreignersPercentage,nationalPlayers],
                 backgroundColor:[
                     getComputedStyle(document.body).getPropertyValue('--primary-blue-900'),
                     getComputedStyle(document.body).getPropertyValue('--primary-blue-50')
@@ -164,13 +154,13 @@ function renderGraph(){
 function getTableAndLastMatches(){
     Promise.all([
         getTable( clubInfo.competitionId, clubInfo.lastSeasonInLeauge,"full"),
-        getClubGamesInfo(clubInfo.lastSeasonInLeauge,5) //by default we want only last 5 games
+        getClubGamesBySeason(clubInfo.lastSeasonInLeauge,5) //by default we want only last 5 games
     ]).then(res=>{
         renderMiniTable(res[0].data)
         renderLast5Games(res[1].data)
         isTableLoaded=true
     }).catch(err=>{
-        alert(err)
+        console.error("There was an error trying to get mini table and last 5 games",err)
     })
 }
 function getCompetitionName(){
@@ -398,7 +388,7 @@ function insertSeasons(seasons){
  * Fetches information about the club's games for the last season.
  * @returns {Promise} - Promise object representing the club's games information.
  */
-function getClubGamesInfo(season,limit) {
+function getClubGamesBySeason(season,limit) {
     return axios.get(MAIN_SERVER + '/games/getLastGamesByClubIdandSeason', {
         params: {
             club_id: clubInfo.clubId,
@@ -423,17 +413,16 @@ function getSeasonsGames(){
 /**
  * Renders information about the competition, including club name, logo, competition name, stadium info, and manager name.
  */
-function renderCompetitionInfo() {
+function renderCompetitionInfo(club) {
     //nome e logo del club nella barra laterale
-    document.getElementById('clubName').innerText = clubInfo.name
+    document.getElementById('clubName').innerText = club.name
     document.getElementById('clubImage').setAttribute('src', `${CLUB_LOGO_IMAGE_URL}${clubInfo.clubId}.png`)
     //nome della competizione + logo
     document.getElementById('squadCompetitionImage').setAttribute('src', `${COMPETITION_LOGO_IMAGE_URL}${clubInfo.competitionId.toLowerCase()}.png`)
-    document.getElementById('squadCompetitionName').innerText= clubInfo.competitionName
+    document.getElementById('squadCompetitionName').innerText= club.competitionName
     //info sullo stadio+numero massimo di spettatori
-    document.getElementById('squadStadiumName').innerText=clubInfo.stadiumName
-    document.getElementById('squadStadiumCapacity').innerHTML=
-        `Spettatori: ${clubInfo.stadiumSeats}`
+    document.getElementById('squadStadiumName').innerText=club.stadiumName
+    document.getElementById('squadStadiumCapacity').innerHTML= `Spettatori: ${club.stadiumSeats}`
     //nome allenatore
-    document.getElementById('squadManagerName').innerText=clubInfo.managerName
+    document.getElementById('squadManagerName').innerText=club.managerName
 }

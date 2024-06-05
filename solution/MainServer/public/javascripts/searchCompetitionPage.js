@@ -56,7 +56,7 @@ function getCompetitionsGroupedByCountry(){
             await renderCompetitionsGroupedByCountry(competitions)
         })
         .catch(err=>{
-            alert(JSON.stringify(err))
+            console.error("There was an error trying to get all competitions grouped by country", err)
         })
 }
 

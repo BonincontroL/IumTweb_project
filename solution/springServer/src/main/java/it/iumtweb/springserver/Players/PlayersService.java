@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayersService {
@@ -85,8 +86,7 @@ public class PlayersService {
     }
 
     /**
-     * Finds players whose name or surname contains the specified letter
-     * The default limit is 1000 .
+     * Finds players whose name or surname contains the specified letter and limit the result
      * @param letter The letter to search for.
      * @return A list containing at most 1000 players whose name or surname contains the specified letter.
      */
@@ -117,7 +117,7 @@ public class PlayersService {
 
 
     /**
-     * Finds players by competition ID, nationality, and role.
+     * Finds players by competition ID, nationality, and role and then sort them by market value in eur.
      * @param competitionId The ID of the competition.
      * @param nationality The nationality of the players.
      * @param specificRole The specific role of the players.
@@ -125,7 +125,10 @@ public class PlayersService {
      */
     public List<Players> findByCompIdNationalityAndRole(String competitionId, String nationality, String specificRole){
         Specification<Players> filters =PlayerSpecification.buildSpecification(competitionId,nationality,specificRole);
-        return playersRepository.findAll(filters);
+        return playersRepository.findAll(filters)
+                .stream()
+                .sorted(Comparator.comparing(Players::getMarketValueInEur, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
     }
 
     /**

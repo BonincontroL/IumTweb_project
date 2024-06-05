@@ -90,7 +90,6 @@ async function renderPlayers(players, competitionIdentifier) {
     // Itera su ogni giocatore e costruisce la card
     for (const player of players) {
         let playerCard = renderPlayerCard(player)
-
         /**
          * Aggiunge il numero del giocatore alla card del giocatore.
          */
@@ -98,7 +97,6 @@ async function renderPlayers(players, competitionIdentifier) {
             let playerNumber = await getPlayerNumber(player.playerId)
             playerCard.appendChild(renderPlayerNumber(playerNumber.data.playerNumber));
         } catch (e) {
-            alert(e)
             console.error('Errore durante il recupero del numero del giocatore:', error);
         }
         playersContainer.appendChild(playerCard);
