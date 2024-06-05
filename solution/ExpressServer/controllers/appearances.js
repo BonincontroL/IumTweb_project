@@ -89,7 +89,6 @@ function getPlayerGames(playerId) {
         {
             $match: {
                 player_id: numericPlayerId,
-                minutes_played: {$gt: 0}
             }
         },
         {

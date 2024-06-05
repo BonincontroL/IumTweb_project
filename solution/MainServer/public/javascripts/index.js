@@ -3,7 +3,11 @@
  * Common functions for managing UI elements and interactions.
  */
 
-const MAIN_SERVER="http://localhost:3000" //=>Constant for the main server URL.
+/**
+ * Constant for the main server URL.
+ * @type {string}
+ */
+const MAIN_SERVER="http://localhost:3000"
 
 /**
  * URL for competition logo images.
@@ -16,6 +20,11 @@ const COMPETITION_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/logo/head
  * @type {string}
  */
 const CLUB_LOGO_IMAGE_URL = "https://tmssl.akamaized.net/images/wappen/head/"
+/**
+ * Default value for missing values
+ * @type {string}
+ */
+const ND_VALUE="N.D"
 
 /**
  * Event listener for DOMContentLoaded event of all pages.

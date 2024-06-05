@@ -1,10 +1,9 @@
 let playerInfoBtn  //=>Player information button.
-const playerPageName = 'player-page' //=>Name of the player page.
+const PLAYER_PAGE_NAME = 'player-page' //=>Name of the player page.
 let playerId; //=>Player ID.
 let isStatsLoaded = false; //=>Flag to indicate if player statistics are loaded.
 let isValutationLoaded = false; //=> Flag to indicate if player valuation is loaded.
 let isLastMatchesLoaded = false; //=>Flag to indicate if player's last matches are loaded.
-const ND_VALUE="N.D"
 document.addEventListener('DOMContentLoaded', async () => {
     let playerInfo = JSON.parse(sessionStorage.getItem('playerInfo'))
     playerId = playerInfo.playerId
@@ -20,11 +19,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     playerInfoBtn = document.getElementById('player-info-btn')
     let lateralPlayerButtonContainer = document.querySelector('#playerLateralNavbar')
-    manageLateralButtons(lateralPlayerButtonContainer, playerPageName)
+    manageLateralButtons(lateralPlayerButtonContainer, PLAYER_PAGE_NAME)
     manageEventDelegation()
     //inizialmente solo il bottone Informazioni è premuto
     playerInfoBtn.classList.add('active')
-    hideAllMainContainers(playerPageName)
+    hideAllMainContainers(PLAYER_PAGE_NAME)
     document.getElementById('playerInformation').style.display = "flex"
     document.getElementById('player-statistic-btn').addEventListener('click', () => {
         if (!isStatsLoaded) {
@@ -48,21 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 /**
- * Retrieves the flag of a country.
- * @param {string} countryName - Name of the country.
- * @returns {Promise} - A promise with the flag data.
- */
-function getCountryFlag(countryName) {
-    const loadingSpinner = document.getElementById('loading-spinner')
-    loadingSpinner.style.display='block'
-    let queryUrl = `https://restcountries.com/v3.1/name/${countryName}`
-    return axios.get(queryUrl)
-        .finally(()=>{
-            loadingSpinner.style.display='none'
-        })
-}
-
-/**
  * Renders the player image.
  * @param {Object} player - Player object containing information.
  */
@@ -79,15 +63,13 @@ function getPlayerStatistics() {
     loadingSpinner.style.display = "block";
     axios.get(`${MAIN_SERVER}/appearances/getPlayerStatistics/${playerId}`)
         .then(response => {
-            if (response.status === 200) {
+            if (response.status === 200)
                 renderPlayerStatistics(response.data)
-            } else {
+            else if(response.status===204) //in this case,  204 no content
                 renderPlayerStatistics([])
-            }
         })
         .catch(error => {
             console.error(`Error not found statistics for player ${playerId}:`, error);
-
         }).finally(() => {
         loadingSpinner.style.display = "none";
     });
@@ -163,7 +145,7 @@ function getPlayerValuation() {
         .then(response => {
             if (response.status === 200)
                 renderPlayerValuations(response.data)
-            else
+            else if(response.status===204)
                 renderPlayerValuations([])
         })
         .catch(error => {
@@ -225,7 +207,8 @@ function renderPlayerValuations(playerValuations) {
 
 
 /**
- * Fetches player's last matches from the server.
+ * Fetches player's last matches from the server and
+ * then render it .
  */
 async function fetchPlayerLastMatches() {
     const lastMatchesContainer = document.getElementById('playerLastMatches');
@@ -297,7 +280,6 @@ function renderPlayerMatch(match) {
     matchResultContainer.appendChild(awayTeamContainer);
 
     gameInfoContainer.appendChild(matchResultContainer);
-
     return gameInfoContainer
 }
 
@@ -318,7 +300,7 @@ function createStats(game) {
 }
 
 /**
- * Creates a container with team information.
+ * Creates a container with team information in the player last match section.
  * @param {string} teamName - Name of the team.
  * @param {number} goals - Number of goals.
  * @param {number} teamId - Team ID.
@@ -327,10 +309,10 @@ function createStats(game) {
  */
 function createTeamContainer(teamName, goals, teamId, stats) {
     const teamContainer = document.createElement('div');
+    const logoUrl = `${CLUB_LOGO_IMAGE_URL}${teamId}.png`;
     let goalsContainer = null, assistsContainer = null, yellowOrRedContainer = null
-    teamContainer.classList.add('squad-info-row');
 
-    const logoUrl = `https://tmssl.akamaized.net/images/wappen/head/${teamId}.png`;
+    teamContainer.classList.add('squad-info-row');
 
     const displayedTeamName = teamName || 'N.D.';
     if (Object.keys(stats).length !== 0) {//se l'oggetto stats c'è
@@ -356,9 +338,8 @@ function createTeamContainer(teamName, goals, teamId, stats) {
     return teamContainer;
 }
 
-
 /**
- * Renders a generic statistics container.
+ * Renders a generic statistics container with a statistic and an icon.
  * @param {number} statistic - Statistic value.
  * @param {string} imageSrc - Source of the statistic icon.
  * @returns {HTMLDivElement} - HTML element representing the statistics container.

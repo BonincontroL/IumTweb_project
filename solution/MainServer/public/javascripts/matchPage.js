@@ -166,7 +166,7 @@ function renderBannerInfo() {
         awayClubCard.setAttribute('data-clubid', matchInfo.away_club_id);
         awayClubCard.setAttribute('data-name',matchInfo.away_club_name);
     }else //altrimenti non è cliccabile
-        homeClubCard.className='match-details-squad-and-logo-away-noclick'
+        awayClubCard.className='match-details-squad-and-logo-away-noclick'
 }
 /**
  * Retrieves current match events from the DB and then render them.
@@ -249,6 +249,7 @@ function renderGoalsColumn(columnContainer, goalEvents) {
         acc[goal.player].push(goal)
         return acc
     }, {})
+
     Object.keys(goalEvents).forEach(player => {
         let playerGoalContainer = document.createElement('p')
         let minutes = goalEvents[player].map(goal => goal.minute + '°').join(', ')
@@ -289,9 +290,9 @@ function renderEvent(event) {
         case EVENT_TYPES.SUBSTITUTION: {
             eventLogo.setAttribute('src', 'images/gameeventsLogos/substitution-icon.svg');
             let playerInContainer = document.createElement('h6')
-            playerInContainer.innerHTML = `Entra: <b>${event.substitute}</b>`//bisogna trovare il modo per ottenere il nome del giocatore
+            playerInContainer.innerHTML = `Entra: <b>${event.substitute? event.substitute: ND_VALUE}</b>`
             let playerOutContainer = document.createElement('h6')
-            playerOutContainer.innerHTML = `Esce: <b>${event.player}</b>`
+            playerOutContainer.innerHTML = `Esce: <b>${event.player? event.player: ND_VALUE}</b>`
             containers.push(playerInContainer, playerOutContainer)
             break
         }
@@ -304,7 +305,7 @@ function renderEvent(event) {
             else if (event.description.search('Yellow') !== -1) //potrebbe essere migliorato,
                 eventLogo.setAttribute('src', 'images/gameeventsLogos/yellow-icon.svg')
             let playercardContainer = document.createElement('h6')
-            playercardContainer.innerHTML = `<b>${event.player}</b>`
+            playercardContainer.innerHTML = `<b>${event.player? event.player: ND_VALUE}</b>`
             containers.push(playercardContainer)
             break;
     }
