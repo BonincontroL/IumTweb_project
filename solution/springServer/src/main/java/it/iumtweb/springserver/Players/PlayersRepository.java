@@ -4,10 +4,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
+/**
+ * The PlayersRepository interface to manage queries of the players table.
+ * I used JpaSpecificationExecutor to manage /getByCompIdNationalityAndRole route
+ * in fact we want to create a flexible filter where user can filter players by competition, nationality and role
+ * and all of these parameters are optional, without JpaSpecificationExecutor we would have to create a query for every possible combination of fields
+ */
 @Repository
 public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpecificationExecutor<Players> {
     /**
@@ -31,34 +36,36 @@ public interface PlayersRepository extends JpaRepository<Players, Long>, JpaSpec
      * @param playerIds a list of player ids
      * @return a list of playersDTO object, that are couples formed by id and url.
      */
-    @Query("select new it.iumtweb.springserver.Players.PlayersDTO(p.playerId,p.imageUrl) " +
+    @Query("select new it.iumtweb.springserver.Players.PlayersImageDTO(p.playerId,p.imageUrl) " +
             "from Players p " +
             "where p.playerId IN (:playerIds)")
-    List<PlayersDTO> findPlayersWithImageUrlsByIds(@Param("playerIds") List<Long> playerIds);
+    List<PlayersImageDTO> findPlayersWithImageUrlsByIds(@Param("playerIds") List<Long> playerIds);
 
 
     /**
-     * Finds the top 150 players associated with the domestic competition of their current club for a given last season,
-     * ordered by market value in descending order.
+     * Find players associated with the domestic competition of their current club for a given last season,
+     * ordered by market value in descending order and limited by maxPlayers parameter.
      *
      * @param competitionId The ID of the domestic competition
      * @param lastSeason    The last season
+     * @param maxPlayers    The maximum number of players to put in the result
      * @return              The list of top 150 players found, ordered by market value in descending order
      */
-    @Query(value="SELECT * FROM Players p where p.current_club_domestic_competition_id = :competitionId AND p.last_season=:lastSeason ORDER BY CASE WHEN p.market_value_in_eur IS NULL THEN 1 ELSE 0 END, p.market_value_in_eur DESC LIMIT 150", nativeQuery = true)
-    List<Players> findTop150ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(String competitionId, Integer lastSeason);
+    @Query(value="SELECT * FROM Players p where p.current_club_domestic_competition_id = :competitionId AND p.last_season=:lastSeason ORDER BY CASE WHEN p.market_value_in_eur IS NULL THEN 1 ELSE 0 END, p.market_value_in_eur DESC LIMIT :maxPlayers", nativeQuery = true)
+    List<Players> findTopPlayersInCompetitionAndSeason(String competitionId, Integer lastSeason, Integer maxPlayers);
+
+    @Query(value="SELECT * from Players order by market_value_in_eur DESC NULLS LAST LIMIT :maxPlayers", nativeQuery = true)
+    List<Players> findTopPlayers(int maxPlayers);
 
     /**
      * Finds players whose first name or last name match the given search term,
      * or whose name (if first name is null) matches the search term.
      * @param searchTerm The search term to match against player names
-     * @param pageable   Pagination information
      * @return           A page of players matching the search term
      */
-    @Query(value="SELECT p from Players p where " +
-            "(p.firstName is not NULL AND lower(p.firstName) LIKE concat(lower(:searchTerm),'%') OR lower(p.lastName) LIKE concat(lower(:searchTerm),'%'))" +
-            "or (p.firstName is null and lower(p.name) like concat('%',lower(:searchTerm),'%'))")
-    Page<Players> findByNameOrSurname(String searchTerm, Pageable pageable);
+    @Query(value="SELECT * FROM Players where " +
+            "lower(name) like concat('%',lower(:searchTerm),'%') LIMIT :maxPlayers", nativeQuery = true)
+    List<Players> findByNameOrSurname(String searchTerm, Integer maxPlayers);
 
 
     /**

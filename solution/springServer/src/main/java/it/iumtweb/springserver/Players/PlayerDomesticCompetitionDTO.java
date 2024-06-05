@@ -2,9 +2,12 @@ package it.iumtweb.springserver.Players;
 
 import java.util.Objects;
 
+/**
+ * this class represents a DTO that represent a single domestic competition with his ID and name
+ */
 public class PlayerDomesticCompetitionDTO {
-    private String id;
-    private String name;
+    private String id; //the competition ID
+    private String name; //the competition name
 
     public PlayerDomesticCompetitionDTO(String id, String name) {
         this.id = id;

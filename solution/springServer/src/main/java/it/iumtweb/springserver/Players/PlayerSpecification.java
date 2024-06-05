@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * Utility class for constructing Specifications to filter player entities based on various criteria.
+ * We used this class to manage  /getByCompIdNationalityAndRole route and to create a flexible filter for players
  */
-
 public class PlayerSpecification {
     public static Specification<Players> hasCurrentClubDomesticCompetitionId(String currentClubDomesticCompetitionId){
         return ((root, query, criteriaBuilder) -> currentClubDomesticCompetitionId==null? null:criteriaBuilder.equal(root.get("currentClubDomesticCompetitionId"),currentClubDomesticCompetitionId));
@@ -24,7 +24,6 @@ public class PlayerSpecification {
         if(currentClubDomesticCompetitionId!=null) specs.add(hasCurrentClubDomesticCompetitionId(currentClubDomesticCompetitionId));
         if(countryOfBirth!=null) specs.add(hasCountryOfCitizenship(countryOfBirth));
         if(subPosition!=null) specs.add(hasSubPosition(subPosition));
-        Specification<Players> result = specs.stream().reduce(Specification::and).orElse(null);
-        return result;
+        return specs.stream().reduce(Specification::and).orElse(null);
     }
 }

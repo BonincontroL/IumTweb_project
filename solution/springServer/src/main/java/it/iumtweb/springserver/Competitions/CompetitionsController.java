@@ -61,7 +61,7 @@ public class CompetitionsController {
         if(name!=null){
             return ResponseEntity.ok().body(name);
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 

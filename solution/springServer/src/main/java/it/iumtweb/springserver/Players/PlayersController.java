@@ -72,8 +72,8 @@ public class PlayersController {
      *  the second is "substitutes" and contains a list of couples with id,url of all the players that bench the match.
      */
     @GetMapping("/getPlayersImgUrlById")
-    public ResponseEntity<Map<String,List<PlayersDTO>>> getPlayersImgUrlById(@RequestParam List<Long> starting, @RequestParam(required = false) List<Long> substitutes){
-        Map<String,List<PlayersDTO>> result = playersService.getPlayersImgUrlById(starting,substitutes);
+    public ResponseEntity<Map<String,List<PlayersImageDTO>>> getPlayersImgUrlById(@RequestParam List<Long> starting, @RequestParam(required = false) List<Long> substitutes){
+        Map<String,List<PlayersImageDTO>> result = playersService.getPlayersImgUrlById(starting,substitutes);
         if(result.isEmpty())
             return ResponseEntity.noContent().build();
         else
@@ -97,10 +97,11 @@ public class PlayersController {
     }
 
     /**
-     * get
-     * @param competitionId
-     * @param lastSeason
-     * @return
+     * Get players basing on competition and last season sorting it by value
+     * The result is limited by playerService
+     * @param competitionId: the unique id of the competition
+     * @param lastSeason the last season of players
+     * @return a list of players sorted by market value.
      */
     @GetMapping("/getPlayersByCompetitionAndLastSeasonSortedByValue/{competitionId}/{lastSeason}")
     public ResponseEntity<List<Players>> getPlayersByCompetitionAndLastSeasonSortedByValue(@PathVariable String competitionId,@PathVariable Integer lastSeason ){
@@ -112,6 +113,7 @@ public class PlayersController {
             return ResponseEntity.ok().body(players);
         }
     }
+
     @GetMapping("/getTop150PlayersByMarketValue")
     public ResponseEntity<List<Players>> getTop150PlayersByMarketValue() {
         List<Players> players = playersService.getTop150PlayersByMarketValue();
@@ -125,7 +127,7 @@ public class PlayersController {
 
     @GetMapping("/findPlayersByLetterInName")
     public ResponseEntity<List<Players>> findPlayersByLetterInName(@RequestParam String letter) {
-        List<Players> players = playersService.findPlayersByLetterInName(letter).stream().toList();
+        List<Players> players = playersService.findPlayersByLetterInName(letter);
         if (players.isEmpty()) {
             System.out.println("No Players found");
             return ResponseEntity.noContent().build();
@@ -134,7 +136,7 @@ public class PlayersController {
         }
     }
     /**
-     *
+     * Get a single player basing on his unique identifier
      * @param player_id to find a player
      * @return an object with  player information
      */
@@ -143,6 +145,11 @@ public class PlayersController {
         Optional<Players> result = playersService.findById(player_id);
         return result.map(club -> ResponseEntity.ok().body(result.get())).orElseGet(() -> ResponseEntity.noContent().build());
     }
+
+    /**
+     * Get all the possible country of citizenship in the players table
+     * @return a list of strings representing all the nationalities present in the players table
+     */
     @GetMapping("/getAllCountryOfCitizenship")
     public ResponseEntity<List<String>> getAllCountryOfCitizenship(){
         List<String> countries = playersService.findAllCountryOfCitizenship();
@@ -152,6 +159,10 @@ public class PlayersController {
             return ResponseEntity.ok().body(countries);
     }
 
+    /**
+     * Get all the domestic competition played by players,
+     * @return a list of Competition DTO with competition id and competition name
+     */
     @GetMapping("/getAllDomesticCompetitions")
     public ResponseEntity<List<PlayerDomesticCompetitionDTO>> getAllDomesticCompetitionIdsAndName(){
         List<PlayerDomesticCompetitionDTO> countries = playersService.findAllDomesticCompetitions();

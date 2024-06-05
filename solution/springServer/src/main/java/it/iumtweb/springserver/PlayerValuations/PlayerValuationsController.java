@@ -24,7 +24,6 @@ public class PlayerValuationsController {
         try {
             List<Object[]> averageMarketValues = playerValuationsService.findAverageMarketValuePerYear(playerId);
             if (averageMarketValues.isEmpty()) {
-                System.out.println("No valuations found for the player with ID: " + playerId);
                 return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.ok().body(averageMarketValues);

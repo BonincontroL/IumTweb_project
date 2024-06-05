@@ -1,10 +1,13 @@
 package it.iumtweb.springserver.Players;
 
-public class PlayersDTO {
+/**
+ * this class represent a player DTO that contains playerId and imageUrl
+ */
+public class PlayersImageDTO {
     private Long playerId;
     private String imageUrl;
 
-    public PlayersDTO(Long playerId, String url) {
+    public PlayersImageDTO(Long playerId, String url) {
         this.playerId = playerId;
         this.imageUrl = url;
     }

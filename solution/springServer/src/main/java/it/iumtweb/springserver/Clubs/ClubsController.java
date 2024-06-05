@@ -75,9 +75,12 @@ public class ClubsController {
     @GetMapping("/getLastSeason")
     public ResponseEntity<Map<String,Integer>> getLastSeason(@RequestParam(name="club_id") Long clubId){
         Map<String,Integer> map = new HashMap<>();
-        Integer lastSeason = Integer.parseInt(clubsService.getLastSeason(clubId));
-        map.put("lastSeason",lastSeason);
-        return ResponseEntity.ok().body(map);
+        String lastSeason = clubsService.getLastSeason(clubId);
+        if(lastSeason!=null) {
+            map.put("lastSeason", Integer.parseInt(lastSeason));
+            return ResponseEntity.ok().body(map);
+        }else
+            return ResponseEntity.noContent().build();
     }
 
 }

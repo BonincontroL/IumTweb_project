@@ -1,24 +1,24 @@
 package it.iumtweb.springserver.Players;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PlayersService {
 
     private final PlayersRepository playersRepository;
+    private static final Integer MAX_RANDOM_PLAYERS=5;
+    private static final Integer MAX_PLAYERS_FOR_RANKING=10;
+    private static final Integer MAX_PLAYERS_BY_MARKET_VALUE = 150;
+    private static final Integer MAX_PLAYERS_IN_SEARCH_RESULT=1000;
 
     @Autowired
     public PlayersService(PlayersRepository playersRepository) {
         this.playersRepository = playersRepository;
     }
-
 
     /**
      * Retrieves all players from the database.
@@ -27,7 +27,6 @@ public class PlayersService {
     public List<Players> getAllPlayers() {
         return playersRepository.findAll();
     }
-
 
     /**
      * Searches for players by club ID and season.
@@ -55,10 +54,10 @@ public class PlayersService {
      * @param substituteIds The IDs of substitute players.
      * @return A map containing lists of image URLs categorized as 'starting_lineup' and 'substitutes'.
      */
-    public Map<String,List<PlayersDTO>> getPlayersImgUrlById(List<Long> startingIds, List<Long> substituteIds){
-        List<PlayersDTO> startingPlayers = playersRepository.findPlayersWithImageUrlsByIds(startingIds);
-        List<PlayersDTO> substitutePlayers= playersRepository.findPlayersWithImageUrlsByIds(substituteIds);
-        Map<String, List<PlayersDTO>> lineup= new HashMap<>();
+    public Map<String,List<PlayersImageDTO>> getPlayersImgUrlById(List<Long> startingIds, List<Long> substituteIds){
+        List<PlayersImageDTO> startingPlayers = playersRepository.findPlayersWithImageUrlsByIds(startingIds);
+        List<PlayersImageDTO> substitutePlayers= playersRepository.findPlayersWithImageUrlsByIds(substituteIds);
+        Map<String, List<PlayersImageDTO>> lineup= new HashMap<>();
         lineup.put("starting_lineup", startingPlayers);
         lineup.put("substitutes", substitutePlayers);
 
@@ -72,9 +71,9 @@ public class PlayersService {
      * @return A list of 5 random players from the specified competition and season.
      */
     public List<Players> get5RandomPlayersByCompIdAndLastSeason(String competitionId, Integer lastSeason) {
-        List<Players> players = playersRepository.findTop150ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
-        Collections.shuffle(players);
-        return players.subList(0,5);
+        List<Players> players = playersRepository.findTopPlayersInCompetitionAndSeason(competitionId,lastSeason, MAX_PLAYERS_BY_MARKET_VALUE); //we take the first 150 and then we shuffle randomicly
+        Collections.shuffle(players); //random shuffle of the players list
+        return players.subList(0,MAX_RANDOM_PLAYERS); //take the first 5.
     }
 
     /**
@@ -82,20 +81,17 @@ public class PlayersService {
      * @return A list of the top 150 players by market value.
      */
     public List<Players> getTop150PlayersByMarketValue() {
-        return playersRepository.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Players::getMarketValueInEur, Comparator.nullsLast(Comparator.reverseOrder())))
-                .limit(150)
-                .collect(Collectors.toList());
+        return playersRepository.findTopPlayers(MAX_PLAYERS_BY_MARKET_VALUE);
     }
 
     /**
-     * Finds players whose name or surname contains the specified letter.
+     * Finds players whose name or surname contains the specified letter
+     * The default limit is 1000 .
      * @param letter The letter to search for.
-     * @return A list of players whose name or surname contains the specified letter.
+     * @return A list containing at most 1000 players whose name or surname contains the specified letter.
      */
     public List<Players> findPlayersByLetterInName(String letter) {
-        return playersRepository.findByNameOrSurname(letter, PageRequest.of(0,1000)).stream().toList();
+        return playersRepository.findByNameOrSurname(letter, MAX_PLAYERS_IN_SEARCH_RESULT);
     }
 
     /**
@@ -147,15 +143,14 @@ public class PlayersService {
         return result;
     }
 
-
     /**
-     * Retrieves players by competition and last season, sorted by market value.
+     * Retrieves the top 10 players by competition and last season, sorted by market value.
      * @param competitionId The ID of the competition.
      * @param lastSeason The last season.
-     * @return A list of players from the specified competition and season, sorted by market value.
+     * @return A list of 10 players from the specified competition and season, sorted by market value.
      */
     public List<Players> getPlayersByCompetitionAndLastSeasonSortedByValue(String competitionId, Integer lastSeason) {
-        List<Players> players = playersRepository.findTop150ByCurrentClubDomesticCompetitionIdAndLastSeasonOrderByMarketValueInEurDesc(competitionId,lastSeason);
-        return players.subList(0,Math.min(10,players.size())); //prendiamo i primi 10
+        List<Players> players = playersRepository.findTopPlayersInCompetitionAndSeason(competitionId,lastSeason, MAX_PLAYERS_FOR_RANKING);
+        return players.subList(0,Math.min(MAX_PLAYERS_FOR_RANKING,players.size())); //vogliamo una classifica quindi prendiamo i primi 10
     }
 }
